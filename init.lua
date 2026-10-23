@@ -1,33 +1,28 @@
 -- CONFIG
-APP_NAME = "otclientv8"  -- important, change it, it's name for config dir and files in appdata
-APP_VERSION = 1341       -- client version for updater and login to identify outdated client
+APP_NAME = "ForgottenL"  -- important, change it, it's name for config dir and files in appdata
+APP_VERSION = 1         -- client version for updater and login to identify outdated client
 DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
 
--- If you don't use updater or other service, set it to updater = ""
+-- ForgottenL does not run an updater/stats/crash-report service of its own; leave these empty.
 Services = {
-  website = "http://otclient.ovh", -- currently not used
-  updater = "http://otclient.ovh/api/updater.php",
+  website = "https://forgottenlegends.hopto.org",
+  updater = "",
   stats = "",
-  crash = "http://otclient.ovh/api/crash.php",
-  feedback = "http://otclient.ovh/api/feedback.php",
-  status = "http://otclient.ovh/api/status.php"
+  crash = "",
+  feedback = "",
+  status = ""
 }
 
 -- Servers accept http login url, websocket login url or ip:port:version
+-- 870 = Tibia client 8.70, the protocol version ForgottenL (TFS 0.4) speaks.
 Servers = {
---[[  OTClientV8 = "http://otclient.ovh/api/login.php",
-  OTClientV8proxy = "http://otclient.ovh/api/login.php?proxy=1",
-  OTClientV8c = "otclient.ovh:7171:1099:25:30:80:90",
-  OTClientV8Test = "http://otclient.ovh/api/login2.php",
-  Evoulinia = "evolunia.net:7171:1098",
-  GarneraTest = "garnera-global.net:7171:1100",
-  LocalTestServ = "127.0.0.1:7171:1098:110:30:93"  ]]
+  ForgottenL = "forgottenlegends.hopto.org:7171:870"
 }
 
 --Server = "ws://otclient.ovh:3000/"
 --Server = "ws://127.0.0.1:88/"
 --USE_NEW_ENERGAME = true -- uses entergamev2 based on websockets instead of entergame
-ALLOW_CUSTOM_SERVERS = true -- if true it shows option ANOTHER on server list
+ALLOW_CUSTOM_SERVERS = false -- ForgottenL-only client: hide the "Another" / custom-server option
 
 g_app.setName("OTCv8")
 -- CONFIG END
