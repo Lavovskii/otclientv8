@@ -196,9 +196,6 @@ local function onTibia12HTTPResult(session, playdata)
   g_game.setClientVersion(G.clientVersion)
   g_game.setProtocolVersion(g_game.getClientProtocolVersion(G.clientVersion))
   g_game.setCustomOs(-1) -- disable
-  if not g_game.getFeature(GameExtendedOpcode) then
-    g_game.setCustomOs(5) -- set os to windows if opcodes are disabled
-  end
   
   onCharacterList(nil, characters, account, nil)  
 end
@@ -528,9 +525,7 @@ function EnterGame.doLogin(account, password, token, host)
   g_game.setCustomProtocolVersion(0)
   g_game.setCustomOs(-1) -- disable
   g_game.chooseRsa(G.host)
-  if #server_params <= 3 and not g_game.getFeature(GameExtendedOpcode) then
-    g_game.setCustomOs(2) -- set os to windows if opcodes are disabled
-  end
+  -- ForgottenL: keep the real OTClient OS value (20+); the server uses it to send wide stats only to OTClient
 
   -- extra features from init.lua
   for i = 4, #server_params do
