@@ -34,8 +34,8 @@ ForgottenLTextEdit < UITextEdit
   font: verdana-11px-antialised
   color: #f0dcae
   size: 190 30
-  text-offset: 0 7
-  padding: 5 9 5 9
+  text-offset: 0 0
+  padding: 8 9 3 9
   opacity: 1
   image-source: /images/ui/forgottenl_textedit
   image-border: 5
