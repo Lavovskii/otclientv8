@@ -1,7 +1,7 @@
 ForgottenLWindow
   id: enterGame
   size: 300 510
-  margin-top: 122
+  margin-top: 100
   @onEnter: EnterGame.doLogin()
 
   ForgottenLLabel
@@ -71,12 +71,6 @@ ForgottenLWindow
       visible: false
       margin-top: -52
 
-    HorizontalSeparator
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: parent.top
-      margin-top: 10
-
     ForgottenLLabel
       id: serverLabel
       !text: tr('Server')
@@ -115,12 +109,6 @@ ForgottenLWindow
       visible: false
       margin-top: -52
 
-    HorizontalSeparator
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: parent.top
-      margin-top: 8
-
     ForgottenLLabel
       id: serverLabel
       !text: tr('IP:PORT or URL')
@@ -156,7 +144,9 @@ ForgottenLWindow
       menu-scroll-step: 25
       margin-right: 3
 
-  HorizontalSeparator
+  UIWidget
+    id: spacer
+    height: 0
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: customServerSelectorPanel.bottom
