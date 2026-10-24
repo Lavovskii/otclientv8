@@ -39,7 +39,7 @@ local function showOffer(offer)
     win.details.buyButton:setEnabled(false)
     return
   end
-  win.details.bigBox.bigItem:setItemId(tonumber(offer.clientItem) or 0)
+  win.details.bigBox.bigItem:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
   win.details.bigBox.bigItem:setItemCount(math.max(1, tonumber(offer.count) or 1))
   win.details.offerName:setText(offer.name)
   win.details.priceBox.offerPrice:setText(formatPoints(offer.price) .. ' ' .. tr('points'))
@@ -54,8 +54,8 @@ local function fillOffers()
     if tonumber(offer.category) == state.category then
       local row = g_ui.createWidget('StoreOffer', win.offersBox.offers)
       row.offer = offer
-      row.item:setItemId(tonumber(offer.clientItem) or 0)
-      row.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
+      row.itemBox.item:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
+      row.itemBox.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
       row.name:setText(offer.name)
       row.priceBox.price:setText(formatPoints(offer.price) .. ' pts')
       first = first or row

@@ -351,7 +351,7 @@ MainWindow
   @onEscape: modules.game_store.hide()
 
 StoreEditWindow < MainWindow
-  size: 360 380
+  size: 360 400
   !text: tr('Store offer')
 
   Label
@@ -392,53 +392,57 @@ StoreEditWindow < MainWindow
     multiline: true
 
   Label
+    id: priceLabel
     !text: tr('Price (points)')
     anchors.left: parent.left
-    anchors.top: prev.bottom
+    anchors.top: description.bottom
     margin-top: 8
+  Label
+    id: itemLabel
+    !text: tr('Item id (server)')
+    anchors.left: parent.horizontalCenter
+    anchors.top: priceLabel.top
+    margin-left: 4
   TextEdit
     id: price
     anchors.left: parent.left
     anchors.right: parent.horizontalCenter
-    anchors.top: prev.bottom
+    anchors.top: priceLabel.bottom
     margin-top: 2
     margin-right: 4
-
-  Label
-    !text: tr('Item id')
-    anchors.left: parent.horizontalCenter
-    anchors.top: prev.top
-    margin-left: 4
   TextEdit
     id: item
     anchors.left: parent.horizontalCenter
     anchors.right: parent.right
-    anchors.top: price.top
+    anchors.top: itemLabel.bottom
+    margin-top: 2
     margin-left: 4
 
   Label
-    !text: tr('Count (items per unit)')
+    id: countLabel
+    !text: tr('Count per unit')
     anchors.left: parent.left
     anchors.top: price.bottom
     margin-top: 8
+  Label
+    id: amountLabel
+    !text: tr('Amount')
+    anchors.left: parent.horizontalCenter
+    anchors.top: countLabel.top
+    margin-left: 4
   TextEdit
     id: count
     anchors.left: parent.left
     anchors.right: parent.horizontalCenter
-    anchors.top: prev.bottom
+    anchors.top: countLabel.bottom
     margin-top: 2
     margin-right: 4
-
-  Label
-    !text: tr('Amount')
-    anchors.left: parent.horizontalCenter
-    anchors.top: prev.top
-    margin-left: 4
   TextEdit
     id: amount
     anchors.left: parent.horizontalCenter
     anchors.right: parent.right
-    anchors.top: count.top
+    anchors.top: amountLabel.bottom
+    margin-top: 2
     margin-left: 4
 
   Button
