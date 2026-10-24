@@ -1,0 +1,9 @@
+Module
+  name: game_store
+  description: ForgottenL donation-points store
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ store ]
+  dependencies: [ client_topmenu, client_entergame ]
+  @onLoad: init()
+  @onUnload: terminate()

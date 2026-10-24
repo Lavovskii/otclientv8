@@ -1,0 +1,204 @@
+StoreOffer < UIWidget
+  height: 44
+  margin-bottom: 3
+  focusable: true
+  image-source: /images/ui/forgottenl_textedit
+  image-border: 5
+  $focus:
+    image-color: #ffd98a
+  $hover !focus:
+    image-color: #d9c08a
+
+  UIItem
+    id: item
+    size: 34 34
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    virtual: true
+
+  Label
+    id: name
+    font: verdana-11px-antialised
+    color: #f0dcae
+    anchors.left: prev.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin: 8 6 0 8
+    text-auto-resize: false
+    phantom: true
+
+  Label
+    id: price
+    font: verdana-11px-antialised
+    color: #e0b44c
+    anchors.left: prev.left
+    anchors.bottom: parent.bottom
+    margin-bottom: 7
+    phantom: true
+
+StoreCategory < UIButton
+  height: 24
+  margin-bottom: 3
+  font: verdana-11px-antialised
+  color: #d8b36a
+  text-align: left
+  text-offset: 10 0
+  focusable: true
+  image-source: /images/ui/forgottenl_textedit
+  image-border: 5
+  $focus:
+    color: #ffe29a
+    image-color: #ffd98a
+  $hover !focus:
+    color: #fff0c4
+
+ForgottenLWindow
+  id: storeWindow
+  size: 660 470
+  padding-top: 52
+  padding-bottom: 20
+  !text: tr('Store')
+  visible: false
+
+  ForgottenLLabel
+    id: pointsLabel
+    text: Points: ...
+    font: verdana-11px-antialised
+    color: #ffe29a
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 2
+    text-auto-resize: true
+
+  Panel
+    id: categories
+    width: 140
+    anchors.left: parent.left
+    anchors.top: pointsLabel.bottom
+    anchors.bottom: bottomBar.top
+    margin-top: 10
+    margin-bottom: 10
+    layout:
+      type: verticalBox
+
+  ScrollablePanel
+    id: offers
+    width: 250
+    anchors.left: categories.right
+    anchors.top: categories.top
+    anchors.bottom: categories.bottom
+    margin-left: 10
+    vertical-scrollbar: offersScroll
+    layout:
+      type: verticalBox
+    inverted-scroll: false
+
+  VerticalScrollBar
+    id: offersScroll
+    anchors.top: offers.top
+    anchors.bottom: offers.bottom
+    anchors.left: offers.right
+    step: 24
+    pixels-scroll: true
+
+  Panel
+    id: details
+    anchors.left: offersScroll.right
+    anchors.right: parent.right
+    anchors.top: categories.top
+    anchors.bottom: categories.bottom
+    margin-left: 8
+
+    UIItem
+      id: bigItem
+      size: 64 64
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      margin-top: 4
+      virtual: true
+
+    ForgottenLLabel
+      id: offerName
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: bigItem.bottom
+      margin-top: 8
+      text-align: center
+      color: #ffe29a
+      text-wrap: true
+      text-auto-resize: true
+
+    ForgottenLLabel
+      id: offerPrice
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: offerName.bottom
+      margin-top: 4
+      text-align: center
+      color: #e0b44c
+
+    ForgottenLLabel
+      id: offerDesc
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: offerPrice.bottom
+      margin-top: 10
+      text-wrap: true
+      text-auto-resize: true
+      color: #d8c9a0
+
+    ForgottenLLabel
+      id: charLabel
+      !text: tr('Deliver to')
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: charBox.top
+      margin-bottom: 3
+      text-align: center
+
+    ComboBox
+      id: charBox
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: buyButton.top
+      margin-bottom: 8
+      margin-left: 20
+      margin-right: 20
+
+    ForgottenLButton
+      id: buyButton
+      !text: tr('Buy')
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.bottom: parent.bottom
+      @onClick: modules.game_store.buy()
+
+  Panel
+    id: bottomBar
+    height: 42
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+    ForgottenLButton
+      id: buyPointsButton
+      !text: tr('Buy Points')
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      @onClick: modules.game_store.openBuyPoints()
+
+    ForgottenLButton
+      id: closeButton
+      !text: tr('Close')
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      @onClick: modules.game_store.hide()
+
+    ForgottenLLabel
+      id: statusLabel
+      anchors.left: buyPointsButton.right
+      anchors.right: closeButton.left
+      anchors.verticalCenter: parent.verticalCenter
+      text-align: center
+      text-wrap: true
+      color: #d8c9a0

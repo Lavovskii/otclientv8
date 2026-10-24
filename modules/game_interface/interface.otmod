@@ -32,7 +32,7 @@ Module
     - game_modaldialog
     - game_unjustifiedpoints
     - game_walking
-    - game_shop
+    - game_store
     - game_itemselector
     - client_textedit
     - client_profiles
@@ -41,6 +41,5 @@ Module
     - game_imbuing
     - game_stats
     - game_shaders
-    - game_bot
   @onLoad: init()
   @onUnload: terminate()
