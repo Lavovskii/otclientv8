@@ -86,6 +86,7 @@ local function applyInfo(data)
   if data.buyUrl and data.buyUrl:sub(1, 4):lower() == 'http' then state.buyUrl = data.buyUrl end
   state.admin = data.admin == true
   win.bottomBar.adminBar:setVisible(state.admin)
+  win.bottomBar.pointsBar:setVisible(state.admin)
   win.pointsBox.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
   win.details.charBox:clearOptions()
   local current = g_game.getLocalPlayer() and g_game.getLocalPlayer():getName()
@@ -211,6 +212,40 @@ function adminRemoveCategory()
   adminCall({ action = 'admin_category_delete', category = state.category }, tr('Category removed.'))
 end
 
+function adminPoints(mode)
+  if not state.admin or state.editor then return end
+  local w = g_ui.createWidget('StorePointsWindow', rootWidget)
+  state.editor = w
+  local titles = { add = tr('Add points'), remove = tr('Remove points'), set = tr('Edit points (set balance)') }
+  w:setText(titles[mode])
+  local current = g_game.getLocalPlayer()
+  local function close() w:destroy() state.editor = nil end
+  w.cancelButton.onClick = close
+  w.okButton.onClick = function()
+    local name = w.character:getText()
+    local amount = tonumber(w.amount:getText())
+    if name == '' or not amount or amount < 0 or (mode ~= 'set' and amount < 1) then
+      setStatus(tr('Enter a character name and a valid amount.'), '#e05a4a')
+      return
+    end
+    close()
+    call({ action = 'admin_points', mode = mode, character = name, amount = math.floor(amount) }, function(data)
+      setStatus(data.message or tr('Done.'), '#7fd37a')
+      refresh()
+    end)
+  end
+  w:raise() w:focus() w.character:focus()
+end
+
+function isAdmin()
+  return state.admin == true
+end
+
+function checkAdmin()
+  if not g_game.isOnline() then return end
+  call({ action = 'info' }, function(data) state.admin = data.admin == true end)
+end
+
 function openBuyPoints()
   g_platform.openUrl(state.buyUrl)
 end
@@ -238,11 +273,11 @@ function init()
   connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
   connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
   topButton = modules.client_topmenu.addRightGameToggleButton('storeButton', tr('Store'), '/images/topbuttons/shop', toggle, false, 8)
-  connect(g_game, { onGameEnd = hide })
+  connect(g_game, { onGameEnd = function() state.admin = false hide() end, onGameStart = function() state.admin = false scheduleEvent(checkAdmin, 1500) end })
+  if g_game.isOnline() then scheduleEvent(checkAdmin, 500) end
 end
 
 function terminate()
-  disconnect(g_game, { onGameEnd = hide })
   if topButton then topButton:destroy() topButton = nil end
   if win then win:destroy() win = nil end
 end

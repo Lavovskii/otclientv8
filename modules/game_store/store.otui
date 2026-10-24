@@ -257,7 +257,7 @@ MainWindow
 
   Panel
     id: bottomBar
-    height: 62
+    height: 92
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
@@ -329,6 +329,45 @@ MainWindow
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 4
         @onClick: modules.game_store.adminRemoveCategory()
+
+    Panel
+      id: pointsBar
+      height: 26
+      visible: false
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: adminBar.bottom
+      margin-top: 4
+
+      Label
+        !text: tr('Points')
+        color: #ff9a4a
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        width: 44
+
+      Button
+        !text: tr('Add points')
+        width: 90
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        @onClick: modules.game_store.adminPoints('add')
+
+      Button
+        !text: tr('Remove points')
+        width: 110
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminPoints('remove')
+
+      Button
+        !text: tr('Edit points')
+        width: 90
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminPoints('set')
 
     Label
       id: statusLabel
@@ -473,6 +512,49 @@ StoreNameWindow < MainWindow
   Button
     id: okButton
     !text: tr('Save')
+    width: 80
+    anchors.right: cancelButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 6
+
+  Button
+    id: cancelButton
+    !text: tr('Cancel')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+StorePointsWindow < MainWindow
+  size: 320 190
+  !text: tr('Donation points')
+
+  Label
+    !text: tr('Character name')
+    anchors.left: parent.left
+    anchors.top: parent.top
+  TextEdit
+    id: character
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  Label
+    id: amountLabel
+    !text: tr('Points')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 8
+  TextEdit
+    id: amount
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  Button
+    id: okButton
+    !text: tr('Apply')
     width: 80
     anchors.right: cancelButton.left
     anchors.bottom: parent.bottom

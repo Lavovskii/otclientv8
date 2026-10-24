@@ -14,6 +14,10 @@ function reloadScripts()
   if g_game.getFeature(GameNoDebug) then
     return
   end
+  -- ForgottenL: script reload only for logged-in admin characters
+  if not g_game.isOnline() or not modules.game_store or not modules.game_store.isAdmin() then
+    return
+  end
   
   g_textures.clearCache()
   g_modules.reloadModules()
