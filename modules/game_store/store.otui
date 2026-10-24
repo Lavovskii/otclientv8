@@ -1,106 +1,103 @@
 StoreOffer < UIWidget
   height: 44
-  margin-bottom: 3
+  margin-bottom: 2
   focusable: true
-  image-source: /images/ui/forgottenl_textedit
-  image-border: 5
+  background-color: #00000000
   $focus:
-    image-color: #ffd98a
+    background-color: #ffffff22
   $hover !focus:
-    image-color: #d9c08a
+    background-color: #ffffff11
 
   UIItem
     id: item
     size: 34 34
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    margin-left: 6
+    margin-left: 4
     virtual: true
 
   Label
     id: name
-    font: verdana-11px-antialised
-    color: #f0dcae
     anchors.left: prev.right
     anchors.top: parent.top
     anchors.right: parent.right
-    margin: 8 6 0 8
-    text-auto-resize: false
+    margin: 5 4 0 8
     phantom: true
 
   Label
     id: price
-    font: verdana-11px-antialised
     color: #e0b44c
     anchors.left: prev.left
     anchors.bottom: parent.bottom
-    margin-bottom: 7
+    margin-bottom: 5
     phantom: true
 
 StoreCategory < UIButton
-  height: 24
-  margin-bottom: 3
-  font: verdana-11px-antialised
-  color: #d8b36a
+  height: 22
+  margin-bottom: 2
   text-align: left
-  text-offset: 10 0
+  text-offset: 8 0
   focusable: true
-  image-source: /images/ui/forgottenl_textedit
-  image-border: 5
+  background-color: #00000000
+  color: #c0c0c0
   $focus:
-    color: #ffe29a
-    image-color: #ffd98a
+    background-color: #ffffff22
+    color: #ffffff
   $hover !focus:
-    color: #fff0c4
+    background-color: #ffffff11
 
-ForgottenLWindow
+MainWindow
   id: storeWindow
-  size: 660 470
-  padding-top: 52
-  padding-bottom: 20
   !text: tr('Store')
+  size: 700 460
   visible: false
 
-  ForgottenLLabel
+  Label
     id: pointsLabel
     text: Points: ...
-    font: verdana-11px-antialised
-    color: #ffe29a
+    color: #e0b44c
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-top: 2
     text-auto-resize: true
+
+  Button
+    id: buyPointsButton
+    !text: tr('Buy Points')
+    width: 110
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: -4
+    @onClick: modules.game_store.openBuyPoints()
 
   Panel
     id: categories
-    width: 140
+    width: 130
     anchors.left: parent.left
     anchors.top: pointsLabel.bottom
     anchors.bottom: bottomBar.top
-    margin-top: 10
-    margin-bottom: 10
+    margin-top: 8
+    margin-bottom: 8
     layout:
       type: verticalBox
-
-  ScrollablePanel
-    id: offers
-    width: 250
-    anchors.left: categories.right
-    anchors.top: categories.top
-    anchors.bottom: categories.bottom
-    margin-left: 10
-    vertical-scrollbar: offersScroll
-    layout:
-      type: verticalBox
-    inverted-scroll: false
 
   VerticalScrollBar
     id: offersScroll
-    anchors.top: offers.top
-    anchors.bottom: offers.bottom
+    anchors.top: categories.top
+    anchors.bottom: categories.bottom
     anchors.left: offers.right
     step: 24
     pixels-scroll: true
+
+  ScrollablePanel
+    id: offers
+    width: 280
+    anchors.left: categories.right
+    anchors.top: categories.top
+    anchors.bottom: categories.bottom
+    margin-left: 8
+    vertical-scrollbar: offersScroll
+    layout:
+      type: verticalBox
 
   Panel
     id: details
@@ -118,18 +115,18 @@ ForgottenLWindow
       margin-top: 4
       virtual: true
 
-    ForgottenLLabel
+    Label
       id: offerName
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: bigItem.bottom
       margin-top: 8
       text-align: center
-      color: #ffe29a
+      color: #ffffff
       text-wrap: true
       text-auto-resize: true
 
-    ForgottenLLabel
+    Label
       id: offerPrice
       anchors.left: parent.left
       anchors.right: parent.right
@@ -138,7 +135,7 @@ ForgottenLWindow
       text-align: center
       color: #e0b44c
 
-    ForgottenLLabel
+    Label
       id: offerDesc
       anchors.left: parent.left
       anchors.right: parent.right
@@ -146,9 +143,9 @@ ForgottenLWindow
       margin-top: 10
       text-wrap: true
       text-auto-resize: true
-      color: #d8c9a0
+      color: #c8c8c8
 
-    ForgottenLLabel
+    Label
       id: charLabel
       !text: tr('Deliver to')
       anchors.left: parent.left
@@ -163,42 +160,236 @@ ForgottenLWindow
       anchors.right: parent.right
       anchors.bottom: buyButton.top
       margin-bottom: 8
-      margin-left: 20
-      margin-right: 20
 
-    ForgottenLButton
+    Button
       id: buyButton
       !text: tr('Buy')
-      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.left: parent.left
+      anchors.right: parent.right
       anchors.bottom: parent.bottom
       @onClick: modules.game_store.buy()
 
   Panel
+    id: adminBar
+    height: 24
+    visible: false
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: bottomBar.top
+    margin-bottom: 4
+
+    Label
+      !text: tr('Admin')
+      color: #ff9a4a
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      width: 44
+
+    Button
+      id: addBtn
+      !text: tr('Add item')
+      width: 80
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      @onClick: modules.game_store.adminEdit(false)
+
+    Button
+      id: editBtn
+      !text: tr('Edit')
+      width: 60
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      @onClick: modules.game_store.adminEdit(true)
+
+    Button
+      id: removeBtn
+      !text: tr('Remove')
+      width: 70
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      @onClick: modules.game_store.adminRemove()
+
+    Button
+      id: addCatBtn
+      !text: tr('Add category')
+      width: 100
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 12
+      @onClick: modules.game_store.adminCategory(false)
+
+    Button
+      id: renameCatBtn
+      !text: tr('Rename category')
+      width: 110
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      @onClick: modules.game_store.adminCategory(true)
+
+    Button
+      id: delCatBtn
+      !text: tr('Remove category')
+      width: 115
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      @onClick: modules.game_store.adminRemoveCategory()
+
+  Panel
     id: bottomBar
-    height: 42
+    height: 26
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
 
-    ForgottenLButton
-      id: buyPointsButton
-      !text: tr('Buy Points')
+    Label
+      id: statusLabel
       anchors.left: parent.left
+      anchors.right: closeButton.left
       anchors.verticalCenter: parent.verticalCenter
-      @onClick: modules.game_store.openBuyPoints()
+      margin-right: 8
+      color: #c8c8c8
 
-    ForgottenLButton
+    Button
       id: closeButton
       !text: tr('Close')
+      width: 80
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
       @onClick: modules.game_store.hide()
 
-    ForgottenLLabel
-      id: statusLabel
-      anchors.left: buyPointsButton.right
-      anchors.right: closeButton.left
-      anchors.verticalCenter: parent.verticalCenter
-      text-align: center
-      text-wrap: true
-      color: #d8c9a0
+  @onEscape: modules.game_store.hide()
+
+StoreEditWindow < MainWindow
+  size: 360 380
+  !text: tr('Store offer')
+
+  Label
+    !text: tr('Name')
+    anchors.left: parent.left
+    anchors.top: parent.top
+  TextEdit
+    id: name
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  Label
+    !text: tr('Category')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 8
+  ComboBox
+    id: category
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  Label
+    !text: tr('Description')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 8
+  TextEdit
+    id: description
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+    height: 60
+    multiline: true
+
+  Label
+    !text: tr('Price (points)')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+    margin-top: 8
+  TextEdit
+    id: price
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: prev.bottom
+    margin-top: 2
+    margin-right: 4
+
+  Label
+    !text: tr('Item id')
+    anchors.left: parent.horizontalCenter
+    anchors.top: prev.top
+    margin-left: 4
+  TextEdit
+    id: item
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: price.top
+    margin-left: 4
+
+  Label
+    !text: tr('Count (items per unit)')
+    anchors.left: parent.left
+    anchors.top: price.bottom
+    margin-top: 8
+  TextEdit
+    id: count
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: prev.bottom
+    margin-top: 2
+    margin-right: 4
+
+  Label
+    !text: tr('Amount')
+    anchors.left: parent.horizontalCenter
+    anchors.top: prev.top
+    margin-left: 4
+  TextEdit
+    id: amount
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: count.top
+    margin-left: 4
+
+  Button
+    id: okButton
+    !text: tr('Save')
+    width: 80
+    anchors.right: cancelButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 6
+
+  Button
+    id: cancelButton
+    !text: tr('Cancel')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+StoreNameWindow < MainWindow
+  size: 300 130
+  !text: tr('Category')
+
+  TextEdit
+    id: name
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+
+  Button
+    id: okButton
+    !text: tr('Save')
+    width: 80
+    anchors.right: cancelButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 6
+
+  Button
+    id: cancelButton
+    !text: tr('Cancel')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
