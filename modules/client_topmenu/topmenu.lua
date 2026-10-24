@@ -52,6 +52,8 @@ function init()
   
   if g_game.isOnline() then
     scheduleEvent(online, 10)
+  else
+    topMenu:hide() -- ForgottenL: no top bar on the login screen
   end
   
   updateFps()  
@@ -70,6 +72,7 @@ function terminate()
 end
 
 function online()
+  topMenu:show()
   if topMenu.hideIngame then
     hide()
   else
@@ -93,6 +96,7 @@ function online()
 end
 
 function offline()
+  topMenu:hide()
   if topMenu.hideIngame then
     show()
   end

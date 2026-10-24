@@ -32,14 +32,14 @@ ForgottenLLabel < UILabel
 
 ForgottenLTextEdit < UITextEdit
   font: verdana-11px-antialised
-  color: #2a1a0e
+  color: #2a1608
   size: 190 22
   text-offset: 0 4
-  padding: 4 8 4 8
+  padding: 5 9 5 9
   opacity: 1
   image-source: /images/ui/forgottenl_textedit
-  image-border: 4
-  selection-color: #2a1a0e
+  image-border: 5
+  selection-color: #2a1608
   selection-background-color: #e0b44c
   change-cursor-image: true
 

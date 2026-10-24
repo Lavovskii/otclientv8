@@ -9,4 +9,4 @@ UIWidget
   focusable: false
   anchors.horizontalCenter: parent.horizontalCenter
   anchors.top: parent.top
-  margin-top: 4
+  margin-top: 74
