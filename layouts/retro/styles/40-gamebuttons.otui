@@ -13,7 +13,7 @@ GameButtonsWindow < HeadlessMiniWindow
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: parent.top
-      color: #ffffff
+      color: #e8c860
       image-color: #3f8fcf
       $hover:
         image-color: #5aa8e6
