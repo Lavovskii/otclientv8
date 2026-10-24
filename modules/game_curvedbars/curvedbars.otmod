@@ -1,9 +1,0 @@
-Module
-  name: game_curvedbars
-  description: Curved health and mana arcs on both sides of the game screen
-  author: ForgottenL
-  sandboxed: true
-  scripts: [ curvedbars ]
-  dependencies: [ game_interface ]
-  @onLoad: init()
-  @onUnload: terminate()

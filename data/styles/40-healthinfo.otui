@@ -106,6 +106,28 @@ HealthOverlay < UIWidget
     opacity: 0.4
     image-color: #0000FFFF
     phantom: true
+
+  Label
+    id: healthPercentLabel
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 169
+    margin-bottom: 16
+    font: verdana-11px-rounded
+    color: #ffffff
+    text-auto-resize: true
+    phantom: true
+
+  Label
+    id: manaPercentLabel
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 130
+    margin-bottom: 16
+    font: verdana-11px-rounded
+    color: #ffffff
+    text-auto-resize: true
+    phantom: true
   
 HealthInfoWindow < MiniWindow
   icon: /images/topbuttons/healthinfo

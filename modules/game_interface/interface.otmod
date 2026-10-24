@@ -13,7 +13,6 @@ Module
     - game_console
     - game_outfit
     - game_healthinfo
-    - game_curvedbars
     - game_skills
     - game_inventory
     - game_containers

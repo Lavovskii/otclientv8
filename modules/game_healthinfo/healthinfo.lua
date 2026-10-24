@@ -32,6 +32,8 @@ healthCircleFront = nil
 manaCircleFront = nil
 healthCircle = nil
 manaCircle = nil
+healthPercentLabel = nil
+manaPercentLabel = nil
 topHealthBar = nil
 topManaBar = nil
 
@@ -68,6 +70,8 @@ function init()
   manaCircleFront = overlay:getChildById('manaCircleFront')
   healthCircle = overlay:getChildById('healthCircle')
   manaCircle = overlay:getChildById('manaCircle')
+  healthPercentLabel = overlay:getChildById('healthPercentLabel')
+  manaPercentLabel = overlay:getChildById('manaPercentLabel')
   topHealthBar = overlay:getChildById('topHealthBar')
   topManaBar = overlay:getChildById('topManaBar')
   
@@ -174,6 +178,7 @@ function onHealthChange(localPlayer, health, maxHealth)
   topHealthBar:setValue(health, 0, maxHealth)
 
   local healthPercent = math.floor(g_game.getLocalPlayer():getHealthPercent())
+  healthPercentLabel:setText((maxHealth > 0 and math.floor(health * 100 / maxHealth + 0.5) or 0) .. '%')
   local Yhppc = math.floor(208 * (1 - (healthPercent / 100)))
   local rect = { x = 0, y = Yhppc, width = 63, height = 208 - Yhppc + 1 }
   healthCircleFront:setImageClip(rect)
@@ -206,6 +211,8 @@ function onManaChange(localPlayer, mana, maxMana)
   topManaBar:setText(comma_value(mana) .. ' / ' .. comma_value(maxMana))
   topManaBar:setTooltip(tr(manaTooltip, mana, maxMana))
   topManaBar:setValue(mana, 0, maxMana)
+
+  manaPercentLabel:setText((maxMana > 0 and math.floor(mana * 100 / maxMana + 0.5) or 0) .. '%')
 
   local Ymppc = math.floor(208 * (1 - (math.floor((maxMana - (maxMana - mana)) * 100 / maxMana) / 100)))
   local rect = { x = 0, y = Ymppc, width = 63, height = 208 - Ymppc + 1 }
