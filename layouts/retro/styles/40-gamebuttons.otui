@@ -13,7 +13,12 @@ GameButtonsWindow < HeadlessMiniWindow
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: parent.top
-      color: #ffe29a
+      color: #ffffff
+      image-color: #3f8fcf
+      $hover:
+        image-color: #5aa8e6
+      $pressed:
+        image-color: #2f78b4
       @onClick: modules.game_store.toggle()
 
     Panel
