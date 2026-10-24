@@ -7,14 +7,21 @@ local function setStatus(text, color)
   win.bottomBar.statusLabel:setColor(color or '#d8c9a0')
 end
 
-local function call(body, cb)
+local function call(body, cb, attempt)
+  attempt = attempt or 1
   body.account = G.account
   body.password = G.password
   state.busy = true
   HTTP.postJSON(STORE_API, body, function(data, err)
     state.busy = false
     if err or type(data) ~= 'table' then
-      setStatus(tr('Could not reach the store. Try again later.'), '#e05a4a')
+      -- transient network failure: retry twice before giving up (buy requests carry a request id, so retries never double-charge)
+      if attempt < 3 then
+        setStatus(tr('Connection problem, retrying...'), '#e0b44c')
+        scheduleEvent(function() if win then call(body, cb, attempt + 1) end end, 1500)
+        return
+      end
+      setStatus(tr('Could not reach the store (%s). Try again later.', tostring(err or 'bad response'):sub(1, 60)), '#e05a4a')
       return
     end
     if not data.ok then
