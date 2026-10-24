@@ -1,0 +1,13 @@
+# Copyrighted CipSoft game assets (Tibia.dat/.spr/.cwm) -- never pushed to the public repo,
+# bundled only in the local installer build. See installer/README-ASSETS.txt.
+data/things/*/Tibia.dat
+data/things/*/Tibia.spr
+data/things/*/Tibia.cwm
+
+# build output / local-only dirs
+installer/dl/
+dist/
+
+# OS cruft
+Thumbs.db
+.DS_Store
