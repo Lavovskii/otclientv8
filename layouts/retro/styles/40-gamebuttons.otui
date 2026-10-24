@@ -1,14 +1,28 @@
 GameButtonsWindow < HeadlessMiniWindow
-  height: 26
+  height: 50
   &forceOpen: true
   &autoOpen: 4
 
   MiniWindowContents
     margin-top: 2
-    
+
+    Button
+      id: storeWideButton
+      !text: tr('Store')
+      height: 20
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: parent.top
+      color: #ffe29a
+      @onClick: modules.game_store.toggle()
+
     Panel
       id: buttons
-      anchors.fill: parent
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: prev.bottom
+      anchors.bottom: parent.bottom
+      margin-top: 4
       layout:
         type: grid
         cell-spacing: 3

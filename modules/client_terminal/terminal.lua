@@ -142,6 +142,7 @@ function init()
 
   terminalButton = modules.client_topmenu.addLeftButton('terminalButton', tr('Terminal') .. ' (Ctrl + T)', '/images/topbuttons/terminal', toggle)
   terminalButton:setOn(false)
+  terminalButton:hide()
   g_keyboard.bindKeyDown('Ctrl+T', toggle)
 
   commandHistory = g_settings.getList('terminal-history')
@@ -238,7 +239,15 @@ function popWindow()
   end
 end
 
+local allowed = false
+function setAllowed(v)
+  allowed = v
+  if terminalButton then terminalButton:setVisible(v) end
+  if not v and terminalWindow and terminalWindow:isVisible() then hide() end
+end
+
 function toggle()
+  if not allowed then return end
   if terminalWindow:isVisible() then
     hide()
   else

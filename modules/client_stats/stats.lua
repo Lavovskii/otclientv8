@@ -26,6 +26,7 @@ local lastSleepTimeReset = 0
 function init()
   statsButton = modules.client_topmenu.addLeftButton('statsButton', 'Debug Info', '/images/topbuttons/debug', toggle)
   statsButton:setOn(false)
+  statsButton:hide()
 
   statsWindow = g_ui.displayUI('stats')
   statsWindow:hide()
@@ -67,7 +68,15 @@ function onClose()
   statsButton:setOn(false)
 end
 
+local allowed = false
+function setAllowed(v)
+  allowed = v
+  if statsButton then statsButton:setVisible(v) end
+  if not v and statsWindow and statsWindow:isVisible() then statsWindow:hide() statsButton:setOn(false) end
+end
+
 function toggle()
+  if not allowed then return end
   if statsButton:isOn() then
     statsWindow:hide()
     statsButton:setOn(false)

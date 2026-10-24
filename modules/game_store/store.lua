@@ -237,13 +237,18 @@ function adminPoints(mode)
   w:raise() w:focus() w.character:focus()
 end
 
+local function applyAdmin(v)
+  state.admin = v
+  if modules.client_options then modules.client_options.setAdminTools(v) end
+end
+
 function isAdmin()
   return state.admin == true
 end
 
 function checkAdmin()
   if not g_game.isOnline() then return end
-  call({ action = 'info' }, function(data) state.admin = data.admin == true end)
+  call({ action = 'info' }, function(data) applyAdmin(data.admin == true) end)
 end
 
 function openBuyPoints()
@@ -272,8 +277,7 @@ function init()
   win:hide()
   connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
   connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
-  topButton = modules.client_topmenu.addRightGameToggleButton('storeButton', tr('Store'), '/images/topbuttons/shop', toggle, false, 8)
-  connect(g_game, { onGameEnd = function() state.admin = false hide() end, onGameStart = function() state.admin = false scheduleEvent(checkAdmin, 1500) end })
+  connect(g_game, { onGameEnd = function() applyAdmin(false) hide() end, onGameStart = function() applyAdmin(false) scheduleEvent(checkAdmin, 1500) end })
   if g_game.isOnline() then scheduleEvent(checkAdmin, 500) end
 end
 

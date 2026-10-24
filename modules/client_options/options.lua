@@ -81,6 +81,7 @@ local graphicsPanel
 local audioPanel
 local customPanel
 local extrasPanel
+local extrasTab
 local audioButton
 
 function init()
@@ -124,9 +125,6 @@ function init()
     extrasButton:setId(v)
     extrasButton:setText(g_extras.getDescription(v))
     extrasPanel:addChild(extrasButton)
-  end
-  if not g_game.getFeature(GameNoDebug) and not g_app.isMobile() then
-    optionsTabBar:addTab(tr('Extras'), extrasPanel, '/images/optionstab/extras')
   end
 
   customPanel = g_ui.loadUI('custom')
@@ -196,6 +194,18 @@ end
 
 function hide()
   optionsWindow:hide()
+end
+
+-- ForgottenL: debug tools (Extras tab, terminal, debug info) are only for logged-in admin characters
+function setAdminTools(on)
+  if on and not extrasTab and not g_app.isMobile() then
+    extrasTab = optionsTabBar:addTab(tr('Extras'), extrasPanel, '/images/optionstab/extras')
+  elseif not on and extrasTab then
+    optionsTabBar:removeTab(extrasTab)
+    extrasTab = nil
+  end
+  if modules.client_terminal then modules.client_terminal.setAllowed(on) end
+  if modules.client_stats then modules.client_stats.setAllowed(on) end
 end
 
 function toggleDisplays()
@@ -376,8 +386,12 @@ function setOption(key, value, force)
     end
   end
   
+  local layoutChanged = key == 'layout' and not force and tostring(value):lower() ~= tostring(g_resources.getLayout()):lower()
   g_settings.set(key, value)
   options[key] = value
+  if layoutChanged then
+    displayInfoBox(tr('Restart required'), tr('The interface layout was changed.\nRestart the client for the change to take effect.'))
+  end
 
   if key == "profile" then
     modules.client_profiles.onProfileChange()
