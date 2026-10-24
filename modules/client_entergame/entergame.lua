@@ -300,6 +300,7 @@ function EnterGame.init()
   g_ui.importStyle('forgottenl_style')
   enterGame = g_ui.displayUI('entergame')
   forgottenLogo = g_ui.displayUI('forgottenl_logo')
+  connect(g_game, { onGameStart = function() if forgottenLogo then forgottenLogo:hide() end end })
   
   serverSelectorPanel = enterGame:getChildById('serverSelectorPanel')
   customServerSelectorPanel = enterGame:getChildById('customServerSelectorPanel')
@@ -386,7 +387,6 @@ end
 
 function EnterGame.hide()
   if not enterGame then return end
-  if forgottenLogo then forgottenLogo:hide() end
   enterGame:hide()
 end
 
