@@ -1,0 +1,19 @@
+CurvedArc < UIWidget
+  size: 56 380
+  phantom: true
+  focusable: false
+
+CurvedFill < UIWidget
+  width: 56
+  anchors.bottom: parent.bottom
+  phantom: true
+  focusable: false
+
+CurvedText < UILabel
+  font: verdana-11px-rounded
+  color: #ffffff
+  background-color: #000000aa
+  padding: 1 5
+  text-auto-resize: true
+  phantom: true
+  focusable: false
