@@ -9,15 +9,15 @@ ForgottenLWindow < StaticMainWindow
   text-align: top
   text-offset: 0 14
   font: verdana-11px-antialised
-  padding-top: 42
+  padding-top: 56
   padding-left: 26
   padding-right: 26
   padding-bottom: 22
 
 ForgottenLCrest < UIWidget
-  image-source: /images/forgottenl_crest
+  image-source: /images/forgottenl_logo
   image-smooth: true
-  size: 46 46
+  size: 190 60
   phantom: true
 
 ForgottenLTitle < UILabel
@@ -57,10 +57,7 @@ ForgottenLButton < UIButton
   size: 150 36
   text-offset: 0 0
   image-source: /images/ui/forgottenl_button
-  image-border-left: 42
-  image-border-right: 42
-  image-border-top: 2
-  image-border-bottom: 2
+  image-border: 14
   image-color: #ffffff
   opacity: 1.0
   change-cursor-image: true

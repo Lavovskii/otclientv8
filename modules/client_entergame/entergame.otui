@@ -6,20 +6,13 @@ ForgottenLWindow
   ForgottenLCrest
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
-    margin-top: -14
-
-  ForgottenLTitle
-    !text: tr('ForgottenL')
-    font: verdana-11px-antialised
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.top: prev.bottom
-    margin-top: 2
+    margin-top: -42
 
   ForgottenLLabel
     !text: tr('Account name')
     anchors.left: parent.left
-    anchors.top: prev.bottom
-    margin-top: 14
+    anchors.top: parent.top
+    margin-top: 28
     text-auto-resize: true
 
   ForgottenLTextEdit
