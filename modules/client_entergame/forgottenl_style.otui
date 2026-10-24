@@ -53,24 +53,24 @@ ForgottenLPasswordTextEdit < ForgottenLTextEdit
 
 ForgottenLButton < UIButton
   font: verdana-11px-antialised
-  color: #ffe29a
-  size: 190 44
-  text-offset: 0 0
+  color: #ffe9b3
+  size: 230 42
+  text-offset: 0 -2
   image-source: /images/ui/forgottenl_button
-  image-border: 16
   image-color: #ffffff
   opacity: 1.0
   change-cursor-image: true
   cursor: pointer
 
   $hover !disabled:
-    image-color: #ffdf9f
+    image-color: #ffffff
+    color: #fff6dd
 
   $pressed:
-    image-color: #c9a35a
-    text-offset: 0 1
+    image-color: #cfcfcf
+    text-offset: 0 -1
 
   $disabled:
-    image-color: #ffffff77
-    color: #ffe29a88
+    image-color: #ffffff66
+    color: #ffe29a66
     change-cursor-image: false
