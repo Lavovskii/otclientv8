@@ -1,60 +1,68 @@
 ForgottenLWindow
   id: enterGame
-  size: 300 430
+  size: 300 360
   @onEnter: EnterGame.doLogin()
 
   ForgottenLCrest
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: parent.top
-    margin-top: -42
+    margin-top: -58
 
   ForgottenLLabel
+    id: accountLabel
     !text: tr('Account name')
     anchors.left: parent.left
+    anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: 28
-    text-auto-resize: true
+    margin-top: 30
+    text-align: center
 
   ForgottenLTextEdit
     id: accountNameTextEdit
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.top: prev.bottom
-    margin-top: 3
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: accountLabel.bottom
+    margin-top: 4
+    width: 190
 
   ForgottenLLabel
+    id: passwordLabel
     !text: tr('Password')
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    margin-top: 9
-    text-auto-resize: true
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: accountNameTextEdit.bottom
+    margin-top: 10
+    text-align: center
 
   ForgottenLPasswordTextEdit
     id: accountPasswordTextEdit
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.top: prev.bottom
-    margin-top: 3
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: passwordLabel.bottom
+    margin-top: 4
+    width: 190
 
+  // TFS 0.4 has no 2FA/token login; the field is kept (hidden, zero-size) only
+  // because entergame.lua still looks it up by id when building the login request.
   ForgottenLLabel
+    id: tokenLabel
     !text: tr('Token')
-    anchors.left: prev.left
-    anchors.top: prev.bottom
-    text-auto-resize: true
-    margin-top: 9
+    visible: false
+    height: 0
+    anchors.left: parent.left
+    anchors.top: accountPasswordTextEdit.bottom
 
   ForgottenLTextEdit
     id: accountTokenTextEdit
+    visible: false
+    height: 0
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.top: prev.bottom
-    margin-top: 3
+    anchors.top: tokenLabel.bottom
 
   Panel
     id: serverSelectorPanel
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.top: prev.bottom
+    anchors.top: accountPasswordTextEdit.bottom
     height: 52
     on: true
     focusable: false
@@ -98,7 +106,7 @@ ForgottenLWindow
     id: customServerSelectorPanel
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.top: prev.bottom
+    anchors.top: serverSelectorPanel.bottom
     height: 52
     on: true
     focusable: true
@@ -155,26 +163,25 @@ ForgottenLWindow
   HorizontalSeparator
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.top: prev.bottom
-    margin-top: 12
+    anchors.top: customServerSelectorPanel.bottom
+    margin-top: 14
 
   CheckBox
     id: rememberPasswordBox
     !text: tr('Remember password')
     !tooltip: tr('Remember account and password when starts client')
-    anchors.left: parent.left
-    anchors.right: parent.right
+    color: #d8b36a
+    width: 170
+    anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: prev.bottom
     margin-top: 10
 
   ForgottenLButton
     !text: tr('Login')
-    anchors.left: parent.left
-    anchors.right: parent.right
+    anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: prev.bottom
     margin-top: 16
-    margin-left: 20
-    margin-right: 20
+    width: 190
     @onClick: EnterGame.doLogin()
 
   Label

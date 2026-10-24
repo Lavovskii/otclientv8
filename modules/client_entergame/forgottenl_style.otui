@@ -33,9 +33,9 @@ ForgottenLLabel < UILabel
 ForgottenLTextEdit < UITextEdit
   font: verdana-11px-antialised
   color: #2a1a0e
-  size: 86 24
-  text-offset: 0 5
-  padding: 5 8 5 8
+  size: 190 22
+  text-offset: 0 4
+  padding: 4 8 4 8
   opacity: 1
   image-source: /images/ui/forgottenl_textedit
   image-border: 4
@@ -54,10 +54,10 @@ ForgottenLPasswordTextEdit < ForgottenLTextEdit
 ForgottenLButton < UIButton
   font: verdana-11px-antialised
   color: #ffe29a
-  size: 150 36
+  size: 190 44
   text-offset: 0 0
   image-source: /images/ui/forgottenl_button
-  image-border: 14
+  image-border: 16
   image-color: #ffffff
   opacity: 1.0
   change-cursor-image: true
