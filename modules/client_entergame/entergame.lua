@@ -11,6 +11,7 @@ local versionsFound = false
 
 local customServerSelectorPanel
 local serverSelectorPanel
+local forgottenLogo
 local serverSelector
 local clientVersionSelector
 local serverHostTextEdit
@@ -298,6 +299,7 @@ function EnterGame.init()
   if USE_NEW_ENERGAME then return end
   g_ui.importStyle('forgottenl_style')
   enterGame = g_ui.displayUI('entergame')
+  forgottenLogo = g_ui.displayUI('forgottenl_logo')
   
   serverSelectorPanel = enterGame:getChildById('serverSelectorPanel')
   customServerSelectorPanel = enterGame:getChildById('customServerSelectorPanel')
@@ -360,6 +362,7 @@ function EnterGame.terminate()
   if not enterGame then return end
   g_keyboard.unbindKeyDown('Ctrl+G')
   
+  if forgottenLogo then forgottenLogo:destroy() forgottenLogo = nil end
   enterGame:destroy()
   if loadBox then
     loadBox:destroy()
@@ -375,6 +378,7 @@ end
 function EnterGame.show()
   if not enterGame then return end
   enterGame:show()
+  if forgottenLogo then forgottenLogo:show() end
   enterGame:raise()
   enterGame:focus()
   enterGame:getChildById('accountNameTextEdit'):focus()
@@ -382,6 +386,7 @@ end
 
 function EnterGame.hide()
   if not enterGame then return end
+  if forgottenLogo then forgottenLogo:hide() end
   enterGame:hide()
 end
 

@@ -1,12 +1,8 @@
 ForgottenLWindow
   id: enterGame
-  size: 300 360
+  size: 300 510
+  margin-top: 122
   @onEnter: EnterGame.doLogin()
-
-  ForgottenLCrest
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.top: parent.top
-    margin-top: -58
 
   ForgottenLLabel
     id: accountLabel
@@ -14,14 +10,14 @@ ForgottenLWindow
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: 30
+    margin-top: 24
     text-align: center
 
   ForgottenLTextEdit
     id: accountNameTextEdit
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: accountLabel.bottom
-    margin-top: 4
+    margin-top: 6
     width: 190
 
   ForgottenLLabel
@@ -30,14 +26,14 @@ ForgottenLWindow
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: accountNameTextEdit.bottom
-    margin-top: 10
+    margin-top: 26
     text-align: center
 
   ForgottenLPasswordTextEdit
     id: accountPasswordTextEdit
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: passwordLabel.bottom
-    margin-top: 4
+    margin-top: 6
     width: 190
 
   // TFS 0.4 has no 2FA/token login; the field is kept (hidden, zero-size) only
@@ -164,7 +160,7 @@ ForgottenLWindow
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: customServerSelectorPanel.bottom
-    margin-top: 14
+    margin-top: 30
 
   CheckBox
     id: rememberPasswordBox
@@ -174,13 +170,13 @@ ForgottenLWindow
     width: 170
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: prev.bottom
-    margin-top: 10
+    margin-top: 22
 
   ForgottenLButton
     !text: tr('Login')
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.top: prev.bottom
-    margin-top: 16
+    margin-top: 34
     @onClick: EnterGame.doLogin()
 
   Label

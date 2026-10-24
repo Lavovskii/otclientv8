@@ -17,7 +17,7 @@ ForgottenLWindow < StaticMainWindow
 ForgottenLCrest < UIWidget
   image-source: /images/forgottenl_logo
   image-smooth: true
-  size: 190 60
+  size: 560 177
   phantom: true
 
 ForgottenLTitle < UILabel

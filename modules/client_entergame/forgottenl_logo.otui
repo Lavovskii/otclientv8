@@ -1,0 +1,12 @@
+// ForgottenL wordmark shown above the login window. It is a separate top-level widget
+// (not a child of the window) because the engine clips children to their parent's bounds.
+UIWidget
+  id: forgottenlLogo
+  image-source: /images/forgottenl_logo
+  image-smooth: true
+  size: 560 177
+  phantom: true
+  focusable: false
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: parent.top
+  margin-top: 4
