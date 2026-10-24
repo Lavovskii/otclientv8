@@ -1,0 +1,79 @@
+// ForgottenL login-screen skin. Scoped ONLY to the entergame (account/password) window,
+// so nothing in-game is affected: these are new class names (not overrides of the shared
+// Window/TextEdit/Button/Label classes used everywhere else in the client).
+
+ForgottenLWindow < StaticMainWindow
+  image-source: /images/ui/forgottenl_window
+  image-border: 48
+  color: #e8d4a6
+  text-align: top
+  text-offset: 0 14
+  font: verdana-11px-antialised
+  padding-top: 42
+  padding-left: 26
+  padding-right: 26
+  padding-bottom: 22
+
+ForgottenLCrest < UIWidget
+  image-source: /images/forgottenl_crest
+  image-smooth: true
+  size: 46 46
+  phantom: true
+
+ForgottenLTitle < UILabel
+  font: verdana-11px-antialised
+  color: #ffe29a
+  text-align: center
+  text-auto-resize: true
+
+ForgottenLLabel < UILabel
+  font: verdana-11px-antialised
+  color: #d8b36a
+
+ForgottenLTextEdit < UITextEdit
+  font: verdana-11px-antialised
+  color: #2a1a0e
+  size: 86 24
+  text-offset: 0 5
+  padding: 5 8 5 8
+  opacity: 1
+  image-source: /images/ui/forgottenl_textedit
+  image-border: 4
+  selection-color: #2a1a0e
+  selection-background-color: #e0b44c
+  change-cursor-image: true
+
+  $disabled:
+    color: #2a1a0e88
+    opacity: 0.6
+    change-cursor-image: false
+
+ForgottenLPasswordTextEdit < ForgottenLTextEdit
+  text-hidden: true
+
+ForgottenLButton < UIButton
+  font: verdana-11px-antialised
+  color: #ffe29a
+  size: 150 36
+  text-offset: 0 0
+  image-source: /images/ui/forgottenl_button
+  image-border-left: 42
+  image-border-right: 42
+  image-border-top: 2
+  image-border-bottom: 2
+  image-color: #ffffff
+  opacity: 1.0
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover !disabled:
+    image-color: #ffdf9f
+
+  $pressed:
+    image-color: #c9a35a
+    text-offset: 0 1
+
+  $disabled:
+    image-color: #ffffff77
+    color: #ffe29a88
+    change-cursor-image: false

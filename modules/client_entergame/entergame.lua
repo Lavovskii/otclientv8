@@ -296,6 +296,7 @@ end
 -- public functions
 function EnterGame.init()
   if USE_NEW_ENERGAME then return end
+  g_ui.importStyle('forgottenl_style')
   enterGame = g_ui.displayUI('entergame')
   
   serverSelectorPanel = enterGame:getChildById('serverSelectorPanel')

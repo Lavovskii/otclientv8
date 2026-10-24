@@ -24,7 +24,7 @@ Servers = {
 --USE_NEW_ENERGAME = true -- uses entergamev2 based on websockets instead of entergame
 ALLOW_CUSTOM_SERVERS = false -- ForgottenL-only client: hide the "Another" / custom-server option
 
-g_app.setName("OTCv8")
+g_app.setName("ForgottenL")
 -- CONFIG END
 
 -- print first terminal message

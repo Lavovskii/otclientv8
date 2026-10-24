@@ -11,3 +11,8 @@ dist/
 # OS cruft
 Thumbs.db
 .DS_Store
+
+# local test/build artifacts (not source)
+ForgottenL.log
+installer/redist/
+dist/
