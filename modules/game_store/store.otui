@@ -1,149 +1,232 @@
 StoreOffer < UIWidget
-  height: 44
-  margin-bottom: 2
+  height: 50
+  margin-bottom: 3
   focusable: true
-  background-color: #00000000
+  background-color: #ffffff0c
+  border-width: 1
+  border-color: #00000099
   $focus:
-    background-color: #ffffff22
+    background-color: #ffffff26
+    border-color: #e0b44c
   $hover !focus:
-    background-color: #ffffff11
+    background-color: #ffffff18
 
-  UIItem
-    id: item
-    size: 34 34
+  Panel
+    id: itemBox
+    size: 38 38
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    margin-left: 4
-    virtual: true
+    margin-left: 6
+    background-color: #00000066
+    border-width: 1
+    border-color: #000000
+    phantom: true
+
+    UIItem
+      id: item
+      size: 32 32
+      anchors.centerIn: parent
+      virtual: true
+      phantom: true
 
   Label
     id: name
-    anchors.left: prev.right
+    anchors.left: itemBox.right
     anchors.top: parent.top
     anchors.right: parent.right
-    margin: 5 4 0 8
+    margin: 8 6 0 10
+    color: #f4f4f4
     phantom: true
 
-  Label
-    id: price
-    color: #e0b44c
-    anchors.left: prev.left
+  Panel
+    id: priceBox
+    height: 16
+    width: 84
+    anchors.left: itemBox.right
     anchors.bottom: parent.bottom
-    margin-bottom: 5
+    margin-left: 10
+    margin-bottom: 6
+    background-color: #00000099
+    border-width: 1
+    border-color: #3a3a3a
     phantom: true
+
+    Label
+      id: price
+      anchors.fill: parent
+      text-align: center
+      color: #e0b44c
+      phantom: true
 
 StoreCategory < UIButton
-  height: 22
-  margin-bottom: 2
+  height: 26
+  margin-bottom: 3
   text-align: left
-  text-offset: 8 0
+  text-offset: 12 0
   focusable: true
-  background-color: #00000000
-  color: #c0c0c0
+  color: #b8b8b8
+  background-color: #ffffff0c
+  border-width: 1
+  border-color: #00000099
   $focus:
-    background-color: #ffffff22
+    background-color: #ffffff26
+    border-color: #e0b44c
     color: #ffffff
   $hover !focus:
-    background-color: #ffffff11
+    background-color: #ffffff18
+    color: #e8e8e8
+
+StoreSection < Panel
+  background-color: #00000040
+  border-width: 1
+  border-color: #000000cc
+  padding: 5
 
 MainWindow
   id: storeWindow
   !text: tr('Store')
-  size: 700 460
+  size: 780 520
   visible: false
 
-  Label
-    id: pointsLabel
-    text: Points: ...
-    color: #e0b44c
+  StoreSection
+    id: pointsBox
+    height: 30
+    width: 190
     anchors.left: parent.left
     anchors.top: parent.top
-    text-auto-resize: true
+
+    Label
+      id: pointsLabel
+      text: Points: ...
+      anchors.fill: parent
+      text-align: left
+      color: #e0b44c
+      margin-left: 6
+      font: verdana-11px-rounded
 
   Button
     id: buyPointsButton
     !text: tr('Buy Points')
-    width: 110
+    width: 130
+    height: 30
     anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: -4
+    color: #ffe29a
     @onClick: modules.game_store.openBuyPoints()
 
-  Panel
-    id: categories
-    width: 130
+  StoreSection
+    id: categoriesBox
+    width: 150
     anchors.left: parent.left
-    anchors.top: pointsLabel.bottom
+    anchors.top: pointsBox.bottom
     anchors.bottom: bottomBar.top
     margin-top: 8
     margin-bottom: 8
-    layout:
-      type: verticalBox
 
-  VerticalScrollBar
-    id: offersScroll
-    anchors.top: categories.top
-    anchors.bottom: categories.bottom
-    anchors.left: offers.right
-    step: 24
-    pixels-scroll: true
+    Panel
+      id: categories
+      anchors.fill: parent
+      layout:
+        type: verticalBox
 
-  ScrollablePanel
-    id: offers
-    width: 280
-    anchors.left: categories.right
-    anchors.top: categories.top
-    anchors.bottom: categories.bottom
+  StoreSection
+    id: offersBox
+    width: 300
+    anchors.left: categoriesBox.right
+    anchors.top: categoriesBox.top
+    anchors.bottom: categoriesBox.bottom
     margin-left: 8
-    vertical-scrollbar: offersScroll
-    layout:
-      type: verticalBox
 
-  Panel
+    ScrollablePanel
+      id: offers
+      anchors.fill: parent
+      margin-right: 14
+      vertical-scrollbar: offersScroll
+      layout:
+        type: verticalBox
+
+    VerticalScrollBar
+      id: offersScroll
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 30
+      pixels-scroll: true
+
+  StoreSection
     id: details
-    anchors.left: offersScroll.right
+    anchors.left: offersBox.right
     anchors.right: parent.right
-    anchors.top: categories.top
-    anchors.bottom: categories.bottom
+    anchors.top: categoriesBox.top
+    anchors.bottom: categoriesBox.bottom
     margin-left: 8
 
-    UIItem
-      id: bigItem
-      size: 64 64
+    Panel
+      id: bigBox
+      size: 80 80
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: parent.top
-      margin-top: 4
-      virtual: true
+      margin-top: 6
+      background-color: #00000080
+      border-width: 1
+      border-color: #000000
+
+      UIItem
+        id: bigItem
+        size: 64 64
+        anchors.centerIn: parent
+        virtual: true
 
     Label
       id: offerName
       anchors.left: parent.left
       anchors.right: parent.right
-      anchors.top: bigItem.bottom
-      margin-top: 8
+      anchors.top: bigBox.bottom
+      margin-top: 10
       text-align: center
       color: #ffffff
       text-wrap: true
       text-auto-resize: true
+      font: verdana-11px-rounded
 
-    Label
-      id: offerPrice
+    Panel
+      id: priceBox
+      height: 20
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: offerName.bottom
-      margin-top: 4
-      text-align: center
-      color: #e0b44c
+      margin-top: 6
+      margin-left: 30
+      margin-right: 30
+      background-color: #00000099
+      border-width: 1
+      border-color: #3a3a3a
 
-    Label
-      id: offerDesc
+      Label
+        id: offerPrice
+        anchors.fill: parent
+        text-align: center
+        color: #e0b44c
+
+    Panel
+      id: descBox
       anchors.left: parent.left
       anchors.right: parent.right
-      anchors.top: offerPrice.bottom
+      anchors.top: priceBox.bottom
+      anchors.bottom: charLabel.top
       margin-top: 10
-      text-wrap: true
-      text-auto-resize: true
-      color: #c8c8c8
+      margin-bottom: 8
+      background-color: #00000066
+      border-width: 1
+      border-color: #000000
+      padding: 6
+
+      Label
+        id: offerDesc
+        anchors.fill: parent
+        text-wrap: true
+        text-align: topLeft
+        color: #cfcfcf
 
     Label
       id: charLabel
@@ -153,6 +236,7 @@ MainWindow
       anchors.bottom: charBox.top
       margin-bottom: 3
       text-align: center
+      color: #b8b8b8
 
     ComboBox
       id: charBox
@@ -164,101 +248,104 @@ MainWindow
     Button
       id: buyButton
       !text: tr('Buy')
+      height: 28
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: parent.bottom
+      color: #ffe29a
       @onClick: modules.game_store.buy()
 
   Panel
-    id: adminBar
-    height: 24
-    visible: false
-    anchors.left: parent.left
-    anchors.right: parent.right
-    anchors.bottom: bottomBar.top
-    margin-bottom: 4
-
-    Label
-      !text: tr('Admin')
-      color: #ff9a4a
-      anchors.left: parent.left
-      anchors.verticalCenter: parent.verticalCenter
-      width: 44
-
-    Button
-      id: addBtn
-      !text: tr('Add item')
-      width: 80
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      @onClick: modules.game_store.adminEdit(false)
-
-    Button
-      id: editBtn
-      !text: tr('Edit')
-      width: 60
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-left: 4
-      @onClick: modules.game_store.adminEdit(true)
-
-    Button
-      id: removeBtn
-      !text: tr('Remove')
-      width: 70
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-left: 4
-      @onClick: modules.game_store.adminRemove()
-
-    Button
-      id: addCatBtn
-      !text: tr('Add category')
-      width: 100
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-left: 12
-      @onClick: modules.game_store.adminCategory(false)
-
-    Button
-      id: renameCatBtn
-      !text: tr('Rename category')
-      width: 110
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-left: 4
-      @onClick: modules.game_store.adminCategory(true)
-
-    Button
-      id: delCatBtn
-      !text: tr('Remove category')
-      width: 115
-      anchors.left: prev.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-left: 4
-      @onClick: modules.game_store.adminRemoveCategory()
-
-  Panel
     id: bottomBar
-    height: 26
+    height: 62
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
+
+    Panel
+      id: adminBar
+      height: 26
+      visible: false
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: parent.top
+
+      Label
+        !text: tr('Admin')
+        color: #ff9a4a
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        width: 44
+
+      Button
+        id: addBtn
+        !text: tr('Add item')
+        width: 80
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        @onClick: modules.game_store.adminEdit(false)
+
+      Button
+        id: editBtn
+        !text: tr('Edit')
+        width: 60
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminEdit(true)
+
+      Button
+        id: removeBtn
+        !text: tr('Remove')
+        width: 70
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminRemove()
+
+      Button
+        id: addCatBtn
+        !text: tr('Add category')
+        width: 100
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 14
+        @onClick: modules.game_store.adminCategory(false)
+
+      Button
+        id: renameCatBtn
+        !text: tr('Rename category')
+        width: 115
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminCategory(true)
+
+      Button
+        id: delCatBtn
+        !text: tr('Remove category')
+        width: 115
+        anchors.left: prev.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 4
+        @onClick: modules.game_store.adminRemoveCategory()
 
     Label
       id: statusLabel
       anchors.left: parent.left
       anchors.right: closeButton.left
-      anchors.verticalCenter: parent.verticalCenter
+      anchors.bottom: parent.bottom
       margin-right: 8
+      margin-bottom: 6
       color: #c8c8c8
 
     Button
       id: closeButton
       !text: tr('Close')
-      width: 80
+      width: 90
+      height: 26
       anchors.right: parent.right
-      anchors.verticalCenter: parent.verticalCenter
+      anchors.bottom: parent.bottom
       @onClick: modules.game_store.hide()
 
   @onEscape: modules.game_store.hide()

@@ -33,54 +33,50 @@ local function showOffer(offer)
   state.selected = offer
   if not offer then
     win.details.offerName:setText('')
-    win.details.offerPrice:setText('')
-    win.details.offerDesc:setText('')
-    win.details.bigItem:setItemId(0)
+    win.details.priceBox.offerPrice:setText('')
+    win.details.descBox.offerDesc:setText('')
+    win.details.bigBox.bigItem:setItemId(0)
     win.details.buyButton:setEnabled(false)
     return
   end
-  win.details.bigItem:setItemId(tonumber(offer.item) or 0)
-  win.details.bigItem:setItemCount(math.max(1, tonumber(offer.count) or 1))
+  win.details.bigBox.bigItem:setItemId(tonumber(offer.item) or 0)
+  win.details.bigBox.bigItem:setItemCount(math.max(1, tonumber(offer.count) or 1))
   win.details.offerName:setText(offer.name)
-  win.details.offerPrice:setText(formatPoints(offer.price) .. ' ' .. tr('points'))
-  win.details.offerDesc:setText(offer.description or '')
+  win.details.priceBox.offerPrice:setText(formatPoints(offer.price) .. ' ' .. tr('points'))
+  win.details.descBox.offerDesc:setText(offer.description or '')
   win.details.buyButton:setEnabled(true)
 end
 
 local function fillOffers()
-  win.offers:destroyChildren()
+  win.offersBox.offers:destroyChildren()
   local first
   for _, offer in ipairs(state.offers) do
     if tonumber(offer.category) == state.category then
-      local row = g_ui.createWidget('StoreOffer', win.offers)
+      local row = g_ui.createWidget('StoreOffer', win.offersBox.offers)
       row.offer = offer
       row.item:setItemId(tonumber(offer.item) or 0)
       row.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
       row.name:setText(offer.name)
-      row.price:setText(formatPoints(offer.price) .. ' ' .. tr('points'))
-      row.onFocusChange = function(w, focused) if focused then showOffer(w.offer) end end
+      row.priceBox.price:setText(formatPoints(offer.price) .. ' pts')
       first = first or row
     end
   end
-  if first then first:focus() else showOffer(nil) end
+  if first then first:focus() showOffer(first.offer) else showOffer(nil) end
 end
 
 local function fillCategories()
   local keep = state.category
-  win.categories:destroyChildren()
+  win.categoriesBox.categories:destroyChildren()
   local first, keepBtn
   for _, cat in ipairs(state.categories) do
-    local btn = g_ui.createWidget('StoreCategory', win.categories)
+    local btn = g_ui.createWidget('StoreCategory', win.categoriesBox.categories)
     btn:setText(cat.name)
     btn.catId = tonumber(cat.id)
-    btn.onFocusChange = function(w, focused)
-      if focused then state.category = w.catId fillOffers() end
-    end
     first = first or btn
     if btn.catId == keep then keepBtn = btn end
   end
   local f = keepBtn or first
-  if f then f:focus() end
+  if f then f:focus() state.category = f.catId fillOffers() end
 end
 
 local function applyInfo(data)
@@ -89,8 +85,8 @@ local function applyInfo(data)
   state.characters = data.characters or {}
   if data.buyUrl and data.buyUrl:sub(1, 4):lower() == 'http' then state.buyUrl = data.buyUrl end
   state.admin = data.admin == true
-  win.adminBar:setVisible(state.admin)
-  win.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
+  win.bottomBar.adminBar:setVisible(state.admin)
+  win.pointsBox.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
   win.details.charBox:clearOptions()
   local current = g_game.getLocalPlayer() and g_game.getLocalPlayer():getName()
   for _, name in ipairs(state.characters) do win.details.charBox:addOption(name) end
@@ -117,7 +113,7 @@ function buy()
     setStatus(tr('Processing...'))
     local rid = string.format('%08x%08x', math.random(0, 0x7fffffff), os.time())
     call({ action = 'buy', offer = tonumber(offer.id), character = character, requestId = rid }, function(data)
-      win.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
+      win.pointsBox.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
       setStatus(data.message or tr('Purchase complete.'), '#7fd37a')
     end)
   end
@@ -239,6 +235,8 @@ end
 function init()
   win = g_ui.loadUI('store', g_ui.getRootWidget())
   win:hide()
+  connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
+  connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
   topButton = modules.client_topmenu.addRightGameToggleButton('storeButton', tr('Store'), '/images/topbuttons/shop', toggle, false, 8)
   connect(g_game, { onGameEnd = hide })
 end
