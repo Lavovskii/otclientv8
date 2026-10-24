@@ -48,14 +48,15 @@ MiniWindow
     layout: verticalBox
 
     SkillButton
-      margin-top: 5
       id: experience
       height: 15
+      visible: false
       SkillNameLabel
         !text: tr('Experience')
       SkillValueLabel
 
     SkillButton
+      margin-top: 5
       id: level
       SkillNameLabel
         !text: tr('Level')
