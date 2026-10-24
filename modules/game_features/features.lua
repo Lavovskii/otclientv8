@@ -65,6 +65,11 @@ function updateFeatures(version)
         g_game.enableFeature(GameDoubleExperience)
         g_game.enableFeature(GamePlayerMounts)
         g_game.enableFeature(GameSpellList)
+        -- ForgottenL server sends wide stats to OTClient: 32 bit health/mana/level, 16 bit magic level and skills
+        g_game.enableFeature(GameDoubleHealth)
+        g_game.enableFeature(GameDoubleLevel)
+        g_game.enableFeature(GameDoubleMagicLevel)
+        g_game.enableFeature(GameDoubleSkills)
     end
 
     if(version >= 910) then
