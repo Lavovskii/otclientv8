@@ -45,5 +45,5 @@ function updateOrder()
    end
    local perRow = math.max(1, math.floor((contentsPanel.buttons:getWidth() + 3) / 23))
    local rows = math.max(1, math.ceil(visibleCount / perRow))
-   buttonsWindow:setHeight(34 + rows * 23)
+   buttonsWindow:setHeight(44 + rows * 23)
 end
