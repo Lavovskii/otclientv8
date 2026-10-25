@@ -1,13 +1,8 @@
 local gameStart = 0
-local silent = {} -- container ids opened by the loot hotkey, they get no window
+local silentMode = false -- while the loot hotkey runs, the containers it opens get no window
 
--- the next container opened with this id gets no window (used by the loot hotkey)
-function openSilently(containerId)
-  silent[containerId] = true
-end
-
-function cancelSilent(containerId)
-  silent[containerId] = nil
+function setSilentMode(on)
+  silentMode = on and true or false
 end
 
 function init()
@@ -119,13 +114,12 @@ function refreshContainerPages(container)
 end
 
 function onContainerOpen(container, previousContainer)
-  if silent[container:getId()] then
-    silent[container:getId()] = nil
+  if silentMode then
     return
   end
 
   local containerWindow
-  if previousContainer then
+  if previousContainer and previousContainer.window then
     containerWindow = previousContainer.window
     previousContainer.window = nil
     previousContainer.itemsPanel = nil

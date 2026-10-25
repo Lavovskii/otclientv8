@@ -175,9 +175,9 @@ local function findEmptyContainerId()
   return id
 end
 
-local function cancelSilentOpen(containerId)
+local function setSilentContainers(on)
   if modules.game_containers then
-    modules.game_containers.cancelSilent(containerId)
+    modules.game_containers.setSilentMode(on)
   end
 end
 
@@ -253,7 +253,6 @@ function onLootFailureMessage(mode, text)
     -- a container that cannot be opened ("You are not the owner.", "Too far away."...): skip it right away
     local callback = pendingOpen.callback
     removeEvent(pendingOpen.event)
-    cancelSilentOpen(pendingOpen.containerId)
     pendingOpen = nil
     callback(nil)
   end
@@ -262,11 +261,11 @@ end
 function stopLooting()
   if loot then
     removeEvent(loot.event)
+    removeEvent(loot.pumpEvent)
   end
 
   if pendingOpen then
     removeEvent(pendingOpen.event)
-    cancelSilentOpen(pendingOpen.containerId)
     pendingOpen = nil
   end
 
@@ -279,6 +278,7 @@ function stopLooting()
   ownOpened = {}
 
   loot = nil
+  setSilentContainers(false)
 end
 
 -- opening containers ---------------------------------------------------------------------------------------------
@@ -303,7 +303,6 @@ local function openContainerItem(item, callback)
 
   if pendingOpen then
     removeEvent(pendingOpen.event)
-    cancelSilentOpen(pendingOpen.containerId)
   end
 
   local containerId = findEmptyContainerId()
@@ -311,14 +310,10 @@ local function openContainerItem(item, callback)
   pendingOpen.event = scheduleEvent(function()
     local cb = pendingOpen and pendingOpen.callback
     pendingOpen = nil
-    cancelSilentOpen(containerId)
     if cb then
       cb(nil)
     end
   end, OPEN_TIMEOUT)
-  if modules.game_containers then
-    modules.game_containers.openSilently(containerId)
-  end
   g_game.open(item)
 end
 
@@ -566,6 +561,47 @@ local function pickDestination(job)
   return job.destinations[#job.destinations]
 end
 
+local MOVES_PER_TICK = 12 -- 120 moves per second at most, far from the server's packet flood limit
+local MOVE_TICK = 100
+
+local function settleLoot()
+  if loot and not loot.settling then
+    loot.settling = true
+    loot.event = scheduleEvent(finishLoot, SETTLE_DELAY)
+  end
+end
+
+local function pumpMoves()
+  if not loot then
+    return
+  end
+
+  for _ = 1, MOVES_PER_TICK do
+    local move = table.remove(loot.moveQueue, 1)
+    if not move then
+      break
+    end
+    g_game.move(move.item, move.position, move.count)
+  end
+
+  if #loot.moveQueue > 0 then
+    loot.pumpEvent = scheduleEvent(pumpMoves, MOVE_TICK)
+  else
+    loot.pumping = false
+    if loot.sent then
+      settleLoot()
+    end
+  end
+end
+
+local function queueMove(item, position)
+  table.insert(loot.moveQueue, {item = item, position = position, count = item:getCount()})
+  if not loot.pumping then
+    loot.pumping = true
+    pumpMoves()
+  end
+end
+
 local lootContainer
 
 -- sends every item of an open container to its destination at once, then goes through the containers inside it
@@ -577,7 +613,7 @@ lootContainer = function(container, corpse, depth, done)
     elseif not isIgnoredLoot(item:getId()) then
       local destination = pickDestination(loot)
       table.insert(corpse.moves, {item = item, id = item:getId(), count = item:getCount()})
-      g_game.move(item, destination.position, item:getCount())
+      queueMove(item, destination.position)
     end
   end
 
@@ -615,8 +651,11 @@ local function lootNextCorpse()
 
   local corpseItem = table.remove(loot.queue, 1)
   if not corpseItem then
-    -- every move was sent: let the server answer, then see what is left
-    loot.event = scheduleEvent(finishLoot, SETTLE_DELAY)
+    -- every move is queued: when the last one is sent, let the server answer and see what is left
+    loot.sent = true
+    if not loot.pumping then
+      settleLoot()
+    end
     return
   end
 
@@ -668,7 +707,9 @@ function lootAround()
     return showFailure('You have no capacity left to loot.')
   end
 
-  loot = {queue = corpses, corpses = {}, destinations = {}, heavyFails = 0, fullFails = 0}
+  loot = {queue = corpses, corpses = {}, destinations = {}, heavyFails = 0, fullFails = 0, moveQueue = {}}
+  setSilentContainers(true)
+  scheduleEvent(function() if not loot then setSilentContainers(false) end end, 6000)
   buildDestinations(function(destinations)
     if not loot then
       return
