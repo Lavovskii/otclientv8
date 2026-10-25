@@ -1,3 +1,21 @@
+// the whole store_plate image, stretched to the button (the normal Button style clips it to a 22x23 piece and pads it)
+StoreButton < UIButton
+  size: 176 32
+  padding: 0
+  text-offset: 0 0
+  image-source: /images/ui/store_plate
+  image-clip: 0 0 176 32
+  image-border: 0
+  image-color: #e6e6e6
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover:
+    image-color: #ffffff
+
+  $pressed:
+    image-color: #bdbdbd
+
 GameButtonsWindow < HeadlessMiniWindow
   height: 62
   &forceOpen: true
@@ -6,21 +24,12 @@ GameButtonsWindow < HeadlessMiniWindow
   MiniWindowContents
     margin-top: 2
 
-    // the website's red dragon plate with a golden neon STORE on top (the neon layer pulses, see game_store)
-    Button
+    // the website's red dragon plate with a golden neon "Store" on top (the neon layer pulses, see game_store)
+    StoreButton
       id: storeWideButton
-      height: 32
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: parent.top
-      image-source: /images/ui/store_plate
-      image-border: 0
-      image-color: #e6e6e6
-      text-offset: 0 0
-      $hover:
-        image-color: #ffffff
-      $pressed:
-        image-color: #bdbdbd
       @onClick: modules.game_store.toggle()
 
       UIWidget
@@ -28,6 +37,7 @@ GameButtonsWindow < HeadlessMiniWindow
         anchors.fill: parent
         phantom: true
         image-source: /images/ui/store_neon
+        image-clip: 0 0 176 32
         image-border: 0
 
     Panel
