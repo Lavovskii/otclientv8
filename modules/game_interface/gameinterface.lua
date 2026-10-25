@@ -449,6 +449,7 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
       else
         menu:addOption(tr('Set as loot bag'), function() modules.game_actionbar.setLootBag(lookThing) end)
       end
+      menu:addOption(tr('Empty backpack'), function() modules.game_actionbar.emptyBackpack(lookThing) end)
     end
     if modules.game_actionbar.isIgnoredLoot(itemId) then
       menu:addOption(tr('Remove from ignore loot list'), function() modules.game_actionbar.setIgnoredLoot(itemId, false) end)

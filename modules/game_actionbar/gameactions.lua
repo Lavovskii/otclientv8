@@ -145,13 +145,15 @@ end
 -- the backpacks inside it, and finally the main backpack, with the real capacity and slot checks. No container is opened,
 -- nothing is moved item by item and the player never walks to a corpse. The server answers with the lines for the Loot
 -- channel and the messages. See Game::playerExtendedOpcode in the server (game.cpp).
---   client -> server  1 loot, 2 ignore list "id,id,...", 3 set the loot bag "x,y,z,spriteId", 4 unset the loot bag
+--   client -> server  1 loot, 2 ignore list "id,id,...", 3 set the loot bag "x,y,z,spriteId", 4 unset the loot bag,
+--                     5 empty a backpack (drops its items on the floor)
 --   server -> client  1 lines: "L|text" Loot channel, "I|text" info, "F|text" failure, "N|" nothing to loot
 
 local OPCODE_LOOT = 1
 local OPCODE_IGNORE = 2
 local OPCODE_SET_BAG = 3
 local OPCODE_CLEAR_BAG = 4
+local OPCODE_EMPTY = 5
 
 local lastLoot = 0
 
@@ -282,4 +284,37 @@ function clearLootBag()
   getSettings().lootBag = nil
   save()
   sendOpcode(OPCODE_CLEAR_BAG)
+end
+
+-- empty backpack -----------------------------------------------------------------------------------------------
+
+local emptyConfirm = nil
+
+-- right click -> "Empty backpack": always asks first, the server then drops everything that is inside on the floor
+function emptyBackpack(item)
+  if emptyConfirm then
+    emptyConfirm:destroy()
+    emptyConfirm = nil
+  end
+
+  local function close()
+    if emptyConfirm then
+      emptyConfirm:destroy()
+      emptyConfirm = nil
+    end
+  end
+
+  local function yes()
+    close()
+    local position = item:getPosition()
+    if position and position.x == 65535 then
+      sendOpcode(OPCODE_EMPTY, position.x .. ',' .. position.y .. ',' .. position.z .. ',' .. item:getId())
+    end
+  end
+
+  emptyConfirm = displayGeneralBox(tr('Empty backpack'),
+    tr('Do you really want to drop everything that is inside this backpack?\nAll the items will be dropped on the floor.'), {
+      { text = tr('Yes'), callback = yes },
+      { text = tr('No'), callback = close },
+      anchor = AnchorHorizontalCenter }, yes, close)
 end
