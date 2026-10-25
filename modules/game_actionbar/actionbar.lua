@@ -159,6 +159,13 @@ function online()
   -- load settings
   load()
 
+  -- the bars this character had open (options are global, so push them into the options first)
+  if settings.bars then
+    for i = 1, 9 do
+      modules.client_options.setOption('actionbar'..i, settings.bars[tostring(i)] == true, true)
+    end
+  end
+
   -- create actionbars
   createActionBars()
 
@@ -172,6 +179,8 @@ function show()
   for i=1,#actionBars do
     local actionbar = actionBars[i]
     local enabled = g_settings.getBoolean("actionbar"..i, false)
+    settings.bars = settings.bars or {}
+    settings.bars[tostring(i)] = enabled or nil
 
     actionbar:setOn(enabled)
     setupActionBar(i)

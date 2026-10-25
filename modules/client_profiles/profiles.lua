@@ -93,11 +93,32 @@ function getProfileFromStartupArgument()
     return false
 end
 
--- returns string path ie. "/settings/1/actionbar.json"
+-- returns the path of a settings file of the character that is online and its current profile, ie.
+-- "/settings/mycharacter/profile_1/actionbar_v2.json": every character keeps its own configs.
+-- A character that has no file yet starts from the old shared one ("/settings/profile_1/...") so nothing is lost.
 function getSettingsFilePath(fileNameWithFormat)
   local currentProfile = g_settings.getNumber('profile')
+  local legacyPath = "/settings/profile_"..currentProfile.."/"..fileNameWithFormat
 
-  return "/settings/profile_"..currentProfile.."/"..fileNameWithFormat
+  local character = g_game.getCharacterName()
+  if not character or character == '' then
+    return legacyPath
+  end
+
+  local folder = "/settings/"..character:lower():gsub('[^%w]', '_')
+  local profileFolder = folder.."/profile_"..currentProfile
+  for _, path in ipairs({"/settings", folder, profileFolder}) do
+    if not g_resources.directoryExists(path) then
+      g_resources.makeDir(path)
+    end
+  end
+
+  local path = profileFolder.."/"..fileNameWithFormat
+  if not g_resources.fileExists(path) and g_resources.fileExists(legacyPath) then
+    g_resources.writeFileContents(path, g_resources.readFileContents(legacyPath))
+  end
+
+  return path
 end
 
 function offline()
