@@ -751,11 +751,13 @@ function moveStackableItem(item, toPos)
   if countWindow then
     return
   end
-  if g_keyboard.isCtrlPressed() then
-    g_game.move(item, toPos, item:getCount())
-    return
-  elseif g_keyboard.isShiftPressed() then
-    g_game.move(item, toPos, 1)
+  -- a stack moves whole like any other item; only Ctrl+drag asks how many (Shift+drag moves one)
+  if not g_keyboard.isCtrlPressed() then
+    if g_keyboard.isShiftPressed() then
+      g_game.move(item, toPos, 1)
+    else
+      g_game.move(item, toPos, item:getCount())
+    end
     return
   end
   local count = item:getCount()
