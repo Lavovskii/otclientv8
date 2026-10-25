@@ -239,8 +239,9 @@ local function samePosition(a, b)
   return a and b and a.x == b.x and a.y == b.y and a.z == b.z
 end
 
+-- only monster corpses (CORPSE_IDS comes from the server items, see itemnames.lua): chests, lockers and the like stay closed
 local function isLootableCorpse(thing)
-  return thing:isItem() and thing:isContainer() and not thing:isPickupable() and not thing:isNotMoveable()
+  return thing:isItem() and CORPSE_IDS ~= nil and CORPSE_IDS[thing:getId()] == true
 end
 
 function onLootFailureMessage(mode, text)
@@ -727,6 +728,7 @@ function lootAround()
     end
   end
 
+  trace('%d corpses around %d,%d,%d', #corpses, position.x, position.y, position.z)
   if #corpses == 0 then
     return nothingToLoot()
   end
