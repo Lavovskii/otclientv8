@@ -231,21 +231,39 @@ function stopLooting()
   loot = nil
 end
 
--- opens the container held by an item (or reuses its window when it is already open) and calls callback(container),
--- or callback(nil) when the server did not open it in time
-local function openContainerItem(item, callback)
+-- the item held by an open container has no position in the client (it is created from the open packet), so open
+-- containers are told apart by their id: the client picks the first free container id for the one it asks to open
+local function findEmptyContainerId()
+  local open = g_game.getContainers()
+  local id = 0
+  while open[id] do
+    id = id + 1
+  end
+  return id
+end
+
+local function findOpenContainer(item)
   for _, container in pairs(g_game.getContainers()) do
     local held = container:getContainerItem()
-    if held and sameItem(held, item) then
-      return callback(container)
+    if held and held:getId() == item:getId() then
+      return container
     end
+  end
+end
+
+-- opens the container held by an item (or reuses its window when a container of that kind is already open, opening it
+-- again would close it) and calls callback(container), or callback(nil) when the server did not open it in time
+local function openContainerItem(item, callback)
+  local open = findOpenContainer(item)
+  if open then
+    return callback(open)
   end
 
   if pendingOpen then
     removeEvent(pendingOpen.event)
   end
 
-  pendingOpen = {item = item, callback = callback}
+  pendingOpen = {containerId = findEmptyContainerId(), callback = callback}
   pendingOpen.event = scheduleEvent(function()
     local cb = pendingOpen and pendingOpen.callback
     pendingOpen = nil
@@ -257,12 +275,7 @@ local function openContainerItem(item, callback)
 end
 
 function onLootContainerOpen(container, previousContainer)
-  if not pendingOpen then
-    return
-  end
-
-  local held = container:getContainerItem()
-  if not held or not sameItem(held, pendingOpen.item) then
+  if not pendingOpen or container:getId() ~= pendingOpen.containerId then
     return
   end
 
