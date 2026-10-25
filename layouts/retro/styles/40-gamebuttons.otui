@@ -17,7 +17,7 @@ StoreButton < UIButton
     image-color: #bdbdbd
 
 GameButtonsWindow < HeadlessMiniWindow
-  height: 64
+  height: 72
   &forceOpen: true
   &autoOpen: 4
 
