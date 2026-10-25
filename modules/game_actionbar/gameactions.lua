@@ -157,6 +157,13 @@ local AUTO_POSITION = {x = 65535, y = 0, z = 0}
 local loot = nil        -- running loot job
 local pendingOpen = nil -- container we asked the server to open: {item, callback, event}
 local lastFailure = nil -- last move failure told by the server ('full', 'heavy' or 'other')
+local ownOpened = {}  -- containers opened by the loot hotkey, closed when it ends
+
+local function cancelSilentOpen(containerId)
+  if modules.game_containers then
+    modules.game_containers.cancelSilent(containerId)
+  end
+end
 
 function initGameActions()
   connect(Container, { onOpen = onLootContainerOpen })
@@ -202,6 +209,7 @@ function onLootFailureMessage(mode, text)
   if pendingOpen then
     local callback = pendingOpen.callback
     removeEvent(pendingOpen.event)
+    cancelSilentOpen(pendingOpen.containerId)
     pendingOpen = nil
     return callback(nil)
   end
@@ -218,15 +226,21 @@ end
 function stopLooting()
   if loot then
     removeEvent(loot.event)
-    if loot.container then
-      g_game.close(loot.container)
-    end
   end
 
   if pendingOpen then
     removeEvent(pendingOpen.event)
+    cancelSilentOpen(pendingOpen.containerId)
     pendingOpen = nil
   end
+
+  for _, container in ipairs(ownOpened) do
+    if container.lootOpened then
+      container.lootOpened = nil
+      g_game.close(container)
+    end
+  end
+  ownOpened = {}
 
   loot = nil
 end
@@ -251,8 +265,9 @@ local function findOpenContainer(item)
   end
 end
 
--- opens the container held by an item (or reuses its window when a container of that kind is already open, opening it
--- again would close it) and calls callback(container), or callback(nil) when the server did not open it in time
+-- opens the container held by an item without showing a window (or reuses it when a container of that kind is open,
+-- opening it again would close it) and calls callback(container), or callback(nil) when the server did not open it in
+-- time. The containers opened here are closed again when the loot ends, so no backpack has to be open to loot.
 local function openContainerItem(item, callback)
   local open = findOpenContainer(item)
   if open then
@@ -261,16 +276,22 @@ local function openContainerItem(item, callback)
 
   if pendingOpen then
     removeEvent(pendingOpen.event)
+    cancelSilentOpen(pendingOpen.containerId)
   end
 
-  pendingOpen = {containerId = findEmptyContainerId(), callback = callback}
+  local containerId = findEmptyContainerId()
+  pendingOpen = {containerId = containerId, callback = callback}
   pendingOpen.event = scheduleEvent(function()
     local cb = pendingOpen and pendingOpen.callback
     pendingOpen = nil
+    cancelSilentOpen(containerId)
     if cb then
       cb(nil)
     end
   end, LOOT_OPEN_TIMEOUT)
+  if modules.game_containers then
+    modules.game_containers.openSilently(containerId)
+  end
   g_game.open(item)
 end
 
@@ -282,7 +303,17 @@ function onLootContainerOpen(container, previousContainer)
   local callback = pendingOpen.callback
   removeEvent(pendingOpen.event)
   pendingOpen = nil
+  container.lootOpened = true
+  table.insert(ownOpened, container)
   callback(container)
+end
+
+-- closes a container this job opened (never one the player had open)
+local function closeLootContainer(container)
+  if container and container.lootOpened then
+    container.lootOpened = nil
+    g_game.close(container)
+  end
 end
 
 -- loot bag -----------------------------------------------------------------------------------------------------
@@ -488,7 +519,7 @@ local function lootNextItem(container, items)
   local item = items[#items]
   if not item then
     logCorpseLoot()
-    g_game.close(container)
+    closeLootContainer(container)
     loot.container = nil
     loot.event = scheduleEvent(lootNextCorpse, LOOT_STEP_DELAY)
     return
