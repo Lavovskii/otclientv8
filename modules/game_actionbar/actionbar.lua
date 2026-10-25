@@ -863,6 +863,7 @@ function assignSpell(widget)
 
   local spells = modules.gamelib.SpellInfo['Default']
   for spellName, spellData in pairs(spells) do
+   if spellData.type ~= 'Rune' then
     local widget = g_ui.createWidget('SpellPreview', window.spellList)
     -- radio
     radio:addWidget(widget)
@@ -873,7 +874,9 @@ function assignSpell(widget)
     spellData.group = newGroup
     
     widget:setId(spellData.id)
-    widget:setText(spellName.."\n"..spellData.words)
+    widget:setText(spellName.."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
+    widget.level = spellData.level
+    widget.maglevel = spellData.maglevel or 0
     widget.voc = spellData.vocations
     widget.param = spellData.parameter
     widget.source = SpelllistSettings['Default'].iconFile
@@ -892,11 +895,16 @@ function assignSpell(widget)
       group = spellData.group,
       id = spellData.id
     }
+   end
   end
 
-  -- sort alphabetically
+  -- sort by level, then magic level, then name
   local widgets = window.spellList:getChildren()
-  table.sort(widgets, function(a, b) return a.spellData.name < b.spellData.name end)
+  table.sort(widgets, function(a, b)
+    if a.level ~= b.level then return a.level < b.level end
+    if a.maglevel ~= b.maglevel then return a.maglevel < b.maglevel end
+    return a.spellData.name < b.spellData.name
+  end)
   for i, widget in ipairs(widgets) do
     window.spellList:moveChildToIndex(widget, i)
   end
@@ -956,7 +964,7 @@ function assignSpell(widget)
   end
 
   window.checkPanel.tick.onCheckChange = filterByVocation
-  filterByVocation(nil, true)
+  filterByVocation(nil, g_game.getClientVersion() >= 910)
 
   local okFunc = function(destroy) 
     local selected = radio:getSelectedWidget()
