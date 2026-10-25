@@ -443,6 +443,13 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
   if lookThing and lookThing:isItem() and lookThing:getId() > 100 and modules.game_actionbar then
     local itemId = lookThing:getId()
     menu:addSeparator()
+    if modules.game_actionbar.canBeLootBag(lookThing) then
+      if modules.game_actionbar.isLootBag(lookThing) then
+        menu:addOption(tr('Unset loot bag'), function() modules.game_actionbar.clearLootBag() end)
+      else
+        menu:addOption(tr('Set as loot bag'), function() modules.game_actionbar.setLootBag(lookThing) end)
+      end
+    end
     if modules.game_actionbar.isIgnoredLoot(itemId) then
       menu:addOption(tr('Remove from ignore loot list'), function() modules.game_actionbar.setIgnoredLoot(itemId, false) end)
     else

@@ -1,8 +1,9 @@
 -- Game actions that can be assigned to an action button ("Assign Action"):
 --   attackNext  attack the next creature of the battle list (so its filters and sorting apply), optionally players only
 --               or monsters only
---   loot        open the corpses around the player and move their items to the backpack, except the items on the
---               ignore loot list (right click an item -> "Add to ignore loot list")
+--   loot        open the corpses around the player and move their items to the loot bag (right click a backpack ->
+--               "Set as loot bag"), then to the main backpack, except the items on the ignore loot list (right click
+--               an item -> "Add to ignore loot list"); it stops when capacity or slots run out
 --   stopAttack  stop attacking (and following)
 --   useUnder    use the item under the player (climb a ladder, use stairs, a lever, a hole...)
 
@@ -18,20 +19,6 @@ TARGET_FILTER = {
   PLAYERS = 'players',
   MONSTERS = 'monsters'
 }
-
-local LOOT_STEP_DELAY = 250   -- ms between two item moves, keeps the server action limits happy
-local LOOT_OPEN_TIMEOUT = 1500 -- ms to wait for a corpse to open before skipping it
-
-local loot = nil -- running loot job: {queue = {corpses}, container = corpse container being emptied, event = timeout}
-
-function initGameActions()
-  connect(Container, { onOpen = onLootContainerOpen })
-end
-
-function terminateGameActions()
-  disconnect(Container, { onOpen = onLootContainerOpen })
-  stopLooting()
-end
 
 function gameActionLabel(action, filter)
   if action == GAME_ACTION.ATTACK_NEXT then
@@ -54,7 +41,7 @@ function gameActionDescription(action, filter)
     if filter == TARGET_FILTER.PLAYERS then what = 'player' elseif filter == TARGET_FILTER.MONSTERS then what = 'monster' end
     return 'Attack the next ' .. what .. ' of the battle list'
   elseif action == GAME_ACTION.LOOT then
-    return 'Loot the creatures around you (items on the ignore loot list are left behind)'
+    return 'Loot the creatures around you into your loot bag (items on the ignore loot list are left behind)'
   elseif action == GAME_ACTION.STOP_ATTACK then
     return 'Stop attacking'
   elseif action == GAME_ACTION.USE_UNDER then
@@ -151,94 +138,367 @@ function setIgnoredLoot(itemId, ignored)
 end
 
 -- loot ---------------------------------------------------------------------------------------------------------
+--
+-- How the server answers a move (kept in sync with the server, see player.cpp sendCancelMessage):
+--   * dropping on a container that is full  -> "You cannot put more objects in this container."
+--   * not enough capacity                   -> "This object is too heavy for you to carry."
+--   * dropping on the inventory "capacity" position (x = 65535, y = 0) lets the server pick the first backpack, or
+--     bag inside a backpack, that has room.
+-- Items go to the loot bag first (set with right click -> "Set as loot bag"). When it is full they go to the next backpack
+-- inside it, then to the main backpack (server routing) with a warning, until nothing has slots left.
+
+local LOOT_STEP_DELAY = 250     -- ms between two item moves, keeps the server action limits happy
+local LOOT_OPEN_TIMEOUT = 1500  -- ms to wait for a container to open before giving up on it
+local FAIL_FULL = 'You cannot put more objects in this container.'
+local FAIL_HEAVY = 'This object is too heavy for you to carry.'
+local FAIL_ROOM = 'There is not enough room.'
+local AUTO_POSITION = {x = 65535, y = 0, z = 0}
+
+local loot = nil        -- running loot job
+local pendingOpen = nil -- container we asked the server to open: {item, callback, event}
+local lastFailure = nil -- last move failure told by the server ('full', 'heavy' or 'other')
+
+function initGameActions()
+  connect(Container, { onOpen = onLootContainerOpen })
+  registerMessageMode(MessageModes.Failure, onLootFailureMessage)
+end
+
+function terminateGameActions()
+  disconnect(Container, { onOpen = onLootContainerOpen })
+  unregisterMessageMode(MessageModes.Failure, onLootFailureMessage)
+  stopLooting()
+end
+
+local function showFailure(text)
+  if modules.game_textmessage then
+    modules.game_textmessage.displayFailureMessage(text)
+  end
+end
+
+local function showInfo(text)
+  if modules.game_textmessage then
+    modules.game_textmessage.displayGameMessage(text)
+  end
+end
 
 local function isLootableCorpse(thing)
   return thing:isItem() and thing:isContainer() and not thing:isPickupable() and not thing:isNotMoveable()
 end
 
+local function samePosition(a, b)
+  return a and b and a.x == b.x and a.y == b.y and a.z == b.z
+end
+
 local function sameItem(a, b)
-  local pa, pb = a:getPosition(), b:getPosition()
-  return a:getId() == b:getId() and pa and pb and pa.x == pb.x and pa.y == pb.y and pa.z == pb.z
+  return a:getId() == b:getId() and samePosition(a:getPosition(), b:getPosition())
+end
+
+function onLootFailureMessage(mode, text)
+  if not loot then
+    return
+  end
+
+  -- a corpse that cannot be opened ("You are not the owner.", "Too far away."...): skip it right away
+  if pendingOpen then
+    local callback = pendingOpen.callback
+    removeEvent(pendingOpen.event)
+    pendingOpen = nil
+    return callback(nil)
+  end
+
+  if text == FAIL_FULL or text == FAIL_ROOM then
+    lastFailure = 'full'
+  elseif text == FAIL_HEAVY then
+    lastFailure = 'heavy'
+  else
+    lastFailure = 'other'
+  end
 end
 
 function stopLooting()
   if loot then
     removeEvent(loot.event)
+    if loot.container then
+      g_game.close(loot.container)
+    end
   end
+
+  if pendingOpen then
+    removeEvent(pendingOpen.event)
+    pendingOpen = nil
+  end
+
   loot = nil
 end
 
-local function lootNextCorpse()
-  if not loot then
-    return
-  end
-
-  removeEvent(loot.event)
-  loot.container = nil
-  local corpse = table.remove(loot.queue, 1)
-  if not corpse then
-    local count = loot.count
-    stopLooting()
-    if count > 0 and modules.game_textmessage then
-      modules.game_textmessage.displayGameMessage('Looted ' .. count .. (count == 1 and ' item.' or ' items.'))
+-- opens the container held by an item (or reuses its window when it is already open) and calls callback(container),
+-- or callback(nil) when the server did not open it in time
+local function openContainerItem(item, callback)
+  for _, container in pairs(g_game.getContainers()) do
+    local held = container:getContainerItem()
+    if held and sameItem(held, item) then
+      return callback(container)
     end
-    return
   end
 
-  loot.corpse = corpse
-  g_game.open(corpse)
-  loot.event = scheduleEvent(lootNextCorpse, LOOT_OPEN_TIMEOUT)
+  if pendingOpen then
+    removeEvent(pendingOpen.event)
+  end
+
+  pendingOpen = {item = item, callback = callback}
+  pendingOpen.event = scheduleEvent(function()
+    local cb = pendingOpen and pendingOpen.callback
+    pendingOpen = nil
+    if cb then
+      cb(nil)
+    end
+  end, LOOT_OPEN_TIMEOUT)
+  g_game.open(item)
 end
 
-local function lootNextItem(container, items, backpack)
+function onLootContainerOpen(container, previousContainer)
+  if not pendingOpen then
+    return
+  end
+
+  local held = container:getContainerItem()
+  if not held or not sameItem(held, pendingOpen.item) then
+    return
+  end
+
+  local callback = pendingOpen.callback
+  removeEvent(pendingOpen.event)
+  pendingOpen = nil
+  callback(container)
+end
+
+-- loot bag -----------------------------------------------------------------------------------------------------
+
+-- the loot bag is remembered as where it is: an inventory slot, or the slot of a container (usually the main backpack)
+local function describeItem(item)
+  local position = item:getPosition()
+  if not position or position.x ~= 65535 then
+    return nil
+  end
+
+  if position.y < 64 then
+    return {id = item:getId(), slot = position.y}
+  end
+
+  return {id = item:getId(), index = position.z}
+end
+
+function isLootBag(item)
+  local ref = getSettings().lootBag
+  local now = ref and describeItem(item)
+  return now ~= nil and now.id == ref.id and now.slot == ref.slot and now.index == ref.index
+end
+
+function canBeLootBag(item)
+  local position = item:getPosition()
+  return item:isContainer() and item:isPickupable() and position and position.x == 65535
+end
+
+function setLootBag(item)
+  local ref = describeItem(item)
+  if not ref then
+    return
+  end
+
+  getSettings().lootBag = ref
+  save()
+  showInfo('This backpack is now your loot bag.')
+end
+
+function clearLootBag()
+  getSettings().lootBag = nil
+  save()
+  showInfo('You no longer have a loot bag.')
+end
+
+-- calls callback(bagItem, bagContainer), or callback(nil) when the saved loot bag cannot be found
+local function findLootBag(ref, callback)
+  local player = g_game.getLocalPlayer()
+  if not player then
+    return callback(nil)
+  end
+
+  if ref.slot then
+    local item = player:getInventoryItem(ref.slot)
+    if not item or item:getId() ~= ref.id then
+      return callback(nil)
+    end
+
+    return openContainerItem(item, function(container) callback(container and item, container) end)
+  end
+
+  local main = player:getInventoryItem(InventorySlotBack)
+  if not main then
+    return callback(nil)
+  end
+
+  openContainerItem(main, function(mainContainer)
+    if not mainContainer then
+      return callback(nil)
+    end
+
+    local found
+    for _, item in ipairs(mainContainer:getItems()) do
+      if item:isContainer() and item:getId() == ref.id then
+        local position = item:getPosition()
+        if position.z == ref.index then
+          found = item
+          break
+        end
+        found = found or item
+      end
+    end
+
+    if not found then
+      return callback(nil)
+    end
+
+    openContainerItem(found, function(container) callback(container and found, container) end)
+  end)
+end
+
+-- destinations, in the order they are tried: {position, bag = true/false}
+local function buildDestinations(callback)
+  local ref = getSettings().lootBag
+  if not ref then
+    return callback({{position = AUTO_POSITION}})
+  end
+
+  findLootBag(ref, function(bagItem, bagContainer)
+    if not bagItem then
+      showFailure('Your loot bag was not found, the loot goes to your main backpack.')
+      return callback({{position = AUTO_POSITION}})
+    end
+
+    local destinations = {{position = bagItem:getPosition(), bag = true}}
+    for _, item in ipairs(bagContainer:getItems()) do
+      if item:isContainer() then
+        table.insert(destinations, {position = item:getPosition(), bag = true})
+      end
+    end
+
+    table.insert(destinations, {position = AUTO_POSITION})
+    callback(destinations)
+  end)
+end
+
+-- running a loot job -------------------------------------------------------------------------------------------
+
+local function finishLoot(reason)
+  local job = loot
+  stopLooting()
+  if not job then
+    return
+  end
+
+  if reason then
+    showFailure(reason)
+  end
+
+  if job.count > 0 then
+    local text = 'Looted ' .. job.count .. (job.count == 1 and ' item.' or ' items.')
+    if job.heavy > 0 then
+      text = text .. ' ' .. job.heavy .. ' too heavy to carry.'
+    end
+    showInfo(text)
+  elseif job.heavy > 0 then
+    showFailure('You have no capacity left to loot.')
+  end
+end
+
+local lootNextCorpse
+
+-- sends the next item of the open corpse to the current destination, then checks how the server answered
+local function lootNextItem(container, items)
   if not loot or loot.container ~= container then
     return
   end
 
-  local item = table.remove(items)
+  local item = items[#items]
   if not item then
     g_game.close(container)
+    loot.container = nil
     loot.event = scheduleEvent(lootNextCorpse, LOOT_STEP_DELAY)
     return
   end
 
-  g_game.move(item, backpack:getPosition(), item:getCount())
-  loot.count = loot.count + 1
-  loot.event = scheduleEvent(function() lootNextItem(container, items, backpack) end, LOOT_STEP_DELAY)
+  local player = g_game.getLocalPlayer()
+  if player and player:getFreeCapacity() <= 0 then
+    return finishLoot('You have no capacity left to loot.')
+  end
+
+  local destination = loot.destinations[loot.current]
+  local before = #container:getItems()
+  lastFailure = nil
+  g_game.move(item, destination.position, item:getCount())
+
+  loot.event = scheduleEvent(function()
+    if not loot or loot.container ~= container then
+      return
+    end
+
+    local moved = #container:getItems() < before
+    if moved then
+      table.remove(items)
+      loot.count = loot.count + 1
+    elseif lastFailure == 'full' then
+      -- this bag has no slots left: next backpack inside the loot bag, then the main backpack
+      loot.current = loot.current + 1
+      local nextDestination = loot.destinations[loot.current]
+      if not nextDestination then
+        return finishLoot('You have no slots left.')
+      end
+
+      if destination.bag and not nextDestination.bag and not loot.warned then
+        loot.warned = true
+        showFailure('Your loot bag has no slots left.')
+      end
+    elseif lastFailure == 'heavy' then
+      table.remove(items)
+      loot.heavy = loot.heavy + 1
+    else
+      -- the server refused it (too far, not allowed...): leave it in the corpse
+      table.remove(items)
+    end
+
+    lootNextItem(container, items)
+  end, LOOT_STEP_DELAY)
 end
 
-function onLootContainerOpen(container, previousContainer)
-  if not loot or not loot.corpse or loot.container then
+lootNextCorpse = function()
+  if not loot then
     return
   end
 
-  local corpse = container:getContainerItem()
-  if not corpse or not sameItem(corpse, loot.corpse) then
-    return
+  local corpse = table.remove(loot.queue, 1)
+  if not corpse then
+    return finishLoot()
   end
 
-  removeEvent(loot.event)
-  loot.container = container
-
-  local player = g_game.getLocalPlayer()
-  local backpack = player and player:getInventoryItem(InventorySlotBack)
-  if not backpack then
-    stopLooting()
-    g_game.close(container)
-    if modules.game_textmessage then
-      modules.game_textmessage.displayFailureMessage('You need a backpack to loot.')
+  openContainerItem(corpse, function(container)
+    if not loot then
+      return
     end
-    return
-  end
 
-  local items = {}
-  for _, item in ipairs(container:getItems()) do
-    if not isIgnoredLoot(item:getId()) then
-      table.insert(items, item)
+    if not container then
+      return lootNextCorpse()
     end
-  end
 
-  lootNextItem(container, items, backpack)
+    loot.container = container
+    local items = {}
+    for _, item in ipairs(container:getItems()) do
+      if not isIgnoredLoot(item:getId()) then
+        table.insert(items, item)
+      end
+    end
+
+    lootNextItem(container, items)
+  end)
 end
 
 function lootAround()
@@ -270,6 +530,17 @@ function lootAround()
     return
   end
 
-  loot = {queue = corpses, count = 0}
-  lootNextCorpse()
+  if player:getFreeCapacity() <= 0 then
+    return showFailure('You have no capacity left to loot.')
+  end
+
+  loot = {queue = corpses, count = 0, heavy = 0, current = 1, destinations = {}}
+  buildDestinations(function(destinations)
+    if not loot then
+      return
+    end
+
+    loot.destinations = destinations
+    lootNextCorpse()
+  end)
 end
