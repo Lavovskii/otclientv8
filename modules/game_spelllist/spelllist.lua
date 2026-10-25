@@ -241,7 +241,7 @@ function updateSpelllist()
     local tmpLabel = spellList:getChildById(spell)
 
     local localPlayer = g_game.getLocalPlayer()
-    if (not(filters.level) or info.level <= localPlayer:getLevel()) and (not(filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId) or table.find(info.vocations, filters.vocationId+4)) and (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or (not(info.premium) and filters.premium == FILTER_PREMIUM_NO)) then
+    if (not(filters.level) or (info.level <= localPlayer:getLevel() and (info.maglevel or 0) <= localPlayer:getMagicLevel())) and (not(filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId) or table.find(info.vocations, filters.vocationId+4)) and (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or (not(info.premium) and filters.premium == FILTER_PREMIUM_NO)) then
       tmpLabel:setVisible(true)
     else
       tmpLabel:setVisible(false)
@@ -285,7 +285,7 @@ function updateSpellInformation(widget)
     end
 
     type    = info.type
-    level   = info.level
+    level   = info.level .. ((info.maglevel or 0) > 0 and (' (magic level ' .. info.maglevel .. ')') or '')
     mana    = info.mana .. ' / ' .. info.soul
     premium = (info.premium and 'yes' or 'no')
     description = info.description or '-'
