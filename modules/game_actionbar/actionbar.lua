@@ -161,14 +161,14 @@ function online()
   -- load settings
   load()
 
-  -- the bars this character had open (options are global, so push them into the options first)
-  if settings.bars then
-    applyingBars = true -- setOption calls show(), which must wait until the bars exist
-    for i = 1, 9 do
-      modules.client_options.setOption('actionbar'..i, settings.bars[tostring(i)] == true, true)
-    end
-    applyingBars = false
+  -- the bars this character had open (options are global, so push them into the options first); a character that has
+  -- no saved bars starts with the default: one at the bottom and one on each side
+  local bars = settings.bars or {['1'] = true, ['4'] = true, ['7'] = true}
+  applyingBars = true -- setOption calls show(), which must wait until the bars exist
+  for i = 1, 9 do
+    modules.client_options.setOption('actionbar'..i, bars[tostring(i)] == true, true)
   end
+  applyingBars = false
 
   -- create actionbars
   createActionBars()

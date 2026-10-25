@@ -52,13 +52,13 @@ local defaultOptions = {
 
   topBar = true,
 
-  actionbar1 = true,
+  actionbar1 = true, -- default: one action bar at the bottom and one on each side
   actionbar2 = false,
   actionbar3 = false,
-  actionbar4 = false,
+  actionbar4 = true,
   actionbar5 = false,
   actionbar6 = false,
-  actionbar7 = false,
+  actionbar7 = true,
   actionbar8 = false,
   actionbar9 = false,
 

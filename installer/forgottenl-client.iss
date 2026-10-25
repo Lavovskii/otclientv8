@@ -43,6 +43,10 @@ Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
+[InstallDelete]
+; modules removed from the client are removed from old installs too
+Type: filesandordirs; Name: "{app}\modules\game_hotkeys"
+
 [Files]
 ; Microsoft's own Visual C++ 2015-2022 x86 runtime (official, Authenticode-signed by Microsoft).
 ; otclient_dx.exe/otclient_gl.exe are 32-bit builds and crash with 0xC000007B on a clean machine
