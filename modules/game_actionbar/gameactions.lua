@@ -402,7 +402,55 @@ end
 
 -- running a loot job -------------------------------------------------------------------------------------------
 
+local function logLoot(text)
+  if modules.game_console and modules.game_console.addLootMessage then
+    modules.game_console.addLootMessage(text)
+  end
+end
+
+local function nothingToLoot()
+  local text = "There's nothing interesting to loot."
+  showInfo(text)
+  logLoot(text)
+end
+
+-- "a sword", "3 gold coins"
+local function lootItemText(id, count)
+  local info = ITEM_NAMES and ITEM_NAMES[id]
+  local name = info and info[1] or ('item ' .. id)
+  if count > 1 then
+    return count .. ' ' .. ((info and info[2]) or name)
+  end
+
+  return (name:match('^[aeiouAEIOU]') and 'an ' or 'a ') .. name
+end
+
+-- one line per corpse: "Loot of a dead rat: 2 gold coins, a cheese"
+local function logCorpseLoot()
+  if not loot or not loot.corpse or #loot.log == 0 then
+    return
+  end
+
+  local order, totals = {}, {}
+  for _, entry in ipairs(loot.log) do
+    if not totals[entry.id] then
+      totals[entry.id] = 0
+      table.insert(order, entry.id)
+    end
+    totals[entry.id] = totals[entry.id] + entry.count
+  end
+
+  local parts = {}
+  for _, id in ipairs(order) do
+    table.insert(parts, lootItemText(id, totals[id]))
+  end
+
+  logLoot('Loot of ' .. lootItemText(loot.corpse:getId(), 1) .. ': ' .. table.concat(parts, ', '))
+  loot.log = {}
+end
+
 local function finishLoot(reason)
+  logCorpseLoot()
   local job = loot
   stopLooting()
   if not job then
@@ -413,12 +461,17 @@ local function finishLoot(reason)
     showFailure(reason)
   end
 
+  if job.count == 0 and job.heavy == 0 and not reason then
+    return nothingToLoot()
+  end
+
   if job.count > 0 then
     local text = 'Looted ' .. job.count .. (job.count == 1 and ' item.' or ' items.')
     if job.heavy > 0 then
       text = text .. ' ' .. job.heavy .. ' too heavy to carry.'
     end
     showInfo(text)
+    logLoot(text)
   elseif job.heavy > 0 then
     showFailure('You have no capacity left to loot.')
   end
@@ -434,6 +487,7 @@ local function lootNextItem(container, items)
 
   local item = items[#items]
   if not item then
+    logCorpseLoot()
     g_game.close(container)
     loot.container = nil
     loot.event = scheduleEvent(lootNextCorpse, LOOT_STEP_DELAY)
@@ -447,6 +501,7 @@ local function lootNextItem(container, items)
 
   local destination = loot.destinations[loot.current]
   local before = #container:getItems()
+  local record = {id = item:getId(), count = item:getCount()}
   lastFailure = nil
   g_game.move(item, destination.position, item:getCount())
 
@@ -459,6 +514,7 @@ local function lootNextItem(container, items)
     if moved then
       table.remove(items)
       loot.count = loot.count + 1
+      table.insert(loot.log, record)
     elseif lastFailure == 'full' then
       -- this bag has no slots left: next backpack inside the loot bag, then the main backpack
       loot.current = loot.current + 1
@@ -503,6 +559,8 @@ lootNextCorpse = function()
     end
 
     loot.container = container
+    loot.corpse = corpse
+    loot.log = {}
     local items = {}
     for _, item in ipairs(container:getItems()) do
       if not isIgnoredLoot(item:getId()) then
@@ -540,14 +598,14 @@ function lootAround()
   end
 
   if #corpses == 0 then
-    return
+    return nothingToLoot()
   end
 
   if player:getFreeCapacity() <= 0 then
     return showFailure('You have no capacity left to loot.')
   end
 
-  loot = {queue = corpses, count = 0, heavy = 0, current = 1, destinations = {}}
+  loot = {queue = corpses, count = 0, heavy = 0, current = 1, destinations = {}, log = {}}
   buildDestinations(function(destinations)
     if not loot then
       return

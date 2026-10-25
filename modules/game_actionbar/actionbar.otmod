@@ -4,4 +4,4 @@ Module
   sandboxed: true
   @onLoad: init()
   @onUnload: terminate()
-  scripts: [ actionbar, gameactions ]
+  scripts: [ actionbar, gameactions, itemnames ]

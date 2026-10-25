@@ -77,6 +77,7 @@ currentMessageIndex = 0
 ignoreNpcMessages = false
 defaultTab = nil
 serverTab = nil
+lootTab = nil
 violationsChannelId = nil
 violationWindow = nil
 violationReportTab = nil
@@ -323,7 +324,7 @@ function load()
 end
 
 function onTabChange(tabBar, tab)
-  if tab == defaultTab or tab == serverTab then
+  if tab == defaultTab or tab == serverTab or tab == lootTab then
     consolePanel:getChildById('closeChannelButton'):disable()
   else
     consolePanel:getChildById('closeChannelButton'):enable()
@@ -360,6 +361,8 @@ function clear()
   defaultTab = nil
   consoleTabBar:removeTab(serverTab)
   serverTab = nil
+  consoleTabBar:removeTab(lootTab)
+  lootTab = nil
 
   local npcTab = consoleTabBar:getTab('NPCs')
   if npcTab then
@@ -466,7 +469,7 @@ function removeTab(tab)
     tab = consoleTabBar:getTab(tab)
   end
 
-  if tab == defaultTab or tab == serverTab then
+  if tab == defaultTab or tab == serverTab or tab == lootTab then
     return
   end
 
@@ -552,6 +555,13 @@ function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName)
     consoleTabBar:selectTab(privateTab)
   end
   addTabText(text, speaktype, privateTab, creatureName)
+end
+
+-- one line of the Loot channel (the items taken by the loot hotkey)
+function addLootMessage(text)
+  if lootTab then
+    addTabText(text, {color = '#e8c872'}, lootTab)
+  end
 end
 
 function addText(text, speaktype, tabName, creatureName)
@@ -758,7 +768,7 @@ function processChannelTabMenu(tab, mousePos, mouseButton)
   local worldName = g_game.getWorldName()
   local characterName = g_game.getCharacterName()
   channelName = tab:getText()
-  if tab ~= defaultTab and tab ~= serverTab then
+  if tab ~= defaultTab and tab ~= serverTab and tab ~= lootTab then
     menu:addOption(tr('Close'), function() removeTab(channelName) end)
     --menu:addOption(tr('Show Server Messages'), function() --[[TODO]] end)
     menu:addSeparator()
@@ -868,7 +878,7 @@ function sendMessage(message, tab)
 
   -- when talking on server log, the message goes to default channel
   local name = tab:getText()
-  if tab == serverTab or tab == getRuleViolationsTab() then
+  if tab == serverTab or tab == lootTab or tab == getRuleViolationsTab() then
     tab = defaultTab
     name = defaultTab:getText()
   end
@@ -1468,6 +1478,7 @@ end
 function online()
   defaultTab = addTab(tr('Default'), true)
   serverTab = addTab(tr('Server Log'), false)
+  lootTab = addTab(tr('Loot'), false) -- always open, written by the loot hotkey (game_actionbar)
 
 
   if g_game.getClientVersion() >= 820 then
