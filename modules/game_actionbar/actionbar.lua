@@ -4,6 +4,7 @@ local settingsFile = ""
 local cachedSettings = nil
 local window = nil
 local mouseGrabberWidget = nil
+local applyingBars = false
 
 local TYPE = {
   BLANK = 0,
@@ -152,6 +153,7 @@ function offline()
   for i, panel in ipairs(actionBars) do
     panel:destroy()
   end
+  actionBars = {}
 end
 
 function online()
@@ -161,9 +163,11 @@ function online()
 
   -- the bars this character had open (options are global, so push them into the options first)
   if settings.bars then
+    applyingBars = true -- setOption calls show(), which must wait until the bars exist
     for i = 1, 9 do
       modules.client_options.setOption('actionbar'..i, settings.bars[tostring(i)] == true, true)
     end
+    applyingBars = false
   end
 
   -- create actionbars
@@ -176,6 +180,10 @@ function online()
 end
 
 function show()
+  if applyingBars then
+    return
+  end
+
   for i=1,#actionBars do
     local actionbar = actionBars[i]
     local enabled = g_settings.getBoolean("actionbar"..i, false)
