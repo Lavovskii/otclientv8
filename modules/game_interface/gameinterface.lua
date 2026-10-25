@@ -440,6 +440,16 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
     end
   end
 
+  if lookThing and lookThing:isItem() and lookThing:getId() > 100 and modules.game_actionbar then
+    local itemId = lookThing:getId()
+    menu:addSeparator()
+    if modules.game_actionbar.isIgnoredLoot(itemId) then
+      menu:addOption(tr('Remove from ignore loot list'), function() modules.game_actionbar.setIgnoredLoot(itemId, false) end)
+    else
+      menu:addOption(tr('Add to ignore loot list'), function() modules.game_actionbar.setIgnoredLoot(itemId, true) end)
+    end
+  end
+
   if lookThing and not lookThing:isCreature() and not lookThing:isNotMoveable() and lookThing:isPickupable() then
     menu:addSeparator()
     menu:addOption(tr('Trade with ...'), function() startTradeWith(lookThing) end)

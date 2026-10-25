@@ -290,6 +290,21 @@ function checkCreatures()
   battlePanel:getLayout():update()
 end
 
+-- the creatures currently listed (after the filters), in the order they are shown
+function getDisplayedCreatures()
+  local creatures = {}
+  for i = 1, #battleButtons do
+    local button = battleButtons[i]
+    if button:isHidden() then
+      break
+    end
+    if button.creature then
+      table.insert(creatures, button.creature)
+    end
+  end
+  return creatures
+end
+
 function doCreatureFitFilters(creature)
   if creature:isLocalPlayer() then
     return false

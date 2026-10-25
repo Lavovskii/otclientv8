@@ -1,0 +1,102 @@
+ActionRadio < CheckBox
+  image-source: /images/ui/checkbox_round
+  margin-top: 4
+
+MainWindow
+  id: assignActionWindow
+  size: 300 295
+  text: Assign Action
+
+  Label
+    anchors.top: parent.top
+    anchors.left: parent.left
+    text: Action:
+    text-horizontal-auto-resize: true
+
+  Panel
+    id: actions
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    layout:
+      type: verticalBox
+      fit-children: true
+
+    ActionRadio
+      id: attackNext
+      text: Attack next target on the battle list
+
+    ActionRadio
+      id: loot
+      text: Loot creatures around
+
+    ActionRadio
+      id: stopAttack
+      text: Stop attacking
+
+    ActionRadio
+      id: useUnder
+      text: Use item under player
+
+  Label
+    id: filterLabel
+    anchors.top: actions.bottom
+    anchors.left: parent.left
+    margin-top: 10
+    text: Targets of "Attack next target":
+    text-horizontal-auto-resize: true
+
+  Panel
+    id: filters
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    layout:
+      type: verticalBox
+      fit-children: true
+
+    ActionRadio
+      id: filterAll
+      text: Players and monsters
+
+    ActionRadio
+      id: filterPlayers
+      text: Players only
+
+    ActionRadio
+      id: filterMonsters
+      text: Monsters only
+
+  HorizontalSeparator
+    anchors.top: filters.bottom
+    margin-top: 10
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  Button
+    id: buttonClose
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+    font: cipsoftFont
+    text: Close
+
+  Button
+    id: buttonApply
+    anchors.right: prev.left
+    margin-right: 5
+    anchors.bottom: parent.bottom
+    size: 45 21
+    font: cipsoftFont
+    text: Apply
+
+  Button
+    id: buttonOk
+    anchors.right: prev.left
+    margin-right: 5
+    anchors.bottom: parent.bottom
+    size: 45 21
+    font: cipsoftFont
+    text: Ok

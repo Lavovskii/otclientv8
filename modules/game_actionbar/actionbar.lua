@@ -9,7 +9,8 @@ local TYPE = {
   BLANK = 0,
   TEXT = 1,
   SPELL = 2,
-  ITEM = 3
+  ITEM = 3,
+  ACTION = 4 -- see gameactions.lua
 }
 
 local ACTION = {
@@ -61,6 +62,7 @@ local function isSpell(text) -- returns bool or table (spelldata, param text)
 end
 
 function init()
+  initGameActions()
   connect(g_game, {
     onGameStart = online,
     onGameEnd = offline,
@@ -80,6 +82,7 @@ function init()
 end
 
 function terminate()
+  terminateGameActions()
   disconnect(g_game, {
     onGameStart = online,
     onGameEnd = offline,
@@ -226,7 +229,8 @@ function destroyAssignWindows()
     'assignItemWindow',
     'assignSpellWindow',
     'assignTextWindow',
-    'assignHotkeyWindow'
+    'assignHotkeyWindow',
+    'assignActionWindow'
   }
 
   local rootWidget = g_ui.getRootWidget()
@@ -368,6 +372,8 @@ function setupButton(widget)
   widget.autoSay = nil
   widget.action = ACTION.BLANK
   widget.spellData = nil
+  widget.gameAction = nil
+  widget.gameFilter = nil
   widget.item:setItemVisible(true)
   widget.text:setImageSource('')
   widget.hotkey = config and config.hotkey or ""
@@ -385,6 +391,8 @@ function setupButton(widget)
     widget.autoSay = config.autoSay
     widget.action = config.action
     widget.spellData = config.spellData
+    widget.gameAction = config.gameAction
+    widget.gameFilter = config.gameFilter
     if config.type ~= 0 and config.type ~= 3 then
       widget.item:setItemVisible(false)
     end
@@ -392,6 +400,10 @@ function setupButton(widget)
 
   -- callback
   setupAction(widget)
+
+  if widget.type == TYPE.ACTION then
+    widget.text:setText(gameActionLabel(widget.gameAction, widget.gameFilter))
+  end
 
   --hotkey
   widget.hotkeyLabel:setText(translateHotkeyDesc(widget.hotkey))
@@ -429,6 +441,7 @@ function setupButton(widget)
       menu:addOption(widget.spellId and tr('Edit Spell') or tr('Assign Spell'), function() assignSpell(widget) end)
       menu:addOption(widget.item:getItemId() > 100 and tr('Edit Object') or tr('Assign Object'), function() assignItem(widget) end)
       menu:addOption(widget.text:getText():len() > 0 and tr('Edit Text') or tr('Assign Text'), function() assignText(widget) end)
+      menu:addOption(widget.gameAction and tr('Edit Action') or tr('Assign Action'), function() assignGameAction(widget) end)
       menu:addOption(widget.hotkey and tr('Edit Hotkey') or tr('Assign Hotkey'), function() assignHotkey(widget) end)
 
       if widget.type > 0 then
@@ -482,6 +495,8 @@ function setupButton(widget)
     actionDesc = actionDesc.. "Mana:  "..spellData.mana
   elseif widget.type == TYPE.ITEM then
     actionDesc = itemAction
+  elseif widget.type == TYPE.ACTION then
+    actionDesc = gameActionDescription(widget.gameAction, widget.gameFilter)
   end
 
   local hotkeyDesc = widget.hotkey and widget.hotkey:len() > 0 and widget.hotkey or "None"
@@ -739,6 +754,96 @@ function assignText(widget)
   end
 end
 
+function getSettings()
+  return settings
+end
+
+function assignGameAction(widget)
+  destroyAssignWindows()
+
+  window = g_ui.loadUI('action', g_ui.getRootWidget())
+  window:show()
+  window:raise()
+  window:focus()
+
+  local actionRadio = UIRadioGroup.create()
+  local filterRadio = UIRadioGroup.create()
+  for _, id in ipairs({GAME_ACTION.ATTACK_NEXT, GAME_ACTION.LOOT, GAME_ACTION.STOP_ATTACK, GAME_ACTION.USE_UNDER}) do
+    actionRadio:addWidget(window.actions:getChildById(id))
+  end
+  filterRadio:addWidget(window.filters.filterAll)
+  filterRadio:addWidget(window.filters.filterPlayers)
+  filterRadio:addWidget(window.filters.filterMonsters)
+
+  local filterIds = {
+    [TARGET_FILTER.ALL] = window.filters.filterAll,
+    [TARGET_FILTER.PLAYERS] = window.filters.filterPlayers,
+    [TARGET_FILTER.MONSTERS] = window.filters.filterMonsters
+  }
+
+  -- the target filter only matters for "Attack next target"
+  actionRadio.onSelectionChange = function(group, selected)
+    local attack = selected and selected:getId() == GAME_ACTION.ATTACK_NEXT
+    window.filterLabel:setEnabled(attack)
+    for _, radioWidget in pairs(filterIds) do
+      radioWidget:setEnabled(attack)
+    end
+  end
+
+  -- copy settings from the current widget
+  actionRadio:selectWidget(window.actions:getChildById(widget.gameAction or GAME_ACTION.ATTACK_NEXT))
+  filterRadio:selectWidget(filterIds[widget.gameFilter] or window.filters.filterAll)
+
+  local closeWindow = function()
+    actionRadio:destroy()
+    filterRadio:destroy()
+    window:destroy()
+  end
+
+  local okFunc = function(destroy)
+    local selected = actionRadio:getSelectedWidget()
+    local filter = TARGET_FILTER.ALL
+    for value, radioWidget in pairs(filterIds) do
+      if filterRadio:getSelectedWidget() == radioWidget then
+        filter = value
+      end
+    end
+
+    local hotkey = settings[widget:getId()] and settings[widget:getId()].hotkey
+    if hotkey and hotkey:len() > 0 and widget.callback then
+      local gameRootPanel = modules.game_interface.getRootPanel()
+      g_keyboard.unbindKeyPress(hotkey, widget.callback, gameRootPanel)
+    end
+
+    settings[widget:getId()] = {
+      hotkey = hotkey,
+      type = TYPE.ACTION,
+      gameAction = selected:getId(),
+      gameFilter = selected:getId() == GAME_ACTION.ATTACK_NEXT and filter or nil
+    }
+
+    if destroy then
+      closeWindow()
+    end
+    setupButton(widget)
+  end
+  local cancelFunc = function()
+    closeWindow()
+    setupButton(widget)
+  end
+
+  window.buttonOk.onClick = function() okFunc(true) end
+  window.buttonApply.onClick = function() okFunc(false) end
+  window.buttonClose.onClick = cancelFunc
+  window.onEscape = cancelFunc
+  window.onEnter = function() okFunc(true) end
+
+  local actionbar = widget:getParent():getParent()
+  if actionbar.locked then
+    cancelFunc()
+  end
+end
+
 function assignSpell(widget)
   destroyAssignWindows()
   local radio = UIRadioGroup.create()
@@ -982,6 +1087,10 @@ function setupAction(widget)
       elseif widget.autoSay then
         g_game.talk(widget.sayText)
       end
+    end
+  elseif widget.type == TYPE.ACTION then
+    widget.callback = function()
+      runGameAction(widget.gameAction, widget.gameFilter)
     end
   elseif widget.type == TYPE.SPELL then
     widget.callback = function()
