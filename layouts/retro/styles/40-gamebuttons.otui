@@ -27,8 +27,7 @@ GameButtonsWindow < HeadlessMiniWindow
     // the website's red dragon plate with a golden neon "Store" on top (the neon layer pulses, see game_store)
     StoreButton
       id: storeWideButton
-      anchors.left: parent.left
-      anchors.right: parent.right
+      anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: parent.top
       @onClick: modules.game_store.toggle()
 
