@@ -46,6 +46,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [InstallDelete]
 ; modules removed from the client are removed from old installs too
 Type: filesandordirs; Name: "{app}\modules\game_hotkeys"
+Type: filesandordirs; Name: "{app}\modules\game_cooldown"
 
 [Files]
 ; Microsoft's own Visual C++ 2015-2022 x86 runtime (official, Authenticode-signed by Microsoft).

@@ -110,7 +110,7 @@ HealthOverlay < UIWidget
     id: healthPercentLabel
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
-    margin-right: 208
+    margin-right: 138
     margin-bottom: 16
     font: verdana-9px-bold
     color: #ffffff
@@ -121,7 +121,7 @@ HealthOverlay < UIWidget
     id: manaPercentLabel
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
-    margin-left: 169
+    margin-left: 96
     margin-bottom: 16
     font: verdana-9px-bold
     color: #ffffff

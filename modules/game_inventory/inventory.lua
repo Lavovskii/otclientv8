@@ -461,14 +461,13 @@ end
 
 function onFreeCapacityChange(player, freeCapacity)
   if not freeCapacity then return end
-  if freeCapacity > 99 then
+  if freeCapacity >= 10000 then
+    freeCapacity = math.floor(freeCapacity / 1000) .. 'k'
+  elseif freeCapacity > 99 then
     freeCapacity = math.floor(freeCapacity * 10) / 10
   end
-  if freeCapacity > 999 then
+  if type(freeCapacity) == 'number' and freeCapacity > 999 then
     freeCapacity = math.floor(freeCapacity)
-  end
-  if freeCapacity > 99999 then
-    freeCapacity = math.min(9999, math.floor(freeCapacity/1000)) .. "k"
   end
   capLabel:setText(tr('Cap') .. ':\n' .. freeCapacity)
 end

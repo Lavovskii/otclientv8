@@ -330,8 +330,16 @@ function onSoulChange(localPlayer, soul)
   setSkillValue('soul', soul)
 end
 
+-- 10000 or more is shown in thousands: 10k, 11k...
+local function formatCapacity(value)
+  if value >= 10000 then
+    return math.floor(value / 1000) .. 'k'
+  end
+  return value
+end
+
 function onFreeCapacityChange(localPlayer, freeCapacity)
-  setSkillValue('capacity', freeCapacity)
+  setSkillValue('capacity', formatCapacity(freeCapacity))
   checkAlert('capacity', freeCapacity, localPlayer:getTotalCapacity(), 20)
 end
 
