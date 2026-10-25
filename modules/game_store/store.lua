@@ -279,14 +279,16 @@ function toggle()
   if win:isVisible() then hide() else show() end
 end
 
--- slow golden "neon" pulse on the wide Store button text
+-- slow golden "neon" pulse on the wide Store button
 local pulseEvent
 local function lerp(a, b, t) return math.floor(a + (b - a) * t + 0.5) end
 local function pulse()
   local btn = g_ui.getRootWidget():recursiveGetChildById('storeWideButton')
-  if btn then
+  local neon = btn and btn:getChildById('neon')
+  if neon then
+    -- slow neon breathing: the glowing STORE layer fades between dim and full brightness
     local t = (math.sin(g_clock.millis() / 1000 * math.pi * 2 / 3.6) + 1) / 2
-    btn:setColor(string.format('#%02x%02x%02x', lerp(0xb0, 0xff, t), lerp(0x7a, 0xf0, t), lerp(0x10, 0x9a, t)))
+    neon:setOpacity(0.55 + 0.45 * t)
   end
   pulseEvent = scheduleEvent(pulse, 60)
 end
