@@ -844,6 +844,51 @@ function assignGameAction(widget)
   end
 end
 
+-- The old protocol does not tell the client the vocation or the spells a character learned, so the website API does
+-- (action "spells", same login as the store). Only castable (instant) spells of the character's vocation that it can
+-- already use (level, magic level, and learned when the spell has to be learned) are listed, sorted by level.
+local SPELLS_API = Services.website .. "/index.php/api/store"
+
+local function normalizeSpellName(name)
+  return name:lower():gsub('[^a-z0-9]', '')
+end
+
+local function canUseSpell(spell, info, player)
+  if spell.type ~= 'Instant' then
+    return false
+  end
+
+  if spell.level > player:getLevel() or (spell.maglevel or 0) > player:getMagicLevel() then
+    return false
+  end
+
+  if not info then
+    return true -- the server could not be asked: fall back to level and magic level only
+  end
+
+  local vocations = {info.vocation}
+  if info.promotion and info.promotion > 0 then
+    table.insert(vocations, info.vocation + 4 * info.promotion)
+  end
+
+  local fits = false
+  for _, vocation in ipairs(vocations) do
+    if table.find(spell.vocations, vocation) then
+      fits = true
+    end
+  end
+
+  if not fits then
+    return false
+  end
+
+  if spell.needlearn then
+    return info.learned[normalizeSpellName(spell.name)] == true
+  end
+
+  return true
+end
+
 function assignSpell(widget)
   destroyAssignWindows()
   local radio = UIRadioGroup.create()
@@ -855,93 +900,96 @@ function assignSpell(widget)
   window:focus()
 
   window:setText("Assign Spell to Action Button "..widget:getId())
+  window.checkPanel:setVisible(false)
 
-  -- old tibia does not send vocation
-  if g_game.getClientVersion() < 910 then
-    window.checkPanel:setVisible(false)
-  end
+  local spellWindow = window
+  local player = g_game.getLocalPlayer()
 
-  local spells = modules.gamelib.SpellInfo['Default']
-  for spellName, spellData in pairs(spells) do
-   if spellData.type ~= 'Rune' then
-    local widget = g_ui.createWidget('SpellPreview', window.spellList)
-    -- radio
-    radio:addWidget(widget)
-    local newGroup = {}
-    for groupId, duration in pairs(spellData.group) do
-      table.insert(newGroup, groupId)
+  local function populate(info)
+    if spellWindow:isDestroyed() then
+      return -- the window was closed while the server answered
     end
-    spellData.group = newGroup
-    
-    widget:setId(spellData.id)
-    widget:setText(spellName.."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
-    widget.level = spellData.level
-    widget.maglevel = spellData.maglevel or 0
-    widget.voc = spellData.vocations
-    widget.param = spellData.parameter
-    widget.source = SpelllistSettings['Default'].iconFile
-    widget.clip = Spells.getImageClip(SpellIcons[spellData.icon][1], 'Default')
-    widget.image:setImageSource(widget.source)
-    widget.image:setImageClip(widget.clip)
 
-    widget.spellData = {
-      words = spellData.words,
-      cd = spellData.exhaustion/1000,
-      mana = spellData.mana,
-      source = widget.source,
-      clip = widget.clip,
-      name = spellName,
-      param = spellData.parameter,
-      group = spellData.group,
-      id = spellData.id
-    }
-   end
-  end
+    local spells = modules.gamelib.SpellInfo['Default']
+    for spellName, spellData in pairs(spells) do
+      local candidate = {name = spellName, type = spellData.type, level = spellData.level, maglevel = spellData.maglevel,
+        vocations = spellData.vocations, needlearn = spellData.needlearn}
+      if canUseSpell(candidate, info, player) then
+        local spellWidget = g_ui.createWidget('SpellPreview', spellWindow.spellList)
+        -- radio
+        radio:addWidget(spellWidget)
+        local newGroup = {}
+        for groupId, duration in pairs(spellData.group) do
+          table.insert(newGroup, groupId)
+        end
+        spellData.group = newGroup
 
-  -- sort by level, then magic level, then name
-  local widgets = window.spellList:getChildren()
-  table.sort(widgets, function(a, b)
-    if a.level ~= b.level then return a.level < b.level end
-    if a.maglevel ~= b.maglevel then return a.maglevel < b.maglevel end
-    return a.spellData.name < b.spellData.name
-  end)
-  for i, widget in ipairs(widgets) do
-    window.spellList:moveChildToIndex(widget, i)
-  end
+        spellWidget:setId(spellData.id)
+        spellWidget:setText(spellName.."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
+        spellWidget.level = spellData.level
+        spellWidget.maglevel = spellData.maglevel or 0
+        spellWidget.voc = spellData.vocations
+        spellWidget.param = spellData.parameter
+        spellWidget.source = SpelllistSettings['Default'].iconFile
+        spellWidget.clip = Spells.getImageClip(SpellIcons[spellData.icon][1], 'Default')
+        spellWidget.image:setImageSource(spellWidget.source)
+        spellWidget.image:setImageClip(spellWidget.clip)
 
-  local function filterByVocation(a, filter)
-     -- disable callback
-    window.spellList.onChildFocusChange = nil
-
-    local widgets = window.spellList:getChildren()
-    local vocation = translateVocation(g_game.getLocalPlayer():getVocation())
-
-    -- visible
-    local fistVisible = nil
-    for i, widget in ipairs(widgets) do
-      local viable = not filter or table.find(widget.voc, vocation) and true or false
-      widget:setVisible(viable)
-      if viable and not fistVisible then
-        fistVisible = widget
-        radio:selectWidget(fistVisible)
+        spellWidget.spellData = {
+          words = spellData.words,
+          cd = spellData.exhaustion/1000,
+          mana = spellData.mana,
+          source = spellWidget.source,
+          clip = spellWidget.clip,
+          name = spellName,
+          param = spellData.parameter,
+          group = spellData.group,
+          id = spellData.id
+        }
       end
     end
 
-    -- select current one if exist
+    -- sort by level, then magic level, then name
+    local widgets = spellWindow.spellList:getChildren()
+    table.sort(widgets, function(a, b)
+      if a.level ~= b.level then return a.level < b.level end
+      if a.maglevel ~= b.maglevel then return a.maglevel < b.maglevel end
+      return a.spellData.name < b.spellData.name
+    end)
+    for i, child in ipairs(widgets) do
+      spellWindow.spellList:moveChildToIndex(child, i)
+    end
+
+    -- select the spell this button already has, or the first one
+    if #widgets > 0 then
+      radio:selectWidget(widgets[1])
+    end
+
     local currentSpell = widget.spellData and widget.spellData.id or 0
     if currentSpell > 0 then
       for i, child in ipairs(radio.widgets) do
-        local childId = child.spellData.id
-
-        if childId == currentSpell then
-          child:setVisible(true)
-          window.spellList:ensureChildVisible(child)
+        if child.spellData.id == currentSpell then
+          spellWindow.spellList:ensureChildVisible(child)
           radio:selectWidget(child)
           break
         end
       end
     end
   end
+
+  -- ask the server which spells the character knows
+  local body = {action = 'spells', character = player and player:getName() or '', account = G.account, password = G.password}
+  HTTP.postJSON(SPELLS_API, body, function(data, err)
+    if type(data) == 'table' and data.ok then
+      local learned = {}
+      for _, name in ipairs(data.learned or {}) do
+        learned[normalizeSpellName(name)] = true
+      end
+      populate({vocation = tonumber(data.vocation) or 0, promotion = tonumber(data.promotion) or 0, learned = learned})
+    else
+      populate(nil)
+    end
+  end)
 
   -- callback
   radio.onSelectionChange = function(widget, selected)
@@ -963,17 +1011,14 @@ function assignSpell(widget)
     end
   end
 
-  window.checkPanel.tick.onCheckChange = filterByVocation
-  filterByVocation(nil, g_game.getClientVersion() >= 910)
-
-  local okFunc = function(destroy) 
+  local okFunc = function(destroy)
     local selected = radio:getSelectedWidget()
     local paramWidgetText = window.paramText:getText()
     if not selected then return end
 
     selected.spellData.param = paramWidgetText
 
-    local hotkey = settings[widget:getId()] and settings[widget:getId()].hotkey   
+    local hotkey = settings[widget:getId()] and settings[widget:getId()].hotkey
     if hotkey and hotkey:len() > 0 and widget.callback then
       local gameRootPanel = modules.game_interface.getRootPanel()
       g_keyboard.unbindKeyPress(widget.hotkey, widget.callback, gameRootPanel)
@@ -982,13 +1027,13 @@ function assignSpell(widget)
     settings[widget:getId()] = {hotkey=hotkey}
     settings[widget:getId()].spellData = selected.spellData
     settings[widget:getId()].type = TYPE.SPELL
- 
+
     if destroy then
       window:destroy()
     end
     setupButton(widget)
   end
-  local cancelFunc = function() 
+  local cancelFunc = function()
     window:destroy()
     setupButton(widget)
   end
