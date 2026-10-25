@@ -6,6 +6,7 @@ function setSilentMode(on)
 end
 
 function init()
+  ProtocolGame.registerExtendedOpcode(2, onBrowseInfo)
   connect(Container, { onOpen = onContainerOpen,
                        onClose = onContainerClose,
                        onSizeChange = onContainerChangeSize,
@@ -19,6 +20,7 @@ function init()
 end
 
 function terminate()
+  ProtocolGame.unregisterExtendedOpcode(2)
   disconnect(Container, { onOpen = onContainerOpen,
                           onClose = onContainerClose,
                           onSizeChange = onContainerChangeSize,
@@ -111,6 +113,58 @@ function refreshContainerPages(container)
       end
     end
   end
+end
+
+-- Browse Field pages -------------------------------------------------------------------------------------------
+-- The server (Game::playerBrowseField) sends the Browse Field window as a normal container with the items of the
+-- current page (40 at most) and tells the client "page,pages" (extended opcode 2); the page buttons ask for another page
+-- (extended opcode 6).
+
+local BROWSE_FIELD_ID = 62
+local browseInfo = {page = 1, pages = 1}
+
+local function sendBrowsePage(page)
+  local protocol = g_game.getProtocolGame()
+  if protocol then
+    protocol:sendExtendedOpcode(6, tostring(page))
+  end
+end
+
+local function refreshBrowsePages(container)
+  local window = container and container.window
+  if not window then
+    return
+  end
+
+  toggleContainerPages(window, browseInfo.pages > 1)
+  window:recursiveGetChildById('pageLabel'):setText(string.format('Page %i of %i', browseInfo.page, browseInfo.pages))
+
+  local prevPageButton = window:recursiveGetChildById('prevPageButton')
+  prevPageButton:setEnabled(browseInfo.page > 1)
+  prevPageButton.onClick = function() sendBrowsePage(browseInfo.page - 1) end
+
+  local nextPageButton = window:recursiveGetChildById('nextPageButton')
+  nextPageButton:setEnabled(browseInfo.page < browseInfo.pages)
+  nextPageButton.onClick = function() sendBrowsePage(browseInfo.page + 1) end
+
+  local pagePanel = window:recursiveGetChildById('pagePanel')
+  if pagePanel then
+    pagePanel.onMouseWheel = function(widget, mousePos, mouseWheel)
+      if browseInfo.pages == 1 then return end
+      if mouseWheel == MouseWheelUp then
+        return prevPageButton.onClick()
+      else
+        return nextPageButton.onClick()
+      end
+    end
+  end
+end
+
+function onBrowseInfo(protocol, opcode, buffer)
+  local page, pages = buffer:match('^(%d+),(%d+)$')
+  browseInfo.page = tonumber(page) or 1
+  browseInfo.pages = tonumber(pages) or 1
+  refreshBrowsePages(g_game.getContainers()[BROWSE_FIELD_ID])
 end
 
 function onContainerOpen(container, previousContainer)
@@ -224,6 +278,10 @@ function onContainerOpen(container, previousContainer)
   end
 
   containerWindow:setup()
+
+  if container:getId() == BROWSE_FIELD_ID then
+    refreshBrowsePages(container)
+  end
 end
 
 function onContainerClose(container)
