@@ -166,6 +166,10 @@ local ownOpened = {}    -- containers opened by the loot hotkey, closed when it 
 local lastOpenRequest = nil
 local originalOpen = nil
 
+local function trace(...)
+  g_logger.info('[loot] ' .. string.format(...))
+end
+
 local function findEmptyContainerId()
   local open = g_game.getContainers()
   local id = 0
@@ -182,7 +186,7 @@ local function setSilentContainers(on)
 end
 
 function initGameActions()
-  connect(Container, { onOpen = onLootContainerOpen })
+  connect(Container, { onOpen = onLootContainerOpen, onClose = onLootContainerClose })
   registerMessageMode(MessageModes.Failure, onLootFailureMessage)
 
   -- the item held by an open container has no position in the client, so every open request is remembered to know
@@ -191,15 +195,14 @@ function initGameActions()
   g_game.open = function(item, previousContainer)
     lastOpenRequest = {
       containerId = previousContainer and previousContainer:getId() or findEmptyContainerId(),
-      itemId = item:getId(),
-      position = item:getPosition()
+      item = item
     }
     return originalOpen(item, previousContainer)
   end
 end
 
 function terminateGameActions()
-  disconnect(Container, { onOpen = onLootContainerOpen })
+  disconnect(Container, { onOpen = onLootContainerOpen, onClose = onLootContainerClose })
   unregisterMessageMode(MessageModes.Failure, onLootFailureMessage)
   if originalOpen then
     g_game.open = originalOpen
@@ -245,6 +248,8 @@ function onLootFailureMessage(mode, text)
     return
   end
 
+  trace('server said: %s', text)
+
   if text == FAIL_FULL or text == FAIL_ROOM then
     loot.fullFails = loot.fullFails + 1
   elseif text == FAIL_HEAVY then
@@ -285,9 +290,8 @@ end
 
 -- the open container that was opened from this item, if the client knows it
 local function findOpenContainer(item)
-  local position = item:getPosition()
   for _, container in pairs(g_game.getContainers()) do
-    if container.sourceItemId == item:getId() and samePosition(container.sourcePosition, position) then
+    if container.sourceItem == item then
       return container
     end
   end
@@ -306,7 +310,8 @@ local function openContainerItem(item, callback)
   end
 
   local containerId = findEmptyContainerId()
-  pendingOpen = {containerId = containerId, callback = callback}
+  pendingOpen = {containerId = containerId, callback = callback, item = item}
+  trace('open item %d (container id %d)', item:getId(), containerId)
   pendingOpen.event = scheduleEvent(function()
     local cb = pendingOpen and pendingOpen.callback
     pendingOpen = nil
@@ -320,8 +325,7 @@ end
 function onLootContainerOpen(container, previousContainer)
   -- remember which item this container belongs to
   if lastOpenRequest and lastOpenRequest.containerId == container:getId() then
-    container.sourceItemId = lastOpenRequest.itemId
-    container.sourcePosition = lastOpenRequest.position
+    container.sourceItem = lastOpenRequest.item
     lastOpenRequest = nil
   end
 
@@ -329,12 +333,34 @@ function onLootContainerOpen(container, previousContainer)
     return
   end
 
+  trace('container %d opened with %d items', container:getId(), #container:getItems())
   local callback = pendingOpen.callback
   removeEvent(pendingOpen.event)
   pendingOpen = nil
   container.lootOpened = true
   table.insert(ownOpened, container)
   callback(container)
+end
+
+-- asking to open a container that was already open closes it (the server toggles): give it back to the player
+function onLootContainerClose(container)
+  if not pendingOpen or container.sourceItem ~= pendingOpen.item then
+    return
+  end
+
+  trace('the container was already open, opening it again')
+  local item, callback = pendingOpen.item, pendingOpen.callback
+  removeEvent(pendingOpen.event)
+  pendingOpen = nil
+  callback(nil)
+
+  scheduleEvent(function()
+    if modules.game_containers then
+      modules.game_containers.setSilentMode(false)
+    end
+    g_game.open(item)
+    scheduleEvent(function() if loot then setSilentContainers(true) end end, 400)
+  end, 100)
 end
 
 -- loot bag -----------------------------------------------------------------------------------------------------
@@ -537,6 +563,7 @@ local function finishLoot()
     return
   end
 
+  trace('finished')
   showLootResult(job)
   stopLooting()
 end
@@ -581,6 +608,7 @@ local function pumpMoves()
     if not move then
       break
     end
+    trace('move item %d x%d to %d,%d,%d', move.item:getId(), move.count, move.position.x, move.position.y, move.position.z)
     g_game.move(move.item, move.position, move.count)
   end
 
@@ -707,6 +735,7 @@ function lootAround()
     return showFailure('You have no capacity left to loot.')
   end
 
+  trace('%d corpses around, loot bag %s', #corpses, getSettings().lootBag and 'set' or 'not set')
   loot = {queue = corpses, corpses = {}, destinations = {}, heavyFails = 0, fullFails = 0, moveQueue = {}}
   setSilentContainers(true)
   scheduleEvent(function() if not loot then setSilentContainers(false) end end, 6000)
