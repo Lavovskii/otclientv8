@@ -1,0 +1,954 @@
+// ForgottenL guides: every card is a drawing made of real client pieces (action bar slots, item sprites, spell icons,
+// menus) and a few words. The drawings are the Art* styles below; guides.lua puts them in the cards and sets the
+// item sprites (&itemId, &itemCount).
+
+// --- pieces ----------------------------------------------------------------------------------------------------------
+
+// an empty action bar slot (or a backpack slot)
+GuideSlot < UIItem
+  size: 34 34
+  padding: 1
+  virtual: true
+  phantom: true
+  image-source: /images/game/actionbar/actionbarslot
+  image-clip: 0 0 34 34
+  image-border: 0
+  image-color: #dfdfdf
+
+// a slot with something in it, as the bars draw it
+GuideSlotOn < GuideSlot
+  image-source: /images/ui/button
+  image-clip: 0 0 22 23
+  image-border: 3
+
+// the text of a slot that holds a text or an action
+GuideSlotText < Label
+  anchors.fill: parent
+  text-align: center
+  text-wrap: true
+  font: verdana-9px
+  color: #dfdfdf
+  phantom: true
+
+// the key of a slot (top right corner)
+GuideHotkey < Label
+  anchors.top: parent.top
+  anchors.right: parent.right
+  margin-top: 2
+  margin-right: 2
+  font: cipsoftFont
+  color: white
+  background: #292A2A
+  text-auto-resize: true
+  phantom: true
+
+// the Ultimate Healing icon: the first one of the spell sheet
+GuideSpell < UIWidget
+  size: 32 32
+  anchors.centerIn: parent
+  phantom: true
+  image-source: /images/game/spells/defaultspells
+  image-clip: 0 0 32 32
+
+GuideItem < UIItem
+  size: 32 32
+  virtual: true
+  phantom: true
+
+GuideMouse < UIWidget
+  size: 26 36
+  phantom: true
+  image-source: /images/game/guides/mouse_right
+
+GuideArrow < UIWidget
+  size: 24 18
+  phantom: true
+  image-source: /images/game/guides/arrow
+
+// a keyboard key
+GuideKey < Label
+  height: 22
+  text-auto-resize: true
+  padding: 3 7 3 7
+  text-align: center
+  font: verdana-11px-rounded
+  color: #f3e7c9
+  background-color: #2b2620
+  border-width: 1
+  border-color: #9c8650
+  phantom: true
+
+// a right click menu
+GuideMenu < UIWidget
+  width: 124
+  image-source: /images/ui/menubox
+  image-border: 3
+  padding: 4
+  phantom: true
+  layout:
+    type: verticalBox
+    fit-children: true
+
+GuideMenuLine < Label
+  height: 15
+  text-offset: 3 1
+  font: verdana-11px-antialised
+  color: #dfdfdf
+  phantom: true
+
+  $on:
+    color: #ffffff
+    background-color: #ffffff40
+
+GuideNote < Label
+  font: verdana-11px-rounded
+  color: #c9b98f
+  text-auto-resize: true
+  phantom: true
+
+// --- drawings: Action Bars --------------------------------------------------------------------------------------------
+
+ArtBars < Panel
+  anchors.fill: parent
+
+  GuideSlotOn
+    id: s1
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 14
+    GuideSpell
+    GuideHotkey
+      text: F1
+
+  GuideSlotOn
+    id: s2
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+    GuideHotkey
+      text: F2
+
+  GuideSlot
+    id: s3
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideHotkey
+      text: F3
+
+  GuideSlot
+    id: s4
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideHotkey
+      text: F4
+
+  GuideSlot
+    id: s5
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideHotkey
+      text: F5
+
+  GuideSlot
+    id: s6
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideHotkey
+      text: F6
+
+  GuideNote
+    anchors.left: s1.left
+    anchors.top: s1.bottom
+    margin-top: 8
+    text: Bottom bar: F1 ... F12 are ready to use
+
+ArtRightClick < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: slot
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 8
+    GuideHotkey
+      text: F3
+
+  GuideMouse
+    id: mouse
+    anchors.left: slot.right
+    anchors.top: slot.top
+    margin-left: -10
+    margin-top: 18
+
+  GuideArrow
+    id: arrow
+    anchors.left: mouse.right
+    anchors.top: slot.top
+    margin-left: 6
+    margin-top: 8
+
+  GuideMenu
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 6
+    GuideMenuLine
+      text: Assign Spell
+    GuideMenuLine
+      text: Assign Object
+    GuideMenuLine
+      text: Assign Text
+    GuideMenuLine
+      text: Assign Action
+    GuideMenuLine
+      text: Assign Hotkey
+
+ArtSpell < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: row
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 14
+    size: 126 36
+    background-color: #ffffff1a
+    border-width: 1
+    border-color: #6b6b6b
+    phantom: true
+    UIWidget
+      id: icon
+      size: 32 32
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 2
+      phantom: true
+      image-source: /images/game/spells/defaultspells
+      image-clip: 0 0 32 32
+    Label
+      anchors.left: icon.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 4
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #ffffff
+      !text: 'Ultimate Healing\nexura vita'
+      phantom: true
+
+  GuideArrow
+    id: arrow
+    anchors.left: row.right
+    anchors.verticalCenter: row.verticalCenter
+    margin-left: 8
+
+  GuideSlotOn
+    anchors.left: arrow.right
+    anchors.verticalCenter: row.verticalCenter
+    margin-left: 8
+    GuideSpell
+    GuideHotkey
+      text: F1
+
+ArtObject < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: from
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 16
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+
+  GuideArrow
+    id: arrow
+    anchors.left: from.right
+    anchors.verticalCenter: from.verticalCenter
+    margin-left: 6
+
+  GuideSlotOn
+    id: to
+    anchors.left: arrow.right
+    anchors.verticalCenter: from.verticalCenter
+    margin-left: 6
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+    GuideHotkey
+      text: F2
+
+  GuideMenu
+    anchors.left: to.right
+    anchors.top: parent.top
+    margin-left: 8
+    GuideMenuLine
+      text: Use on yourself
+      on: true
+    GuideMenuLine
+      text: Use on target
+    GuideMenuLine
+      text: With crosshair
+    GuideMenuLine
+      text: Equip/Unequip
+
+ArtText < Panel
+  anchors.fill: parent
+
+  GuideSlotOn
+    id: slot
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 16
+    GuideSlotText
+      text: hi
+    GuideHotkey
+      text: F7
+
+  GuideArrow
+    id: arrow
+    anchors.left: slot.right
+    anchors.verticalCenter: slot.verticalCenter
+    margin-left: 8
+
+  Label
+    anchors.left: arrow.right
+    anchors.verticalCenter: slot.verticalCenter
+    margin-left: 8
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #f0f000
+    text: Dev says: hi
+    phantom: true
+
+ArtAction < Panel
+  anchors.fill: parent
+
+  GuideSlotOn
+    id: a1
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 14
+    GuideSlotText
+      text: Loot
+  GuideSlotOn
+    id: a2
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideSlotText
+      !text: 'Next\nTarget'
+  GuideSlotOn
+    id: a3
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideSlotText
+      !text: 'Open\nDoor'
+  GuideSlotOn
+    id: a4
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideSlotText
+      !text: 'Stop\nAttack'
+  GuideSlotOn
+    id: a5
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideSlotText
+      !text: 'Use\nUnder'
+
+  GuideNote
+    anchors.left: a1.left
+    anchors.top: a1.bottom
+    margin-top: 8
+    text: They are on your left bar
+
+ArtHotkey < Panel
+  anchors.fill: parent
+
+  GuideSlotOn
+    id: before
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 16
+    GuideSlotText
+      text: Loot
+
+  GuideArrow
+    id: arrow1
+    anchors.left: before.right
+    anchors.verticalCenter: before.verticalCenter
+    margin-left: 6
+
+  GuideKey
+    id: key
+    anchors.left: arrow1.right
+    anchors.verticalCenter: before.verticalCenter
+    margin-left: 6
+    text: Space
+
+  GuideArrow
+    id: arrow2
+    anchors.left: key.right
+    anchors.verticalCenter: before.verticalCenter
+    margin-left: 6
+
+  GuideSlotOn
+    anchors.left: arrow2.right
+    anchors.verticalCenter: before.verticalCenter
+    margin-left: 6
+    GuideSlotText
+      text: Loot
+    GuideHotkey
+      text: Space
+
+ArtTips < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: lock
+    size: 16 16
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 6
+    image-source: /images/game/actionbar/locked
+    phantom: true
+
+  GuideNote
+    anchors.left: lock.right
+    anchors.verticalCenter: lock.verticalCenter
+    margin-left: 6
+    text: lock / unlock the bar
+
+  GuideSlotOn
+    id: s1
+    anchors.left: parent.left
+    anchors.top: lock.bottom
+    margin-top: 10
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+
+  GuideArrow
+    id: arrow
+    anchors.left: s1.right
+    anchors.verticalCenter: s1.verticalCenter
+    margin-left: 6
+
+  GuideSlotOn
+    id: s2
+    anchors.left: arrow.right
+    anchors.verticalCenter: s1.verticalCenter
+    margin-left: 6
+    GuideSpell
+
+  GuideNote
+    anchors.left: s2.right
+    anchors.verticalCenter: s1.verticalCenter
+    margin-left: 8
+    text: drag to swap
+
+// --- drawings: Loot ---------------------------------------------------------------------------------------------------
+
+ArtLootKey < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: corpse
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 14
+    &itemId: 4286
+
+  GuideItem
+    id: corpse2
+    anchors.left: corpse.right
+    anchors.top: corpse.top
+    margin-left: -8
+    margin-top: 8
+    &itemId: 4286
+
+  GuideArrow
+    id: arrow1
+    anchors.left: corpse2.right
+    anchors.top: corpse.top
+    margin-left: 6
+    margin-top: 12
+
+  GuideSlotOn
+    id: key
+    anchors.left: arrow1.right
+    anchors.top: corpse.top
+    margin-left: 6
+    margin-top: 4
+    GuideSlotText
+      text: Loot
+    GuideHotkey
+      text: Space
+
+  GuideArrow
+    id: arrow2
+    anchors.left: key.right
+    anchors.verticalCenter: key.verticalCenter
+    margin-left: 6
+
+  GuideSlot
+    id: bag
+    anchors.left: arrow2.right
+    anchors.verticalCenter: key.verticalCenter
+    margin-left: 6
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3031
+      &itemCount: 100
+
+  GuideSlot
+    anchors.left: bag.right
+    anchors.verticalCenter: key.verticalCenter
+    margin-left: 2
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3583
+
+ArtLootBag < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: bag
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 10
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 2854
+
+  GuideMouse
+    id: mouse
+    anchors.left: bag.right
+    anchors.top: bag.top
+    margin-left: -10
+    margin-top: 18
+
+  GuideArrow
+    id: arrow
+    anchors.left: mouse.right
+    anchors.top: bag.top
+    margin-left: 6
+    margin-top: 8
+
+  GuideMenu
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 6
+    width: 140
+    GuideMenuLine
+      text: Open
+    GuideMenuLine
+      text: Set as loot bag
+      on: true
+    GuideMenuLine
+      text: Empty backpack
+
+ArtIgnore < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: item
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 10
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3577
+
+  GuideMouse
+    id: mouse
+    anchors.left: item.right
+    anchors.top: item.top
+    margin-left: -10
+    margin-top: 18
+
+  GuideArrow
+    id: arrow
+    anchors.left: mouse.right
+    anchors.top: item.top
+    margin-left: 6
+    margin-top: 8
+
+  GuideMenu
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 6
+    width: 170
+    GuideMenuLine
+      text: Look
+    GuideMenuLine
+      text: Add to ignore loot list
+      on: true
+
+ArtLootChannel < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: console
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-top: 10
+    height: 52
+    background-color: #1c1c1c
+    border-width: 1
+    border-color: #5a5a5a
+    phantom: true
+
+    Label
+      id: tab1
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin: 3 0 0 4
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #8a8a8a
+      text: Default
+      phantom: true
+
+    Label
+      id: tab2
+      anchors.left: tab1.right
+      anchors.top: tab1.top
+      margin-left: 12
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #ffffff
+      text: Loot
+      phantom: true
+
+    Label
+      anchors.left: parent.left
+      anchors.top: tab1.bottom
+      margin: 6 0 0 6
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #e8e8e8
+      text: Loot of a dragon: 120 gold coins, dragon ham
+      phantom: true
+
+// --- drawings: Items --------------------------------------------------------------------------------------------------
+
+ArtBrowse < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: i1
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 12
+    &itemId: 3357
+  GuideItem
+    id: i2
+    anchors.left: i1.left
+    anchors.top: i1.top
+    margin-left: 6
+    margin-top: 6
+    &itemId: 3286
+  GuideItem
+    id: i3
+    anchors.left: i1.left
+    anchors.top: i1.top
+    margin-left: 12
+    margin-top: 12
+    &itemId: 3269
+
+  GuideMouse
+    id: mouse
+    anchors.left: i3.right
+    anchors.top: i3.top
+    margin-left: -6
+    margin-top: 6
+
+  GuideArrow
+    id: arrow
+    anchors.left: mouse.right
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 22
+
+  UIWidget
+    id: window
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 4
+    size: 112 78
+    image-source: /images/ui/menubox
+    image-border: 3
+    phantom: true
+
+    Label
+      id: title
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin: 3 0 0 5
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #dfdfdf
+      text: Browse Field
+      phantom: true
+
+    GuideSlot
+      id: b1
+      anchors.left: parent.left
+      anchors.top: title.bottom
+      margin: 3 0 0 3
+      image-source: /images/ui/item
+      image-clip: 0 0 34 34
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 3357
+    GuideSlot
+      id: b2
+      anchors.left: prev.right
+      anchors.top: prev.top
+      margin-left: 2
+      image-source: /images/ui/item
+      image-clip: 0 0 34 34
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 3286
+    GuideSlot
+      id: b3
+      anchors.left: prev.right
+      anchors.top: prev.top
+      margin-left: 2
+      image-source: /images/ui/item
+      image-clip: 0 0 34 34
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 3269
+
+    Label
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: b1.bottom
+      margin-top: 2
+      text-auto-resize: true
+      font: verdana-11px-antialised
+      color: #9a9a9a
+      text: Page 1 of 3
+      phantom: true
+
+ArtStacks < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: from
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 6
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3031
+      &itemCount: 100
+
+  GuideArrow
+    id: arrow1
+    anchors.left: from.right
+    anchors.verticalCenter: from.verticalCenter
+    margin-left: 6
+
+  GuideSlot
+    anchors.left: arrow1.right
+    anchors.verticalCenter: from.verticalCenter
+    margin-left: 6
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3031
+      &itemCount: 100
+
+  GuideKey
+    id: ctrl
+    anchors.left: parent.left
+    anchors.top: from.bottom
+    margin-top: 12
+    text: Ctrl
+
+  GuideNote
+    id: plus
+    anchors.left: ctrl.right
+    anchors.verticalCenter: ctrl.verticalCenter
+    margin-left: 6
+    text: + drag
+
+  GuideArrow
+    id: arrow2
+    anchors.left: plus.right
+    anchors.verticalCenter: ctrl.verticalCenter
+    margin-left: 6
+
+  GuideNote
+    anchors.left: arrow2.right
+    anchors.verticalCenter: ctrl.verticalCenter
+    margin-left: 6
+    text: how many?
+
+ArtEmpty < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: bag
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 10
+    image-source: /images/ui/item
+    image-clip: 0 0 34 34
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 2854
+
+  GuideMouse
+    id: mouse
+    anchors.left: bag.right
+    anchors.top: bag.top
+    margin-left: -10
+    margin-top: 18
+
+  GuideMenu
+    id: menu
+    anchors.left: mouse.right
+    anchors.top: parent.top
+    margin-left: 6
+    width: 120
+    GuideMenuLine
+      text: Open
+    GuideMenuLine
+      text: Empty backpack
+      on: true
+
+  GuideArrow
+    id: arrow
+    anchors.left: menu.right
+    anchors.top: bag.top
+    margin-left: 6
+    margin-top: 8
+
+  GuideItem
+    id: f1
+    anchors.left: arrow.right
+    anchors.top: bag.top
+    margin-left: 6
+    &itemId: 3357
+  GuideItem
+    anchors.left: f1.left
+    anchors.top: f1.top
+    margin-left: 10
+    margin-top: 10
+    &itemId: 3031
+    &itemCount: 37
+
+// --- window -----------------------------------------------------------------------------------------------------------
+
+GuideCard < Panel
+  height: 96
+  padding: 6
+  background-color: #00000040
+  border-width: 1
+  border-color: #4a4032
+
+  Panel
+    id: art
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 290
+    phantom: true
+
+  Label
+    id: title
+    anchors.left: art.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 10
+    font: verdana-11px-rounded
+    color: #ffd57a
+    phantom: true
+
+  Label
+    id: text
+    anchors.left: title.left
+    anchors.top: title.bottom
+    anchors.right: parent.right
+    margin-top: 6
+    text-wrap: true
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #dcdcdc
+    phantom: true
+
+GuidePage < Panel
+  ScrollablePanel
+    id: cards
+    anchors.fill: parent
+    margin-right: 14
+    vertical-scrollbar: scroll
+    layout:
+      type: verticalBox
+      spacing: 6
+
+  VerticalScrollBar
+    id: scroll
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 60
+    pixels-scroll: true
+
+MainWindow
+  id: guidesWindow
+  !text: tr('Guides')
+  size: 680 540
+  @onEscape: modules.game_guides.hide()
+
+  TabBar
+    id: guidesTabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  Panel
+    id: guidesTabContent
+    anchors.top: guidesTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 8
+    margin-bottom: 8
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 64
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_guides.hide()

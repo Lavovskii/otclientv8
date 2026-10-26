@@ -8,6 +8,7 @@ Module
   load-later:
     - game_buttons
     - game_questlog
+    - game_guides
     - game_textmessage
     - game_console
     - game_outfit

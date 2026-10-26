@@ -57,6 +57,24 @@ function gameActionDescription(action, filter)
   return 'None'
 end
 
+-- the tooltip of an action button: what it does, in a few lines
+function gameActionHelp(action, filter)
+  if action == GAME_ACTION.ATTACK_NEXT then
+    local who = 'the next creature'
+    if filter == TARGET_FILTER.PLAYERS then who = 'the next player' elseif filter == TARGET_FILTER.MONSTERS then who = 'the next monster' end
+    return 'NEXT TARGET\nAttacks ' .. who .. ' of your battle list.\nPress again to go to the one after it.'
+  elseif action == GAME_ACTION.LOOT then
+    return 'LOOT\nLoots the monsters you killed around you,\nstraight into your loot bag.\nRight click a backpack: Set as loot bag.\nRight click an item: Add to ignore loot list.'
+  elseif action == GAME_ACTION.STOP_ATTACK then
+    return 'STOP ATTACK\nStops attacking and following.'
+  elseif action == GAME_ACTION.USE_UNDER then
+    return 'USE UNDER\nUses what you stand on:\nladders, stairs, levers, holes.'
+  elseif action == GAME_ACTION.OPEN_DOOR then
+    return 'OPEN DOOR\nOpens the closed door next to you\n(the one in front of you first).\nNo door around: takes the stairs or ladder under you.'
+  end
+  return ''
+end
+
 function runGameAction(action, filter)
   if not g_game.isOnline() then
     return

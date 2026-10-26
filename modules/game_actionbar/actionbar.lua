@@ -189,10 +189,72 @@ function offline()
   actionBars = {}
 end
 
+-- what a character starts with (applied once per character, never over a slot or a key the player already uses):
+-- F1 to F12 on the first 12 slots of the bottom bar, and every game action on the left bar, without keys (the tooltip
+-- of an action tells the player to give it one)
+local DEFAULTS_VERSION = 1
+local DEFAULT_ACTIONS = {
+  {action = 'loot'},
+  {action = 'attackNext', filter = 'all'},
+  {action = 'attackNext', filter = 'monsters'},
+  {action = 'attackNext', filter = 'players'},
+  {action = 'stopAttack'},
+  {action = 'openDoor'},
+  {action = 'useUnder'}
+}
+
+local function applyDefaults()
+  if (settings.defaultsVersion or 0) >= DEFAULTS_VERSION then
+    return
+  end
+  settings.defaultsVersion = DEFAULTS_VERSION
+
+  local usedKeys, usedActions = {}, {}
+  for _, config in pairs(settings) do
+    if type(config) == 'table' then
+      if config.hotkey and config.hotkey ~= '' then
+        usedKeys[config.hotkey] = true
+      end
+      if config.type == TYPE.ACTION then
+        usedActions[tostring(config.gameAction) .. ':' .. tostring(config.gameFilter)] = true
+      end
+    end
+  end
+
+  for i = 1, 12 do
+    local id, key = '1.' .. i, 'F' .. i
+    settings[id] = settings[id] or {}
+    if (settings[id].hotkey or '') == '' and not usedKeys[key] then
+      settings[id].hotkey = key
+      usedKeys[key] = true
+    end
+  end
+
+  local slot = 1
+  for _, default in ipairs(DEFAULT_ACTIONS) do
+    local filter = default.action == 'attackNext' and default.filter or nil
+    if not usedActions[default.action .. ':' .. tostring(filter)] then
+      while slot <= 50 and settings['4.' .. slot] and settings['4.' .. slot].type do
+        slot = slot + 1
+      end
+      if slot > 50 then
+        break
+      end
+      local id = '4.' .. slot
+      settings[id] = settings[id] or {}
+      settings[id].type = TYPE.ACTION
+      settings[id].gameAction = default.action
+      settings[id].gameFilter = filter
+      slot = slot + 1
+    end
+  end
+end
+
 function online()
   settingsFile = modules.client_profiles.getSettingsFilePath("actionbar_v2.json")
   -- load settings
   load()
+  applyDefaults()
 
   -- the bars this character had open (options are global, so push them into the options first); a character that has
   -- no saved bars starts with the default: one at the bottom and one on each side
@@ -561,6 +623,14 @@ function setupButton(widget)
   local tooltip = "Action Button "..id
   tooltip = tooltip.."\n\n\tAction:  ".. actionDesc
   tooltip = tooltip.."\nHotkeys:  ".. hotkeyDesc
+  if widget.type == TYPE.ACTION then
+    tooltip = gameActionHelp(widget.gameAction, widget.gameFilter)
+    if hotkeyDesc == "None" then
+      tooltip = tooltip.."\n\nNo key yet: right click this slot and choose Assign Hotkey."
+    else
+      tooltip = tooltip.."\n\nKey: "..hotkeyDesc
+    end
+  end
 
   widget.item:setTooltip(tooltip)
 end

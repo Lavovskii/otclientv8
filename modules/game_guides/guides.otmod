@@ -1,0 +1,9 @@
+Module
+  name: game_guides
+  description: Illustrated guides (action bars, loot, items)
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ guides ]
+  dependencies: [ client_topmenu ]
+  @onLoad: init()
+  @onUnload: terminate()
