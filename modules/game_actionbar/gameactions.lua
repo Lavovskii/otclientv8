@@ -166,7 +166,7 @@ end
 
 local function showFailure(text)
   if modules.game_textmessage then
-    modules.game_textmessage.displayFailureMessage(text)
+    modules.game_textmessage.displayBroadcastMessage(text) -- MessageModes.Warning: red, centre of the screen
   end
 end
 
