@@ -258,7 +258,12 @@ function onLootReply(protocol, opcode, buffer)
   end
 end
 
--- the server keeps the ignore list in memory only: send it at login and whenever it changes
+-- the server keeps the ignore list in memory only: send it at login and whenever it changes (and before the first
+-- loot of a session, in case the login send came before the server's extended opcode handshake)
+local ignoreSent = false
+local emptyConfirm = nil
+local syncEvent = nil
+
 function sendIgnoreList()
   local ids = {}
   for id in pairs(getSettings().ignoreLoot or {}) do
@@ -266,15 +271,35 @@ function sendIgnoreList()
   end
 
   sendOpcode(OPCODE_IGNORE, table.concat(ids, ','))
+  ignoreSent = true
 end
 
 function syncLootSettings()
-  scheduleEvent(sendIgnoreList, 1500) -- after the server's extended opcode handshake
+  ignoreSent = false
+  removeEvent(syncEvent)
+  syncEvent = scheduleEvent(function()
+    syncEvent = nil
+    sendIgnoreList()
+  end, 1500) -- after the server's extended opcode handshake
+end
+
+local function closeEmptyConfirm()
+  if emptyConfirm then
+    emptyConfirm:destroy()
+    emptyConfirm = nil
+  end
+end
+
+-- what belongs to the session ends with it (the "Empty backpack" question would point at an item of the old one)
+function endGameActions()
+  removeEvent(syncEvent)
+  syncEvent = nil
+  closeEmptyConfirm()
 end
 
 function initGameActions()
   ProtocolGame.registerExtendedOpcode(OPCODE_LOOT, onLootReply)
-  connect(g_game, {onGameStart = syncLootSettings})
+  connect(g_game, {onGameStart = syncLootSettings, onGameEnd = endGameActions})
   if g_game.isOnline() then
     syncLootSettings()
   end
@@ -282,7 +307,8 @@ end
 
 function terminateGameActions()
   ProtocolGame.unregisterExtendedOpcode(OPCODE_LOOT)
-  disconnect(g_game, {onGameStart = syncLootSettings})
+  disconnect(g_game, {onGameStart = syncLootSettings, onGameEnd = endGameActions})
+  endGameActions()
 end
 
 function lootAround()
@@ -292,6 +318,9 @@ function lootAround()
   end
 
   lastLoot = now
+  if not ignoreSent then
+    sendIgnoreList()
+  end
   sendOpcode(OPCODE_LOOT)
 end
 
@@ -343,24 +372,12 @@ end
 
 -- empty backpack -----------------------------------------------------------------------------------------------
 
-local emptyConfirm = nil
-
 -- right click -> "Empty backpack": always asks first, the server then drops everything that is inside on the floor
 function emptyBackpack(item)
-  if emptyConfirm then
-    emptyConfirm:destroy()
-    emptyConfirm = nil
-  end
-
-  local function close()
-    if emptyConfirm then
-      emptyConfirm:destroy()
-      emptyConfirm = nil
-    end
-  end
+  closeEmptyConfirm()
 
   local function yes()
-    close()
+    closeEmptyConfirm()
     local position = item:getPosition()
     if position and position.x == 65535 then
       sendOpcode(OPCODE_EMPTY, position.x .. ',' .. position.y .. ',' .. position.z .. ',' .. item:getId())
@@ -370,6 +387,6 @@ function emptyBackpack(item)
   emptyConfirm = displayGeneralBox(tr('Empty backpack'),
     tr('Do you really want to drop everything that is inside this backpack?\nAll the items will be dropped on the floor.'), {
       { text = tr('Yes'), callback = yes },
-      { text = tr('No'), callback = close },
-      anchor = AnchorHorizontalCenter }, yes, close)
+      { text = tr('No'), callback = closeEmptyConfirm },
+      anchor = AnchorHorizontalCenter }, yes, closeEmptyConfirm)
 end

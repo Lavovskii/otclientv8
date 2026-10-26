@@ -231,8 +231,7 @@ function onSoulChange(localPlayer, soul)
 end
 
 function onFreeCapacityChange(player, freeCapacity)
-  if freeCapacity >= 10000 then freeCapacity = math.floor(freeCapacity / 1000) .. 'k' end
-  capLabel:setText(tr('Cap') .. ': ' .. freeCapacity)
+  capLabel:setText(tr('Cap') .. ': ' .. formatCapacity(freeCapacity))
 end
 
 function onStatesChange(localPlayer, now, old)

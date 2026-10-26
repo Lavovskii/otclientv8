@@ -279,32 +279,61 @@ function toggle()
   if win:isVisible() then hide() else show() end
 end
 
--- slow golden "neon" pulse on the wide Store button
-local pulseEvent
-local function lerp(a, b, t) return math.floor(a + (b - a) * t + 0.5) end
+-- slow golden "neon" pulse on the wide Store button: the neon layer is looked up once (again only if it was
+-- destroyed), and the pulse stops in layouts that have no Store button
+local pulseEvent, neonWidget
 local function pulse()
-  local btn = g_ui.getRootWidget():recursiveGetChildById('storeWideButton')
-  local neon = btn and btn:getChildById('neon')
-  if neon then
-    -- slow neon breathing: the glowing STORE layer fades between dim and full brightness
-    local t = (math.sin(g_clock.millis() / 1000 * math.pi * 2 / 3.6) + 1) / 2
-    neon:setOpacity(0.55 + 0.45 * t)
+  if not neonWidget or neonWidget:isDestroyed() then
+    local btn = g_ui.getRootWidget():recursiveGetChildById('storeWideButton')
+    neonWidget = btn and btn:getChildById('neon')
   end
+  if not neonWidget then
+    pulseEvent = nil
+    return
+  end
+
+  -- slow neon breathing: the glowing STORE layer fades between dim and full brightness
+  local t = (math.sin(g_clock.millis() / 1000 * math.pi * 2 / 3.6) + 1) / 2
+  neonWidget:setOpacity(0.55 + 0.45 * t)
   pulseEvent = scheduleEvent(pulse, 60)
 end
 local function startPulse() if not pulseEvent then pulse() end end
 local function stopPulse() if pulseEvent then removeEvent(pulseEvent) pulseEvent = nil end end
+
+local adminEvent
+function onGameStart()
+  applyAdmin(false)
+  removeEvent(adminEvent)
+  adminEvent = scheduleEvent(checkAdmin, 1500)
+  startPulse()
+end
+
+function onGameEnd()
+  removeEvent(adminEvent)
+  adminEvent = nil
+  stopPulse()
+  applyAdmin(false)
+  if win then
+    hide()
+  end
+end
 
 function init()
   win = g_ui.loadUI('store', g_ui.getRootWidget())
   win:hide()
   connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
   connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
-  connect(g_game, { onGameEnd = function() applyAdmin(false) hide() stopPulse() end, onGameStart = function() applyAdmin(false) scheduleEvent(checkAdmin, 1500) startPulse() end })
-  if g_game.isOnline() then scheduleEvent(checkAdmin, 500) startPulse() end
+  connect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })
+  if g_game.isOnline() then
+    adminEvent = scheduleEvent(checkAdmin, 500)
+    startPulse()
+  end
 end
 
 function terminate()
+  disconnect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })
+  removeEvent(adminEvent)
+  adminEvent = nil
   stopPulse()
   if topButton then topButton:destroy() topButton = nil end
   if win then win:destroy() win = nil end

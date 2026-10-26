@@ -197,12 +197,17 @@ function hide()
 end
 
 -- ForgottenL: debug tools (Extras tab, terminal, debug info) are only for logged-in admin characters
+-- the tab is added once and then only shown or hidden (removeTab destroys its panel, which a later addTab would reuse)
 function setAdminTools(on)
-  if on and not extrasTab and not g_app.isMobile() then
+  on = on and not g_app.isMobile()
+  if on and not extrasTab then
     extrasTab = optionsTabBar:addTab(tr('Extras'), extrasPanel, '/images/optionstab/extras')
-  elseif not on and extrasTab then
-    optionsTabBar:removeTab(extrasTab)
-    extrasTab = nil
+  end
+  if extrasTab then
+    if not on and optionsTabBar:getCurrentTab() == extrasTab then
+      optionsTabBar:selectTab(optionsTabBar:getTabs()[1])
+    end
+    extrasTab:setVisible(on)
   end
   if modules.client_terminal then modules.client_terminal.setAllowed(on) end
   if modules.client_stats then modules.client_stats.setAllowed(on) end

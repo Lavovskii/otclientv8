@@ -1,12 +1,6 @@
 local gameStart = 0
-local silentMode = false -- while the loot hotkey runs, the containers it opens get no window
-
-function setSilentMode(on)
-  silentMode = on and true or false
-end
-
 function init()
-  ProtocolGame.registerExtendedOpcode(2, onBrowseInfo)
+  ProtocolGame.registerExtendedOpcode(BROWSE_INFO_OPCODE, onBrowseInfo)
   connect(Container, { onOpen = onContainerOpen,
                        onClose = onContainerClose,
                        onSizeChange = onContainerChangeSize,
@@ -20,7 +14,7 @@ function init()
 end
 
 function terminate()
-  ProtocolGame.unregisterExtendedOpcode(2)
+  ProtocolGame.unregisterExtendedOpcode(BROWSE_INFO_OPCODE)
   disconnect(Container, { onOpen = onContainerOpen,
                           onClose = onContainerClose,
                           onSizeChange = onContainerChangeSize,
@@ -117,10 +111,11 @@ end
 
 -- Browse Field pages -------------------------------------------------------------------------------------------
 -- The server (Game::playerBrowseField) sends the Browse Field window as a normal container with the items of the
--- current page (40 at most) and tells the client "page,pages" (extended opcode 2); the page buttons ask for another page
+-- current page (40 at most) and tells the client "page,pages" (extended opcode 7); the page buttons ask for another page
 -- (extended opcode 6).
 
 local BROWSE_FIELD_ID = 62
+BROWSE_INFO_OPCODE = 7 -- "page,pages" from the server (opcode 2 is the client's ping)
 local browseInfo = {page = 1, pages = 1}
 
 local function sendBrowsePage(page)
@@ -168,10 +163,6 @@ function onBrowseInfo(protocol, opcode, buffer)
 end
 
 function onContainerOpen(container, previousContainer)
-  if silentMode then
-    return
-  end
-
   local containerWindow
   if previousContainer and previousContainer.window then
     containerWindow = previousContainer.window

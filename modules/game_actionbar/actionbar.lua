@@ -23,17 +23,48 @@ local ACTION = {
   USE_CROSS = 5
 }
 
--- servers may have different id's, change if not working properly (only for protocols 910+)
-local function translateVocation(id) 
-  if id == 1 or id == 11 then
-    return 8 -- ek
-  elseif id == 2 or id == 12 then
-    return 7 -- rp
-  elseif id == 3 or id == 13 then
-    return 5 -- ms
-  elseif id == 4 or id == 14 then
-    return 6 -- ed
+-- removes the key binding of a button: setupAction binds a new callback every time a button is set up, so the
+-- old one has to go first or the key would run the action twice
+local function unbindButton(widget)
+  if widget.keyCallback and widget.hotkey and widget.hotkey:len() > 0 then
+    g_keyboard.unbindKeyPress(widget.hotkey, widget.keyCallback, modules.game_interface.getRootPanel())
   end
+  widget.keyCallback = nil
+  widget.callback = nil
+end
+
+-- while the chat is open a key that writes text (a letter, with or without Shift) belongs to the chat; with the option
+-- "Disable action bar hotkeys when chat mode is on" every action bar key waits until the chat is closed
+local function keyBelongsToChat(hotkey)
+  if not (modules.game_console and modules.game_console.isChatEnabled()) then
+    return false
+  end
+
+  if modules.client_options and modules.client_options.getOption('actionbarLock') then
+    return true
+  end
+
+  return hotkey:gsub('^Shift%+', ''):len() == 1
+end
+
+-- the cooldown groups of a spell as a list (SpellInfo keeps them as {[groupId] = ms}; it is shared with the spell
+-- list module, so it is never changed here)
+local function spellGroups(spellData)
+  local groups = {}
+  for groupId in pairs(spellData.group or {}) do
+    table.insert(groups, groupId)
+  end
+  return groups
+end
+
+-- the settings are written a second after the last change (and at logout), so a crash keeps the bars
+local saveEvent = nil
+function scheduleSave()
+  removeEvent(saveEvent)
+  saveEvent = scheduleEvent(function()
+    saveEvent = nil
+    save()
+  end, 1000)
 end
 
 local function isSpell(text) -- returns bool or table (spelldata, param text)
@@ -83,6 +114,13 @@ function init()
 end
 
 function terminate()
+  if g_game.isOnline() then
+    offline()
+  end
+  if mouseGrabberWidget then
+    mouseGrabberWidget:destroy()
+    mouseGrabberWidget = nil
+  end
   terminateGameActions()
   disconnect(g_game, {
     onGameStart = online,
@@ -128,23 +166,18 @@ end
 
 function offline()
   -- save settings to json
+  removeEvent(saveEvent)
+  saveEvent = nil
   save()
 
   -- destroy windows
   destroyAssignWindows()
-  mouseGrabberWidget:destroy()
 
   -- remove binds
   for index, actionbar in ipairs(actionBars) do
     if actionbar.tabBar then
       for i, actionButton in ipairs(actionbar.tabBar:getChildren()) do
-        local callback = actionButton.callback
-        local hotkey = actionButton.hotkey and actionButton.hotkey:len() > 0 and actionButton.hotkey or false
-
-        if callback and hotkey then
-          local gameRootPanel = modules.game_interface.getRootPanel()
-          g_keyboard.unbindKeyPress(hotkey, callback, gameRootPanel)
-        end
+        unbindButton(actionButton)
       end
     end
   end
@@ -353,6 +386,11 @@ function setupActionBar(n)
   actionbar.nextPanel.lock:setOn(not locked)
   actionbar.nextPanel.lock.image:setOn(not locked)
 
+  -- the old buttons go away: their keys first
+  for _, child in ipairs(actionbar.tabBar:getChildren()) do
+    unbindButton(child)
+  end
+
   if not visible then
     return actionbar.tabBar:destroyChildren() -- will hopefully lower stress
   else
@@ -393,8 +431,8 @@ function setupButton(widget)
   widget.gameFilter = nil
   widget.item:setItemVisible(true)
   widget.text:setImageSource('')
+  unbindButton(widget)
   widget.hotkey = config and config.hotkey or ""
-  widget.callback = nil
 
   -- add new settings
   if config and config.type then
@@ -417,6 +455,9 @@ function setupButton(widget)
 
   -- callback
   setupAction(widget)
+  if not applyingBars then
+    scheduleSave()
+  end
 
   if widget.type == TYPE.ACTION then
     widget.text:setText(gameActionLabel(widget.gameAction, widget.gameFilter))
@@ -455,11 +496,11 @@ function setupButton(widget)
 
       local menu = g_ui.createWidget('PopupMenu')
       menu:setGameMenu(true)
-      menu:addOption(widget.spellId and tr('Edit Spell') or tr('Assign Spell'), function() assignSpell(widget) end)
+      menu:addOption(widget.spellData and tr('Edit Spell') or tr('Assign Spell'), function() assignSpell(widget) end)
       menu:addOption(widget.item:getItemId() > 100 and tr('Edit Object') or tr('Assign Object'), function() assignItem(widget) end)
       menu:addOption(widget.text:getText():len() > 0 and tr('Edit Text') or tr('Assign Text'), function() assignText(widget) end)
       menu:addOption(widget.gameAction and tr('Edit Action') or tr('Assign Action'), function() assignGameAction(widget) end)
-      menu:addOption(widget.hotkey and tr('Edit Hotkey') or tr('Assign Hotkey'), function() assignHotkey(widget) end)
+      menu:addOption(widget.hotkey ~= '' and tr('Edit Hotkey') or tr('Assign Hotkey'), function() assignHotkey(widget) end)
 
       if widget.type > 0 then
         menu:addSeparator()
@@ -723,11 +764,6 @@ function assignText(widget)
     if spell then -- entered text is spell
       local paramText = spell.param
       local spellData = spell.data
-      local newGroup = {}
-      for groupId, duration in pairs(spellData.group) do
-        table.insert(newGroup, groupId)
-      end
-      spellData.group = newGroup
 
   
       settings[widget:getId()].type = TYPE.SPELL
@@ -739,7 +775,7 @@ function assignText(widget)
         clip = Spells.getImageClip(SpellIcons[spellData.icon][1], 'Default'),
         name = spellData.spellName,
         param = paramText,
-        group = spellData.group,
+        group = spellGroups(spellData),
         id = spellData.id
       }
     else -- is just text
@@ -935,11 +971,6 @@ function assignSpell(widget)
         local spellWidget = g_ui.createWidget('SpellPreview', spellWindow.spellList)
         -- radio
         radio:addWidget(spellWidget)
-        local newGroup = {}
-        for groupId, duration in pairs(spellData.group) do
-          table.insert(newGroup, groupId)
-        end
-        spellData.group = newGroup
 
         spellWidget:setId(spellData.id)
         spellWidget:setText(spellName.."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
@@ -960,7 +991,7 @@ function assignSpell(widget)
           clip = spellWidget.clip,
           name = spellName,
           param = spellData.parameter,
-          group = spellData.group,
+          group = spellGroups(spellData),
           id = spellData.id
         }
       end
@@ -1103,10 +1134,7 @@ function assignHotkey(widget)
   local okFunc = function() 
     local hotkey = window.display:getText()
 
-    if settings[widget:getId()].hotkey and settings[widget:getId()].hotkey:len() > 0 and widget.callback then
-      local gameRootPanel = modules.game_interface.getRootPanel()
-      g_keyboard.unbindKeyPress(widget.hotkey, widget.callback, gameRootPanel)
-    end
+    unbindButton(widget)
     settings[widget:getId()] = settings[widget:getId()] or {}
     settings[widget:getId()].hotkey = hotkey
   
@@ -1117,10 +1145,7 @@ function assignHotkey(widget)
     window.display:setText('')
     local hotkey = window.display:getText()
 
-    if settings[widget:getId()].hotkey and settings[widget:getId()].hotkey:len() > 0 and widget.callback then
-      local gameRootPanel = modules.game_interface.getRootPanel()
-      g_keyboard.unbindKeyPress(widget.hotkey, widget.callback, gameRootPanel)
-    end
+    unbindButton(widget)
     settings[widget:getId()] = settings[widget:getId()] or {}
     settings[widget:getId()].hotkey = hotkey
   
@@ -1138,7 +1163,7 @@ function assignHotkey(widget)
 
   local actionbar = widget:getParent():getParent()
   if actionbar.locked then
-    cancelFunc()
+    closeFunc()
   end
 end
 
@@ -1253,8 +1278,13 @@ function setupAction(widget)
   end
 
   if widget.hotkey and widget.hotkey:len() > 0 and widget.callback then
-    local gameRootPanel = modules.game_interface.getRootPanel()
-    g_keyboard.bindKeyPress(widget.hotkey, widget.callback, gameRootPanel)
+    local action, hotkey = widget.callback, widget.hotkey
+    widget.keyCallback = function()
+      if not keyBelongsToChat(hotkey) then
+        action()
+      end
+    end
+    g_keyboard.bindKeyPress(hotkey, widget.keyCallback, modules.game_interface.getRootPanel())
   end
 end
 
@@ -1325,6 +1355,10 @@ function updateCooldown(action)
 end
 
 function save()
+  if settingsFile == "" then
+    return
+  end
+
   local status, result = pcall(function() return json.encode(settings, 2) end)
   if not status then
       return g_logger.error(
