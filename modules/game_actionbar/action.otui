@@ -4,7 +4,7 @@ ActionRadio < CheckBox
 
 MainWindow
   id: assignActionWindow
-  size: 300 295
+  size: 300 316
   text: Assign Action
 
   Label
@@ -38,6 +38,10 @@ MainWindow
     ActionRadio
       id: useUnder
       text: Use item under player
+
+    ActionRadio
+      id: openDoor
+      text: Open door next to player (or use stairs)
 
   Label
     id: filterLabel

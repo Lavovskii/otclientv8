@@ -6,12 +6,15 @@
 --               except the items on the ignore loot list (right click an item -> "Add to ignore loot list")
 --   stopAttack  stop attacking (and following)
 --   useUnder    use the item under the player (climb a ladder, use stairs, a lever, a hole...)
+--   openDoor    open the closed door next to the player (the one in front first); with no door around, use the item
+--               under the player (stairs, ladders)
 
 GAME_ACTION = {
   ATTACK_NEXT = 'attackNext',
   LOOT = 'loot',
   STOP_ATTACK = 'stopAttack',
-  USE_UNDER = 'useUnder'
+  USE_UNDER = 'useUnder',
+  OPEN_DOOR = 'openDoor'
 }
 
 TARGET_FILTER = {
@@ -31,6 +34,8 @@ function gameActionLabel(action, filter)
     return 'Stop\nAttack'
   elseif action == GAME_ACTION.USE_UNDER then
     return 'Use\nUnder'
+  elseif action == GAME_ACTION.OPEN_DOOR then
+    return 'Open\nDoor'
   end
   return ''
 end
@@ -46,6 +51,8 @@ function gameActionDescription(action, filter)
     return 'Stop attacking'
   elseif action == GAME_ACTION.USE_UNDER then
     return 'Use the item under you (ladders, stairs, levers...)'
+  elseif action == GAME_ACTION.OPEN_DOOR then
+    return 'Open the door next to you (or use the stairs under you)'
   end
   return 'None'
 end
@@ -63,6 +70,8 @@ function runGameAction(action, filter)
     g_game.cancelAttackAndFollow()
   elseif action == GAME_ACTION.USE_UNDER then
     useItemUnderPlayer()
+  elseif action == GAME_ACTION.OPEN_DOOR then
+    openDoorAround()
   end
 end
 
@@ -83,6 +92,52 @@ function useItemUnderPlayer()
 
   if thing then
     g_game.use(thing)
+  end
+end
+
+-- open door ------------------------------------------------------------------------------------------------------
+
+-- the tile the player faces is tried first, then the straight ones, then the diagonals
+local FACING_OFFSET = {
+  [North] = {x = 0, y = -1}, [East] = {x = 1, y = 0}, [South] = {x = 0, y = 1}, [West] = {x = -1, y = 0}
+}
+local AROUND = {{x = 0, y = -1}, {x = 1, y = 0}, {x = 0, y = 1}, {x = -1, y = 0},
+  {x = -1, y = -1}, {x = 1, y = -1}, {x = 1, y = 1}, {x = -1, y = 1}}
+
+-- the closed door (DOOR_IDS, generated from the server's items.xml) of the tile next to the player
+local function findDoor(position, offset)
+  local tile = g_map.getTile({x = position.x + offset.x, y = position.y + offset.y, z = position.z})
+  if not tile then
+    return nil
+  end
+
+  for _, item in ipairs(tile:getItems()) do
+    if DOOR_IDS[item:getId()] then
+      return item
+    end
+  end
+end
+
+function openDoorAround()
+  local player = g_game.getLocalPlayer()
+  if not player then
+    return
+  end
+
+  local position = player:getPosition()
+  local facing = FACING_OFFSET[player:getDirection()]
+  local door = facing and findDoor(position, facing)
+  for _, offset in ipairs(AROUND) do
+    if door then
+      break
+    end
+    door = findDoor(position, offset)
+  end
+
+  if door then
+    g_game.use(door)
+  else
+    useItemUnderPlayer()
   end
 end
 

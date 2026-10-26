@@ -785,7 +785,7 @@ function assignGameAction(widget)
 
   local actionRadio = UIRadioGroup.create()
   local filterRadio = UIRadioGroup.create()
-  for _, id in ipairs({GAME_ACTION.ATTACK_NEXT, GAME_ACTION.LOOT, GAME_ACTION.STOP_ATTACK, GAME_ACTION.USE_UNDER}) do
+  for _, id in ipairs({GAME_ACTION.ATTACK_NEXT, GAME_ACTION.LOOT, GAME_ACTION.STOP_ATTACK, GAME_ACTION.USE_UNDER, GAME_ACTION.OPEN_DOOR}) do
     actionRadio:addWidget(window.actions:getChildById(id))
   end
   filterRadio:addWidget(window.filters.filterAll)
