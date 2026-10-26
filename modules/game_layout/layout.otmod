@@ -1,0 +1,8 @@
+Module
+  name: game_layout
+  description: Keeps every character's windows and open backpacks as they were left
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ layout ]
+  @onLoad: init()
+  @onUnload: terminate()
