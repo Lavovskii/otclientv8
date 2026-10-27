@@ -1,9 +1,9 @@
 Module
   name: game_spelllist
-  description: View available spells
+  description: The spells of your vocation, with a demo of each
   author: Summ, Edubart
   website: https://github.com/edubart/otclient
   sandboxed: true
-  scripts: [ spelllist ]
+  scripts: [ spelldemosprites, spelldemos, spelldemo, spelllist ]
   @onLoad: init()
   @onUnload: terminate()

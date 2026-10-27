@@ -1,390 +1,324 @@
-local SpelllistProfile = 'Default'
+-- The Spells window: only the spells of the character's vocation, grouped and sorted by level, with filters (attack,
+-- healing, support, runes, what the character can already cast, a search). Clicking a spell shows its details and
+-- plays a demo of it (spelldemo.lua).
+--
+-- The old protocol does not tell the client the vocation or the spells a character learned, so the website API does
+-- (action "spells", the same call the action bars make). Until it answers, or when it cannot be reached, every spell
+-- is listed.
 
-spelllistWindow       = nil
-spelllistButton       = nil
-spellList             = nil
-nameValueLabel        = nil
-formulaValueLabel     = nil
-vocationValueLabel    = nil
-groupValueLabel       = nil
-typeValueLabel        = nil
-cooldownValueLabel    = nil
-levelValueLabel       = nil
-manaValueLabel        = nil
-premiumValueLabel     = nil
-descriptionValueLabel = nil
-
-vocationBoxAny        = nil
-vocationBoxSorcerer   = nil
-vocationBoxDruid      = nil
-vocationBoxPaladin    = nil
-vocationBoxKnight     = nil
-
-groupBoxAny           = nil
-groupBoxAttack        = nil
-groupBoxHealing       = nil
-groupBoxSupport       = nil
-
-premiumBoxAny         = nil
-premiumBoxNo          = nil
-premiumBoxYes         = nil
-
-vocationRadioGroup    = nil
-groupRadioGroup       = nil
-premiumRadioGroup     = nil
-
--- consts
-FILTER_PREMIUM_ANY        = 0
-FILTER_PREMIUM_NO         = 1
-FILTER_PREMIUM_YES        = 2
-
-FILTER_VOCATION_ANY       = 0
-FILTER_VOCATION_SORCERER  = 1
-FILTER_VOCATION_DRUID     = 2
-FILTER_VOCATION_PALADIN   = 3
-FILTER_VOCATION_KNIGHT    = 4
-
-FILTER_GROUP_ANY          = 0
-FILTER_GROUP_ATTACK       = 1
-FILTER_GROUP_HEALING      = 2
-FILTER_GROUP_SUPPORT      = 3
-
--- Filter Settings
-local filters = {
-  level        = false,
-  vocation     = false,
-
-  vocationId   = FILTER_VOCATION_ANY,
-  premium      = FILTER_PREMIUM_ANY,
-  groupId      = FILTER_GROUP_ANY
+local SPELLS_API = Services.website .. "/index.php/api/store"
+local VOCATIONS = {'Sorcerer', 'Druid', 'Paladin', 'Knight'}
+local CATEGORIES = {
+  {id = 'all', text = 'All'},
+  {id = 'attack', text = 'Attack', group = 1},
+  {id = 'healing', text = 'Healing', group = 2},
+  {id = 'support', text = 'Support', group = 3},
+  {id = 'runes', text = 'Runes'},
+}
+-- the level groups of the list
+local BRACKETS = {
+  {0, 'Level 1 to 19'}, {20, 'Level 20 to 49'}, {50, 'Level 50 to 99'}, {100, 'Level 100 to 999'},
+  {1000, 'Level 1,000 to 9,999'}, {10000, 'Level 10,000 to 29,999'}, {30000, 'Level 30,000 to 59,999'},
+  {60000, 'Level 60,000 and up'},
 }
 
-function getSpelllistProfile()
-  return SpelllistProfile
+spelllistWindow = nil
+spelllistButton = nil
+local spellList, details, demoPlayer
+local categoryButtons = {}
+local state = {category = 'all', castableOnly = false, search = '', character = nil, info = nil, selected = nil}
+
+local function normalize(name)
+  return name:lower():gsub('[^a-z0-9]', '')
 end
 
-function setSpelllistProfile(name)
-  if SpelllistProfile == name then return end
-
-  if SpelllistSettings[name] and SpellInfo[name] then
-    local oldProfile = SpelllistProfile
-    SpelllistProfile = name
-    changeSpelllistProfile(oldProfile)
-  else
-    perror('Spelllist profile \'' .. name .. '\' could not be set.')
+local function thousands(n)
+  local s = tostring(n)
+  while true do
+    local done
+    s, done = s:gsub('^(%d+)(%d%d%d)', '%1,%2')
+    if done == 0 then return s end
   end
+end
+
+-- the vocations a spell must list to be one of the character's: the base vocation and, when promoted, the promoted one
+local function characterVocations()
+  local info = state.info
+  if not info or info.vocation < 1 then return nil end
+  local list = {info.vocation, info.vocation + 4}
+  return list
+end
+
+local function spellFits(spell)
+  local vocations = characterVocations()
+  if not vocations then return true end
+  for _, v in ipairs(vocations) do
+    if table.find(spell.vocations, v) then return true end
+  end
+  return false
+end
+
+-- why the character cannot cast the spell yet (nil when it can)
+local function blockedReason(spell)
+  local player = g_game.getLocalPlayer()
+  if not player then return nil end
+  if spell.level > player:getLevel() then
+    return tr('Needs level %s', thousands(spell.level))
+  end
+  if (spell.maglevel or 0) > player:getMagicLevel() then
+    return tr('Needs magic level %d', spell.maglevel)
+  end
+  local info = state.info
+  if info and info.promotion < 1 and not table.find(spell.vocations, info.vocation) then
+    return tr('Needs a promotion')
+  end
+  if spell.needlearn and info and not info.learned[normalize(spell.name)] then
+    return tr('Must be learned first')
+  end
+  return nil
+end
+
+local function inCategory(spell)
+  local category = state.category
+  if category == 'all' then return true end
+  if category == 'runes' then return spell.type == 'Rune' end
+  for _, c in ipairs(CATEGORIES) do
+    if c.id == category then return spell.group[c.group] ~= nil end
+  end
+  return true
+end
+
+local function matchesSearch(spell)
+  if state.search == '' then return true end
+  local s = state.search:lower()
+  return spell.name:lower():find(s, 1, true) or spell.words:lower():find(s, 1, true)
+end
+
+local function iconClip(spell)
+  local id = tonumber(spell.icon) or (SpellIcons[spell.icon] and SpellIcons[spell.icon][1]) or 1
+  return Spells.getImageClip(id, 'Default')
+end
+
+local function spellsToShow()
+  local list = {}
+  for name, data in pairs(SpellInfo['Default']) do
+    local spell = {name = name}
+    for k, v in pairs(data) do spell[k] = v end
+    if spellFits(spell) and inCategory(spell) and matchesSearch(spell) then
+      spell.blocked = blockedReason(spell)
+      if not (state.castableOnly and spell.blocked) then
+        table.insert(list, spell)
+      end
+    end
+  end
+  table.sort(list, function(a, b)
+    if a.level ~= b.level then return a.level < b.level end
+    if (a.maglevel or 0) ~= (b.maglevel or 0) then return (a.maglevel or 0) < (b.maglevel or 0) end
+    return a.name < b.name
+  end)
+  return list
+end
+
+local function bracketOf(level)
+  local found = BRACKETS[1][2]
+  for _, b in ipairs(BRACKETS) do
+    if level >= b[1] then found = b[2] end
+  end
+  return found
+end
+
+local function updateVocationLabel()
+  local label = spelllistWindow:getChildById('vocationLabel')
+  local info = state.info
+  if info and info.vocation >= 1 then
+    local name = VOCATIONS[info.vocation]
+    local promoted = info.promotion > 0 and VocationNames[info.vocation + 4] or name
+    label:setText(tr('Spells of a %s', promoted))
+  elseif state.asked then
+    label:setText(tr('Every vocation (yours could not be checked)'))
+  else
+    label:setText(tr('Checking your vocation...'))
+  end
+end
+
+function refresh()
+  if not spelllistWindow then return end
+  local keep = state.selected
+  spellList:destroyChildren()
+  local first, focused
+  local bracket
+  for _, spell in ipairs(spellsToShow()) do
+    local b = bracketOf(spell.level)
+    if b ~= bracket then
+      bracket = b
+      local header = g_ui.createWidget('SpellGroupHeader', spellList)
+      header:setText(tr(b))
+    end
+    local row = g_ui.createWidget('SpellRow', spellList)
+    row.spell = spell
+    row.icon:setImageClip(iconClip(spell))
+    row.name:setText(spell.name)
+    row.words:setText(spell.words)
+    row.level:setText(tr('Lv %s', thousands(spell.level)))
+    if spell.blocked then
+      row:setOpacity(0.5)
+      row:setTooltip(spell.blocked)
+    end
+    first = first or row
+    if keep and spell.name == keep then focused = row end
+  end
+  spelllistWindow:getChildById('emptyLabel'):setVisible(first == nil)
+  updateVocationLabel()
+  local target = focused or first
+  if target then
+    spellList:focusChild(target, KeyboardFocusReason)
+    spellList:ensureChildVisible(target)
+  else
+    showSpell(nil)
+  end
+end
+
+local function infoRow(key, value)
+  local row = g_ui.createWidget('SpellInfoRow', details.info)
+  row.key:setText(key)
+  row.value:setText(value)
+end
+
+function showSpell(spell)
+  state.selected = spell and spell.name or nil
+  details.info:destroyChildren()
+  if not spell then
+    details.icon:hide()
+    details.name:setText('')
+    details.words:setText('')
+    demoPlayer:stop()
+    spelllistWindow:recursiveGetChildById('demoHint'):show()
+    return
+  end
+  details.icon:show()
+  details.icon:setImageClip(iconClip(spell))
+  details.name:setText(spell.name)
+  details.words:setText('"' .. spell.words .. '"')
+
+  local groups = {}
+  for id, name in ipairs(SpellGroups) do
+    if spell.group[id] then table.insert(groups, tr(name)) end
+  end
+  local level = thousands(spell.level)
+  if (spell.maglevel or 0) > 0 then
+    level = level .. '  ' .. tr('(magic level %d)', spell.maglevel)
+  end
+  infoRow(tr('Level') .. ':', level)
+  infoRow(tr('Kind') .. ':', table.concat(groups, ', ') .. (spell.type == 'Rune' and (' ' .. tr('rune')) or ''))
+  infoRow(tr('Mana') .. ':', spell.mana > 0 and thousands(spell.mana) or '-')
+  infoRow(tr('Cooldown') .. ':', (spell.exhaustion / 1000) .. 's' .. (spell.blocked and ('   ' .. spell.blocked) or ''))
+
+  spelllistWindow:recursiveGetChildById('demoHint'):hide()
+  demoPlayer:play(SpellDemos[spell.name])
+end
+
+function replay()
+  local row = spellList:getFocusedChild()
+  if row and row.spell then showSpell(row.spell) end
+end
+
+function setCategory(id)
+  state.category = id
+  for cid, button in pairs(categoryButtons) do
+    button:setOn(cid == id)
+  end
+  refresh()
+end
+
+function setCastableOnly(checked)
+  state.castableOnly = checked
+  refresh()
+end
+
+function setSearch(text)
+  state.search = text or ''
+  refresh()
+end
+
+-- asks the website which vocation the character has and which spells it learned (once per character)
+local function askVocation()
+  local player = g_game.getLocalPlayer()
+  local character = player and player:getName() or ''
+  if state.character == character and (state.info or state.asking) then return end
+  state.character, state.info, state.asking, state.asked = character, nil, true, false
+  local body = {action = 'spells', character = character, account = G.account, password = G.password}
+  HTTP.postJSON(SPELLS_API, body, function(data, err)
+    if state.character ~= character then return end
+    state.asking, state.asked = false, true
+    if type(data) == 'table' and data.ok then
+      local learned = {}
+      for _, name in ipairs(data.learned or {}) do
+        learned[normalize(name)] = true
+      end
+      state.info = {vocation = tonumber(data.vocation) or 0, promotion = tonumber(data.promotion) or 0, learned = learned}
+    end
+    if spelllistWindow:isVisible() then refresh() end
+  end)
 end
 
 function online()
-  if g_game.getFeature(GameSpellList) then
-    spelllistButton:show()
-  else
-    spelllistButton:hide()
-  end
-
-  -- Vocation is only send in newer clients
-  if g_game.getClientVersion() >= 950 then
-    spelllistWindow:getChildById('buttonFilterVocation'):setVisible(true)
-  else
-    spelllistWindow:getChildById('buttonFilterVocation'):setVisible(false)
-  end
+  spelllistButton:show()
+  state.character, state.info, state.asking, state.asked = nil, nil, false, false
 end
 
 function offline()
-  resetWindow()
+  if spelllistWindow:isVisible() then toggle() end
+  demoPlayer:stop()
 end
 
 function init()
-  connect(g_game, { onGameStart = online,
-                    onGameEnd   = offline })
+  connect(g_game, {onGameStart = online, onGameEnd = offline})
 
   spelllistWindow = g_ui.displayUI('spelllist', modules.game_interface.getRightPanel())
   spelllistWindow:hide()
-
-  spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spell List'), '/images/topbuttons/spelllist', toggle, false, 4)
+  spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spells'), '/images/topbuttons/spelllist', toggle, false, 4)
   spelllistButton:setOn(false)
 
-  nameValueLabel        = spelllistWindow:getChildById('labelNameValue')
-  formulaValueLabel     = spelllistWindow:getChildById('labelFormulaValue')
-  vocationValueLabel    = spelllistWindow:getChildById('labelVocationValue')
-  groupValueLabel       = spelllistWindow:getChildById('labelGroupValue')
-  typeValueLabel        = spelllistWindow:getChildById('labelTypeValue')
-  cooldownValueLabel    = spelllistWindow:getChildById('labelCooldownValue')
-  levelValueLabel       = spelllistWindow:getChildById('labelLevelValue')
-  manaValueLabel        = spelllistWindow:getChildById('labelManaValue')
-  premiumValueLabel     = spelllistWindow:getChildById('labelPremiumValue')
-  descriptionValueLabel = spelllistWindow:getChildById('labelDescriptionValue')
-
-  vocationBoxAny        = spelllistWindow:getChildById('vocationBoxAny')
-  vocationBoxSorcerer   = spelllistWindow:getChildById('vocationBoxSorcerer')
-  vocationBoxDruid      = spelllistWindow:getChildById('vocationBoxDruid')
-  vocationBoxPaladin    = spelllistWindow:getChildById('vocationBoxPaladin')
-  vocationBoxKnight     = spelllistWindow:getChildById('vocationBoxKnight')
-
-  groupBoxAny           = spelllistWindow:getChildById('groupBoxAny')
-  groupBoxAttack        = spelllistWindow:getChildById('groupBoxAttack')
-  groupBoxHealing       = spelllistWindow:getChildById('groupBoxHealing')
-  groupBoxSupport       = spelllistWindow:getChildById('groupBoxSupport')
-
-  premiumBoxAny         = spelllistWindow:getChildById('premiumBoxAny')
-  premiumBoxYes         = spelllistWindow:getChildById('premiumBoxYes')
-  premiumBoxNo          = spelllistWindow:getChildById('premiumBoxNo')
-
-  vocationRadioGroup = UIRadioGroup.create()
-  vocationRadioGroup:addWidget(vocationBoxAny)
-  vocationRadioGroup:addWidget(vocationBoxSorcerer)
-  vocationRadioGroup:addWidget(vocationBoxDruid)
-  vocationRadioGroup:addWidget(vocationBoxPaladin)
-  vocationRadioGroup:addWidget(vocationBoxKnight)
-
-  groupRadioGroup = UIRadioGroup.create()
-  groupRadioGroup:addWidget(groupBoxAny)
-  groupRadioGroup:addWidget(groupBoxAttack)
-  groupRadioGroup:addWidget(groupBoxHealing)
-  groupRadioGroup:addWidget(groupBoxSupport)
-
-  premiumRadioGroup = UIRadioGroup.create()
-  premiumRadioGroup:addWidget(premiumBoxAny)
-  premiumRadioGroup:addWidget(premiumBoxYes)
-  premiumRadioGroup:addWidget(premiumBoxNo)
-
-  premiumRadioGroup:selectWidget(premiumBoxAny)
-  vocationRadioGroup:selectWidget(vocationBoxAny)
-  groupRadioGroup:selectWidget(groupBoxAny)
-
-  vocationRadioGroup.onSelectionChange  = toggleFilter
-  groupRadioGroup.onSelectionChange     = toggleFilter
-  premiumRadioGroup.onSelectionChange   = toggleFilter
-
   spellList = spelllistWindow:getChildById('spellList')
+  details = spelllistWindow:getChildById('details')
+  demoPlayer = SpellDemoPlayer.create(details.demo)
 
+  local bar = spelllistWindow:getChildById('categories')
+  for _, c in ipairs(CATEGORIES) do
+    local button = g_ui.createWidget('SpellCategoryButton', bar)
+    button:setText(tr(c.text))
+    button.onClick = function() setCategory(c.id) end
+    categoryButtons[c.id] = button
+  end
+  categoryButtons[state.category]:setOn(true)
+
+  connect(spellList, {onChildFocusChange = function(_, focused)
+    if focused and focused.spell then showSpell(focused.spell) end
+  end})
   g_keyboard.bindKeyPress('Down', function() spellList:focusNextChild(KeyboardFocusReason) end, spelllistWindow)
   g_keyboard.bindKeyPress('Up', function() spellList:focusPreviousChild(KeyboardFocusReason) end, spelllistWindow)
 
-  initializeSpelllist()
-  resizeWindow()
-
-  if g_game.isOnline() then
-    online()
-  end
+  if g_game.isOnline() then online() end
 end
 
 function terminate()
-  disconnect(g_game, { onGameStart = online,
-                       onGameEnd   = offline })
-
-  disconnect(spellList, { onChildFocusChange = function(self, focusedChild)
-                          if focusedChild == nil then return end
-                          updateSpellInformation(focusedChild)
-                        end })
-
+  disconnect(g_game, {onGameStart = online, onGameEnd = offline})
+  demoPlayer:stop()
   spelllistWindow:destroy()
   spelllistButton:destroy()
-
-  vocationRadioGroup:destroy()
-  groupRadioGroup:destroy()
-  premiumRadioGroup:destroy()
-end
-
-function initializeSpelllist()
-  for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
-    local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
-    local info = SpellInfo[SpelllistProfile][spell]
-
-    local tmpLabel = g_ui.createWidget('SpellListLabel', spellList)
-    tmpLabel:setId(spell)
-    tmpLabel:setText(spell .. '\n\'' .. info.words .. '\'')
-    tmpLabel:setPhantom(false)
-
-    local iconId = tonumber(info.icon)
-    if not iconId and SpellIcons[info.icon] then
-      iconId = SpellIcons[info.icon][1]
-    end
-
-    if not(iconId) then
-      perror('Spell icon \'' .. info.icon .. '\' not found.')
-    end
-
-    tmpLabel:setHeight(SpelllistSettings[SpelllistProfile].iconSize.height + 4)
-    tmpLabel:setTextOffset(topoint((SpelllistSettings[SpelllistProfile].iconSize.width + 10) .. ' ' .. (SpelllistSettings[SpelllistProfile].iconSize.height - 32)/2 + 3))
-    tmpLabel:setImageSource(SpelllistSettings[SpelllistProfile].iconFile)
-    tmpLabel:setImageClip(Spells.getImageClip(iconId, SpelllistProfile))
-    tmpLabel:setImageSize(tosize(SpelllistSettings[SpelllistProfile].iconSize.width .. ' ' .. SpelllistSettings[SpelllistProfile].iconSize.height))
-    tmpLabel.onClick = updateSpellInformation
-  end
-
-  connect(spellList, { onChildFocusChange = function(self, focusedChild)
-                          if focusedChild == nil then return end
-                          updateSpellInformation(focusedChild)
-                        end })
-end
-
-function changeSpelllistProfile(oldProfile)
-  -- Delete old labels
-  for i = 1, #SpelllistSettings[oldProfile].spellOrder do
-    local spell = SpelllistSettings[oldProfile].spellOrder[i]
-    local tmpLabel = spellList:getChildById(spell)
-
-    tmpLabel:destroy()
-  end
-
-  -- Create new spelllist and ajust window
-  initializeSpelllist()
-  resizeWindow()
-  resetWindow()
-end
-
-function updateSpelllist()
-  for i = 1, #SpelllistSettings[SpelllistProfile].spellOrder do
-    local spell = SpelllistSettings[SpelllistProfile].spellOrder[i]
-    local info = SpellInfo[SpelllistProfile][spell]
-    local tmpLabel = spellList:getChildById(spell)
-
-    local localPlayer = g_game.getLocalPlayer()
-    if (not(filters.level) or (info.level <= localPlayer:getLevel() and (info.maglevel or 0) <= localPlayer:getMagicLevel())) and (not(filters.vocation) or table.find(info.vocations, localPlayer:getVocation())) and (filters.vocationId == FILTER_VOCATION_ANY or table.find(info.vocations, filters.vocationId) or table.find(info.vocations, filters.vocationId+4)) and (filters.groupId == FILTER_GROUP_ANY or info.group[filters.groupId]) and (filters.premium == FILTER_PREMIUM_ANY or (info.premium and filters.premium == FILTER_PREMIUM_YES) or (not(info.premium) and filters.premium == FILTER_PREMIUM_NO)) then
-      tmpLabel:setVisible(true)
-    else
-      tmpLabel:setVisible(false)
-    end
-  end
-end
-
-function updateSpellInformation(widget)
-  local spell = widget:getId()
-
-  local name        = ''
-  local formula     = ''
-  local vocation    = ''
-  local group       = ''
-  local type        = ''
-  local cooldown    = ''
-  local level       = ''
-  local mana        = ''
-  local premium     = ''
-  local description = ''
-
-  if SpellInfo[SpelllistProfile][spell] then
-    local info = SpellInfo[SpelllistProfile][spell]
-
-    name    = spell
-    formula = info.words
-
-    for i = 1, #info.vocations do
-      local vocationId = info.vocations[i]
-      if vocationId <= 4 or not(table.find(info.vocations, (vocationId-4))) then
-        vocation = vocation .. (vocation:len() == 0 and '' or ', ') .. VocationNames[vocationId]
-      end
-    end
-
-    cooldown = (info.exhaustion / 1000) .. 's'
-    for groupId, groupName in ipairs(SpellGroups) do
-      if info.group[groupId] then
-        group    = group .. (group:len() == 0 and '' or ' / ') .. groupName
-        cooldown = cooldown .. ' / ' .. (info.group[groupId] / 1000) .. 's'
-      end
-    end
-
-    type    = info.type
-    level   = info.level .. ((info.maglevel or 0) > 0 and (' (magic level ' .. info.maglevel .. ')') or '')
-    mana    = info.mana .. ' / ' .. info.soul
-    premium = (info.premium and 'yes' or 'no')
-    description = info.description or '-'
-  end
-
-  nameValueLabel:setText(name)
-  formulaValueLabel:setText(formula)
-  vocationValueLabel:setText(vocation)
-  groupValueLabel:setText(group)
-  typeValueLabel:setText(type)
-  cooldownValueLabel:setText(cooldown)
-  levelValueLabel:setText(level)
-  manaValueLabel:setText(mana)
-  premiumValueLabel:setText(premium)
-  descriptionValueLabel:setText(description)
 end
 
 function toggle()
-  if spelllistButton:isOn() then
+  if spelllistWindow:isVisible() then
     spelllistButton:setOn(false)
+    demoPlayer:stop()
     spelllistWindow:hide()
   else
     spelllistButton:setOn(true)
     spelllistWindow:show()
     spelllistWindow:raise()
     spelllistWindow:focus()
+    askVocation()
+    refresh()
   end
-end
-
-function toggleFilter(widget, selectedWidget)
-  if widget == vocationRadioGroup then
-    local boxId = selectedWidget:getId()
-    if boxId == 'vocationBoxAny' then
-      filters.vocationId = FILTER_VOCATION_ANY
-    elseif boxId == 'vocationBoxSorcerer' then
-      filters.vocationId = FILTER_VOCATION_SORCERER
-    elseif boxId == 'vocationBoxDruid' then
-      filters.vocationId = FILTER_VOCATION_DRUID
-    elseif boxId == 'vocationBoxPaladin' then
-      filters.vocationId = FILTER_VOCATION_PALADIN
-    elseif boxId == 'vocationBoxKnight' then
-      filters.vocationId = FILTER_VOCATION_KNIGHT
-    end
-  elseif widget == groupRadioGroup then
-    local boxId = selectedWidget:getId()
-    if boxId == 'groupBoxAny' then
-      filters.groupId = FILTER_GROUP_ANY
-    elseif boxId == 'groupBoxAttack' then
-      filters.groupId = FILTER_GROUP_ATTACK
-    elseif boxId == 'groupBoxHealing' then
-      filters.groupId = FILTER_GROUP_HEALING
-    elseif boxId == 'groupBoxSupport' then
-      filters.groupId = FILTER_GROUP_SUPPORT
-    end
-  elseif widget == premiumRadioGroup then
-    local boxId = selectedWidget:getId()
-    if boxId == 'premiumBoxAny' then
-      filters.premium = FILTER_PREMIUM_ANY
-    elseif boxId == 'premiumBoxNo' then
-      filters.premium = FILTER_PREMIUM_NO
-    elseif boxId == 'premiumBoxYes' then
-      filters.premium = FILTER_PREMIUM_YES
-    end
-  else
-    local id = widget:getId()
-    if id == 'buttonFilterLevel' then
-      filters.level = not(filters.level)
-      widget:setOn(filters.level)
-    elseif id == 'buttonFilterVocation' then
-      filters.vocation = not(filters.vocation)
-      widget:setOn(filters.vocation)
-    end
-  end
-
-  updateSpelllist()
-end
-
-function resizeWindow()
-  spelllistWindow:setWidth(SpelllistSettings['Default'].spellWindowWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
-  spellList:setWidth(SpelllistSettings['Default'].spellListWidth + SpelllistSettings[SpelllistProfile].iconSize.width - 32)
-end
-
-function resetWindow()
-  spelllistWindow:hide()
-  spelllistButton:setOn(false)
-
-  -- Resetting filters
-  filters.level = false
-  filters.vocation = false
-
-  local buttonFilterLevel = spelllistWindow:getChildById('buttonFilterLevel')
-  buttonFilterLevel:setOn(filters.level)
-
-  local buttonFilterVocation = spelllistWindow:getChildById('buttonFilterVocation')
-  buttonFilterVocation:setOn(filters.vocation)
-
-  vocationRadioGroup:selectWidget(vocationBoxAny)
-  groupRadioGroup:selectWidget(groupBoxAny)
-  premiumRadioGroup:selectWidget(premiumBoxAny)
-
-  updateSpelllist()
 end

@@ -106,6 +106,59 @@ GuideNote < Label
   text-auto-resize: true
   phantom: true
 
+// a floor tile, the area a spell hits and one frame of a fire effect (the sheets of the Spells window demos)
+GuideFloor < UIWidget
+  size: 26 26
+  anchors.left: parent.left
+  anchors.top: parent.top
+  image-source: /images/game/floor
+  image-color: #8a8a8a
+  border-width: 1
+  border-color: #00000030
+  phantom: true
+
+GuideArea < UIWidget
+  size: 26 26
+  anchors.left: parent.left
+  anchors.top: parent.top
+  background-color: #e8b03a2a
+  border-width: 1
+  border-color: #e8b03a40
+  phantom: true
+
+GuideFire < GuideFloor
+  image-source: /images/game/spelldemo/effects
+  image-color: #ffffff
+  border-width: 0
+
+// a tab of the Spells window
+GuideTab < Label
+  height: 16
+  text-auto-resize: true
+  padding: 1 5 1 5
+  font: verdana-11px-rounded
+  color: #dfdfdf
+  background-color: #3a3a3a
+  border-width: 1
+  border-color: #000000
+  phantom: true
+
+  $on:
+    color: #ffffff
+    background-color: #6b5a2c
+    border-color: #e8c66a
+
+// a small button of the inventory (Stop, Options, Guides, Logout)
+GuideButtonText < Label
+  size: 45 18
+  text-align: center
+  font: cipsoftFont
+  color: white
+  image-source: /images/ui/button
+  image-clip: 0 0 22 23
+  image-border: 3
+  phantom: true
+
 // --- drawings: Action Bars --------------------------------------------------------------------------------------------
 
 ArtBars < Panel
@@ -1121,8 +1174,8 @@ ArtStats < Panel
     margin-top: 6
     text: Cap: 14k  (14,000)
 
-// the Spell List button and what it shows
-ArtSpellList < Panel
+// the Spells button and the window it opens: the spells of your vocation by level, with tabs
+ArtSpells < Panel
   anchors.fill: parent
 
   UIWidget
@@ -1130,7 +1183,7 @@ ArtSpellList < Panel
     size: 20 20
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-top: 26
+    margin-top: 30
     image-source: /images/topbuttons/spelllist
     image-clip: 0 0 20 20
     phantom: true
@@ -1139,28 +1192,316 @@ ArtSpellList < Panel
     id: arrow
     anchors.left: button.right
     anchors.verticalCenter: button.verticalCenter
-    margin-left: 8
+    margin-left: 6
 
-  GuideMenu
-    id: list
-    width: 170
+  Panel
+    id: win
     anchors.left: arrow.right
     anchors.top: parent.top
-    margin-left: 8
-    margin-top: 4
-    GuideMenuLine
-      text: Ultimate Healing
+    anchors.bottom: parent.bottom
+    width: 224
+    margin-left: 6
+    background-color: #1c1c1c
+    border-width: 1
+    border-color: #5b4b25
+    phantom: true
+
+    GuideTab
+      id: all
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-left: 4
+      margin-top: 4
+      text: All
+    GuideTab
+      id: attack
+      anchors.left: prev.right
+      anchors.top: prev.top
+      margin-left: 3
+      text: Attack
       on: true
-    GuideMenuLine
-      text: Words: exura vita
-    GuideMenuLine
-      text: Level, mana, cooldown
-    GuideMenuLine
-      text: Only your vocation
+    GuideTab
+      anchors.left: prev.right
+      anchors.top: prev.top
+      margin-left: 3
+      text: Healing
+    GuideTab
+      anchors.left: prev.right
+      anchors.top: prev.top
+      margin-left: 3
+      text: Runes
+
+    Label
+      id: header
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: all.bottom
+      margin: 5 1 0 1
+      height: 15
+      text-offset: 4 1
+      font: verdana-11px-rounded
+      color: #e8c66a
+      background-color: #00000088
+      text: Level 1 to 19
+      phantom: true
+
+    UIWidget
+      id: icon
+      size: 26 26
+      anchors.left: parent.left
+      anchors.top: header.bottom
+      margin-left: 4
+      margin-top: 4
+      image-source: /images/game/spells/defaultspells
+      image-clip: 224 96 32 32
+      phantom: true
+    Label
+      id: name
+      anchors.left: icon.right
+      anchors.top: icon.top
+      margin-left: 6
+      font: verdana-11px-rounded
+      color: #e6e6e6
+      text: Fire Wave
+      text-auto-resize: true
+      phantom: true
+    Label
+      anchors.left: name.left
+      anchors.top: name.bottom
+      margin-top: 1
+      font: verdana-11px-rounded
+      color: #c9a95a
+      text: exevo flam hur
+      text-auto-resize: true
+      phantom: true
+    Label
+      anchors.right: parent.right
+      anchors.top: icon.top
+      margin-right: 5
+      font: verdana-11px-rounded
+      color: #9f9f9f
+      text: Lv 18
+      text-auto-resize: true
+      phantom: true
+
+// a spell clicked in the Spells window plays on a little floor: the fire of Fire Wave in front of the caster
+ArtSpellDemo < Panel
+  anchors.fill: parent
+
+  Panel
+    id: grid
+    anchors.left: parent.left
+    anchors.top: parent.top
+    size: 130 78
+    margin-top: 3
+    border-width: 1
+    border-color: #5b4b25
+    phantom: true
+
+    GuideFloor
+      margin-left: 0
+      margin-top: 0
+    GuideFloor
+      margin-left: 26
+      margin-top: 0
+    GuideFloor
+      margin-left: 52
+      margin-top: 0
+    GuideFloor
+      margin-left: 78
+      margin-top: 0
+    GuideFloor
+      margin-left: 104
+      margin-top: 0
+    GuideFloor
+      margin-left: 0
+      margin-top: 26
+    GuideFloor
+      margin-left: 26
+      margin-top: 26
+    GuideFloor
+      margin-left: 52
+      margin-top: 26
+    GuideFloor
+      margin-left: 78
+      margin-top: 26
+    GuideFloor
+      margin-left: 104
+      margin-top: 26
+    GuideFloor
+      margin-left: 0
+      margin-top: 52
+    GuideFloor
+      margin-left: 26
+      margin-top: 52
+    GuideFloor
+      margin-left: 52
+      margin-top: 52
+    GuideFloor
+      margin-left: 78
+      margin-top: 52
+    GuideFloor
+      margin-left: 104
+      margin-top: 52
+    GuideArea
+      margin-left: 0
+      margin-top: 0
+    GuideArea
+      margin-left: 26
+      margin-top: 0
+    GuideArea
+      margin-left: 52
+      margin-top: 0
+    GuideArea
+      margin-left: 78
+      margin-top: 0
+    GuideArea
+      margin-left: 104
+      margin-top: 0
+    GuideArea
+      margin-left: 26
+      margin-top: 26
+    GuideArea
+      margin-left: 52
+      margin-top: 26
+    GuideArea
+      margin-left: 78
+      margin-top: 26
+    GuideFire
+      margin-left: 0
+      margin-top: 0
+      image-clip: 160 992 32 32
+    GuideFire
+      margin-left: 26
+      margin-top: 0
+      image-clip: 224 992 32 32
+    GuideFire
+      margin-left: 52
+      margin-top: 0
+      image-clip: 160 992 32 32
+    GuideFire
+      margin-left: 78
+      margin-top: 0
+      image-clip: 224 992 32 32
+    GuideFire
+      margin-left: 104
+      margin-top: 0
+      image-clip: 160 992 32 32
+    GuideFire
+      margin-left: 26
+      margin-top: 26
+      image-clip: 224 992 32 32
+    GuideFire
+      margin-left: 52
+      margin-top: 26
+      image-clip: 160 992 32 32
+    GuideFire
+      margin-left: 78
+      margin-top: 26
+      image-clip: 224 992 32 32
+
+    UICreature
+      id: caster
+      size: 52 52
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-left: 39
+      margin-top: 39
+      phantom: true
+      &outfitType: 128
+
+  GuideArrow
+    id: arrow
+    anchors.left: grid.right
+    anchors.verticalCenter: grid.verticalCenter
+    margin-left: 10
+
+  GuideButtonText
+    width: 54
+    anchors.left: arrow.right
+    anchors.verticalCenter: grid.verticalCenter
+    margin-left: 8
+    text: Replay
+
+// the Guides button: first of the buttons window, in a golden frame, and again in the inventory under Options
+ArtGuidesButton < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: guides
+    size: 20 20
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 30
+    image-source: /images/topbuttons/guides
+    image-clip: 0 0 20 20
+    phantom: true
+    UIWidget
+      size: 28 28
+      anchors.centerIn: parent
+      image-source: /images/ui/guides_glow
+      phantom: true
+  UIWidget
+    size: 20 20
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 3
+    image-source: /images/topbuttons/skills
+    image-clip: 0 0 20 20
+    phantom: true
+  UIWidget
+    size: 20 20
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 3
+    image-source: /images/topbuttons/battle
+    image-clip: 0 0 20 20
+    phantom: true
+  UIWidget
+    size: 20 20
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 3
+    image-source: /images/topbuttons/viplist
+    image-clip: 0 0 20 20
+    phantom: true
+
+  UIWidget
+    id: last
+    size: 1 1
+    anchors.left: prev.right
+    anchors.top: prev.top
+    phantom: true
+
+  GuideButtonText
+    id: options
+    anchors.left: last.right
+    anchors.top: parent.top
+    margin-left: 26
+    margin-top: 10
+    text: Options
+  GuideButtonText
+    id: guidesText
+    anchors.left: options.left
+    anchors.top: options.bottom
+    margin-top: 2
+    color: #f4d27a
+    text: Guides
+  GuideButtonText
+    anchors.left: options.left
+    anchors.top: guidesText.bottom
+    margin-top: 2
+    text: Logout
+
+  GuideArrow
+    anchors.left: guidesText.right
+    anchors.verticalCenter: guidesText.verticalCenter
+    margin-left: 8
 
 // --- drawings: Store --------------------------------------------------------------------------------------------------
 
-// the Store button of the right panel: the red plate with the golden neon
+// the Store button of the right panel: the dragon-wing plate with the golden neon
 ArtStoreButton < Panel
   anchors.fill: parent
 

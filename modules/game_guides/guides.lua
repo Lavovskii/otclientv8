@@ -1,5 +1,6 @@
 -- ForgottenL guides: a window with one tab per subject; every tab is a list of cards, each with a drawing (an Art*
--- style of guides.otui) and a few words. The button sits next to the Quest Tracker.
+-- style of guides.otui) and a few words. The button is the first of the buttons window, and the inventory has a
+-- Guides button too, under Options.
 
 local guidesWindow, guidesButton
 
@@ -58,8 +59,17 @@ local GUIDES = {
        text = 'Move, resize and minimize your windows and open your backpacks: at the next login, even days later, everything is back in its place. Each character keeps its own.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent; capacity shows 14k for 14,000.'},
-      {art = 'ArtSpellList', title = 'Spell List',
-       text = 'The Spell List button shows the spells of your vocation: words, level, mana and cooldown. Assign Spell on a slot shows the same list.'},
+      {art = 'ArtGuidesButton', title = 'Guides',
+       text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
+    }
+  },
+  {
+    name = 'Spells',
+    cards = {
+      {art = 'ArtSpells', title = 'Your spells',
+       text = 'The Spells button lists only the spells of your vocation, by level. The tabs show Attack, Healing, Support or Runes. Faded spells need a higher level.'},
+      {art = 'ArtSpellDemo', title = 'See a spell',
+       text = 'Click a spell: a small demo shows its missile, effect and area as they look in the game. Replay plays it again.'},
     }
   },
   {
@@ -77,7 +87,7 @@ local GUIDES = {
   },
 }
 
--- the item sprites of a drawing (set from Lua: the OTUI only names them)
+-- the item and creature sprites of a drawing (set from Lua: the OTUI only names them)
 local function fillArt(art)
   for _, child in ipairs(art:recursiveGetChildren()) do
     if child.itemId then
@@ -85,6 +95,9 @@ local function fillArt(art)
       if child.itemCount then
         child:setItemCount(tonumber(child.itemCount))
       end
+    end
+    if child.outfitType then
+      child:setOutfit({type = tonumber(child.outfitType), head = 78, body = 69, legs = 58, feet = 76})
     end
   end
 end
@@ -107,13 +120,45 @@ local function build()
   end
 end
 
+-- the Guides button comes first in the buttons window, in a golden frame that slowly glows brighter and dimmer
+local glowEvent
+local function glow()
+  local frame = guidesButton and guidesButton:getChildById('glow')
+  if not frame then
+    glowEvent = nil
+    return
+  end
+  local t = (math.sin(g_clock.millis() / 1000 * math.pi * 2 / 2.4) + 1) / 2
+  frame:setOpacity(0.45 + 0.55 * t)
+  glowEvent = scheduleEvent(glow, 60)
+end
+
+local function onGameStart()
+  if not glowEvent then glow() end
+end
+
+local function onGameEnd()
+  removeEvent(glowEvent)
+  glowEvent = nil
+  hide()
+end
+
 function init()
-  guidesButton = modules.client_topmenu.addLeftGameButton('guidesButton', tr('Guides'), '/images/topbuttons/guides', toggle, false, 10)
-  connect(g_game, {onGameEnd = hide})
+  guidesButton = modules.client_topmenu.addLeftGameButton('guidesButton', tr('Guides'), '/images/topbuttons/guides', toggle, false, 0)
+  local frame = g_ui.createWidget('UIWidget', guidesButton)
+  frame:setId('glow')
+  frame:setPhantom(true)
+  frame:setSize({width = 28, height = 28})
+  frame:setImageSource('/images/ui/guides_glow')
+  frame:centerIn('parent')
+  connect(g_game, {onGameStart = onGameStart, onGameEnd = onGameEnd})
+  if g_game.isOnline() then onGameStart() end
 end
 
 function terminate()
-  disconnect(g_game, {onGameEnd = hide})
+  removeEvent(glowEvent)
+  glowEvent = nil
+  disconnect(g_game, {onGameStart = onGameStart, onGameEnd = onGameEnd})
   if guidesWindow then
     guidesWindow:destroy()
     guidesWindow = nil

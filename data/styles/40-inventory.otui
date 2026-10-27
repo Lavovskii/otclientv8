@@ -291,5 +291,10 @@ InventoryWindow < MiniWindow
           @onClick: modules.client_options.toggle()
 
         InventoryButton
+          !text: tr('Guides')
+          color: #f4d27a
+          @onClick: modules.game_guides.toggle()
+
+        InventoryButton
           !text: tr('Logout')
           @onClick: modules.game_interface.tryLogout()

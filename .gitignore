@@ -3,6 +3,8 @@
 data/things/*/Tibia.dat
 data/things/*/Tibia.spr
 data/things/*/Tibia.cwm
+# the spell demo sheets are cut from Tibia.spr: made locally by tools/gen_spell_demo_sprites.py before the installer
+data/images/game/spelldemo/
 
 # build output / local-only dirs
 installer/dl/
