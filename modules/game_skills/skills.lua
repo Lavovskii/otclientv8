@@ -543,7 +543,10 @@ function showStats()
       'Storage 17016 = 1. VIP Scroll: actions/scripts/items/vip/vip_scroll.lua.', 5957)
   end
   if (stats.premium or 0) > 0 then
-    line(bonus, 'prem', tr('Premium'), days(stats.premium * 86400), GREEN, tr('Premium days left on your account.'), 'Account: accounts.premdays.', 3011)
+    local unlimited = stats.premium >= 65535 -- the server's way of saying premium for ever (free premium)
+    line(bonus, 'prem', tr('Premium'), unlimited and tr('Unlimited') or days(stats.premium * 86400), GREEN,
+      unlimited and tr('Your account is premium for ever.') or tr('Premium days left on your account.'),
+      'Account: accounts.premdays (65535 = for ever, or config.lua freePremium).', 3011)
   end
   line(bonus, 'burst', tr('Exp Burst'), stats.expburst == 1 and tr('Unlocked') or tr('Locked'), stats.expburst == 1 and GREEN or GREY,
     stats.expburst == 1 and tr('Type !expburst to turn your Experience Boost on and off.') or tr('Finish the !expburst quest to be able to turn on your Experience Boost.'),
