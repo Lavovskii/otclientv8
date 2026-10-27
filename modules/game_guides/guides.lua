@@ -57,6 +57,8 @@ local GUIDES = {
     cards = {
       {art = 'ArtWindows', title = 'Your screen stays as you left it',
        text = 'Move, resize and minimize your windows and open your backpacks: at the next login, even days later, everything is back in its place. Each character keeps its own.'},
+      {art = 'ArtSkills', title = 'Skills window',
+       text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see what it means.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent; capacity shows 14k for 14,000.'},
       {art = 'ArtGuidesButton', title = 'Guides',

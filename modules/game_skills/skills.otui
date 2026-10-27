@@ -1,18 +1,26 @@
-SkillFirstWidget < UIWidget
+// The Skills window, laid out like today's Tibia and split in sections: level and experience, the character, the
+// skills, combat (what the equipment gives), protection and bonuses (VIP, boosters...). Every line has an icon (a
+// sprite of the game) and explains itself under the mouse. The values the 8.70 protocol does not send come from the
+// server through extended opcode 8 (see skills.lua).
 
 SkillButton < UIButton
-  height: 21
-  margin-bottom: 2
+  height: 15
+  margin-bottom: 1
   &onClick: onSkillButtonClick
 
-SmallSkillButton < SkillButton
-  height: 14
+  $hover:
+    background-color: #ffffff12
+
+SkillBarButton < SkillButton
+  height: 21
 
 SkillNameLabel < GameLabel
+  id: name
   font: verdana-11px-monochrome
   anchors.left: parent.left
   anchors.top: parent.top
-  anchors.bottom: parent.bottom
+  height: 14
+  phantom: true
 
 SkillValueLabel < GameLabel
   id: value
@@ -20,8 +28,9 @@ SkillValueLabel < GameLabel
   text-align: topright
   anchors.right: parent.right
   anchors.top: parent.top
-  anchors.bottom: parent.bottom
-  anchors.left: prev.left
+  anchors.left: prev.right
+  height: 14
+  phantom: true
 
 SkillPercentPanel < ProgressBar
   id: percent
@@ -32,6 +41,75 @@ SkillPercentPanel < ProgressBar
   anchors.right: parent.right
   anchors.top: parent.top
   phantom: false
+
+// a small sprite in front of the name (set from Lua: &itemId)
+SkillIcon < UIItem
+  id: icon
+  size: 12 12
+  anchors.left: parent.left
+  anchors.top: parent.top
+  margin-top: 1
+  virtual: true
+  phantom: true
+
+SkillIconImage < UIWidget
+  id: icon
+  size: 12 12
+  anchors.left: parent.left
+  anchors.top: parent.top
+  margin-top: 1
+  phantom: true
+
+// a name with its icon
+SkillIconNameLabel < SkillNameLabel
+  anchors.left: icon.right
+  margin-left: 4
+
+// the title of a section, with a thin golden line after it
+SkillSection < UIWidget
+  height: 17
+  margin-top: 3
+  margin-bottom: 1
+  phantom: true
+
+  Label
+    id: title
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #e8c66a
+    phantom: true
+
+  UIWidget
+    anchors.left: title.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 5
+    height: 1
+    background-color: #e8c66a40
+    phantom: true
+
+// a line made from Lua (combat, protection, bonuses): icon + name + value
+SkillInfoRow < SkillButton
+  SkillIcon
+  SkillIconNameLabel
+  SkillValueLabel
+
+SkillInfoRowImage < SkillButton
+  SkillIconImage
+  SkillIconNameLabel
+  SkillValueLabel
+
+SkillListPanel < Panel
+  layout:
+    type: verticalBox
+    fit-children: true
+
+// a fixed line with an item icon (its children are written in the window below)
+SkillItemRow < SkillButton
+
+SkillItemBarRow < SkillBarButton
 
 MiniWindow
   id: skillWindow
@@ -47,16 +125,9 @@ MiniWindow
     padding-right: 5
     layout: verticalBox
 
-    SkillButton
-      id: experience
-      height: 15
-      visible: false
-      SkillNameLabel
-        !text: tr('Experience')
-      SkillValueLabel
-
-    SkillButton
-      margin-top: 5
+    // level and experience
+    SkillBarButton
+      margin-top: 4
       id: level
       SkillNameLabel
         !text: tr('Level')
@@ -65,149 +136,183 @@ MiniWindow
         background-color: red
 
     SkillButton
-      id: health
-      height: 15
+      id: experience
       SkillNameLabel
+        !text: tr('Experience')
+      SkillValueLabel
+
+    SkillItemRow
+      id: xpRate
+      SkillIcon
+        &itemId: 7440
+      SkillIconNameLabel
+        !text: tr('XP Gain Rate')
+      SkillValueLabel
+
+    SkillItemRow
+      id: xpBoost
+      visible: false
+      SkillIcon
+        &itemId: 138
+      SkillIconNameLabel
+        !text: tr('XP Boost')
+      SkillValueLabel
+
+    SkillSection
+      id: characterSection
+
+    SkillItemRow
+      id: health
+      SkillIcon
+        &itemId: 266
+      SkillIconNameLabel
         !text: tr('Hit Points')
       SkillValueLabel
 
-    SkillButton
+    SkillItemRow
       id: mana
-      height: 15
-      SkillNameLabel
+      SkillIcon
+        &itemId: 268
+      SkillIconNameLabel
         !text: tr('Mana')
       SkillValueLabel
 
-    SkillButton
+    SkillItemRow
       id: soul
-      height: 15
-      SkillNameLabel
+      SkillIcon
+        &itemId: 5944
+      SkillIconNameLabel
         !text: tr('Soul Points')
       SkillValueLabel
 
-    SkillButton
+    SkillItemRow
       id: capacity
-      height: 15
-      SkillNameLabel
+      SkillIcon
+        &itemId: 2854
+      SkillIconNameLabel
         !text: tr('Capacity')
       SkillValueLabel
 
-    SkillButton
+    SkillItemRow
       id: speed
-      height: 15
-      SkillNameLabel
+      SkillIcon
+        &itemId: 3079
+      SkillIconNameLabel
         !text: tr('Speed')
       SkillValueLabel
 
-    SkillButton
-      id: regenerationTime
-      SkillNameLabel
-        !text: tr('Regeneration Time')
+    SkillItemRow
+      id: food
+      SkillIcon
+        &itemId: 3582
+      SkillIconNameLabel
+        !text: tr('Food')
       SkillValueLabel
 
-    SkillButton
+    SkillItemBarRow
       id: stamina
-      SkillNameLabel
+      SkillIcon
+        &itemId: 112
+      SkillIconNameLabel
         !text: tr('Stamina')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
-      id: offlineTraining
-      SkillNameLabel
-        !text: tr('Offline Training')
-      SkillValueLabel
-      SkillPercentPanel
+    SkillSection
+      id: skillsSection
 
-    SkillButton
+    SkillItemBarRow
       id: magiclevel
-      SkillNameLabel
-        !text: tr('Magic Level')
+      SkillIcon
+        &itemId: 648
+      SkillIconNameLabel
+        !text: tr('Magic')
       SkillValueLabel
       SkillPercentPanel
         background-color: red
 
-    SkillButton
+    SkillBarButton
       id: skillId0
-      SkillNameLabel
-        !text: tr('Fist Fighting')
+      SkillIconImage
+        image-source: /images/game/skills_fist
+      SkillIconNameLabel
+        !text: tr('Fist')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId1
-      SkillNameLabel
-        !text: tr('Club Fighting')
+      SkillIcon
+        &itemId: 3286
+      SkillIconNameLabel
+        !text: tr('Club')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId2
-      SkillNameLabel
-        !text: tr('Sword Fighting')
+      SkillIcon
+        &itemId: 3264
+      SkillIconNameLabel
+        !text: tr('Sword')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId3
-      SkillNameLabel
-        !text: tr('Axe Fighting')
+      SkillIcon
+        &itemId: 3274
+      SkillIconNameLabel
+        !text: tr('Axe')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId4
-      SkillNameLabel
-        !text: tr('Distance Fighting')
+      SkillIcon
+        &itemId: 3350
+      SkillIconNameLabel
+        !text: tr('Distance')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId5
-      SkillNameLabel
+      SkillIcon
+        &itemId: 3409
+      SkillIconNameLabel
         !text: tr('Shielding')
       SkillValueLabel
       SkillPercentPanel
 
-    SkillButton
+    SkillItemBarRow
       id: skillId6
-      SkillNameLabel
+      SkillIcon
+        &itemId: 3483
+      SkillIconNameLabel
         !text: tr('Fishing')
       SkillValueLabel
       SkillPercentPanel
 
-    SmallSkillButton
-      id: skillId7
-      SkillNameLabel
-        !text: tr('Critical Hit Chance')
-      SkillValueLabel
+    // what the equipment gives, protection and the character's bonuses (from the server)
+    SkillSection
+      id: combatSection
 
-    SmallSkillButton
-      id: skillId8
-      SkillNameLabel
-        !text: tr('Critical Hit Damage')
-      SkillValueLabel
+    SkillListPanel
+      id: combatPanel
 
-    SmallSkillButton
-      id: skillId9
-      SkillNameLabel
-        !text: tr('Life Leech Chance')
-      SkillValueLabel
+    SkillSection
+      id: protectionSection
 
-    SmallSkillButton
-      id: skillId10
-      SkillNameLabel
-        !text: tr('Life Leech Amount')
-      SkillValueLabel
+    SkillListPanel
+      id: protectionPanel
 
-    SmallSkillButton
-      id: skillId11
-      SkillNameLabel
-        !text: tr('Mana Leech Chance')
-      SkillValueLabel
+    SkillSection
+      id: bonusSection
 
-    SmallSkillButton
-      id: skillId12
-      SkillNameLabel
-        !text: tr('Mana Leech Amount')
-      SkillValueLabel
+    SkillListPanel
+      id: bonusPanel
+
+    UIWidget
+      height: 4
+      phantom: true

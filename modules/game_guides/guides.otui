@@ -1423,6 +1423,173 @@ ArtSpellDemo < Panel
     margin-left: 8
     text: Replay
 
+// the Skills window: sections with an icon on every line, and the explanation under the mouse
+GuideSkillText < Label
+  anchors.top: parent.top
+  font: verdana-11px-monochrome
+  color: #bbbbbb
+  text-auto-resize: true
+  phantom: true
+
+ArtSkills < Panel
+  anchors.fill: parent
+
+  Panel
+    id: win
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    width: 140
+    padding: 3 5 3 5
+    background-color: #2a2a2a
+    border-width: 1
+    border-color: #555555
+    phantom: true
+    layout:
+      type: verticalBox
+
+    Panel
+      height: 13
+      phantom: true
+      Label
+        id: title
+        anchors.left: parent.left
+        anchors.top: parent.top
+        font: verdana-11px-rounded
+        color: #e8c66a
+        text-auto-resize: true
+        text: Combat
+        phantom: true
+      UIWidget
+        anchors.left: title.right
+        anchors.right: parent.right
+        anchors.verticalCenter: title.verticalCenter
+        margin-left: 4
+        height: 1
+        background-color: #e8c66a40
+        phantom: true
+    Panel
+      height: 13
+      phantom: true
+      UIItem
+        id: icon
+        size: 11 11
+        anchors.left: parent.left
+        anchors.top: parent.top
+        virtual: true
+        phantom: true
+        &itemId: 3278
+      GuideSkillText
+        anchors.left: icon.right
+        margin-left: 3
+        text: Attack Value
+      GuideSkillText
+        anchors.right: parent.right
+        color: #bbbbbb
+        text: 50
+    Panel
+      height: 13
+      phantom: true
+      UIItem
+        id: icon
+        size: 11 11
+        anchors.left: parent.left
+        anchors.top: parent.top
+        virtual: true
+        phantom: true
+        &itemId: 3366
+      GuideSkillText
+        anchors.left: icon.right
+        margin-left: 3
+        text: Armor Value
+      GuideSkillText
+        anchors.right: parent.right
+        color: #bbbbbb
+        text: 26
+    Panel
+      height: 13
+      phantom: true
+      UIItem
+        id: icon
+        size: 11 11
+        anchors.left: parent.left
+        anchors.top: parent.top
+        virtual: true
+        phantom: true
+        &itemId: 3191
+      GuideSkillText
+        anchors.left: icon.right
+        margin-left: 3
+        text: Fire
+      GuideSkillText
+        anchors.right: parent.right
+        color: #44ad25
+        text: +5%
+    Panel
+      height: 13
+      phantom: true
+      Label
+        id: title
+        anchors.left: parent.left
+        anchors.top: parent.top
+        font: verdana-11px-rounded
+        color: #e8c66a
+        text-auto-resize: true
+        text: Bonuses
+        phantom: true
+      UIWidget
+        anchors.left: title.right
+        anchors.right: parent.right
+        anchors.verticalCenter: title.verticalCenter
+        margin-left: 4
+        height: 1
+        background-color: #e8c66a40
+        phantom: true
+    Panel
+      height: 13
+      phantom: true
+      UIItem
+        id: icon
+        size: 11 11
+        anchors.left: parent.left
+        anchors.top: parent.top
+        virtual: true
+        phantom: true
+        &itemId: 5785
+      GuideSkillText
+        anchors.left: icon.right
+        margin-left: 3
+        text: VIP
+      GuideSkillText
+        anchors.right: parent.right
+        color: #44ad25
+        text: 12 days
+
+  GuideMouse
+    id: mouse
+    anchors.left: win.right
+    anchors.top: parent.top
+    margin-left: 2
+    margin-top: 14
+
+  Label
+    id: tip
+    anchors.left: mouse.right
+    anchors.top: parent.top
+    anchors.right: parent.right
+    margin-left: 4
+    margin-top: 8
+    padding: 3
+    text-wrap: true
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #dfdfdf
+    background-color: #111111dd
+    border-width: 1
+    border-color: #6b5a2c
+    text: Attack of your weapon: the higher, the harder you hit.
+    phantom: true
+
 // the Guides button: first of the buttons window, in a golden frame, and again in the inventory under Options
 ArtGuidesButton < Panel
   anchors.fill: parent
