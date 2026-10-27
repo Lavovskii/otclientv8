@@ -68,21 +68,12 @@ ConsolePanel < Panel
     anchors.left: parent.left
     anchors.right: parent.right
 
-  CheckBox
-    id: toggleChat
-    !tooltip: tr('Disable chat mode, allow to walk using ASDW')
-    anchors.left: parent.left
-    anchors.top: parent.top
-    margin-left: 13
-    margin-top: 8
-    @onCheckChange: toggleChat()
-
   TabButton
     id: prevChannelButton
     icon: /images/game/console/leftarrow
-    anchors.left: toggleChat.right
+    anchors.left: parent.left
     anchors.top: parent.top
-    margin-left: 3
+    margin-left: 13
     margin-top: 6
 
   ConsoleTabBar
@@ -173,14 +164,36 @@ ConsolePanel < Panel
     margin-bottom: 6
     @onClick: sayModeChange()
 
-  TextEdit
-    id: consoleTextEdit
-    anchors.left: sayModeButton.right
+  // Tibia-like chat mode (console.lua): Chat Off / Chat On, right after the text box
+  Button
+    id: chatModeButton
+    size: 64 22
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     margin-right: 6
+    margin-bottom: 6
+    text-offset: 0 0
+    @onClick: toggleChat()
+
+  TextEdit
+    id: consoleTextEdit
+    anchors.left: sayModeButton.right
+    anchors.right: chatModeButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 3
     margin-left: 6
     margin-bottom: 6
     shift-navigation: true
     max-length: 255
     text-auto-submit: true
+
+  // shown on the text box while the chat is off; a click opens the chat for one message, like Enter
+  Label
+    id: chatOffLabel
+    anchors.fill: consoleTextEdit
+    text-offset: 6 0
+    text-align: left
+    font: verdana-11px-antialised
+    color: #8a8a8a
+    !text: tr('Chat off: press Enter to talk')
+    @onClick: enableChat(true)

@@ -15,9 +15,9 @@ OptionPanel
     !text: tr('Display text messages')
 
   OptionCheckBox
-    id: wsadWalking
-    !text: tr('Enable WSAD walking')
-    !tooltip: tr('Disable chat and allow walk using WSAD keys')
+    id: walkWithWasd
+    !text: tr('Walk with WASD while the chat is off')
+    !tooltip: tr('W A S D walk, Q E Z C walk diagonally, Ctrl + W A S D turn.\nA key you gave to an action bar slot runs the slot instead.')
     $mobile:
       visible: false
 

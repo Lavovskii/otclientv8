@@ -6,8 +6,8 @@
 --               except the items on the ignore loot list (right click an item -> "Add to ignore loot list")
 --   stopAttack  stop attacking (and following)
 --   useUnder    use the item under the player (climb a ladder, use stairs, a lever, a hole...)
---   openDoor    open the closed door next to the player (the one in front first); with no door around, use the item
---               under the player (stairs, ladders)
+--   openDoor    open the closed door next to the player, or close the open one (the door in front first); with no door
+--               around, use the item under the player (stairs, ladders)
 
 GAME_ACTION = {
   ATTACK_NEXT = 'attackNext',
@@ -35,7 +35,7 @@ function gameActionLabel(action, filter)
   elseif action == GAME_ACTION.USE_UNDER then
     return 'Use\nUnder'
   elseif action == GAME_ACTION.OPEN_DOOR then
-    return 'Open\nDoor'
+    return 'Open\nClose'
   end
   return ''
 end
@@ -52,7 +52,7 @@ function gameActionDescription(action, filter)
   elseif action == GAME_ACTION.USE_UNDER then
     return 'Use the item under you (ladders, stairs, levers...)'
   elseif action == GAME_ACTION.OPEN_DOOR then
-    return 'Open the door next to you (or use the stairs under you)'
+    return 'Open or close the door next to you (or use the stairs under you)'
   end
   return 'None'
 end
@@ -70,7 +70,7 @@ function gameActionHelp(action, filter)
   elseif action == GAME_ACTION.USE_UNDER then
     return 'USE UNDER\nUses what you stand on:\nladders, stairs, levers, holes.'
   elseif action == GAME_ACTION.OPEN_DOOR then
-    return 'OPEN DOOR\nOpens the closed door next to you\n(the one in front of you first).\nNo door around: takes the stairs or ladder under you.'
+    return 'OPEN / CLOSE DOOR\nOpens the closed door next to you,\nor closes it again once you are through\n(the door in front of you first).\nNo door around: takes the stairs or ladder under you.'
   end
   return ''
 end
@@ -113,7 +113,7 @@ function useItemUnderPlayer()
   end
 end
 
--- open door ------------------------------------------------------------------------------------------------------
+-- open / close door ----------------------------------------------------------------------------------------------
 
 -- the tile the player faces is tried first, then the straight ones, then the diagonals
 local FACING_OFFSET = {
@@ -122,7 +122,8 @@ local FACING_OFFSET = {
 local AROUND = {{x = 0, y = -1}, {x = 1, y = 0}, {x = 0, y = 1}, {x = -1, y = 0},
   {x = -1, y = -1}, {x = 1, y = -1}, {x = 1, y = 1}, {x = -1, y = 1}}
 
--- the closed door (DOOR_IDS, generated from the server's items.xml) of the tile next to the player
+-- the door of the tile next to the player (doors.lua, generated from the server): a closed one, or an open one nobody
+-- stands in (using an open door with someone in it would push them out); the second value tells if it is open
 local function findDoor(position, offset)
   local tile = g_map.getTile({x = position.x + offset.x, y = position.y + offset.y, z = position.z})
   if not tile then
@@ -130,12 +131,17 @@ local function findDoor(position, offset)
   end
 
   for _, item in ipairs(tile:getItems()) do
-    if DOOR_IDS[item:getId()] then
-      return item
+    local id = item:getId()
+    if DOOR_IDS[id] then
+      return item, false
+    elseif OPEN_DOOR_IDS[id] and #tile:getCreatures() == 0 then
+      return item, true
     end
   end
 end
 
+-- the door in front of the player whatever its state; otherwise a closed door around is opened first and, with none,
+-- an open one is closed (the door just walked through)
 function openDoorAround()
   local player = g_game.getLocalPlayer()
   if not player then
@@ -145,12 +151,19 @@ function openDoorAround()
   local position = player:getPosition()
   local facing = FACING_OFFSET[player:getDirection()]
   local door = facing and findDoor(position, facing)
+  local openDoor = nil
   for _, offset in ipairs(AROUND) do
     if door then
       break
     end
-    door = findDoor(position, offset)
+    local found, isOpen = findDoor(position, offset)
+    if found and not isOpen then
+      door = found
+    elseif found and not openDoor then
+      openDoor = found
+    end
   end
+  door = door or openDoor
 
   if door then
     g_game.use(door)

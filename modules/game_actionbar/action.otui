@@ -41,7 +41,7 @@ MainWindow
 
     ActionRadio
       id: openDoor
-      text: Open door next to player (or use stairs)
+      text: Open / close door next to player (or use stairs)
 
   Label
     id: filterLabel

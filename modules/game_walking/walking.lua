@@ -102,20 +102,26 @@ function enableWSAD()
     player:lockWalk(100) -- 100 ms walk lock for all directions    
   end
 
-  bindWalkKey("W", North)
-  bindWalkKey("D", East)
-  bindWalkKey("S", South)
-  bindWalkKey("A", West)
+  bindWalkKey("W", North, true)
+  bindWalkKey("D", East, true)
+  bindWalkKey("S", South, true)
+  bindWalkKey("A", West, true)
 
-  bindTurnKey("Ctrl+W", North)
-  bindTurnKey("Ctrl+D", East)
-  bindTurnKey("Ctrl+S", South)
-  bindTurnKey("Ctrl+A", West)
+  bindTurnKey("Ctrl+W", North, true)
+  bindTurnKey("Ctrl+D", East, true)
+  bindTurnKey("Ctrl+S", South, true)
+  bindTurnKey("Ctrl+A", West, true)
 
-  bindWalkKey("E", NorthEast)
-  bindWalkKey("Q", NorthWest)
-  bindWalkKey("C", SouthEast)
-  bindWalkKey("Z", SouthWest)
+  bindWalkKey("E", NorthEast, true)
+  bindWalkKey("Q", NorthWest, true)
+  bindWalkKey("C", SouthEast, true)
+  bindWalkKey("Z", SouthWest, true)
+end
+
+-- a WASD key that an action bar slot uses runs the slot and does not walk, like in Tibia
+local function keyIsFree(key)
+  local actionbar = modules.game_actionbar
+  return not (actionbar and actionbar.isHotkeyUsed and actionbar.isHotkeyUsed(key))
 end
 
 function disableWSAD()
@@ -140,11 +146,11 @@ function disableWSAD()
   unbindWalkKey("Z")
 end
 
-function bindWalkKey(key, dir)
+function bindWalkKey(key, dir, unlessUsed)
   local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.bindKeyDown(key, function() changeWalkDir(dir) end, gameRootPanel, true)
+  g_keyboard.bindKeyDown(key, function() if not unlessUsed or keyIsFree(key) then changeWalkDir(dir) end end, gameRootPanel, true)
   g_keyboard.bindKeyUp(key, function() changeWalkDir(dir, true) end, gameRootPanel, true)
-  g_keyboard.bindKeyPress(key, function(c, k, ticks) smartWalk(dir, ticks) end, gameRootPanel)
+  g_keyboard.bindKeyPress(key, function(c, k, ticks) if not unlessUsed or keyIsFree(key) then smartWalk(dir, ticks) end end, gameRootPanel)
 end
 
 function unbindWalkKey(key)
@@ -154,11 +160,11 @@ function unbindWalkKey(key)
   g_keyboard.unbindKeyPress(key, gameRootPanel)
 end
 
-function bindTurnKey(key, dir)
+function bindTurnKey(key, dir, unlessUsed)
   turnKeys[key] = dir
   local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.bindKeyDown(key, function() turn(dir, false) end, gameRootPanel)
-  g_keyboard.bindKeyPress(key, function() turn(dir, true) end, gameRootPanel)
+  g_keyboard.bindKeyDown(key, function() if not unlessUsed or keyIsFree(key) then turn(dir, false) end end, gameRootPanel)
+  g_keyboard.bindKeyPress(key, function() if not unlessUsed or keyIsFree(key) then turn(dir, true) end end, gameRootPanel)
   g_keyboard.bindKeyUp(key, function() local player = g_game.getLocalPlayer() if player then player:lockWalk(200) end end, gameRootPanel)
 end
 

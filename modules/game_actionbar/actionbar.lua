@@ -23,6 +23,9 @@ local ACTION = {
   USE_CROSS = 5
 }
 
+-- the keys bound to a slot, built when asked (game_walking leaves them to the slots) and dropped on every change
+local usedKeys = nil
+
 -- removes the key binding of a button: setupAction binds a new callback every time a button is set up, so the
 -- old one has to go first or the key would run the action twice
 local function unbindButton(widget)
@@ -31,20 +34,36 @@ local function unbindButton(widget)
   end
   widget.keyCallback = nil
   widget.callback = nil
+  usedKeys = nil
 end
 
--- while the chat is open a key that writes text (a letter, with or without Shift) belongs to the chat; with the option
--- "Disable action bar hotkeys when chat mode is on" every action bar key waits until the chat is closed
+-- F1-F12, with or without Ctrl, Alt or Shift
+local function isFunctionKey(hotkey)
+  return hotkey:match('^F%d+$') or hotkey:match('%+F%d+$')
+end
+
+-- Tibia-like chat mode (game_console): with the chat on every key writes in the chat, so only F1-F12 run slots; with
+-- the chat off every key does
 local function keyBelongsToChat(hotkey)
   if not (modules.game_console and modules.game_console.isChatEnabled()) then
     return false
   end
 
-  if modules.client_options and modules.client_options.getOption('actionbarLock') then
-    return true
-  end
+  return not isFunctionKey(hotkey)
+end
 
-  return hotkey:gsub('^Shift%+', ''):len() == 1
+function isHotkeyUsed(hotkey)
+  if not usedKeys then
+    usedKeys = {}
+    for _, actionbar in ipairs(actionBars) do
+      for _, child in ipairs(actionbar.tabBar:getChildren()) do
+        if child.keyCallback and child.hotkey then
+          usedKeys[child.hotkey] = true
+        end
+      end
+    end
+  end
+  return usedKeys[hotkey] == true
 end
 
 -- the cooldown groups of a spell as a list (SpellInfo keeps them as {[groupId] = ms}; it is shared with the spell
@@ -620,6 +639,9 @@ function setupButton(widget)
   end
 
   local hotkeyDesc = widget.hotkey and widget.hotkey:len() > 0 and widget.hotkey or "None"
+  if hotkeyDesc ~= "None" and not isFunctionKey(hotkeyDesc) then
+    hotkeyDesc = hotkeyDesc.." (with the chat off)"
+  end
   local tooltip = "Action Button "..id
   tooltip = tooltip.."\n\n\tAction:  ".. actionDesc
   tooltip = tooltip.."\nHotkeys:  ".. hotkeyDesc
@@ -1355,6 +1377,7 @@ function setupAction(widget)
       end
     end
     g_keyboard.bindKeyPress(hotkey, widget.keyCallback, modules.game_interface.getRootPanel())
+    usedKeys = nil
   end
 end
 

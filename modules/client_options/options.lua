@@ -43,7 +43,7 @@ local defaultOptions = {
   turnDelay = 30,
   hotkeyDelay = 30,
     
-  wsadWalking = false,
+  walkWithWasd = true, -- while the chat is off (game_console)
   walkFirstStepDelay = 200,
   walkTurnDelay = 100,
   walkStairsDelay = 50,
@@ -61,8 +61,6 @@ local defaultOptions = {
   actionbar7 = true,
   actionbar8 = false,
   actionbar9 = false,
-
-  actionbarLock = false,
 
   profile = 1,
   
@@ -349,9 +347,9 @@ function setOption(key, value, force)
     else 
       g_game.setMaxPreWalkingSteps(1)    
     end
-  elseif key == 'wsadWalking' then
-    if modules.game_console and modules.game_console.consoleToggleChat:isChecked() ~= value then
-      modules.game_console.consoleToggleChat:setChecked(value)
+  elseif key == 'walkWithWasd' then
+    if modules.game_console and modules.game_console.updateWasd then
+      modules.game_console.updateWasd()
     end
   elseif key == 'hotkeyDelay' then
     generalPanel:getChildById('hotkeyDelayLabel'):setText(tr('Hotkey delay: %s ms', value))  

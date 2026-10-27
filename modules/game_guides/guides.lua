@@ -18,9 +18,11 @@ local GUIDES = {
       {art = 'ArtText', title = 'Text',
        text = 'Assign Text: the slot says it for you. Tick "Send automatically" to say it at once.'},
       {art = 'ArtAction', title = 'Action',
-       text = 'Assign Action: loot, attack the next target, open a door, stop attacking, use what is under you. Point at one to see what it does.'},
+       text = 'Assign Action: loot, attack the next target, open or close a door, stop attacking, use what is under you. Point at one to see what it does.'},
       {art = 'ArtHotkey', title = 'Hotkey',
        text = 'Right click a slot, choose Assign Hotkey and press any key or combination (Ctrl, Shift, Alt).'},
+      {art = 'ArtChat', title = 'Chat On / Off',
+       text = 'You start with the chat off: letters, numbers and Space run your hotkeys and W A S D walk. Press Enter to say one thing. Click Chat Off to keep the chat on. F1-F12 always work.'},
       {art = 'ArtTips', title = 'Tips',
        text = 'Lock a bar so nothing moves by mistake. Drag a slot onto another to swap them. Options > Custom shows up to 9 bars.'},
     }

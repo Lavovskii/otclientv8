@@ -117,9 +117,3 @@ OptionPanel
       id: actionbar9
       !text: tr('Bar 3')
       width: 60
-
-  Label
-
-  OptionCheckBox
-    id: actionbarLock
-    !text: tr('Disable action bar hotkeys when chat mode is on')

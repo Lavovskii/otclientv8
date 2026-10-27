@@ -67,7 +67,6 @@ consolePanel = nil
 consoleContentPanel = nil
 consoleTabBar = nil
 consoleTextEdit = nil
-consoleToggleChat = nil
 channels = nil
 channelsWindow = nil
 communicationWindow = nil
@@ -156,8 +155,10 @@ function init()
   g_keyboard.bindKeyDown('Ctrl+O', g_game.requestChannels, gameRootPanel)
   g_keyboard.bindKeyDown('Ctrl+E', removeCurrentTab, gameRootPanel)
   g_keyboard.bindKeyDown('Ctrl+H', openHelp, gameRootPanel)
+  g_keyboard.bindKeyDown('Enter', onEnterKey, gameRootPanel)
+  g_keyboard.bindKeyDown('Escape', onEscapeKey, gameRootPanel)
 
-  consoleToggleChat = consolePanel:getChildById('toggleChat')
+  disableChat()
   load()
 
   if g_game.isOnline() then
@@ -186,76 +187,93 @@ function selectAll(consoleBuffer)
   end
 end
 
+-- Tibia-like chat mode. Every login starts with the chat off: the keys belong to the action bars (letters, numbers and
+-- Space too) and W A S D walk (Options > Game). Enter, or a click on the text box, opens the chat for one message:
+-- Enter sends it and closes the chat again, Escape just closes it. The Chat On / Chat Off button after the text box
+-- keeps the chat on (the keys write then, only F1-F12 run action bar slots) or turns it off again.
+local chatOn = false
+local talkingOnce = false
+
+local function updateChatMode()
+  local button = consolePanel:getChildById('chatModeButton')
+  if button then
+    local on = chatOn and not talkingOnce
+    button:setText(on and tr('Chat On') or tr('Chat Off'))
+    button:setColor(on and '#8fe08f' or '#f09a9a')
+    button:setTooltip(on and tr('Chat on: your keys write in the chat, only F1-F12 run your hotkeys.\nClick to turn the chat off.')
+      or tr('Chat off: your keys run your hotkeys and W A S D walk.\nPress Enter to say one thing, or click to turn the chat on.'))
+  end
+  local hint = consolePanel:getChildById('chatOffLabel')
+  if hint then
+    hint:setVisible(not chatOn)
+  end
+end
+
+-- W A S D walk while the chat is off (Options > Game)
+function updateWasd()
+  if not modules.game_walking then
+    return
+  end
+  if not chatOn and modules.client_options.getOption('walkWithWasd') then
+    modules.game_walking.enableWSAD()
+  else
+    modules.game_walking.disableWSAD()
+  end
+end
+
+-- Enter and Escape of the game window (bound in init, which comes before them in this file, so they are not local)
+function onEnterKey()
+  if g_app.isMobile() or not g_game.isOnline() then
+    return false
+  end
+  if not chatOn then
+    enableChat(true)
+    return true
+  elseif talkingOnce then
+    disableChat() -- the text box has sent the message already
+    return true
+  end
+  return false
+end
+
+function onEscapeKey()
+  if talkingOnce then
+    disableChat()
+  end
+  return false -- Escape still stops the attack
+end
+
 function toggleChat()
-  if consoleToggleChat:isChecked() then
+  if chatOn and not talkingOnce then
     disableChat()
   else
     enableChat()
   end
 end
 
-function enableChat(temporarily)
+function enableChat(once)
   if g_app.isMobile() then return end
-  if consoleToggleChat:isChecked() then
-    return consoleToggleChat:setChecked(false)
-  end
-  if not temporarily then
-    modules.client_options.setOption("wsadWalking", false)
-  end
-
-  consoleTextEdit:setVisible(true)
-  consoleTextEdit:setText("")
+  chatOn = true
+  talkingOnce = once and true or false
+  consoleTextEdit:setEnabled(true)
+  consoleTextEdit:clearText()
   consoleTextEdit:focus()
-
-  local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.unbindKeyDown("Enter", gameRootPanel)
-  
-  if temporarily then
-    local quickFunc = function()
-      if not g_game.isOnline() then return end
-      g_keyboard.unbindKeyDown("Enter", gameRootPanel)
-      g_keyboard.unbindKeyDown("Escape", gameRootPanel)
-      disableChat(temporarily)
-    end
-    g_keyboard.bindKeyDown("Enter", quickFunc, gameRootPanel)
-    g_keyboard.bindKeyDown("Escape", quickFunc, gameRootPanel)  
-  end
-
-  modules.game_walking.disableWSAD()
-
-  consoleToggleChat:setTooltip(tr("Disable chat mode, allow to walk using ASDW"))
+  updateWasd()
+  updateChatMode()
 end
 
-function disableChat(temporarily)
+function disableChat()
   if g_app.isMobile() then return end
-  if not consoleToggleChat:isChecked() then
-    return consoleToggleChat:setChecked(true)
-  end
-  if not temporarily then
-    modules.client_options.setOption("wsadWalking", true)
-  end
-
-  consoleTextEdit:setVisible(false)
-  consoleTextEdit:setText("")
-
-  local quickFunc = function()
-    if not g_game.isOnline() then return end
-    if consoleToggleChat:isChecked() then
-      consoleToggleChat:setChecked(false)
-    end
-    enableChat(true)
-  end
-  
-  local gameRootPanel = modules.game_interface.getRootPanel()
-  g_keyboard.bindKeyDown("Enter", quickFunc, gameRootPanel)
-
-  modules.game_walking.enableWSAD()
-
-  consoleToggleChat:setTooltip(tr("Enable chat mode"))
+  chatOn = false
+  talkingOnce = false
+  consoleTextEdit:clearText()
+  consoleTextEdit:setEnabled(false)
+  updateWasd()
+  updateChatMode()
 end
 
 function isChatEnabled()
-  return consoleTextEdit:isVisible()
+  return chatOn
 end
 
 function terminate()
@@ -282,6 +300,8 @@ function terminate()
   g_keyboard.unbindKeyDown('Ctrl+O', gameRootPanel)
   g_keyboard.unbindKeyDown('Ctrl+E', gameRootPanel)
   g_keyboard.unbindKeyDown('Ctrl+H', gameRootPanel)
+  g_keyboard.unbindKeyDown('Enter', onEnterKey, gameRootPanel)
+  g_keyboard.unbindKeyDown('Escape', onEscapeKey, gameRootPanel)
 
   saveCommunicationSettings()
 
@@ -299,7 +319,6 @@ function terminate()
 
   consoleTabBar = nil
   consoleContentPanel = nil
-  consoleToggleChat = nil
   consoleTextEdit = nil
 
   consolePanel:destroy()
@@ -420,6 +439,9 @@ function clearChannel(consoleTabBar)
 end
 
 function setTextEditText(text)
+  if not chatOn then
+    enableChat(true) -- a text slot without "Send automatically", with the chat off: open the chat for it
+  end
   consoleTextEdit:setText(text)
   consoleTextEdit:setCursorPos(-1)
 end
@@ -1476,6 +1498,7 @@ function onClickIgnoreButton()
 end
 
 function online()
+  disableChat() -- every login starts with the chat off
   defaultTab = addTab(tr('Default'), true)
   serverTab = addTab(tr('Server Log'), false)
   lootTab = addTab(tr('Loot'), false) -- always open, written by the loot hotkey (game_actionbar)
