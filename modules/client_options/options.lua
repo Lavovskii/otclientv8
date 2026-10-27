@@ -294,6 +294,8 @@ function setOption(key, value, force)
     modules.game_healthinfo.healthCircleFront:setVisible(value)
     modules.game_healthinfo.manaCircle:setVisible(value)
     modules.game_healthinfo.manaCircleFront:setVisible(value)
+    modules.game_healthinfo.healthCircleFrame:setVisible(value)
+    modules.game_healthinfo.manaCircleFrame:setVisible(value)
     modules.game_healthinfo.healthPercentLabel:setVisible(value)
     modules.game_healthinfo.manaPercentLabel:setVisible(value)
   elseif key == 'backgroundFrameRate' then

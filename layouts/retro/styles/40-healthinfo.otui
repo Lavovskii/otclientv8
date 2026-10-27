@@ -46,6 +46,28 @@ ConditionWidget < UIWidget
   $!first:
     margin-left: 2
       
+// one layer of the health or mana arc: the images are 76x212 and healthinfo.lua cuts the fill in those pixels
+CircleLayer < UIWidget
+  size: 76 212
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.verticalCenter: parent.verticalCenter
+  margin-bottom: 16
+  opacity: 0.85
+  phantom: true
+
+HealthCircleLayer < CircleLayer
+  margin-right: 175
+
+ManaCircleLayer < CircleLayer
+  margin-left: 135
+
+// the percentage inside the medallion of an arc
+CirclePercent < Label
+  font: verdana-9px-bold
+  color: #f0e2b6
+  text-auto-resize: true
+  phantom: true
+
 HealthOverlay < UIWidget
   id: healthOverlay
   anchors.fill: parent
@@ -65,68 +87,44 @@ HealthOverlay < UIWidget
     anchors.left: parent.horizontalCenter
     phantom: true
     
-  UIProgressBar
+  // the health and mana arcs around the character (tools/gen_health_circles.py): the track, the fill (cut and tinted
+  // by healthinfo.lua) and the bronze frame whose medallion holds the percentage
+  HealthCircleLayer
     id: healthCircle
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    image-source: /images/game/circle/left_empty
-    margin-right: 169
-    margin-bottom: 16
-    opacity: 0.5
-    phantom: true
+    image-source: /images/game/circle/left_back
 
-  UIProgressBar
+  HealthCircleLayer
     id: healthCircleFront
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    image-source: /images/game/circle/left_full
-    margin-right: 169
-    margin-bottom: 16
-    opacity: 0.5
-    phantom: true
+    image-source: /images/game/circle/left_fill
 
-  UIProgressBar
+  HealthCircleLayer
+    id: healthCircleFrame
+    image-source: /images/game/circle/left_frame
+
+  ManaCircleLayer
     id: manaCircle
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    image-source: /images/game/circle/right_empty    
-    margin-left: 130
-    margin-bottom: 16
-    opacity: 0.5
-    phantom: true
+    image-source: /images/game/circle/right_back
 
-  UIProgressBar
+  ManaCircleLayer
     id: manaCircleFront
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    image-source: /images/game/circle/right_full
-    margin-left: 130
-    margin-bottom: 16    
-    opacity: 0.4
-    image-color: #0000FFFF
-    phantom: true
+    image-source: /images/game/circle/right_fill
+    image-color: #3a7bff
 
-  Label
+  ManaCircleLayer
+    id: manaCircleFrame
+    image-source: /images/game/circle/right_frame
+
+  CirclePercent
     id: healthPercentLabel
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    margin-right: 175
-    margin-bottom: 16
-    font: verdana-9px-bold
-    color: #ffffff
-    text-auto-resize: true
-    phantom: true
+    anchors.horizontalCenter: healthCircleFrame.left
+    anchors.verticalCenter: healthCircleFrame.verticalCenter
+    margin-left: 27
 
-  Label
+  CirclePercent
     id: manaPercentLabel
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.verticalCenter: parent.verticalCenter
-    margin-left: 134
-    margin-bottom: 16
-    font: verdana-9px-bold
-    color: #ffffff
-    text-auto-resize: true
-    phantom: true
+    anchors.horizontalCenter: manaCircleFrame.right
+    anchors.verticalCenter: manaCircleFrame.verticalCenter
+    margin-right: 27
   
 HealthInfoWindow < HeadlessMiniWindow
   icon: 

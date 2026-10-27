@@ -1030,64 +1030,91 @@ GuideBar < Label
   border-color: #000000
   phantom: true
 
-// the circles around the character and the bars, with the real numbers
+// the middle of the circles around the character, at their real size (the images are cut to the medallions), and the
+// bars with the real numbers
+GuideCircle < UIWidget
+  size: 76 84
+  image-clip: 0 64 76 84
+  phantom: true
+
 ArtStats < Panel
   anchors.fill: parent
 
-  UIWidget
-    id: healthArc
-    size: 24 80
+  GuideCircle
+    id: hBack
     anchors.left: parent.left
     anchors.top: parent.top
-    image-source: /images/game/circle/left_full
-    image-color: #2fbf3a
-    opacity: 0.8
-    phantom: true
+    image-source: /images/game/circle/left_back
+  GuideCircle
+    anchors.left: hBack.left
+    anchors.top: hBack.top
+    image-source: /images/game/circle/left_fill
+    image-color: #00bc00
+  GuideCircle
+    id: hFrame
+    anchors.left: hBack.left
+    anchors.top: hBack.top
+    image-source: /images/game/circle/left_frame
   Label
-    anchors.left: healthArc.right
-    anchors.verticalCenter: healthArc.verticalCenter
-    margin-left: 2
+    anchors.horizontalCenter: hFrame.left
+    anchors.verticalCenter: hFrame.top
+    margin-left: 27
+    margin-top: 42
     font: verdana-9px-bold
-    color: #ffffff
+    color: #f0e2b6
     text: 100%
     text-auto-resize: true
     phantom: true
 
-  UIWidget
-    id: manaArc
-    size: 24 80
-    anchors.left: healthArc.right
+  GuideCircle
+    id: mBack
+    anchors.left: hBack.right
     anchors.top: parent.top
-    margin-left: 72
-    image-source: /images/game/circle/right_full
-    image-color: #3a5cff
-    opacity: 0.8
+    margin-left: 4
+    image-source: /images/game/circle/right_back
+  // mana at 40%: the fill starts below the medallion
+  UIWidget
+    size: 76 22
+    anchors.left: mBack.left
+    anchors.top: mBack.top
+    margin-top: 62
+    image-source: /images/game/circle/right_fill
+    image-clip: 0 126 76 22
+    image-color: #3a7bff
     phantom: true
+  GuideCircle
+    id: mFrame
+    anchors.left: mBack.left
+    anchors.top: mBack.top
+    image-source: /images/game/circle/right_frame
   Label
-    anchors.right: manaArc.left
-    anchors.verticalCenter: manaArc.verticalCenter
-    margin-right: 2
+    anchors.horizontalCenter: mFrame.right
+    anchors.verticalCenter: mFrame.top
+    margin-right: 27
+    margin-top: 42
     font: verdana-9px-bold
-    color: #ffffff
-    text: 80%
+    color: #f0e2b6
+    text: 40%
     text-auto-resize: true
     phantom: true
 
   GuideBar
     id: hp
-    anchors.left: manaArc.right
+    width: 110
+    anchors.left: mBack.right
     anchors.top: parent.top
-    margin-left: 14
+    margin-left: 8
     margin-top: 10
     background-color: #b01c1c
     text: 92,130 / 92,130
   GuideBar
     id: mp
+    width: 110
     anchors.left: hp.left
     anchors.top: hp.bottom
     margin-top: 4
     background-color: #1c3cb0
-    text: 24,144 / 30,180
+    text: 12,072 / 30,180
   GuideNote
     anchors.left: hp.left
     anchors.top: mp.bottom

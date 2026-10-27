@@ -32,6 +32,8 @@ healthCircleFront = nil
 manaCircleFront = nil
 healthCircle = nil
 manaCircle = nil
+healthCircleFrame = nil
+manaCircleFrame = nil
 healthPercentLabel = nil
 manaPercentLabel = nil
 topHealthBar = nil
@@ -70,6 +72,8 @@ function init()
   manaCircleFront = overlay:getChildById('manaCircleFront')
   healthCircle = overlay:getChildById('healthCircle')
   manaCircle = overlay:getChildById('manaCircle')
+  healthCircleFrame = overlay:getChildById('healthCircleFrame')
+  manaCircleFrame = overlay:getChildById('manaCircleFrame')
   healthPercentLabel = overlay:getChildById('healthPercentLabel')
   manaPercentLabel = overlay:getChildById('manaPercentLabel')
   topHealthBar = overlay:getChildById('topHealthBar')
@@ -164,6 +168,19 @@ function onMiniWindowClose()
   end
 end
 
+-- the arcs around the character (images made by tools/gen_health_circles.py): 76x212, the track goes from y 4 to 208;
+-- the fill shows from the bottom of the track up to the percentage
+local CIRCLE_W, CIRCLE_H = 76, 212
+local FILL_TOP, FILL_BOTTOM = 4, 208
+
+function fillCircle(widget, percent)
+  percent = math.max(0, math.min(100, percent))
+  local top = math.floor(FILL_TOP + (FILL_BOTTOM - FILL_TOP) * (1 - percent / 100))
+  local rect = { x = 0, y = top, width = CIRCLE_W, height = CIRCLE_H - top }
+  widget:setImageClip(rect)
+  widget:setImageRect(rect)
+end
+
 function onHealthChange(localPlayer, health, maxHealth)
   if health > maxHealth then
     maxHealth = health
@@ -179,10 +196,7 @@ function onHealthChange(localPlayer, health, maxHealth)
 
   local healthPercent = math.floor(g_game.getLocalPlayer():getHealthPercent())
   healthPercentLabel:setText((maxHealth > 0 and math.floor(health * 100 / maxHealth + 0.5) or 0) .. '%')
-  local Yhppc = math.floor(208 * (1 - (healthPercent / 100)))
-  local rect = { x = 0, y = Yhppc, width = 63, height = 208 - Yhppc + 1 }
-  healthCircleFront:setImageClip(rect)
-  healthCircleFront:setImageRect(rect)
+  fillCircle(healthCircleFront, healthPercent)
 
   if healthPercent > 92 then
     healthCircleFront:setImageColor("#00BC00FF")
@@ -213,11 +227,7 @@ function onManaChange(localPlayer, mana, maxMana)
   topManaBar:setValue(mana, 0, maxMana)
 
   manaPercentLabel:setText((maxMana > 0 and math.floor(mana * 100 / maxMana + 0.5) or 0) .. '%')
-
-  local Ymppc = math.floor(208 * (1 - (math.floor((maxMana - (maxMana - mana)) * 100 / maxMana) / 100)))
-  local rect = { x = 0, y = Ymppc, width = 63, height = 208 - Ymppc + 1 }
-  manaCircleFront:setImageClip(rect)
-  manaCircleFront:setImageRect(rect)
+  fillCircle(manaCircleFront, maxMana > 0 and math.floor(mana * 100 / maxMana) or 0)
 end
 
 function onLevelChange(localPlayer, value, percent)

@@ -49,6 +49,9 @@ Type: filesandordirs; Name: "{app}\modules\game_hotkeys"
 Type: filesandordirs; Name: "{app}\modules\game_cooldown"
 Type: filesandordirs; Name: "{app}\modules\game_bot"
 Type: filesandordirs; Name: "{app}\modules\game_shop"
+; the old health and mana arcs (replaced by *_back, *_fill and *_frame)
+Type: files; Name: "{app}\data\images\game\circle\*_empty.png"
+Type: files; Name: "{app}\data\images\game\circle\*_full.png"
 
 [Files]
 ; Microsoft's own Visual C++ 2015-2022 x86 runtime (official, Authenticode-signed by Microsoft).
