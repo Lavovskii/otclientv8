@@ -1402,11 +1402,11 @@ ArtSpellDemo < Panel
 
     UICreature
       id: caster
-      size: 52 52
+      size: 39 39
       anchors.left: parent.left
       anchors.top: parent.top
-      margin-left: 39
-      margin-top: 39
+      margin-left: 46
+      margin-top: 46
       phantom: true
       &outfitType: 128
 

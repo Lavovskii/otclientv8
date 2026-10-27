@@ -136,6 +136,271 @@ SpellDemoMissile < UIWidget
   image-clip: 0 0 32 32
   phantom: true
 
+// the admins' editor of one spell (Add / Edit in the Spells window)
+SpellEditLabel < Label
+  font: verdana-11px-rounded
+  color: #c9b98f
+  margin-top: 7
+
+SpellEditCheck < CheckBox
+  width: 84
+  height: 16
+
+SpellEditWindow < MainWindow
+  size: 390 486
+  !text: tr('Spell')
+
+  SpellEditLabel
+    id: nameLabel
+    !text: tr('Name')
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 0
+  TextEdit
+    id: name
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  SpellEditLabel
+    !text: tr('Words')
+    anchors.left: parent.left
+    anchors.top: prev.bottom
+  TextEdit
+    id: words
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.top: prev.bottom
+    margin-top: 2
+
+  SpellEditLabel
+    id: levelLabel
+    !text: tr('Level')
+    anchors.left: parent.left
+    anchors.top: words.bottom
+  SpellEditLabel
+    id: maglevelLabel
+    !text: tr('Magic level')
+    anchors.left: parent.horizontalCenter
+    anchors.top: levelLabel.top
+    margin-left: 4
+    margin-top: 0
+  TextEdit
+    id: level
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: levelLabel.bottom
+    margin-top: 2
+    margin-right: 4
+  TextEdit
+    id: maglevel
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: maglevelLabel.bottom
+    margin-top: 2
+    margin-left: 4
+
+  SpellEditLabel
+    id: manaLabel
+    !text: tr('Mana')
+    anchors.left: parent.left
+    anchors.top: level.bottom
+  SpellEditLabel
+    id: exhaustionLabel
+    !text: tr('Cooldown (ms)')
+    anchors.left: parent.horizontalCenter
+    anchors.top: manaLabel.top
+    margin-left: 4
+    margin-top: 0
+  TextEdit
+    id: mana
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: manaLabel.bottom
+    margin-top: 2
+    margin-right: 4
+  TextEdit
+    id: exhaustion
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: exhaustionLabel.bottom
+    margin-top: 2
+    margin-left: 4
+
+  SpellEditLabel
+    id: typeLabel
+    !text: tr('Type')
+    anchors.left: parent.left
+    anchors.top: mana.bottom
+  SpellEditLabel
+    id: demoLabel
+    !text: tr('Demo of (empty: this spell)')
+    anchors.left: parent.horizontalCenter
+    anchors.top: typeLabel.top
+    margin-left: 4
+    margin-top: 0
+  ComboBox
+    id: type
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    anchors.top: typeLabel.bottom
+    margin-top: 2
+    margin-right: 4
+  TextEdit
+    id: demo
+    anchors.left: parent.horizontalCenter
+    anchors.right: parent.right
+    anchors.top: demoLabel.bottom
+    margin-top: 2
+    margin-left: 4
+
+  SpellEditLabel
+    id: kindLabel
+    !text: tr('Kind')
+    anchors.left: parent.left
+    anchors.top: type.bottom
+  SpellEditCheck
+    id: group1
+    !text: tr('Attack')
+    anchors.left: parent.left
+    anchors.top: kindLabel.bottom
+    margin-top: 3
+  SpellEditCheck
+    id: group2
+    !text: tr('Healing')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: group3
+    !text: tr('Support')
+    anchors.left: prev.right
+    anchors.top: prev.top
+
+  SpellEditLabel
+    id: vocationsLabel
+    !text: tr('Vocations')
+    anchors.left: parent.left
+    anchors.top: group1.bottom
+  SpellEditCheck
+    id: voc1
+    !text: tr('Sorcerer')
+    anchors.left: parent.left
+    anchors.top: vocationsLabel.bottom
+    margin-top: 3
+  SpellEditCheck
+    id: voc2
+    !text: tr('Druid')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: voc3
+    !text: tr('Paladin')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: voc4
+    !text: tr('Knight')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: voc5
+    !text: tr('Master S.')
+    !tooltip: tr('Master Sorcerer')
+    anchors.left: parent.left
+    anchors.top: voc1.bottom
+    margin-top: 3
+  SpellEditCheck
+    id: voc6
+    !text: tr('Elder D.')
+    !tooltip: tr('Elder Druid')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: voc7
+    !text: tr('Royal P.')
+    !tooltip: tr('Royal Paladin')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: voc8
+    !text: tr('Elite K.')
+    !tooltip: tr('Elite Knight')
+    anchors.left: prev.right
+    anchors.top: prev.top
+  SpellEditCheck
+    id: premium
+    !text: tr('Premium')
+    anchors.left: parent.left
+    anchors.top: voc5.bottom
+    margin-top: 10
+  SpellEditCheck
+    id: needlearn
+    !text: tr('Must be learned')
+    width: 130
+    anchors.left: prev.right
+    anchors.top: prev.top
+
+  SpellEditLabel
+    id: iconLabel
+    !text: tr('Icon')
+    anchors.left: parent.left
+    anchors.top: premium.bottom
+  Button
+    id: iconPrev
+    text: <
+    width: 22
+    anchors.left: parent.left
+    anchors.top: iconLabel.bottom
+    margin-top: 9
+  UIWidget
+    id: icon
+    size: 32 32
+    anchors.left: prev.right
+    anchors.top: iconLabel.bottom
+    margin-top: 4
+    margin-left: 6
+    image-source: /images/game/spells/defaultspells
+    image-clip: 0 0 32 32
+  Button
+    id: iconNext
+    text: >
+    width: 22
+    anchors.left: prev.right
+    anchors.top: iconPrev.top
+    margin-left: 6
+  Label
+    id: iconName
+    anchors.left: prev.right
+    anchors.right: parent.right
+    anchors.verticalCenter: icon.verticalCenter
+    margin-left: 8
+    font: verdana-11px-rounded
+    color: #9f9f9f
+
+  Button
+    id: resetButton
+    !text: tr('Built-in values')
+    !tooltip: tr('Forget the changes to this spell and use the one built into the client')
+    width: 100
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+
+  Button
+    id: okButton
+    !text: tr('Save')
+    width: 70
+    anchors.right: cancelButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 6
+
+  Button
+    id: cancelButton
+    !text: tr('Cancel')
+    width: 70
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
 MainWindow
   id: spelllistWindow
   !text: tr('Spells')
@@ -294,3 +559,47 @@ MainWindow
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     @onClick: modules.game_spelllist.toggle()
+
+  // admins only: the list is kept on the server (web API), like the Store
+  Panel
+    id: adminBar
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    width: 268
+    height: 22
+    visible: false
+
+    Button
+      id: addButton
+      !text: tr('Add')
+      width: 46
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      @onClick: modules.game_spelllist.adminEdit(false)
+
+    Button
+      id: editButton
+      !text: tr('Edit')
+      width: 46
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 3
+      @onClick: modules.game_spelllist.adminEdit(true)
+
+    Button
+      id: deleteButton
+      !text: tr('Delete')
+      width: 56
+      anchors.left: prev.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 3
+      @onClick: modules.game_spelllist.adminDelete()
+
+    CheckBox
+      id: showDeleted
+      !text: tr('Show deleted')
+      anchors.left: prev.right
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+      @onCheckChange: modules.game_spelllist.setShowDeleted(self:isChecked())

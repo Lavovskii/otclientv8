@@ -127,10 +127,13 @@ function SpellDemoPlayer:drawScene(demo)
     if widget.setDirection then
       widget:setDirection(c[3] == 'caster' and Directions.North or Directions.South)
     end
-    -- the outfit is drawn in the middle of the widget: a widget of two tiles centred on the creature's tile
-    widget:setSize({width = t * 2, height = t * 2})
-    widget:setMarginLeft(self.originX + c[1] * t - math.floor(t / 2))
-    widget:setMarginTop(self.originY + c[2] * t - math.floor(t / 2))
+    -- a creature widget draws the outfit's 32x32 sprite at 8,8 of a 48x48 frame stretched over the widget: a widget of
+    -- 1.5 tiles keeps the sprite one tile big, and moved up and left by a quarter tile it puts the sprite on its tile
+    local size = math.floor(t * 1.5)
+    local shift = math.floor(t / 4)
+    widget:setSize({width = size, height = size})
+    widget:setMarginLeft(self.originX + c[1] * t - shift)
+    widget:setMarginTop(self.originY + c[2] * t - shift)
   end
 end
 

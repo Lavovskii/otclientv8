@@ -1067,19 +1067,20 @@ function assignSpell(widget)
     for spellName, spellData in pairs(spells) do
       local candidate = {name = spellName, type = spellData.type, level = spellData.level, maglevel = spellData.maglevel,
         vocations = spellData.vocations, needlearn = spellData.needlearn}
-      if canUseSpell(candidate, info, player) then
+      -- spells the admins deleted from the list (Spells window) are not offered
+      if not spellData.hidden and canUseSpell(candidate, info, player) then
         local spellWidget = g_ui.createWidget('SpellPreview', spellWindow.spellList)
         -- radio
         radio:addWidget(spellWidget)
 
         spellWidget:setId(spellData.id)
-        spellWidget:setText(spellName.."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
+        spellWidget:setText((spellData.title or spellName).."\n"..spellData.words.."  -  Level "..spellData.level..((spellData.maglevel or 0) > 0 and (", ML "..spellData.maglevel) or ""))
         spellWidget.level = spellData.level
         spellWidget.maglevel = spellData.maglevel or 0
         spellWidget.voc = spellData.vocations
         spellWidget.param = spellData.parameter
         spellWidget.source = SpelllistSettings['Default'].iconFile
-        spellWidget.clip = Spells.getImageClip(SpellIcons[spellData.icon][1], 'Default')
+        spellWidget.clip = Spells.getImageClip((SpellIcons[spellData.icon] or SpellIcons['energybeam'])[1], 'Default')
         spellWidget.image:setImageSource(spellWidget.source)
         spellWidget.image:setImageClip(spellWidget.clip)
 
@@ -1089,7 +1090,7 @@ function assignSpell(widget)
           mana = spellData.mana,
           source = spellWidget.source,
           clip = spellWidget.clip,
-          name = spellName,
+          name = spellData.title or spellName,
           param = spellData.parameter,
           group = spellGroups(spellData),
           id = spellData.id
