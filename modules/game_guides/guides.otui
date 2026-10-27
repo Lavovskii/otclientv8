@@ -347,6 +347,13 @@ ArtAction < Panel
     GuideSlotText
       !text: 'Next\nTarget'
   GuideSlotOn
+    id: a2b
+    anchors.left: prev.right
+    anchors.top: prev.top
+    margin-left: 2
+    GuideSlotText
+      !text: 'Prev\nTarget'
+  GuideSlotOn
     id: a3
     anchors.left: prev.right
     anchors.top: prev.top
@@ -939,6 +946,358 @@ ArtEmpty < Panel
     margin-top: 10
     &itemId: 3031
     &itemCount: 37
+
+// --- drawings: Interface ----------------------------------------------------------------------------------------------
+
+// a game window, as a small title bar
+GuideWin < Label
+  size: 84 18
+  text-offset: 5 0
+  text-align: left
+  font: verdana-11px-antialised
+  color: #dfdfdf
+  background-color: #3a342c
+  border-width: 1
+  border-color: #6b5c40
+  phantom: true
+
+// the same windows today and at the next login
+ArtWindows < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: today
+    anchors.left: parent.left
+    anchors.top: parent.top
+    text: today
+  GuideWin
+    id: w1
+    anchors.left: parent.left
+    anchors.top: today.bottom
+    margin-top: 3
+    text: Skills
+  GuideWin
+    id: w2
+    anchors.left: w1.left
+    anchors.top: w1.bottom
+    margin-top: 2
+    text: Backpack
+  GuideWin
+    id: w3
+    anchors.left: w1.left
+    anchors.top: w2.bottom
+    margin-top: 2
+    text: Battle
+
+  GuideArrow
+    id: arrow
+    anchors.left: w1.right
+    anchors.verticalCenter: w2.verticalCenter
+    margin-left: 16
+
+  GuideNote
+    id: tomorrow
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 16
+    text: next login
+  GuideWin
+    id: n1
+    anchors.left: tomorrow.left
+    anchors.top: tomorrow.bottom
+    margin-top: 3
+    text: Skills
+  GuideWin
+    id: n2
+    anchors.left: n1.left
+    anchors.top: n1.bottom
+    margin-top: 2
+    text: Backpack
+  GuideWin
+    id: n3
+    anchors.left: n1.left
+    anchors.top: n2.bottom
+    margin-top: 2
+    text: Battle
+
+// a health or mana bar with its numbers
+GuideBar < Label
+  size: 140 15
+  text-align: center
+  font: verdana-11px-rounded
+  color: #ffffff
+  border-width: 1
+  border-color: #000000
+  phantom: true
+
+// the circles around the character and the bars, with the real numbers
+ArtStats < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: healthArc
+    size: 24 80
+    anchors.left: parent.left
+    anchors.top: parent.top
+    image-source: /images/game/circle/left_full
+    image-color: #2fbf3a
+    opacity: 0.8
+    phantom: true
+  Label
+    anchors.left: healthArc.right
+    anchors.verticalCenter: healthArc.verticalCenter
+    margin-left: 2
+    font: verdana-9px-bold
+    color: #ffffff
+    text: 100%
+    text-auto-resize: true
+    phantom: true
+
+  UIWidget
+    id: manaArc
+    size: 24 80
+    anchors.left: healthArc.right
+    anchors.top: parent.top
+    margin-left: 72
+    image-source: /images/game/circle/right_full
+    image-color: #3a5cff
+    opacity: 0.8
+    phantom: true
+  Label
+    anchors.right: manaArc.left
+    anchors.verticalCenter: manaArc.verticalCenter
+    margin-right: 2
+    font: verdana-9px-bold
+    color: #ffffff
+    text: 80%
+    text-auto-resize: true
+    phantom: true
+
+  GuideBar
+    id: hp
+    anchors.left: manaArc.right
+    anchors.top: parent.top
+    margin-left: 14
+    margin-top: 10
+    background-color: #b01c1c
+    text: 92,130 / 92,130
+  GuideBar
+    id: mp
+    anchors.left: hp.left
+    anchors.top: hp.bottom
+    margin-top: 4
+    background-color: #1c3cb0
+    text: 24,144 / 30,180
+  GuideNote
+    anchors.left: hp.left
+    anchors.top: mp.bottom
+    margin-top: 6
+    text: Cap: 14k  (14,000)
+
+// the Spell List button and what it shows
+ArtSpellList < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: button
+    size: 20 20
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 26
+    image-source: /images/topbuttons/spelllist
+    image-clip: 0 0 20 20
+    phantom: true
+
+  GuideArrow
+    id: arrow
+    anchors.left: button.right
+    anchors.verticalCenter: button.verticalCenter
+    margin-left: 8
+
+  GuideMenu
+    id: list
+    width: 170
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 8
+    margin-top: 4
+    GuideMenuLine
+      text: Ultimate Healing
+      on: true
+    GuideMenuLine
+      text: Words: exura vita
+    GuideMenuLine
+      text: Level, mana, cooldown
+    GuideMenuLine
+      text: Only your vocation
+
+// --- drawings: Store --------------------------------------------------------------------------------------------------
+
+// the Store button of the right panel: the red plate with the golden neon
+ArtStoreButton < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: plate
+    size: 176 32
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 18
+    image-source: /images/ui/store_plate
+    image-border: 0
+    phantom: true
+    UIWidget
+      anchors.fill: parent
+      image-source: /images/ui/store_neon
+      image-border: 0
+      phantom: true
+
+  GuideMouse
+    anchors.left: plate.right
+    anchors.top: plate.top
+    margin-left: -18
+    margin-top: 12
+    image-source: /images/game/guides/mouse_left
+
+// the points of the account and the Buy Points button
+ArtStorePoints < Panel
+  anchors.fill: parent
+
+  GuideKey
+    id: points
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 10
+    text: Points: 1,250
+
+  UIWidget
+    id: buy
+    size: 86 22
+    anchors.left: points.right
+    anchors.verticalCenter: points.verticalCenter
+    margin-left: 10
+    image-source: /images/ui/button
+    image-clip: 0 0 22 23
+    image-border: 3
+    image-color: #dfdfdf
+    font: verdana-11px-antialised
+    color: #dfdfdf
+    text: Buy Points
+    phantom: true
+
+  GuideNote
+    anchors.left: points.left
+    anchors.top: points.bottom
+    margin-top: 10
+    text: Buy Points opens the website
+
+// a category, an offer and the Buy button
+ArtStoreBuy < Panel
+  anchors.fill: parent
+
+  GuideMenu
+    id: categories
+    width: 70
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 4
+    GuideMenuLine
+      text: Runes
+      on: true
+    GuideMenuLine
+      text: Potions
+    GuideMenuLine
+      text: Items
+
+  GuideSlot
+    id: offer
+    anchors.left: categories.right
+    anchors.top: parent.top
+    margin-left: 10
+    margin-top: 4
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+
+  Label
+    id: name
+    anchors.left: offer.right
+    anchors.top: offer.top
+    margin-left: 6
+    margin-top: 2
+    font: verdana-11px-rounded
+    color: #ffd57a
+    text: Rich UH
+    text-auto-resize: true
+    phantom: true
+  Label
+    anchors.left: name.left
+    anchors.top: name.bottom
+    margin-top: 2
+    font: verdana-11px-antialised
+    color: #dcdcdc
+    text: 30 points
+    text-auto-resize: true
+    phantom: true
+
+  UIWidget
+    id: buy
+    size: 54 22
+    anchors.left: offer.left
+    anchors.top: offer.bottom
+    margin-top: 10
+    image-source: /images/ui/button
+    image-clip: 0 0 22 23
+    image-border: 3
+    image-color: #dfdfdf
+    font: verdana-11px-antialised
+    color: #dfdfdf
+    text: Buy
+    phantom: true
+  GuideNote
+    anchors.left: buy.right
+    anchors.verticalCenter: buy.verticalCenter
+    margin-left: 8
+    text: asks first
+
+// the character that gets it, and the backpack it lands in
+ArtStoreDelivery < Panel
+  anchors.fill: parent
+
+  GuideKey
+    id: deliver
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 16
+    text: Deliver to: Dev
+
+  GuideArrow
+    id: arrow
+    anchors.left: deliver.right
+    anchors.verticalCenter: deliver.verticalCenter
+    margin-left: 8
+
+  GuideSlot
+    id: bag
+    anchors.left: arrow.right
+    anchors.verticalCenter: deliver.verticalCenter
+    margin-left: 8
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 2854
+  GuideSlot
+    anchors.left: bag.right
+    anchors.top: bag.top
+    margin-left: 2
+    GuideItem
+      anchors.centerIn: parent
+      &itemId: 3160
+
+  GuideNote
+    anchors.left: deliver.left
+    anchors.top: deliver.bottom
+    margin-top: 12
+    text: in seconds, or at the next login
 
 // --- window -----------------------------------------------------------------------------------------------------------
 

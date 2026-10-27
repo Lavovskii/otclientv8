@@ -26,6 +26,10 @@ local ACTION = {
 -- the keys bound to a slot, built when asked (game_walking leaves them to the slots) and dropped on every change
 local usedKeys = nil
 
+-- how often a held slot key with a spell or an object tries again (the server's action time is 100 ms, runes and
+-- potions 400-500 ms)
+local HELD_KEY_INTERVAL = 200
+
 -- removes the key binding of a button: setupAction binds a new callback every time a button is set up, so the
 -- old one has to go first or the key would run the action twice
 local function unbindButton(widget)
@@ -210,20 +214,23 @@ end
 
 -- what a character starts with (applied once per character, never over a slot or a key the player already uses):
 -- F1 to F12 on the first 12 slots of the bottom bar, and every game action on the left bar, without keys (the tooltip
--- of an action tells the player to give it one)
-local DEFAULTS_VERSION = 1
+-- of an action tells the player to give it one). An action added later (since > 1) is given once to the characters
+-- that already had their defaults; the ones they had are never put back.
+local DEFAULTS_VERSION = 2
 local DEFAULT_ACTIONS = {
-  {action = 'loot'},
-  {action = 'attackNext', filter = 'all'},
-  {action = 'attackNext', filter = 'monsters'},
-  {action = 'attackNext', filter = 'players'},
-  {action = 'stopAttack'},
-  {action = 'openDoor'},
-  {action = 'useUnder'}
+  {action = 'loot', since = 1},
+  {action = 'attackNext', filter = 'all', since = 1},
+  {action = 'attackPrevious', filter = 'all', since = 2},
+  {action = 'attackNext', filter = 'monsters', since = 1},
+  {action = 'attackNext', filter = 'players', since = 1},
+  {action = 'stopAttack', since = 1},
+  {action = 'openDoor', since = 1},
+  {action = 'useUnder', since = 1}
 }
 
 local function applyDefaults()
-  if (settings.defaultsVersion or 0) >= DEFAULTS_VERSION then
+  local done = settings.defaultsVersion or 0
+  if done >= DEFAULTS_VERSION then
     return
   end
   settings.defaultsVersion = DEFAULTS_VERSION
@@ -240,7 +247,7 @@ local function applyDefaults()
     end
   end
 
-  for i = 1, 12 do
+  for i = 1, done < 1 and 12 or 0 do
     local id, key = '1.' .. i, 'F' .. i
     settings[id] = settings[id] or {}
     if (settings[id].hotkey or '') == '' and not usedKeys[key] then
@@ -251,8 +258,8 @@ local function applyDefaults()
 
   local slot = 1
   for _, default in ipairs(DEFAULT_ACTIONS) do
-    local filter = default.action == 'attackNext' and default.filter or nil
-    if not usedActions[default.action .. ':' .. tostring(filter)] then
+    local filter = isTargetAction(default.action) and default.filter or nil
+    if default.since > done and not usedActions[default.action .. ':' .. tostring(filter)] then
       while slot <= 50 and settings['4.' .. slot] and settings['4.' .. slot].type do
         slot = slot + 1
       end
@@ -913,7 +920,8 @@ function assignGameAction(widget)
 
   local actionRadio = UIRadioGroup.create()
   local filterRadio = UIRadioGroup.create()
-  for _, id in ipairs({GAME_ACTION.ATTACK_NEXT, GAME_ACTION.LOOT, GAME_ACTION.STOP_ATTACK, GAME_ACTION.USE_UNDER, GAME_ACTION.OPEN_DOOR}) do
+  for _, id in ipairs({GAME_ACTION.ATTACK_NEXT, GAME_ACTION.ATTACK_PREVIOUS, GAME_ACTION.LOOT, GAME_ACTION.STOP_ATTACK,
+      GAME_ACTION.USE_UNDER, GAME_ACTION.OPEN_DOOR}) do
     actionRadio:addWidget(window.actions:getChildById(id))
   end
   filterRadio:addWidget(window.filters.filterAll)
@@ -926,9 +934,9 @@ function assignGameAction(widget)
     [TARGET_FILTER.MONSTERS] = window.filters.filterMonsters
   }
 
-  -- the target filter only matters for "Attack next target"
+  -- the target filter only matters for "Attack next / previous target"
   actionRadio.onSelectionChange = function(group, selected)
-    local attack = selected and selected:getId() == GAME_ACTION.ATTACK_NEXT
+    local attack = selected and isTargetAction(selected:getId())
     window.filterLabel:setEnabled(attack)
     for _, radioWidget in pairs(filterIds) do
       radioWidget:setEnabled(attack)
@@ -964,7 +972,7 @@ function assignGameAction(widget)
       hotkey = hotkey,
       type = TYPE.ACTION,
       gameAction = selected:getId(),
-      gameFilter = selected:getId() == GAME_ACTION.ATTACK_NEXT and filter or nil
+      gameFilter = isTargetAction(selected:getId()) and filter or nil
     }
 
     if destroy then
@@ -1276,8 +1284,8 @@ function setupAction(widget)
       end
     end
   elseif widget.type == TYPE.ACTION then
-    widget.callback = function()
-      runGameAction(widget.gameAction, widget.gameFilter)
+    widget.callback = function(repeated)
+      runGameAction(widget.gameAction, widget.gameFilter, repeated)
     end
   elseif widget.type == TYPE.SPELL then
     widget.callback = function()
@@ -1371,10 +1379,24 @@ function setupAction(widget)
 
   if widget.hotkey and widget.hotkey:len() > 0 and widget.callback then
     local action, hotkey = widget.callback, widget.hotkey
-    widget.keyCallback = function()
-      if not keyBelongsToChat(hotkey) then
-        action()
+    -- a held key repeats every few milliseconds: the game actions pace themselves (gameactions.lua); a text, an equip
+    -- and a crosshair run once per press; a spell or an object is tried again at most every HELD_KEY_INTERVAL (the
+    -- server's exhaust decides what gets through, but it should not get a packet every 10 ms)
+    local oncePerPress = widget.type == TYPE.TEXT or
+      widget.type == TYPE.ITEM and (widget.action == ACTION.EQUIP or widget.action == ACTION.USE_CROSS)
+    widget.keyCallback = function(_, _, autoRepeatTicks)
+      if keyBelongsToChat(hotkey) then
+        return
       end
+      local repeated = (autoRepeatTicks or 0) > 0
+      if repeated and widget.type ~= TYPE.ACTION then
+        local now = g_clock.millis()
+        if oncePerPress or now - (widget.lastRepeat or 0) < HELD_KEY_INTERVAL then
+          return
+        end
+        widget.lastRepeat = now
+      end
+      action(repeated)
     end
     g_keyboard.bindKeyPress(hotkey, widget.keyCallback, modules.game_interface.getRootPanel())
     usedKeys = nil

@@ -1,6 +1,6 @@
 Module
   name: game_guides
-  description: Illustrated guides (action bars, loot, items)
+  description: Illustrated guides (action bars, loot, items, interface, store)
   author: ForgottenL
   sandboxed: true
   scripts: [ guides ]

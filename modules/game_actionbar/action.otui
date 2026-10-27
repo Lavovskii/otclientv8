@@ -4,7 +4,7 @@ ActionRadio < CheckBox
 
 MainWindow
   id: assignActionWindow
-  size: 300 316
+  size: 300 336
   text: Assign Action
 
   Label
@@ -28,6 +28,10 @@ MainWindow
       text: Attack next target on the battle list
 
     ActionRadio
+      id: attackPrevious
+      text: Attack previous target on the battle list
+
+    ActionRadio
       id: loot
       text: Loot creatures around
 
@@ -48,7 +52,7 @@ MainWindow
     anchors.top: actions.bottom
     anchors.left: parent.left
     margin-top: 10
-    text: Targets of "Attack next target":
+    text: Targets of "Attack next / previous target":
     text-horizontal-auto-resize: true
 
   Panel

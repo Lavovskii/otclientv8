@@ -18,7 +18,7 @@ local GUIDES = {
       {art = 'ArtText', title = 'Text',
        text = 'Assign Text: the slot says it for you. Tick "Send automatically" to say it at once.'},
       {art = 'ArtAction', title = 'Action',
-       text = 'Assign Action: loot, attack the next target, open or close a door, stop attacking, use what is under you. Point at one to see what it does.'},
+       text = 'Assign Action: loot, attack the next or previous target, open or close a door, stop attacking, use what is under you. Point at one to see what it does.'},
       {art = 'ArtHotkey', title = 'Hotkey',
        text = 'Right click a slot, choose Assign Hotkey and press any key or combination (Ctrl, Shift, Alt).'},
       {art = 'ArtChat', title = 'Chat On / Off',
@@ -49,6 +49,30 @@ local GUIDES = {
        text = 'Dragging moves the whole stack. Hold Ctrl while you drag to choose how many.'},
       {art = 'ArtEmpty', title = 'Empty backpack',
        text = 'Right click a backpack and choose Empty backpack: everything inside drops on the floor (it asks first).'},
+    }
+  },
+  {
+    name = 'Interface',
+    cards = {
+      {art = 'ArtWindows', title = 'Your screen stays as you left it',
+       text = 'Move, resize and minimize your windows and open your backpacks: at the next login, even days later, everything is back in its place. Each character keeps its own.'},
+      {art = 'ArtStats', title = 'Real health, mana and stats',
+       text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent; capacity shows 14k for 14,000.'},
+      {art = 'ArtSpellList', title = 'Spell List',
+       text = 'The Spell List button shows the spells of your vocation: words, level, mana and cooldown. Assign Spell on a slot shows the same list.'},
+    }
+  },
+  {
+    name = 'Store',
+    cards = {
+      {art = 'ArtStoreButton', title = 'Open the Store',
+       text = 'Click the Store button on the right, under your equipment.'},
+      {art = 'ArtStorePoints', title = 'Points',
+       text = 'Your points are at the top of the Store. Buy Points opens the website, where you get more.'},
+      {art = 'ArtStoreBuy', title = 'Choose and buy',
+       text = 'Pick a category and click an offer to see its price and what it does. Buy asks before it takes your points.'},
+      {art = 'ArtStoreDelivery', title = 'Delivery',
+       text = 'Choose which of your characters gets it: it lands in their backpack within seconds, or at their next login. No room or capacity? It waits and arrives by itself.'},
     }
   },
 }

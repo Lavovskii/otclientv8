@@ -1,6 +1,7 @@
 -- Game actions that can be assigned to an action button ("Assign Action"):
 --   attackNext  attack the next creature of the battle list (so its filters and sorting apply), optionally players only
 --               or monsters only
+--   attackPrevious  the same, going up the battle list
 --   loot        the server moves everything from the corpses around the player (and the containers inside them, never
 --               the containers) to the loot bag (right click a backpack -> "Set as loot bag") or the main backpack,
 --               except the items on the ignore loot list (right click an item -> "Add to ignore loot list")
@@ -11,6 +12,7 @@
 
 GAME_ACTION = {
   ATTACK_NEXT = 'attackNext',
+  ATTACK_PREVIOUS = 'attackPrevious',
   LOOT = 'loot',
   STOP_ATTACK = 'stopAttack',
   USE_UNDER = 'useUnder',
@@ -23,11 +25,17 @@ TARGET_FILTER = {
   MONSTERS = 'monsters'
 }
 
+-- attackNext and attackPrevious are the actions that have a target filter
+function isTargetAction(action)
+  return action == GAME_ACTION.ATTACK_NEXT or action == GAME_ACTION.ATTACK_PREVIOUS
+end
+
 function gameActionLabel(action, filter)
-  if action == GAME_ACTION.ATTACK_NEXT then
-    if filter == TARGET_FILTER.PLAYERS then return 'Next\nPlayer' end
-    if filter == TARGET_FILTER.MONSTERS then return 'Next\nMonster' end
-    return 'Next\nTarget'
+  if isTargetAction(action) then
+    local way = action == GAME_ACTION.ATTACK_PREVIOUS and 'Prev' or 'Next'
+    if filter == TARGET_FILTER.PLAYERS then return way .. '\nPlayer' end
+    if filter == TARGET_FILTER.MONSTERS then return way .. '\nMonster' end
+    return way .. '\nTarget'
   elseif action == GAME_ACTION.LOOT then
     return 'Loot'
   elseif action == GAME_ACTION.STOP_ATTACK then
@@ -41,10 +49,11 @@ function gameActionLabel(action, filter)
 end
 
 function gameActionDescription(action, filter)
-  if action == GAME_ACTION.ATTACK_NEXT then
+  if isTargetAction(action) then
     local what = 'creature'
     if filter == TARGET_FILTER.PLAYERS then what = 'player' elseif filter == TARGET_FILTER.MONSTERS then what = 'monster' end
-    return 'Attack the next ' .. what .. ' of the battle list'
+    local way = action == GAME_ACTION.ATTACK_PREVIOUS and 'previous' or 'next'
+    return 'Attack the ' .. way .. ' ' .. what .. ' of the battle list'
   elseif action == GAME_ACTION.LOOT then
     return 'Loot the creatures around you into your loot bag (items on the ignore loot list are left behind)'
   elseif action == GAME_ACTION.STOP_ATTACK then
@@ -59,10 +68,13 @@ end
 
 -- the tooltip of an action button: what it does, in a few lines
 function gameActionHelp(action, filter)
-  if action == GAME_ACTION.ATTACK_NEXT then
-    local who = 'the next creature'
-    if filter == TARGET_FILTER.PLAYERS then who = 'the next player' elseif filter == TARGET_FILTER.MONSTERS then who = 'the next monster' end
-    return 'NEXT TARGET\nAttacks ' .. who .. ' of your battle list.\nPress again to go to the one after it.'
+  if isTargetAction(action) then
+    local who = 'creature'
+    if filter == TARGET_FILTER.PLAYERS then who = 'player' elseif filter == TARGET_FILTER.MONSTERS then who = 'monster' end
+    if action == GAME_ACTION.ATTACK_PREVIOUS then
+      return 'PREVIOUS TARGET\nAttacks the previous ' .. who .. ' of your battle list.\nPress again to go to the one above it.'
+    end
+    return 'NEXT TARGET\nAttacks the next ' .. who .. ' of your battle list.\nPress again to go to the one after it.'
   elseif action == GAME_ACTION.LOOT then
     return 'LOOT\nLoots the monsters you killed around you,\nstraight into your loot bag.\nRight click a backpack: Set as loot bag.\nRight click an item: Add to ignore loot list.'
   elseif action == GAME_ACTION.STOP_ATTACK then
@@ -75,13 +87,37 @@ function gameActionHelp(action, filter)
   return ''
 end
 
-function runGameAction(action, filter)
+-- The game window repeats a held key every few milliseconds (that is what makes walking smooth), so an action must not
+-- follow every repeat or a held key would send dozens of packets a second. The loot paces itself (lootAround); every
+-- other action runs once per press however long the key is held, and a key pressed again and again waits its interval:
+-- using a door or the stairs gets the server's action time (config.lua timeBetweenActions, 100 ms) plus room for the
+-- ping, and switching targets gets a pace the server and the battle list keep up with.
+local ACTION_INTERVAL = {
+  [GAME_ACTION.ATTACK_NEXT] = 250,
+  [GAME_ACTION.ATTACK_PREVIOUS] = 250,
+  [GAME_ACTION.STOP_ATTACK] = 250,
+  [GAME_ACTION.USE_UNDER] = 300,
+  [GAME_ACTION.OPEN_DOOR] = 300
+}
+local lastRun = {}
+
+-- repeated: the key is held (an automatic repeat of the press)
+function runGameAction(action, filter, repeated)
   if not g_game.isOnline() then
     return
   end
 
-  if action == GAME_ACTION.ATTACK_NEXT then
-    attackNextTarget(filter)
+  local interval = ACTION_INTERVAL[action]
+  if interval then
+    local now = g_clock.millis()
+    if repeated or now - (lastRun[action] or 0) < interval then
+      return
+    end
+    lastRun[action] = now
+  end
+
+  if isTargetAction(action) then
+    attackNextTarget(filter, action == GAME_ACTION.ATTACK_PREVIOUS and -1 or 1)
   elseif action == GAME_ACTION.LOOT then
     lootAround()
   elseif action == GAME_ACTION.STOP_ATTACK then
@@ -174,7 +210,9 @@ end
 
 -- attack -------------------------------------------------------------------------------------------------------
 
-function attackNextTarget(filter)
+-- attacking the creature already attacked would cancel the attack, so a list of one creature keeps it
+function attackNextTarget(filter, step)
+  step = step or 1
   local battle = modules.game_battle
   if not battle or not battle.getDisplayedCreatures then
     return
@@ -203,7 +241,16 @@ function attackNextTarget(filter)
     end
   end
 
-  g_game.attack(candidates[(index % #candidates) + 1])
+  -- step 1 goes down the list, -1 goes up; with no target yet they start at the first and at the last creature
+  if index == 0 then
+    index = step > 0 and 1 or #candidates
+  else
+    index = (index - 1 + step) % #candidates + 1
+  end
+  local target = candidates[index]
+  if target ~= current then
+    g_game.attack(target)
+  end
 end
 
 -- ignore loot list ---------------------------------------------------------------------------------------------
