@@ -46,9 +46,9 @@ ConditionWidget < UIWidget
   $!first:
     margin-left: 2
       
-// one layer of the health or mana arc: the images are 76x212 and healthinfo.lua cuts the fill in those pixels
+// one layer of the health or mana arc: the images are 84x212 and healthinfo.lua cuts the fill in those pixels
 CircleLayer < UIWidget
-  size: 76 212
+  size: 84 212
   anchors.horizontalCenter: parent.horizontalCenter
   anchors.verticalCenter: parent.verticalCenter
   margin-bottom: 16
@@ -56,10 +56,10 @@ CircleLayer < UIWidget
   phantom: true
 
 HealthCircleLayer < CircleLayer
-  margin-right: 175
+  margin-right: 171
 
 ManaCircleLayer < CircleLayer
-  margin-left: 135
+  margin-left: 132
 
 // the percentage inside the medallion of an arc
 CirclePercent < Label
@@ -118,13 +118,13 @@ HealthOverlay < UIWidget
     id: healthPercentLabel
     anchors.horizontalCenter: healthCircleFrame.left
     anchors.verticalCenter: healthCircleFrame.verticalCenter
-    margin-left: 27
+    margin-left: 29
 
   CirclePercent
     id: manaPercentLabel
     anchors.horizontalCenter: manaCircleFrame.right
     anchors.verticalCenter: manaCircleFrame.verticalCenter
-    margin-right: 27
+    margin-right: 29
   
 HealthInfoWindow < MiniWindow
   icon: /images/topbuttons/healthinfo

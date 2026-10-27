@@ -34,7 +34,7 @@ local defaultOptions = {
   displayHealth = true,
   displayMana = true,
   displayHealthOnTop = false,
-  showHealthManaCircle = false,
+  showHealthManaCircle = true,
   hidePlayerBars = false,
   highlightThingsUnderCursor = true,
   topHealtManaBar = true,
@@ -152,6 +152,13 @@ function terminate()
 end
 
 function setup()
+  -- the health and mana circles are on by default since 2026-10-27: every option is saved, so the installs that had
+  -- the old default (off) get them turned on once
+  if not g_settings.getBoolean('healthCirclesDefaultOn') then
+    g_settings.set('showHealthManaCircle', true)
+    g_settings.set('healthCirclesDefaultOn', true)
+  end
+
   -- load options
   for k,v in pairs(defaultOptions) do
     if type(v) == 'boolean' then

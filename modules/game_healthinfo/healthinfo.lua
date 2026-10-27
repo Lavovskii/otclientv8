@@ -168,10 +168,10 @@ function onMiniWindowClose()
   end
 end
 
--- the arcs around the character (images made by tools/gen_health_circles.py): 76x212, the track goes from y 4 to 208;
+-- the arcs around the character (images made by tools/gen_health_circles.py): 84x212, the track goes from y 6 to 206;
 -- the fill shows from the bottom of the track up to the percentage
-local CIRCLE_W, CIRCLE_H = 76, 212
-local FILL_TOP, FILL_BOTTOM = 4, 208
+local CIRCLE_W, CIRCLE_H = 84, 212
+local FILL_TOP, FILL_BOTTOM = 6, 206
 
 function fillCircle(widget, percent)
   percent = math.max(0, math.min(100, percent))

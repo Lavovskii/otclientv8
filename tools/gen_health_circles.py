@@ -4,7 +4,7 @@
 Each side has three layers, drawn in this order by layouts/*/styles/40-healthinfo.otui:
   *_back   the empty track: a dark, see-through groove
   *_fill   the liquid in the track, in grey: the client tints it (health: green to red with the health left, mana: blue)
-           and cuts it from the bottom up (healthinfo.lua, FILL_TOP / FILL_BOTTOM below)
+           and cuts it from the bottom up (healthinfo.lua FILL_TOP / FILL_BOTTOM: the rows of the track, 6 to 206)
   *_frame  the bronze frame, the 10% notches and the medallion in the middle that holds the percentage
 The right side is the mirror of the left one. Everything is drawn 4x larger and scaled down (smooth edges).
 
@@ -18,14 +18,14 @@ from PIL import Image
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'images', 'game', 'circle')
 
-W, H = 76, 212                 # image size (healthinfo.lua CIRCLE_W / CIRCLE_H)
+W, H = 84, 212                 # image size (healthinfo.lua CIRCLE_W / CIRCLE_H)
 CY = H / 2
-R_OUT, R_IN = 150.0, 137.0     # the track: a ring this thick, centred to the right of the image
+R_OUT, R_IN = 150.0, 132.0     # the track: a ring 18 px thick, centred to the right of the image
 CX = 20 + R_OUT                # leftmost point of the track at x = 20
 R_MID = (R_OUT + R_IN) / 2
-HALF = math.asin(98 / R_MID)   # the track spans 98 px up and down from the middle (at mid thickness)
+HALF = math.asin(94 / R_MID)   # the track spans 94 px up and down from the middle (at mid thickness)
 RIM = 2.2                      # bronze border width
-MED_R, MED_IN = 19.0, 14.5     # medallion: outer radius and the dark inside
+MED_R, MED_IN = 20.0, 15.5     # medallion: outer radius and the dark inside
 MED_X, MED_Y = CX - R_MID, CY  # on the track, in the middle
 S = 4                          # supersampling
 

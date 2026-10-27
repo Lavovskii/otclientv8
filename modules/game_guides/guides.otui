@@ -1033,8 +1033,8 @@ GuideBar < Label
 // the middle of the circles around the character, at their real size (the images are cut to the medallions), and the
 // bars with the real numbers
 GuideCircle < UIWidget
-  size: 76 84
-  image-clip: 0 64 76 84
+  size: 84 84
+  image-clip: 0 64 84 84
   phantom: true
 
 ArtStats < Panel
@@ -1058,7 +1058,7 @@ ArtStats < Panel
   Label
     anchors.horizontalCenter: hFrame.left
     anchors.verticalCenter: hFrame.top
-    margin-left: 27
+    margin-left: 29
     margin-top: 42
     font: verdana-9px-bold
     color: #f0e2b6
@@ -1070,16 +1070,16 @@ ArtStats < Panel
     id: mBack
     anchors.left: hBack.right
     anchors.top: parent.top
-    margin-left: 4
+    margin-left: 2
     image-source: /images/game/circle/right_back
   // mana at 40%: the fill starts below the medallion
   UIWidget
-    size: 76 22
+    size: 84 22
     anchors.left: mBack.left
     anchors.top: mBack.top
     margin-top: 62
     image-source: /images/game/circle/right_fill
-    image-clip: 0 126 76 22
+    image-clip: 0 126 84 22
     image-color: #3a7bff
     phantom: true
   GuideCircle
@@ -1090,7 +1090,7 @@ ArtStats < Panel
   Label
     anchors.horizontalCenter: mFrame.right
     anchors.verticalCenter: mFrame.top
-    margin-right: 27
+    margin-right: 29
     margin-top: 42
     font: verdana-9px-bold
     color: #f0e2b6
@@ -1103,7 +1103,7 @@ ArtStats < Panel
     width: 110
     anchors.left: mBack.right
     anchors.top: parent.top
-    margin-left: 8
+    margin-left: 6
     margin-top: 10
     background-color: #b01c1c
     text: 92,130 / 92,130
