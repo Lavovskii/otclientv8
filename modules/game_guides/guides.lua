@@ -69,7 +69,7 @@ local GUIDES = {
     name = 'Spells',
     cards = {
       {art = 'ArtSpells', title = 'Your spells',
-       text = 'The Spells button lists only the spells of your vocation, by level. The tabs show Attack, Healing, Support or Runes. Faded spells need a higher level.'},
+       text = 'The Spells button lists only the spells of your vocation, by level. The tabs show Attack, Healing or Support. Faded spells need a higher level.'},
       {art = 'ArtSpellDemo', title = 'See a spell',
        text = 'Click a spell: a small demo shows its missile, effect and area as they look in the game. Replay plays it again.'},
     }

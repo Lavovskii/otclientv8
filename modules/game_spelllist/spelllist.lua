@@ -1,5 +1,5 @@
 -- The Spells window: only the spells of the character's vocation, grouped and sorted by level, with filters (attack,
--- healing, support, runes, what the character can already cast, a search). Clicking a spell shows its details and
+-- healing, support, what the character can already cast, a search). Runes are not listed (they are items). Clicking a spell shows its details and
 -- plays a demo of it (spelldemo.lua).
 --
 -- The old protocol does not tell the client the vocation or the spells a character learned, so the website API does
@@ -18,7 +18,6 @@ local CATEGORIES = {
   {id = 'attack', text = 'Attack', group = 1},
   {id = 'healing', text = 'Healing', group = 2},
   {id = 'support', text = 'Support', group = 3},
-  {id = 'runes', text = 'Runes'},
 }
 -- the level groups of the list
 local BRACKETS = {
@@ -169,7 +168,6 @@ end
 local function inCategory(spell)
   local category = state.category
   if category == 'all' then return true end
-  if category == 'runes' then return spell.type == 'Rune' end
   for _, c in ipairs(CATEGORIES) do
     if c.id == category then return spell.group[c.group] ~= nil end
   end
@@ -200,7 +198,7 @@ local function spellsToShow()
     local spell = {name = name}
     for k, v in pairs(data) do spell[k] = v end
     spell.name = name
-    local visible = not spell.hidden or (state.admin and state.showDeleted)
+    local visible = (not spell.hidden or (state.admin and state.showDeleted)) and spell.type ~= 'Rune'
     if visible and spellFits(spell) and inCategory(spell) and matchesSearch(spell) then
       spell.blocked = blockedReason(spell)
       if not (state.castableOnly and spell.blocked) then
@@ -328,7 +326,7 @@ function showSpell(spell)
     level = level .. '  ' .. tr('(magic level %d)', spell.maglevel)
   end
   infoRow(tr('Level') .. ':', level)
-  infoRow(tr('Kind') .. ':', table.concat(groups, ', ') .. (spell.type == 'Rune' and (' ' .. tr('rune')) or ''))
+  infoRow(tr('Kind') .. ':', table.concat(groups, ', '))
   infoRow(tr('Mana') .. ':', spell.mana > 0 and thousands(spell.mana) or '-')
   infoRow(tr('Cooldown') .. ':', (spell.exhaustion / 1000) .. 's' .. (spell.blocked and ('   ' .. spell.blocked) or ''))
 
@@ -405,8 +403,6 @@ function adminEdit(editing)
   local w = g_ui.createWidget('SpellEditWindow', rootWidget)
   state.editor = w
   w:setText(spell and tr('Edit spell') or tr('Add a spell'))
-  w.type:addOption('Instant')
-  w.type:addOption('Rune')
 
   local icons = sortedIcons()
   local iconIndex = 1
@@ -424,7 +420,6 @@ function adminEdit(editing)
     w.maglevel:setText(tostring(s.maglevel or 0))
     w.mana:setText(tostring(s.mana or 0))
     w.exhaustion:setText(tostring(s.exhaustion or 1000))
-    w.type:setCurrentOption(s.type == 'Rune' and 'Rune' or 'Instant')
     w.demo:setText(s.demo or '')
     for g = 1, 3 do w['group' .. g]:setChecked(s.group and s.group[g] ~= nil) end
     for v = 1, 8 do w['voc' .. v]:setChecked(s.vocations and table.find(s.vocations, v) ~= nil) end
@@ -460,7 +455,7 @@ function adminEdit(editing)
     for g = 1, 3 do if w['group' .. g]:isChecked() then table.insert(groups, g) end end
     for v = 1, 8 do if w['voc' .. v]:isChecked() then table.insert(vocations, v) end end
     local data = {
-      name = w.name:getText():trim(), words = w.words:getText():trim(), type = w.type:getCurrentOption().text,
+      name = w.name:getText():trim(), words = w.words:getText():trim(), type = 'Instant',
       level = numberOf(w.level), maglevel = numberOf(w.maglevel), mana = numberOf(w.mana), soul = spell and spell.soul or 0,
       exhaustion = numberOf(w.exhaustion), groups = groups, vocations = vocations, icon = icons[iconIndex],
       premium = w.premium:isChecked(), needlearn = w.needlearn:isChecked(), demo = w.demo:getText():trim()

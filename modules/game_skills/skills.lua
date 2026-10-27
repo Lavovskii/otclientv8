@@ -486,11 +486,16 @@ function showStats()
   line(combat, 'armor', tr('Armor Value'), tostring(stats.armor or 0), nil,
     tr('Armor of everything you wear: takes away part of the physical damage you get.'),
     'Server: Player::getArmor, items.xml armor of what you wear (x vocations.xml armor multiplier).', 3366)
-  if stats.critical and (stats.critical[1] or 0) > 0 then
-    line(combat, 'crit', tr('Critical Hit Chance'), stats.critical[1] .. '%', nil,
-      tr('Chance that one of your hits does extra damage.'), 'Server: config.lua criticalHitChance (the same for every player).', 3037)
-    line(combat, 'critx', tr('Critical Damage'), '+' .. math.floor((stats.critical[2] or 0) * 100) .. '%', nil,
-      tr('How much more a critical hit does.'), 'Server: config.lua criticalHitMultiplier.', 3037)
+  -- the server's critical hit (weapons only, weapons.cpp) raises the maximum damage to the power of
+  -- criticalHitMultiplier when random(1, 100) < criticalHitChance: with a multiplier of 1 it does nothing
+  local critChance, critPower = stats.critical and (stats.critical[1] or 0) - 1 or 0, stats.critical and stats.critical[2] or 1
+  if critChance > 0 and critPower > 1 then
+    line(combat, 'crit', tr('Critical Hit Chance'), critChance .. '%', nil,
+      tr('Chance that a weapon hit (not a spell) is a critical hit.'),
+      'Server: config.lua criticalHitChance (the same for every player; the server checks random(1, 100) < it, so it is one less).', 3037)
+    line(combat, 'critx', tr('Critical Damage'), '^' .. critPower, nil,
+      tr('A critical hit raises your maximum damage to the power of %s: the stronger you hit, the more it adds.', critPower),
+      'Server: config.lua criticalHitMultiplier (weapons.cpp: maxDamage ^ multiplier).', 3037)
   end
   local inc = stats.increment or {}
   if (inc[4] or 0) ~= 0 then line(combat, 'mdmgp', tr('Magic Damage'), percentText(inc[4]), GREEN, tr('Your equipment makes your attack spells and runes stronger.'), 'Server: items.xml increaseMagicPercent of what you wear.', 3071) end

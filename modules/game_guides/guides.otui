@@ -1229,7 +1229,7 @@ ArtSpells < Panel
       anchors.left: prev.right
       anchors.top: prev.top
       margin-left: 3
-      text: Runes
+      text: Support
 
     Label
       id: header

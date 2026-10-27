@@ -229,37 +229,22 @@ SpellEditWindow < MainWindow
     margin-left: 4
 
   SpellEditLabel
-    id: typeLabel
-    !text: tr('Type')
-    anchors.left: parent.left
-    anchors.top: mana.bottom
-  SpellEditLabel
     id: demoLabel
     !text: tr('Demo of (empty: this spell)')
-    anchors.left: parent.horizontalCenter
-    anchors.top: typeLabel.top
-    margin-left: 4
-    margin-top: 0
-  ComboBox
-    id: type
     anchors.left: parent.left
-    anchors.right: parent.horizontalCenter
-    anchors.top: typeLabel.bottom
-    margin-top: 2
-    margin-right: 4
+    anchors.top: mana.bottom
   TextEdit
     id: demo
-    anchors.left: parent.horizontalCenter
+    anchors.left: parent.left
     anchors.right: parent.right
     anchors.top: demoLabel.bottom
     margin-top: 2
-    margin-left: 4
 
   SpellEditLabel
     id: kindLabel
     !text: tr('Kind')
     anchors.left: parent.left
-    anchors.top: type.bottom
+    anchors.top: demo.bottom
   SpellEditCheck
     id: group1
     !text: tr('Attack')
