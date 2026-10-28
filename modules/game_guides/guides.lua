@@ -38,7 +38,7 @@ local GUIDES = {
       {art = 'ArtIgnore', title = 'Ignore loot list',
        text = 'Right click an item you never want: the Loot key leaves it behind. Right click it again to take it back.'},
       {art = 'ArtLootChannel', title = 'Loot channel',
-       text = 'Everything you loot is written in the Loot channel.'},
+       text = 'Everything you loot, and every loot message, is written in the Loot channel, not in Server Log.'},
     }
   },
   {

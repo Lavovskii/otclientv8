@@ -76,6 +76,17 @@ function calculateVisibleTime(text)
   return math.max(#text * 50, 3000)
 end
 
+local function showOnScreen(msgtype, text)
+  if msgtype.screenTarget then
+    local label = messagesPanel:recursiveGetChildById(msgtype.screenTarget)
+    label:setText(text)
+    label:setColor(msgtype.color)
+    label:setVisible(true)
+    removeEvent(label.hideEvent)
+    label.hideEvent = scheduleEvent(function() label:setVisible(false) end, calculateVisibleTime(text))
+  end
+end
+
 function displayMessage(mode, text)
   if not g_game.isOnline() then return end
 
@@ -91,13 +102,16 @@ function displayMessage(mode, text)
     --TODO move to game_console
   end
 
-  if msgtype.screenTarget then
-    local label = messagesPanel:recursiveGetChildById(msgtype.screenTarget)
-    label:setText(text)
-    label:setColor(msgtype.color)
-    label:setVisible(true)
-    removeEvent(label.hideEvent)
-    label.hideEvent = scheduleEvent(function() label:setVisible(false) end, calculateVisibleTime(text))
+  showOnScreen(msgtype, text)
+end
+
+-- on the screen only, never in a console tab (the loot hotkey writes its messages in the Loot channel itself)
+function displayScreenMessage(mode, text)
+  if not g_game.isOnline() then return end
+
+  local msgtype = MessageTypes[mode]
+  if msgtype then
+    showOnScreen(msgtype, text)
   end
 end
 

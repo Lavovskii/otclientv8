@@ -7,6 +7,8 @@ SkillButton < UIButton
   height: 15
   margin-bottom: 1
   &onClick: onSkillButtonClick
+  // the colour out of hover must be set too: leaving $hover only puts back what the style sets
+  background-color: alpha
 
   $hover:
     background-color: #ffffff12

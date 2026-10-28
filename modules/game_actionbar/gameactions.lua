@@ -297,21 +297,23 @@ local function sendOpcode(opcode, buffer)
   end
 end
 
+-- the loot messages show on the screen and are written in the Loot channel, never in Server Log
+local function logLoot(text)
+  if modules.game_console and modules.game_console.addLootMessage then
+    modules.game_console.addLootMessage(text)
+  end
+end
+
 local function showFailure(text)
   if modules.game_textmessage then
-    modules.game_textmessage.displayBroadcastMessage(text) -- MessageModes.Warning: red, centre of the screen
+    modules.game_textmessage.displayScreenMessage(MessageModes.Warning, text) -- red, centre of the screen
   end
+  logLoot(text)
 end
 
 local function showInfo(text)
   if modules.game_textmessage then
-    modules.game_textmessage.displayGameMessage(text)
-  end
-end
-
-local function logLoot(text)
-  if modules.game_console and modules.game_console.addLootMessage then
-    modules.game_console.addLootMessage(text)
+    modules.game_textmessage.displayScreenMessage(MessageModes.Game, text)
   end
 end
 
@@ -328,6 +330,9 @@ function onLootReply(protocol, opcode, buffer)
       logLoot(text)
     elseif tag == 'I' then
       showInfo(text)
+      if not buffer:find('L|' .. text .. '\n', 1, true) then -- "Looted N items." also comes as a Loot channel line
+        logLoot(text)
+      end
     elseif tag == 'F' then
       showFailure(text)
     elseif tag == 'N' then
