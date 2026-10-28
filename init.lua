@@ -5,7 +5,7 @@ DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bello
 
 -- ForgottenL does not run an updater/stats/crash-report service of its own; leave these empty.
 Services = {
-  website = "https://forgottenlegends.hopto.org",
+  website = "https://forgottenl.me",
   updater = "",
   stats = "",
   crash = "",
@@ -16,7 +16,7 @@ Services = {
 -- Servers accept http login url, websocket login url or ip:port:version
 -- 870 = Tibia client 8.70, the protocol version ForgottenL (TFS 0.4) speaks.
 Servers = {
-  ForgottenL = "forgottenlegends.hopto.org:7171:870"
+  ForgottenL = "forgottenl.me:7171:870"
 }
 
 --Server = "ws://otclient.ovh:3000/"

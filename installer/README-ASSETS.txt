@@ -2,7 +2,7 @@ ForgottenL Client - one step left
 ==================================
 
 This client is fully configured to connect to ForgottenL
-(forgottenlegends.hopto.org:7171, Tibia client version 8.70) and is ready
+(forgottenl.me:7171, Tibia client version 8.70) and is ready
 to run - except for one thing we deliberately did NOT include:
 
     Tibia.dat
