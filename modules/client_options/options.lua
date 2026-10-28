@@ -100,6 +100,7 @@ function init()
 
   g_keyboard.bindKeyDown('Ctrl+Shift+F', function() toggleOption('fullscreen') end)
   g_keyboard.bindKeyDown('Ctrl+N', toggleDisplays)
+  g_keyboard.bindKeyDown('Ctrl+Shift+B', function() toggleOption('showHealthManaCircle') end)
 
   generalPanel = g_ui.loadUI('game')
   optionsTabBar:addTab(tr('Game'), generalPanel, '/images/optionstab/game')
@@ -146,6 +147,7 @@ function terminate()
 
   g_keyboard.unbindKeyDown('Ctrl+Shift+F')
   g_keyboard.unbindKeyDown('Ctrl+N')
+  g_keyboard.unbindKeyDown('Ctrl+Shift+B')
   optionsWindow:destroy()
   optionsButton:destroy()
   audioButton:destroy()

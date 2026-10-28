@@ -159,6 +159,42 @@ GuideButtonText < Label
   image-border: 3
   phantom: true
 
+// a line of a Hotkeys card: its keys with a + between them, and what the shortcut does (guides.lua adds them)
+GuideKeyRow < Panel
+  height: 22
+  phantom: true
+  layout:
+    type: horizontalBox
+    spacing: 4
+
+GuideKeyPlus < Label
+  height: 22
+  text: +
+  text-auto-resize: true
+  text-align: center
+  font: verdana-11px-rounded
+  color: #c9b98f
+  phantom: true
+
+GuideKeyNote < Label
+  height: 22
+  margin-left: 6
+  text-auto-resize: true
+  text-align: left
+  font: verdana-11px-rounded
+  color: #c9b98f
+  phantom: true
+
+// --- drawings: Hotkeys ------------------------------------------------------------------------------------------------
+
+// the keys of the card, one line per shortcut (filled by guides.lua)
+ArtKeys < Panel
+  anchors.fill: parent
+  padding-top: 2
+  layout:
+    type: verticalBox
+    spacing: 6
+
 // --- drawings: Action Bars --------------------------------------------------------------------------------------------
 
 ArtBars < Panel

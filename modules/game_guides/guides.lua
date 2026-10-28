@@ -29,6 +29,24 @@ local GUIDES = {
     }
   },
   {
+    -- Ctrl+K opens this tab; the drawings are the keys of each card (keys: the shortcut and what it does)
+    name = 'Hotkeys',
+    cards = {
+      {art = 'ArtKeys', title = 'This guide', keys = {{'Ctrl+K', 'Hotkeys guide'}},
+       text = 'Ctrl+K opens this tab of the Guides at any time in the game. Press it again to close it.'},
+      {art = 'ArtKeys', title = 'Health and mana circles', keys = {{'Ctrl+Shift+B', 'Circles on / off'}},
+       text = 'Ctrl+Shift+B hides the health and mana circles around your character. Press it again to bring them back. Options > Custom has the same switch.'},
+      {art = 'ArtKeys', title = 'Windows', keys = {{'Ctrl+B', 'Battle'}, {'Ctrl+M', 'Minimap'}, {'Ctrl+P', 'VIP list'}},
+       text = 'Each key opens its window, and closes it when it is open. Ctrl+Shift+M shows the whole map; Ctrl+I shows or hides your inventory.'},
+      {art = 'ArtKeys', title = 'Chat', keys = {{'Ctrl+O', 'Channels'}, {'Ctrl+E', 'Close channel'}, {'Ctrl+H', 'Help channel'}},
+       text = 'Ctrl+O lists the channels you can open; Ctrl+E closes the tab you are in; Ctrl+H opens the Help channel.'},
+      {art = 'ArtKeys', title = 'Screen', keys = {{'Ctrl+N', 'Names and bars'}, {'Ctrl+W', 'Clear texts'}, {'Ctrl+Shift+F', 'Full screen'}},
+       text = 'Ctrl+N hides the names, then the health bars, then brings them back. Ctrl+W clears the texts on the screen. Ctrl+Shift+F switches full screen.'},
+      {art = 'ArtKeys', title = 'Logout', keys = {{'Ctrl+Q', 'Logout'}, {'Ctrl+L', 'Logout'}},
+       text = 'Either key logs your character out (not during a fight).'},
+    }
+  },
+  {
     name = 'Loot',
     cards = {
       {art = 'ArtLootKey', title = 'Loot key',
@@ -60,7 +78,7 @@ local GUIDES = {
       {art = 'ArtSkills', title = 'Skills window',
        text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see what it means.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
-       text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent; capacity shows 14k for 14,000.'},
+       text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
     }
@@ -104,6 +122,22 @@ local function fillArt(art)
   end
 end
 
+-- the keys of a Hotkeys card: one line per shortcut, its keys ("Ctrl+Shift+B" as Ctrl + Shift + B) and what it does
+local function fillKeys(art, keys)
+  for _, shortcut in ipairs(keys) do
+    local row = g_ui.createWidget('GuideKeyRow', art)
+    for i, key in ipairs(shortcut[1]:split('+')) do
+      if i > 1 then
+        g_ui.createWidget('GuideKeyPlus', row)
+      end
+      g_ui.createWidget('GuideKey', row):setText(key)
+    end
+    g_ui.createWidget('GuideKeyNote', row):setText(tr(shortcut[2]))
+  end
+end
+
+local guideTabs = {}
+
 local function build()
   guidesWindow = g_ui.displayUI('guides')
   guidesWindow:hide()
@@ -116,9 +150,13 @@ local function build()
       local card = g_ui.createWidget('GuideCard', page.cards)
       card.title:setText(tr(info.title))
       card.text:setText(tr(info.text))
-      fillArt(g_ui.createWidget(info.art, card.art))
+      local art = g_ui.createWidget(info.art, card.art)
+      fillArt(art)
+      if info.keys then
+        fillKeys(art, info.keys)
+      end
     end
-    tabBar:addTab(tr(guide.name), page)
+    guideTabs[guide.name] = tabBar:addTab(tr(guide.name), page)
   end
 end
 
@@ -155,9 +193,11 @@ function init()
   frame:centerIn('parent')
   connect(g_game, {onGameStart = onGameStart, onGameEnd = onGameEnd})
   if g_game.isOnline() then onGameStart() end
+  g_keyboard.bindKeyDown('Ctrl+K', toggleHotkeys)
 end
 
 function terminate()
+  g_keyboard.unbindKeyDown('Ctrl+K')
   removeEvent(glowEvent)
   glowEvent = nil
   disconnect(g_game, {onGameStart = onGameStart, onGameEnd = onGameEnd})
@@ -192,4 +232,18 @@ function toggle()
   else
     show()
   end
+end
+
+-- Ctrl+K: the Guides on the Hotkeys tab, or closed when they already show it
+function toggleHotkeys()
+  if not g_game.isOnline() then
+    return
+  end
+  local tabBar = guidesWindow and guidesWindow:getChildById('guidesTabBar')
+  if tabBar and guidesWindow:isVisible() and tabBar:getCurrentTab() == guideTabs['Hotkeys'] then
+    hide()
+    return
+  end
+  show()
+  guidesWindow:getChildById('guidesTabBar'):selectTab(guideTabs['Hotkeys'])
 end

@@ -7,7 +7,7 @@
 ;   redistributed here. The player must supply their own legitimate copy.
 
 #define MyAppName "ForgottenL"
-#define MyAppVersion "1.0.2"
+#define MyAppVersion "1.0.3"
 #define MyAppPublisher "ForgottenL Team"
 #define MyAppURL "https://forgottenl.me"
 #define MyAppExeName "otclient_dx.exe"
