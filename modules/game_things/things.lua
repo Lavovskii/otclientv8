@@ -9,6 +9,12 @@ function isLoaded()
   return loaded
 end
 
+-- the folder of data/things a client version reads: ForgottenL speaks protocol 8.70 but draws with the the860 assets
+-- (game_features turns on their extensions)
+function getFolder(version)
+  return version == 870 and 860 or version
+end
+
 function load()
   local version = g_game.getClientVersion()
   local things = g_settings.getNode('things')
@@ -22,10 +28,8 @@ function load()
       datPath = resolvepath('/things/' .. filename)
       sprPath = resolvepath('/things/' .. filename)
     else
-      -- ForgottenL speaks protocol 8.70 but draws with the the860 assets (game_features turns on their extensions)
-      local folder = version == 870 and 860 or version
-      datPath = resolvepath('/things/' .. folder .. '/Tibia')
-      sprPath = resolvepath('/things/' .. folder .. '/Tibia')
+      datPath = resolvepath('/things/' .. getFolder(version) .. '/Tibia')
+      sprPath = resolvepath('/things/' .. getFolder(version) .. '/Tibia')
     end
   end
 

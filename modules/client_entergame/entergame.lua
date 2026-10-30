@@ -133,15 +133,15 @@ local function onTibia12HTTPResult(session, playdata)
   end
     
   local things = {
-    data = {G.clientVersion .. "/Tibia.dat", ""},
-    sprites = {G.clientVersion .. "/Tibia.cwm", ""},
+    data = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.dat", ""},
+    sprites = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.cwm", ""},
   }
 
   local incorrectThings = validateThings(things)
   if #incorrectThings > 0 then
     things = {
-      data = {G.clientVersion .. "/Tibia.dat", ""},
-      sprites = {G.clientVersion .. "/Tibia.spr", ""},
+      data = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.dat", ""},
+      sprites = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.spr", ""},
     }  
     incorrectThings = validateThings(things)
   end
@@ -476,15 +476,15 @@ function EnterGame.doLogin(account, password, token, host)
   end
   
   local things = {
-    data = {G.clientVersion .. "/Tibia.dat", ""},
-    sprites = {G.clientVersion .. "/Tibia.cwm", ""},
+    data = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.dat", ""},
+    sprites = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.cwm", ""},
   }
   
   local incorrectThings = validateThings(things)
   if #incorrectThings > 0 then
     things = {
-      data = {G.clientVersion .. "/Tibia.dat", ""},
-      sprites = {G.clientVersion .. "/Tibia.spr", ""},
+      data = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.dat", ""},
+      sprites = {modules.game_things.getFolder(G.clientVersion) .. "/Tibia.spr", ""},
     }  
     incorrectThings = validateThings(things)
   end
