@@ -1,8 +1,10 @@
-// the launcher (updater.lua): the ForgottenL login skin (client_entergame/forgottenl_style), one button in the middle
+// the launcher (updater.lua): the ForgottenL login skin (client_entergame/forgottenl_style), one button in the middle;
+// the ForgottenL logo above it is the login's (client_entergame/forgottenl_logo)
 ForgottenLWindow
   id: updaterWindow
-  !text: tr('ForgottenL')
-  size: 360 300
+  size: 360 320
+  // the top edge where the login window's is, under the logo
+  margin-top: 6
 
   ForgottenLTitle
     id: version
@@ -85,6 +87,6 @@ ForgottenLWindow
     !text: tr('Play')
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.bottom: parent.bottom
-    margin-bottom: 8
+    margin-bottom: 30
     visible: false
     @onClick: Updater.play()

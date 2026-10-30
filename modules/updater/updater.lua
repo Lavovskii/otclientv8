@@ -12,6 +12,7 @@ Updater = { }
 Updater.maxRetries = 5
 
 local launcher
+local logo
 local loadModulesFunction
 local scheduledEvent
 local httpOperationId = 0
@@ -202,11 +203,18 @@ function Updater.abort()
     launcher:destroy()
     launcher = nil
   end
+  if logo then
+    logo:destroy()
+    logo = nil
+  end
   loadModules()
 end
 
 function Updater.check()
   removeEvent(scheduledEvent)
+  if not logo then
+    logo = g_ui.displayUI('/modules/client_entergame/forgottenl_logo')
+  end
   if not launcher then
     launcher = g_ui.displayUI('updater')
     launcher:show()
