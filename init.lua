@@ -3,10 +3,11 @@ APP_NAME = "ForgottenL"  -- important, change it, it's name for config dir and f
 APP_VERSION = 1         -- client version for updater and login to identify outdated client
 DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
 
--- ForgottenL does not run an updater/stats/crash-report service of its own; leave these empty.
+-- updater: the update manifest of the website (tools/build_release.py --publish); the installed client (data.zip)
+-- shows Play / Update before the login (modules/updater). No stats/crash-report service: leave those empty.
 Services = {
   website = "https://forgottenl.me",
-  updater = "",
+  updater = "https://forgottenl.me/downloads/updater/manifest.json",
   stats = "",
   crash = "",
   feedback = "",

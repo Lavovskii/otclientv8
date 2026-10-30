@@ -81,6 +81,8 @@ local GUIDES = {
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
+      {art = 'ArtUpdater', title = 'Updates',
+       text = 'Each time you open the client it looks for an update. Click Update: it downloads only what changed and restarts, then Play opens the login. Play waits while there is an update.'},
     }
   },
   {

@@ -1,18 +1,24 @@
+-- The launcher of the installed client (it runs from data.zip, see init.lua): before the login it compares the
+-- client's files with the update manifest of the website (Services.updater, written by tools/build_release.py) and
+-- shows one button in the middle of the screen:
+--   Play      the client is up to date: the login opens;
+--   Update    some files changed: only those are downloaded, written into a new data.zip in the user's folder
+--             (AppData/OTClientV8/ForgottenL) and the client restarts; Play waits until then;
+--   Download  the game graphics (Tibia.dat/spr of the the860 assets, kept outside data.zip) changed: the full
+--             installer is needed, the button opens its download.
+-- When the website can't be reached, Play stays possible (with Try again).
 Updater = { }
 
 Updater.maxRetries = 5
 
---[[
-
-]]--
-
-local updaterWindow
+local launcher
 local loadModulesFunction
 local scheduledEvent
 local httpOperationId = 0
+local update -- what Update downloads: {url, files = {{path, checksum}}, finalFiles, binary}
 
 local function onLog(level, message, time)
-  if level == LogError then    
+  if level == LogError then
     Updater.error(message)
     g_logger.setOnLog(nil)
   end
@@ -22,7 +28,7 @@ local function initAppWindow()
   if g_resources.getLayout() == "mobile" then
     g_window.setMinimumSize({ width = 640, height = 360 })
   else
-    g_window.setMinimumSize({ width = 800, height = 640 })  
+    g_window.setMinimumSize({ width = 800, height = 640 })
   end
 
   -- window size
@@ -45,7 +51,7 @@ local function initAppWindow()
 
   g_window.setTitle(g_app.getName())
   g_window.setIcon('/images/clienticon')
-  
+
   if g_app.isMobile() then
     scheduleEvent(function()
       g_app.scale(5.0)
@@ -61,24 +67,40 @@ local function loadModules()
   end
 end
 
+-- what the launcher shows: the status text and which button (play, update, download, retry) is there
+local function show(status, buttons, progress)
+  if not launcher then return end
+  launcher.status:setText(status)
+  buttons = buttons or {}
+  launcher.playButton:setVisible(buttons.play ~= nil)
+  launcher.playButton:setEnabled(buttons.play == true)
+  launcher.updateButton:setVisible(buttons.update == true)
+  launcher.downloadButton:setVisible(buttons.download == true)
+  launcher.retryButton:setVisible(buttons.retry == true)
+  launcher.mainProgress:setVisible(progress == true)
+  launcher.downloadProgress:setVisible(progress == true)
+  launcher.downloadStatus:setVisible(progress == true)
+end
+
 local function downloadFiles(url, files, index, retries, doneCallback)
-  if not updaterWindow then return end
+  if not launcher then return end
   local entry = files[index]
   if not entry then -- finished
     return doneCallback()
   end
   local file = entry[1]
   local file_checksum = entry[2]
-  
+
   if retries > 0 then
-    updaterWindow.downloadStatus:setText(tr("Downloading (%i retry):\n%s", retries, file))
+    launcher.downloadStatus:setText(tr("Downloading (%i retry):\n%s", retries, file))
   else
-    updaterWindow.downloadStatus:setText(tr("Downloading:\n%s", file))
+    launcher.downloadStatus:setText(tr("Downloading:\n%s", file))
   end
-  updaterWindow.downloadProgress:setPercent(0)
-  updaterWindow.mainProgress:setPercent(math.floor(100 * index / #files))
-  
-  httpOperationId = HTTP.download(url .. file, file,
+  launcher.downloadProgress:setPercent(0)
+  launcher.mainProgress:setPercent(math.floor(100 * index / #files))
+
+  -- the checksum in the address keeps any cache from handing back an older copy
+  httpOperationId = HTTP.download(url .. file .. "?" .. file_checksum, file,
     function (file, checksum, err)
       if not err and checksum ~= file_checksum then
         err = "Invalid checksum of: " .. file .. ".\nShould be " .. file_checksum .. ", is: " .. checksum
@@ -96,104 +118,66 @@ local function downloadFiles(url, files, index, retries, doneCallback)
       downloadFiles(url, files, index + 1, 0, doneCallback)
     end,
     function (progress, speed)
-      updaterWindow.downloadProgress:setPercent(progress)
-      updaterWindow.downloadProgress:setText(speed .. " kbps")
+      if not launcher then return end
+      launcher.downloadProgress:setPercent(progress)
+      launcher.downloadProgress:setText(speed .. " kbps")
     end)
 end
 
-local function updateFiles(data, keepCurrentFiles)
-  if not updaterWindow then return end
-  if type(data) ~= "table" then
-    return Updater.error("Invalid data from updater api (not table)")
+-- the manifest against this client: Play, Update or the full installer
+local function compare(data)
+  if not launcher then return end
+  if type(data) ~= "table" or type(data["files"]) ~= "table" or type(data["url"]) ~= 'string' or data["url"]:len() < 4 then
+    return Updater.error(tr("Invalid data from the update server."))
   end
-  if type(data["error"]) == 'string' and data["error"]:len() > 0 then
-    return Updater.error(data["error"])    
-  end
-  if not data["files"] or type(data["url"]) ~= 'string' or data["url"]:len() < 4 then
-    return Updater.error("Invalid data from updater api: " .. json.encode(data, 2))
-  end
-  if data["keepFiles"] then
-    keepCurrentFiles = true
-  end
-  
-  local newFiles = false
-  local finalFiles = {}
-  local localFiles = g_resources.filesChecksums()
-  local toUpdate = {}
-  -- keep all files or files from data/things
-  for file, checksum in pairs(localFiles) do
-    if keepCurrentFiles or string.find(file, "data/things") then
-      table.insert(finalFiles, file)
+
+  local version = type(data["version"]) == 'string' and data["version"] or ""
+  launcher.version:setText(tr("Client version %s", version))
+
+  -- the game graphics live outside data.zip; the installer writes their version next to them
+  local things = data["things"]
+  if type(things) == "table" and type(things["folder"]) == 'string' then
+    local marker = "/data/things/" .. things["folder"] .. "/version.txt"
+    local installed = g_resources.fileExists(marker) and g_resources.readFileContents(marker):trim() or ""
+    if installed ~= things["version"] then
+      Updater.installer = data["installer"]
+      return show(tr("New game graphics are out.\nDownload and run the new installer to keep playing."),
+                  { play = false, download = true })
     end
   end
-  -- update files
+
+  local localFiles = g_resources.filesChecksums()
+  local files, finalFiles = {}, {}
   for file, checksum in pairs(data["files"]) do
     table.insert(finalFiles, file)
-    if not localFiles[file] or localFiles[file] ~= checksum then
-      table.insert(toUpdate, {file, checksum})
-      newFiles = true
+    if localFiles[file] ~= checksum then
+      table.insert(files, {file, checksum})
     end
   end
-  -- update binary
+  if data["keepFiles"] then
+    for file, checksum in pairs(localFiles) do
+      if not data["files"][file] then
+        table.insert(finalFiles, file)
+      end
+    end
+  end
+
   local binary = nil
-  if type(data["binary"]) == "table" and data["binary"]["file"]:len() > 1 then
+  if type(data["binary"]) == "table" and type(data["binary"]["file"]) == 'string' and data["binary"]["file"]:len() > 1 then
     local selfChecksum = g_resources.selfChecksum()
     if selfChecksum:len() > 0 and selfChecksum ~= data["binary"]["checksum"] then
       binary = data["binary"]["file"]
-      table.insert(toUpdate, {binary, data["binary"]["checksum"]})
+      table.insert(files, {binary, data["binary"]["checksum"]})
     end
   end
-  
-  if #toUpdate == 0 then -- nothing to update
-    updaterWindow.mainProgress:setPercent(100)
-    scheduledEvent = scheduleEvent(Updater.abort, 20)
-    return
+
+  if #files == 0 then
+    update = nil
+    return show(tr("Your client is up to date."), { play = true })
   end
-  
-  -- update of some files require full client restart
-  local forceRestart = false
-  local reloadModules = false
-  local forceRestartPattern = {"init.lua", "corelib", "updater", "otmod"}
-  for _, file in ipairs(toUpdate) do
-    for __, pattern in ipairs(forceRestartPattern) do
-      if string.find(file[1], pattern) then
-        forceRestart = true
-      end
-      if not string.find(file[1], "data/things") then
-        reloadModules = true
-      end
-    end
-  end
-  
-  updaterWindow.status:setText(tr("Updating %i files", #toUpdate))
-  updaterWindow.mainProgress:setPercent(0)
-  updaterWindow.downloadProgress:setPercent(0)
-  updaterWindow.downloadProgress:show()
-  updaterWindow.downloadStatus:show()
-  updaterWindow.changeUrlButton:hide()
-  downloadFiles(data["url"], toUpdate, 1, 0, function()
-    updaterWindow.status:setText(tr("Updating client (may take few seconds)"))
-    updaterWindow.mainProgress:setPercent(100)
-    updaterWindow.downloadProgress:hide()
-    updaterWindow.downloadStatus:hide() 
-    scheduledEvent = scheduleEvent(function()
-      local restart = binary or (not loadModulesFunction and reloadModules) or forceRestart
-      if newFiles then
-        g_resources.updateData(finalFiles, not restart)
-      end
-      if binary then
-        g_resources.updateExecutable(binary)
-      end
-      if restart then
-        g_app.restart()
-      else
-        if reloadModules then
-          g_modules.reloadModules()
-        end
-        Updater.abort()
-      end
-    end, 100)  
-  end)
+
+  update = { url = data["url"], files = files, finalFiles = finalFiles, binary = binary }
+  show(tr("An update is ready (%i files).\nUpdate the client to play.", #files), { play = false, update = true })
 end
 
 -- public functions
@@ -201,6 +185,7 @@ function Updater.init(loadModulesFunc)
   g_logger.setOnLog(onLog)
   loadModulesFunction = loadModulesFunc
   initAppWindow()
+  g_ui.importStyle('/modules/client_entergame/forgottenl_style')
   Updater.check()
 end
 
@@ -209,70 +194,68 @@ function Updater.terminate()
   Updater.abort()
 end
 
+-- Play (or nothing to do): the launcher goes away and the client (login) loads
 function Updater.abort()
   HTTP.cancel(httpOperationId)
   removeEvent(scheduledEvent)
-  if updaterWindow then
-    updaterWindow:destroy()
-    updaterWindow = nil
+  if launcher then
+    launcher:destroy()
+    launcher = nil
   end
   loadModules()
 end
 
-function Updater.check(args)
-  if updaterWindow then return end
-  
-  updaterWindow = g_ui.displayUI('updater')
-  updaterWindow:show()
-  updaterWindow:focus()
-  updaterWindow:raise()  
-  
-  local updateData = nil
-  local function progressUpdater(value)
-    removeEvent(scheduledEvent)
-    if value == 100 then
-      return Updater.error(tr("Timeout"))
-    end
-    if updateData and (value > 60 or (not g_app.isMobile() or not ALLOW_CUSTOM_SERVERS or not loadModulesFunc)) then -- gives 3s to set custom updater for mobile version
-      return updateFiles(updateData)
-    end
-    scheduledEvent = scheduleEvent(function() progressUpdater(value + 1) end, 50)
-    updaterWindow.mainProgress:setPercent(value)
+function Updater.check()
+  removeEvent(scheduledEvent)
+  if not launcher then
+    launcher = g_ui.displayUI('updater')
+    launcher:show()
+    launcher:raise()
+    launcher:focus()
   end
-  progressUpdater(0)
+  update = nil
+  show(tr("Checking for updates..."))
 
-  httpOperationId = HTTP.postJSON(Services.updater, {
-    version = APP_VERSION,
-    build = g_app.getVersion(),
-    os = g_app.getOs(),
-    platform = g_window.getPlatformType(),
-    args = args or {}
-  }, function(data, err)
-    if err then      
-      return Updater.error(err)
+  -- the time in the address keeps any cache from handing back an older manifest
+  httpOperationId = HTTP.getJSON(Services.updater .. "?t=" .. os.time(), function(data, err)
+    if err then
+      return Updater.error(tr("The update server can't be reached:\n%s", err))
     end
-    updateData = data
+    compare(data)
   end)
+end
+
+function Updater.play()
+  if update then return end -- an update has to come first
+  Updater.abort()
+end
+
+function Updater.update()
+  if not launcher or not update then return end
+  local todo = update
+  show(tr("Updating %i files", #todo.files), {}, true)
+  launcher.mainProgress:setPercent(0)
+  launcher.downloadProgress:setPercent(0)
+  downloadFiles(todo.url, todo.files, 1, 0, function()
+    show(tr("Installing the update, the client restarts..."), {}, false)
+    scheduledEvent = scheduleEvent(function()
+      g_resources.updateData(todo.finalFiles, false)
+      if todo.binary then
+        g_resources.updateExecutable(todo.binary)
+      end
+      g_app.restart()
+    end, 100)
+  end)
+end
+
+-- the game graphics changed: the download page of the full installer
+function Updater.download()
+  g_platform.openUrl(Updater.installer or (Services.website .. "/downloads/ForgottenL-Client-Setup.exe"))
 end
 
 function Updater.error(message)
   removeEvent(scheduledEvent)
-  if not updaterWindow then return end
-  displayErrorBox(tr("Updater Error"), message).onOk = function()
-    Updater.abort()
-  end
-end
-
-function Updater.changeUrl()
-  removeEvent(scheduledEvent)
-  modules.client_textedit.edit(Services.updater, {title="Enter updater url", width=300}, function(newUrl)
-    if updaterWindow and newUrl:len() > 4 then
-      Services.updater = newUrl
-    end
-    if updaterWindow then
-      updaterWindow:destroy()
-      updaterWindow = nil
-    end
-    Updater.check()
-  end)
+  if not launcher then return end
+  update = nil
+  show(message, { play = true, retry = true })
 end

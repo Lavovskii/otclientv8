@@ -1731,6 +1731,45 @@ ArtStoreButton < Panel
     margin-top: 12
     image-source: /images/game/guides/mouse_left
 
+// the launcher before the login: Update first, Play once the client is up to date
+ArtUpdater < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: update
+    size: 116 32
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 12
+    image-source: /images/ui/forgottenl_button
+    font: verdana-11px-antialised
+    color: #ffe9b3
+    text: Update
+    text-offset: 0 -2
+    phantom: true
+
+  UIWidget
+    id: play
+    size: 116 32
+    anchors.left: update.right
+    anchors.top: update.top
+    margin-left: 14
+    image-source: /images/ui/forgottenl_button
+    image-color: #ffffff66
+    font: verdana-11px-antialised
+    color: #ffe29a66
+    text: Play
+    text-offset: 0 -2
+    phantom: true
+
+  GuideMouse
+    anchors.left: update.right
+    anchors.top: update.top
+    margin-left: -24
+    margin-top: 14
+    image-source: /images/game/guides/mouse_left
+
 // the points of the account and the Buy Points button
 ArtStorePoints < Panel
   anchors.fill: parent

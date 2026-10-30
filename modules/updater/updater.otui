@@ -1,53 +1,90 @@
-StaticMainWindow
+// the launcher (updater.lua): the ForgottenL login skin (client_entergame/forgottenl_style), one button in the middle
+ForgottenLWindow
   id: updaterWindow
-  !text: tr('Updater')
-  width: 350
+  !text: tr('ForgottenL')
+  size: 360 300
 
-  layout:
-    type: verticalBox
-    fit-children: true
-      
-  Label
+  ForgottenLTitle
+    id: version
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 4
+
+  ForgottenLLabel
     id: status
-    !text: tr('Checking for updates')
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 16
+    height: 46
     text-align: center
+    text-wrap: true
+    !text: tr('Checking for updates...')
 
   ProgressBar
     id: mainProgress
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
     height: 15
-    background-color: #4444ff
-    margin-bottom: 5
-    margin-top: 5
+    background-color: #c9962e
+    visible: false
 
   Label
     id: downloadStatus
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    height: 28
+    color: #d8b36a
     text-align: center
-    text-auto-resize: true
     text-wrap: true
     visible: false
 
   ProgressBar
     id: downloadProgress
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
     height: 15
-    background-color: #4444ff
-    margin-bottom: 5
-    margin-top: 5
+    background-color: #c9962e
     visible: false
-          
-  Button
-    id: changeUrlButton
-    margin-left: 50
-    margin-right: 50
-    margin-top: 5
+
+  ForgottenLButton
+    id: updateButton
+    !text: tr('Update')
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: playButton.top
     margin-bottom: 10
-    !text: tr('Change updater URL')
-    @onClick: Updater.changeUrl()
-    $!mobile:
-      visible: false
+    visible: false
+    @onClick: Updater.update()
 
-  Button
-    margin-left: 90
-    margin-right: 90
-    !text: tr('Cancel')
-    @onClick: Updater.abort()
+  ForgottenLButton
+    id: downloadButton
+    !text: tr('Download the installer')
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: playButton.top
+    margin-bottom: 10
+    visible: false
+    @onClick: Updater.download()
 
+  ForgottenLButton
+    id: retryButton
+    !text: tr('Try again')
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: playButton.top
+    margin-bottom: 10
+    visible: false
+    @onClick: Updater.check()
+
+  ForgottenLButton
+    id: playButton
+    !text: tr('Play')
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    margin-bottom: 8
+    visible: false
+    @onClick: Updater.play()
