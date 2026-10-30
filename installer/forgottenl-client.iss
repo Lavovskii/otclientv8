@@ -2,12 +2,12 @@
 ; Download-and-run installer: no extraction step for the end user, single EXE.
 ;
 ; NOT included (by design, see README-ASSETS.txt in the install dir):
-;   data/things/870/Tibia.dat and Tibia.spr (or .cwm) -- the actual Tibia 8.70
+;   data/things/860/Tibia.dat and Tibia.spr (or .cwm) -- the actual Tibia
 ;   game assets (sprites + object data) are copyrighted by CipSoft and are not
 ;   redistributed here. The player must supply their own legitimate copy.
 
 #define MyAppName "ForgottenL"
-#define MyAppVersion "1.0.3"
+#define MyAppVersion "1.0.4"
 #define MyAppPublisher "ForgottenL Team"
 #define MyAppURL "https://forgottenl.me"
 #define MyAppExeName "otclient_dx.exe"
@@ -52,6 +52,8 @@ Type: filesandordirs; Name: "{app}\modules\game_shop"
 ; the old health and mana arcs (replaced by *_back, *_fill and *_frame)
 Type: files; Name: "{app}\data\images\game\circle\*_empty.png"
 Type: files; Name: "{app}\data\images\game\circle\*_full.png"
+; the Tibia 8.70 game data, replaced by the the860 assets (data\things\860) in 1.0.4
+Type: filesandordirs; Name: "{app}\data\things\870"
 
 [Files]
 ; Microsoft's own Visual C++ 2015-2022 x86 runtime (official, Authenticode-signed by Microsoft).
@@ -72,13 +74,13 @@ Source: "{#SourceDir}data\*"; DestDir: "{app}\data"; Flags: ignoreversion recurs
 Source: "{#SourceDir}modules\*"; DestDir: "{app}\modules"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#SourceDir}layouts\*"; DestDir: "{app}\layouts"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#SourceDir}mods\*"; DestDir: "{app}\mods"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-; Tibia 8.70 game data (sprites + object defs). Verified against the known client-870 DAT
-; signature (4CFE22C5) before being added here. See CHANGES.md for provenance.
-Source: "{#SourceDir}data\things\870\Tibia.dat"; DestDir: "{app}\data\things\870"; Flags: ignoreversion
-Source: "{#SourceDir}data\things\870\Tibia.spr"; DestDir: "{app}\data\things\870"; Flags: ignoreversion
+; the860 game data (sprites + object defs): the 8.60 dat layout (signature 4C2C7993, spr 4C220594) with the OTClient
+; extensions of its Tibia.otfi (extended sprite ids, frame durations, frame groups), read with protocol 8.70.
+Source: "{#SourceDir}data\things\860\Tibia.dat"; DestDir: "{app}\data\things\860"; Flags: ignoreversion
+Source: "{#SourceDir}data\things\860\Tibia.spr"; DestDir: "{app}\data\things\860"; Flags: ignoreversion
 
 [Dirs]
-Name: "{app}\data\things\870"
+Name: "{app}\data\things\860"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"

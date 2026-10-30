@@ -1641,9 +1641,10 @@ ArtGuidesButton < Panel
     image-clip: 0 0 20 20
     phantom: true
     UIWidget
-      size: 28 28
+      size: 24 24
       anchors.centerIn: parent
       image-source: /images/ui/guides_glow
+      image-clip: 0 0 24 24
       phantom: true
   UIWidget
     size: 20 20

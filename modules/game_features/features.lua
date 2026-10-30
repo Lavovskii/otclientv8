@@ -18,6 +18,11 @@ function updateFeatures(version)
     g_game.enableFeature(GameBrowseField) -- right click a tile -> Browse Field (the server lists the items of the tile)
     --g_game.enableFeature(GameMinimapLimitedToSingleFloor) -- it will generate minimap only for current floor
     --g_game.enableFeature(GameSpritesAlphaChannel)
+    -- the the860 assets (data/things/860, game_things): the 8.60 dat layout with the OTClient extensions, Tibia.otfi says
+    -- extended sprite ids, frame durations and frame groups (idle and walking outfits); the protocol stays 8.70
+    g_game.enableFeature(GameSpritesU32)
+    g_game.enableFeature(GameEnhancedAnimations)
+    g_game.enableFeature(GameIdleAnimations)
     
     if(version >= 770) then
         g_game.enableFeature(GameLooktypeU16)

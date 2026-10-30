@@ -22,8 +22,10 @@ function load()
       datPath = resolvepath('/things/' .. filename)
       sprPath = resolvepath('/things/' .. filename)
     else
-      datPath = resolvepath('/things/' .. version .. '/Tibia')
-      sprPath = resolvepath('/things/' .. version .. '/Tibia')
+      -- ForgottenL speaks protocol 8.70 but draws with the the860 assets (game_features turns on their extensions)
+      local folder = version == 870 and 860 or version
+      datPath = resolvepath('/things/' .. folder .. '/Tibia')
+      sprPath = resolvepath('/things/' .. folder .. '/Tibia')
     end
   end
 

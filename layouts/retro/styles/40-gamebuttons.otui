@@ -46,6 +46,7 @@ GameButtonsWindow < HeadlessMiniWindow
       anchors.top: prev.bottom
       anchors.bottom: parent.bottom
       margin-top: 4
+      margin-left: 2
       layout:
         type: grid
         cell-spacing: 3

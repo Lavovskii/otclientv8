@@ -63,7 +63,7 @@ local GUIDES = {
     name = 'Items',
     cards = {
       {art = 'ArtBrowse', title = 'Browse Field',
-       text = 'Right click a tile next to you and choose Browse Field to see every item on it, 40 per page.'},
+       text = 'Right click a tile and choose Browse Field: you walk to it and see every item on it, 40 per page.'},
       {art = 'ArtStacks', title = 'Stacks',
        text = 'Dragging moves the whole stack. Hold Ctrl while you drag to choose how many.'},
       {art = 'ArtEmpty', title = 'Empty backpack',
@@ -160,7 +160,10 @@ local function build()
   end
 end
 
--- the Guides button comes first in the buttons window, in a golden frame that slowly glows brighter and dimmer
+-- the Guides button comes first in the buttons window, in a thin golden frame with a shine running around it: the
+-- frames of data/images/ui/guides_glow.png (GLOW_FRAMES of GLOW_SIZE x GLOW_SIZE side by side, tools/gen_guides_glow.py)
+-- one after the other
+local GLOW_FRAMES, GLOW_SIZE, GLOW_FRAME_MS = 42, 24, 45
 local glowEvent
 local function glow()
   local frame = guidesButton and guidesButton:getChildById('glow')
@@ -168,9 +171,9 @@ local function glow()
     glowEvent = nil
     return
   end
-  local t = (math.sin(g_clock.millis() / 1000 * math.pi * 2 / 2.4) + 1) / 2
-  frame:setOpacity(0.45 + 0.55 * t)
-  glowEvent = scheduleEvent(glow, 60)
+  local i = math.floor(g_clock.millis() / GLOW_FRAME_MS) % GLOW_FRAMES
+  frame:setImageClip({x = i * GLOW_SIZE, y = 0, width = GLOW_SIZE, height = GLOW_SIZE})
+  glowEvent = scheduleEvent(glow, GLOW_FRAME_MS)
 end
 
 local function onGameStart()
@@ -188,8 +191,9 @@ function init()
   local frame = g_ui.createWidget('UIWidget', guidesButton)
   frame:setId('glow')
   frame:setPhantom(true)
-  frame:setSize({width = 28, height = 28})
+  frame:setSize({width = GLOW_SIZE, height = GLOW_SIZE})
   frame:setImageSource('/images/ui/guides_glow')
+  frame:setImageClip({x = 0, y = 0, width = GLOW_SIZE, height = GLOW_SIZE})
   frame:centerIn('parent')
   connect(g_game, {onGameStart = onGameStart, onGameEnd = onGameEnd})
   if g_game.isOnline() then onGameStart() end
