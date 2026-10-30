@@ -9,7 +9,9 @@ manifest and files the launcher (modules/updater) compares itself with, the inst
 The installed client reads data.zip from its folder, or the newer one an update wrote into the user's folder
 (AppData/OTClientV8/ForgottenL). The game graphics (data/things/860, 371 MB) stay out of data.zip: the installer puts
 them in the user's folder with version.txt next to them, and a change of their version asks for the full installer.
-A Lua, OTUI or image change only needs --publish: every client gets it at its next start (Update button).
+A Lua, OTUI or image change only needs --publish: every client gets it at its next start (Update button). Raise
+CLIENT_BUILD in init.lua with every release and set the server's minClientBuild to it: the login and the game refuse
+older builds, so nobody plays an old client (one that never asked, or could not reach the website).
 """
 import json
 import os
@@ -74,6 +76,7 @@ def check_lua(names):
 
 def main():
     version = re.search(r'#define MyAppVersion "([^"]+)"', open(ISS, encoding='utf-8').read()).group(1)
+    build = int(re.search(r'^CLIENT_BUILD = (\d+)', open(os.path.join(ROOT, 'init.lua'), encoding='utf-8').read(), re.M).group(1))
     os.makedirs(DIST, exist_ok=True)
     names = packed_files()
     check_lua(names)
@@ -96,7 +99,8 @@ def main():
     open(os.path.join(DIST, 'things-version.txt'), 'w', newline='\n').write(things_version + '\n')
 
     manifest = {
-        'version': version,
+        'version': '%s build %d' % (version, build),
+        'build': build,
         'url': SITE + '/updater/files',
         'installer': SITE + '/ForgottenL-Client-Setup.exe',
         'things': {'folder': THINGS, 'version': things_version},
@@ -104,7 +108,7 @@ def main():
     }
     with open(os.path.join(updater, 'manifest.json'), 'w', newline='\n') as f:
         json.dump(manifest, f, indent=1, sort_keys=True)
-    print('client %s: %d files, data.zip %d KB, graphics %s' % (version, len(files),
+    print('client %s build %d: %d files, data.zip %d KB, graphics %s' % (version, build, len(files),
           os.path.getsize(os.path.join(DIST, 'data.zip')) // 1024, things_version))
 
     if '--installer' in sys.argv:
@@ -123,6 +127,7 @@ def main():
         ssh.stdin.close()
         if ssh.wait() != 0:
             sys.exit('publish failed')
+        print('now set minClientBuild = %d in the server config.lua (and restart it) so older clients are refused' % build)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,9 @@
 -- CONFIG
 APP_NAME = "ForgottenL"  -- important, change it, it's name for config dir and files in appdata
 APP_VERSION = 1         -- client version for updater and login to identify outdated client
+-- ForgottenL: raise CLIENT_BUILD with every client update (tools/build_release.py --publish), then the server's
+-- minClientBuild (config.lua): the login sends it as its OS value, 1000 + CLIENT_BUILD, and the server refuses older ones
+CLIENT_BUILD = 6
 DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
 
 -- updater: the update manifest of the website (tools/build_release.py --publish); the installed client (data.zip)

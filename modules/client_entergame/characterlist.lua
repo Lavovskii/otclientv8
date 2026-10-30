@@ -12,6 +12,7 @@ local resendWaitEvent
 local loginEvent
 local autoReconnectEvent
 local lastLogout = 0
+local checkingUpdate = false -- Enter game asks the updater first (CharacterList.doLogin)
 
 -- private functions
 local function tryLogin(charInfo, tries)
@@ -377,6 +378,25 @@ function CharacterList.doLogin()
   removeEvent(autoReconnectEvent)
   autoReconnectEvent = nil
 
+  -- ForgottenL: entering the game (the button, a double click, the auto reconnect after a server restart) asks the
+  -- update server first, like the login (modules/updater, only in the installed client): with an update the launcher
+  -- comes back with its Update button instead of the game
+  if Updater and Updater.checkBeforeLogin then
+    if checkingUpdate then return end
+    checkingUpdate = true
+    return Updater.checkBeforeLogin(function()
+      checkingUpdate = false
+      CharacterList.enterSelected()
+    end, function()
+      checkingUpdate = false
+      CharacterList.cancelWait()
+      CharacterList.hide()
+    end, CharacterList.show)
+  end
+  CharacterList.enterSelected()
+end
+
+function CharacterList.enterSelected()
   local selected = characterList:getFocusedChild()
   if selected then
     local charInfo = { worldHost = selected.worldHost,

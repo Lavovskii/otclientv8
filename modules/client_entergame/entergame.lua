@@ -541,9 +541,10 @@ function EnterGame.doLogin(account, password, token, host)
   g_game.setClientVersion(G.clientVersion)
   g_game.setProtocolVersion(g_game.getClientProtocolVersion(G.clientVersion))
   g_game.setCustomProtocolVersion(0)
-  g_game.setCustomOs(-1) -- disable
   g_game.chooseRsa(G.host)
-  -- ForgottenL: keep the real OTClient OS value (20+); the server uses it to send wide stats only to OTClient
+  -- ForgottenL: the OS value carries the client build (1000 + CLIENT_BUILD, init.lua) to the login and game servers,
+  -- which refuse builds under their minClientBuild; at 10 or more the server still treats it as OTClient (wide stats)
+  g_game.setCustomOs(1000 + (CLIENT_BUILD or 0))
 
   -- extra features from init.lua
   for i = 4, #server_params do
