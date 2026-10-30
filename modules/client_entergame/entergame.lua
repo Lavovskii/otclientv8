@@ -12,6 +12,7 @@ local versionsFound = false
 local customServerSelectorPanel
 local serverSelectorPanel
 local forgottenLogo
+local checkingUpdate, updateChecked = false, false -- the login's question to the updater (EnterGame.doLogin)
 local serverSelector
 local clientVersionSelector
 local serverHostTextEdit
@@ -430,6 +431,23 @@ function EnterGame.doLogin(account, password, token, host)
     local errorBox = displayErrorBox(tr('Login Error'), tr('Cannot login while already in game.'))
     connect(errorBox, { onOk = EnterGame.show })
     return
+  end
+
+  -- ForgottenL: every login asks the update server first (modules/updater, only in the installed client): with an
+  -- update the launcher comes back with its Update button and there is no login
+  if Updater and Updater.checkBeforeLogin and not updateChecked then
+    if checkingUpdate then return end
+    checkingUpdate = true
+    return Updater.checkBeforeLogin(function()
+      checkingUpdate = false
+      updateChecked = true
+      EnterGame.doLogin(account, password, token, host)
+      updateChecked = false
+    end, function()
+      checkingUpdate = false
+      EnterGame.hide()
+      if forgottenLogo then forgottenLogo:hide() end
+    end, EnterGame.show)
   end
   
   G.account = account or enterGame:getChildById('accountNameTextEdit'):getText()

@@ -13,6 +13,7 @@ Updater.maxRetries = 5
 
 local launcher
 local logo
+local backToLogin -- shows the login again when Play closes a launcher the login brought back
 local loadModulesFunction
 local scheduledEvent
 local httpOperationId = 0
@@ -125,15 +126,13 @@ local function downloadFiles(url, files, index, retries, doneCallback)
     end)
 end
 
--- the manifest against this client: Play, Update or the full installer
-local function compare(data)
-  if not launcher then return end
+-- the manifest against this client: {kind = "play"}, {kind = "update", update = ...}, {kind = "installer"} (the game
+-- graphics changed) or {kind = "invalid"}
+local function evaluate(data)
   if type(data) ~= "table" or type(data["files"]) ~= "table" or type(data["url"]) ~= 'string' or data["url"]:len() < 4 then
-    return Updater.error(tr("Invalid data from the update server."))
+    return { kind = "invalid" }
   end
-
   local version = type(data["version"]) == 'string' and data["version"] or ""
-  launcher.version:setText(tr("Client version %s", version))
 
   -- the game graphics live outside data.zip; the installer writes their version next to them
   local things = data["things"]
@@ -141,9 +140,7 @@ local function compare(data)
     local marker = "/data/things/" .. things["folder"] .. "/version.txt"
     local installed = g_resources.fileExists(marker) and g_resources.readFileContents(marker):trim() or ""
     if installed ~= things["version"] then
-      Updater.installer = data["installer"]
-      return show(tr("New game graphics are out.\nDownload and run the new installer to keep playing."),
-                  { play = false, download = true })
+      return { kind = "installer", version = version, installer = data["installer"] }
     end
   end
 
@@ -173,12 +170,44 @@ local function compare(data)
   end
 
   if #files == 0 then
+    return { kind = "play", version = version }
+  end
+  return { kind = "update", version = version,
+           update = { url = data["url"], files = files, finalFiles = finalFiles, binary = binary } }
+end
+
+-- the launcher shows what evaluate found
+local function compare(data)
+  if not launcher then return end
+  local result = evaluate(data)
+  if result.kind == "invalid" then
+    return Updater.error(tr("Invalid data from the update server."))
+  end
+  launcher.version:setText(tr("Client version %s", result.version))
+  if result.kind == "installer" then
+    Updater.installer = result.installer
+    return show(tr("New game graphics are out.\nDownload and run the new installer to keep playing."),
+                { play = false, download = true })
+  end
+  if result.kind == "play" then
     update = nil
     return show(tr("Your client is up to date."), { play = true })
   end
+  update = result.update
+  show(tr("An update is ready (%i files).\nUpdate the client to play.", #update.files), { play = false, update = true })
+end
 
-  update = { url = data["url"], files = files, finalFiles = finalFiles, binary = binary }
-  show(tr("An update is ready (%i files).\nUpdate the client to play.", #files), { play = false, update = true })
+-- the logo and the launcher window
+local function open()
+  if not logo then
+    logo = g_ui.displayUI('/modules/client_entergame/forgottenl_logo')
+  end
+  if not launcher then
+    launcher = g_ui.displayUI('updater')
+    launcher:show()
+    launcher:raise()
+    launcher:focus()
+  end
 end
 
 -- public functions
@@ -212,15 +241,7 @@ end
 
 function Updater.check()
   removeEvent(scheduledEvent)
-  if not logo then
-    logo = g_ui.displayUI('/modules/client_entergame/forgottenl_logo')
-  end
-  if not launcher then
-    launcher = g_ui.displayUI('updater')
-    launcher:show()
-    launcher:raise()
-    launcher:focus()
-  end
+  open()
   update = nil
   show(tr("Checking for updates..."))
 
@@ -235,7 +256,26 @@ end
 
 function Updater.play()
   if update then return end -- an update has to come first
+  local back = backToLogin
+  backToLogin = nil
   Updater.abort()
+  if back then back() end
+end
+
+-- every login asks again (client_entergame, EnterGame.doLogin): onReady when the client is still up to date (or the
+-- update server can't be reached); with an update or new game graphics onBlocked hides the login and the launcher comes
+-- back with its button (Play stays off); onBack shows the login again if Play becomes possible after all (an error)
+function Updater.checkBeforeLogin(onReady, onBlocked, onBack)
+  httpOperationId = HTTP.getJSON(Services.updater .. "?t=" .. os.time(), function(data, err)
+    local result = not err and evaluate(data) or { kind = "invalid" }
+    if result.kind == "play" or result.kind == "invalid" then
+      return onReady()
+    end
+    onBlocked()
+    backToLogin = onBack
+    open()
+    compare(data)
+  end)
 end
 
 function Updater.update()

@@ -57,10 +57,26 @@ def packed_files():
     return sorted(names)
 
 
+def check_lua(names):
+    """every Lua file compiles with LuaJIT 2.1 (the client's Lua): a broken updater.lua would stop every client at
+    startup, before it could fetch the fix"""
+    from lupa.luajit21 import LuaRuntime
+    compile_lua = LuaRuntime().eval('function(source, name) local f, err = loadstring(source, name) return err end')
+    errors = []
+    for name in names:
+        if name.endswith('.lua'):
+            err = compile_lua(open(os.path.join(ROOT, name), 'rb').read(), '@' + name)
+            if err:
+                errors.append(err)
+    if errors:
+        sys.exit('Lua errors, nothing built:\n' + '\n'.join(errors))
+
+
 def main():
     version = re.search(r'#define MyAppVersion "([^"]+)"', open(ISS, encoding='utf-8').read()).group(1)
     os.makedirs(DIST, exist_ok=True)
     names = packed_files()
+    check_lua(names)
 
     with zipfile.ZipFile(os.path.join(DIST, 'data.zip'), 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for name in names:
