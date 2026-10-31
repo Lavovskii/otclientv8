@@ -380,7 +380,7 @@ function CharacterList.doLogin()
 
   -- ForgottenL: entering the game (the button, a double click, the auto reconnect after a server restart) asks the
   -- update server first, like the login (modules/updater, only in the installed client): with an update the launcher
-  -- comes back with its Update button instead of the game
+  -- comes back and updates the client instead of the game
   if Updater and Updater.checkBeforeLogin then
     if checkingUpdate then return end
     checkingUpdate = true

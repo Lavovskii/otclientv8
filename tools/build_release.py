@@ -7,11 +7,13 @@ manifest and files the launcher (modules/updater) compares itself with, the inst
   python tools/build_release.py --publish    ... and puts dist/updater on the website (ssh alias "vps")
 
 The installed client reads data.zip from its folder, or the newer one an update wrote into the user's folder
-(AppData/OTClientV8/ForgottenL). The game graphics (data/things/860, 371 MB) stay out of data.zip: the installer puts
-them in the user's folder with version.txt next to them, and a change of their version asks for the full installer.
-A Lua, OTUI or image change only needs --publish: every client gets it at its next start (Update button). Raise
-CLIENT_BUILD in init.lua with every release and set the server's minClientBuild to it: the login and the game refuse
-older builds, so nobody plays an old client (one that never asked, or could not reach the website).
+(AppData/OTClientV8/ForgottenL). The game graphics (data/things/860, 420 MB) stay out of data.zip: the installer puts
+them in the user's folder with version.txt next to them. For the updates they are cut into zipped parts
+(dist/graphics/<version>, about 100 MB, published once per graphics version): when their version changes the launcher
+downloads the parts and writes the files itself. Any change, graphics too, only needs --publish: every client updates
+itself at its next start or login and restarts. Raise CLIENT_BUILD in init.lua with every release and set the
+server's minClientBuild to it: the login and the game refuse older builds, so nobody plays an old client (one that
+never asked, or could not reach the website).
 """
 import json
 import os
@@ -30,7 +32,11 @@ ISCC = os.environ.get('ISCC', os.path.expanduser(r'~\AppData\Local\Programs\Inno
 THINGS = '860'
 SITE = 'https://forgottenl.me/downloads'
 REMOTE = '/var/www/forgl-downloads/updater'
+REMOTE_GRAPHICS = '/var/www/forgl-downloads/graphics'
 PACKED = ['init.lua', 'data', 'modules', 'layouts', 'mods']
+# the game graphics are cut into parts of this many bytes, each zipped on its own (about 3 MB): the client holds a
+# download in memory, so a part has to stay small, and the launcher writes each one into the file as it arrives
+GRAPHICS_PART = 6 << 20
 
 
 def crc(path):
@@ -74,6 +80,31 @@ def check_lua(names):
         sys.exit('Lua errors, nothing built:\n' + '\n'.join(errors))
 
 
+def graphics_parts(things, version):
+    """the game graphics as zipped parts (dist/graphics/<version>, one entry "part" per zip, the same bytes at every
+    build) and their list for the manifest: [{name, size, parts: [{file, checksum, size}]}]; made once per version"""
+    out = os.path.join(DIST, 'graphics', version)
+    listing = os.path.join(out, 'parts.json')
+    if os.path.isfile(listing):
+        return json.load(open(listing))
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(out)
+    files = []
+    for name in ('Tibia.dat', 'Tibia.spr'):
+        parts = []
+        with open(os.path.join(things, name), 'rb') as f:
+            for chunk in iter(lambda: f.read(GRAPHICS_PART), b''):
+                part = '%s.%03d.zip' % (name, len(parts))
+                with zipfile.ZipFile(os.path.join(out, part), 'w') as z:
+                    z.writestr(zipfile.ZipInfo('part', date_time=(1980, 1, 1, 0, 0, 0)), chunk,
+                               compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+                parts.append({'file': part, 'checksum': crc(os.path.join(out, part)), 'size': len(chunk)})
+        files.append({'name': name, 'size': sum(p['size'] for p in parts), 'parts': parts})
+    with open(listing, 'w', newline='\n') as f:
+        json.dump(files, f, indent=1)
+    return files
+
+
 def main():
     version = re.search(r'#define MyAppVersion "([^"]+)"', open(ISS, encoding='utf-8').read()).group(1)
     build = int(re.search(r'^CLIENT_BUILD = (\d+)', open(os.path.join(ROOT, 'init.lua'), encoding='utf-8').read(), re.M).group(1))
@@ -97,13 +128,18 @@ def main():
     things = os.path.join(ROOT, 'data', 'things', THINGS)
     things_version = '%s-%s-%s' % (THINGS, crc(os.path.join(things, 'Tibia.dat')), crc(os.path.join(things, 'Tibia.spr')))
     open(os.path.join(DIST, 'things-version.txt'), 'w', newline='\n').write(things_version + '\n')
+    graphics = graphics_parts(things, things_version)
 
+    # "graphics", not the old "things": the launchers of 1.0.6 and 1.0.7 sent the player to the installer when the
+    # "things" version changed; without it they take the update of the Lua files, and the new launcher they get then
+    # downloads the graphics by itself
     manifest = {
         'version': '%s build %d' % (version, build),
         'build': build,
         'url': SITE + '/updater/files',
         'installer': SITE + '/ForgottenL-Client-Setup.exe',
-        'things': {'folder': THINGS, 'version': things_version},
+        'graphics': {'folder': THINGS, 'version': things_version, 'url': SITE + '/graphics/' + things_version + '/',
+                     'files': graphics},
         'files': files,
     }
     with open(os.path.join(updater, 'manifest.json'), 'w', newline='\n') as f:
@@ -116,6 +152,21 @@ def main():
         print('installer', os.path.join(DIST, 'ForgottenL-Client-Setup.exe'))
 
     if '--publish' in sys.argv:
+        # the graphics parts first (only when this version is not on the website yet), so the manifest never names a
+        # part not there; "complete" marks a finished upload
+        target = '%s/%s' % (REMOTE_GRAPHICS, things_version)
+        if subprocess.run(['ssh', 'vps', 'test -f %s/complete' % target]).returncode != 0:
+            remote = ('set -e; G=%s; sudo rm -rf $G.new; sudo mkdir -p $G.new; sudo tar -xf - -C $G.new --no-same-owner; '
+                      'sudo touch $G.new/complete; sudo chmod -R a+rX %s; sudo rm -rf $G; sudo mv $G.new $G; '
+                      'echo published graphics $(ls $G | grep -c zip) parts' % (target, REMOTE_GRAPHICS))
+            ssh = subprocess.Popen(['ssh', 'vps', remote], stdin=subprocess.PIPE)
+            with tarfile.open(fileobj=ssh.stdin, mode='w|') as tar:
+                for f in graphics:
+                    for part in f['parts']:
+                        tar.add(os.path.join(DIST, 'graphics', things_version, part['file']), part['file'])
+            ssh.stdin.close()
+            if ssh.wait() != 0:
+                sys.exit('publish of the graphics failed')
         # the whole folder goes up and replaces the old one at once, so a manifest never names a file not there yet
         remote = ('set -e; D=%s; sudo rm -rf $D.new $D.old; sudo mkdir -p $D.new; sudo tar -xf - -C $D.new --no-same-owner; '
                   'sudo chmod -R a+rX $D.new; if [ -d $D ]; then sudo mv $D $D.old; fi; sudo mv $D.new $D; sudo rm -rf $D.old; '

@@ -82,7 +82,7 @@ local GUIDES = {
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
       {art = 'ArtUpdater', title = 'Updates',
-       text = 'Each time you open the client it looks for an update. Click Update: it downloads only what changed and restarts, then Play opens the login. Play waits while there is an update.'},
+       text = 'Each time you open the client or log in it looks for an update and installs it by itself, new game graphics too: only what changed is downloaded, then the client restarts on its own. Nothing to click or install.'},
     }
   },
   {

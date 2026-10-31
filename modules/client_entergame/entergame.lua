@@ -434,7 +434,7 @@ function EnterGame.doLogin(account, password, token, host)
   end
 
   -- ForgottenL: every login asks the update server first (modules/updater, only in the installed client): with an
-  -- update the launcher comes back with its Update button and there is no login
+  -- update the launcher comes back and updates the client, and there is no login
   if Updater and Updater.checkBeforeLogin and not updateChecked then
     if checkingUpdate then return end
     checkingUpdate = true

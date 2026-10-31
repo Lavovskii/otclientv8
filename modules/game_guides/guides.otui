@@ -1731,29 +1731,38 @@ ArtStoreButton < Panel
     margin-top: 12
     image-source: /images/game/guides/mouse_left
 
-// the launcher before the login: Update first, Play once the client is up to date
+// the launcher before the login updating the client by itself (its progress bar), Play waiting until it restarts
 ArtUpdater < Panel
   anchors.fill: parent
 
-  UIWidget
-    id: update
-    size: 116 32
+  Label
+    id: status
     anchors.left: parent.left
     anchors.top: parent.top
     margin-left: 6
-    margin-top: 12
-    image-source: /images/ui/forgottenl_button
+    margin-top: 6
     font: verdana-11px-antialised
     color: #ffe9b3
-    text: Update
-    text-offset: 0 -2
+    text-auto-resize: true
+    text: Updating the client...
     phantom: true
+
+  ProgressBar
+    id: progress
+    anchors.left: status.left
+    anchors.top: status.bottom
+    margin-top: 6
+    width: 146
+    height: 15
+    background-color: #c9962e
+    phantom: true
+    @onSetup: self:setPercent(65)
 
   UIWidget
     id: play
     size: 116 32
-    anchors.left: update.right
-    anchors.top: update.top
+    anchors.left: progress.right
+    anchors.verticalCenter: progress.verticalCenter
     margin-left: 14
     image-source: /images/ui/forgottenl_button
     image-color: #ffffff66
@@ -1763,12 +1772,11 @@ ArtUpdater < Panel
     text-offset: 0 -2
     phantom: true
 
-  GuideMouse
-    anchors.left: update.right
-    anchors.top: update.top
-    margin-left: -24
-    margin-top: 14
-    image-source: /images/game/guides/mouse_left
+  GuideNote
+    anchors.left: progress.left
+    anchors.top: progress.bottom
+    margin-top: 10
+    text: then the client restarts by itself
 
 // the points of the account and the Buy Points button
 ArtStorePoints < Panel

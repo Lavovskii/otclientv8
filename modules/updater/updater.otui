@@ -56,15 +56,6 @@ ForgottenLWindow
     visible: false
 
   ForgottenLButton
-    id: updateButton
-    !text: tr('Update')
-    anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: playButton.top
-    margin-bottom: 10
-    visible: false
-    @onClick: Updater.update()
-
-  ForgottenLButton
     id: downloadButton
     !text: tr('Download the installer')
     anchors.horizontalCenter: parent.horizontalCenter
