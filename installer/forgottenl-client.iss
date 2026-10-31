@@ -6,7 +6,7 @@
 ; user's folder of the client ({userappdata}\OTClientV8\ForgottenL, where the updates go too) with their version.txt.
 
 #define MyAppName "ForgottenL"
-#define MyAppVersion "1.0.6"
+#define MyAppVersion "1.0.7"
 #define MyAppPublisher "ForgottenL Team"
 #define MyAppURL "https://forgottenl.me"
 #define MyAppExeName "otclient_dx.exe"
