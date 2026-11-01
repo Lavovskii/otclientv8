@@ -23,36 +23,44 @@ ForgottenLWindow
     text-wrap: true
     !text: tr('Checking for updates...')
 
-  ProgressBar
+  // the whole update, its percent inside
+  ForgottenLProgressBar
     id: mainProgress
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 6
-    height: 15
-    background-color: #c9962e
     visible: false
 
-  Label
+  // the file (or graphics part) on its way, then its thin bar, then the MB and the speed
+  ForgottenLLabel
     id: downloadStatus
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 6
-    height: 28
-    color: #d8b36a
+    margin-top: 10
+    height: 14
     text-align: center
-    text-wrap: true
     visible: false
 
-  ProgressBar
+  ForgottenLProgressBar
     id: downloadProgress
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     margin-top: 4
-    height: 15
-    background-color: #c9962e
+    height: 10
+    visible: false
+
+  ForgottenLLabel
+    id: downloadInfo
+    anchors.top: prev.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+    height: 14
+    color: #a98c5a
+    text-align: center
     visible: false
 
   ForgottenLButton

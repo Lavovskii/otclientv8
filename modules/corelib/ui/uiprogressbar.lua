@@ -65,6 +65,12 @@ function UIProgressBar:updateBackground()
     local height = self:getHeight() - self.bgBorderTop - self.bgBorderBottom
     local rect = { x = self.bgBorderLeft, y = self.bgBorderTop, width = width, height = height }
     self:setBackgroundRect(rect)
+    -- ForgottenL: a bar drawn with an image (ForgottenLProgressBar) has a child 'fill' that takes the progress' width
+    local fill = self:getChildById('fill')
+    if fill then
+      fill:setWidth(width)
+      fill:setVisible(self:getProgress() > 0)
+    end
   end
 end
 

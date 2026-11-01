@@ -74,3 +74,31 @@ ForgottenLButton < UIButton
     image-color: #ffffff66
     color: #ffe29a66
     change-cursor-image: false
+
+// a gold bar in a dark track with a gold edge (the launcher, Guides): the progress is the child 'fill', an image
+// (UIProgressBar sizes it), and its text is the child 'caption', drawn over the fill
+ForgottenLProgressBar < UIProgressBar
+  height: 20
+  image-source: /images/ui/forgottenl_bar
+  image-border: 5
+  background-color: #00000000
+  background-border: 3
+
+  UIWidget
+    id: fill
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    margin: 3
+    image-source: /images/ui/forgottenl_bar_fill
+    image-border-left: 2
+    image-border-right: 2
+    phantom: true
+
+  UILabel
+    id: caption
+    anchors.fill: parent
+    text-align: center
+    font: verdana-11px-rounded
+    color: #fff6dc
+    phantom: true

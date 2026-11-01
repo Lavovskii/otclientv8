@@ -1747,16 +1747,16 @@ ArtUpdater < Panel
     text: Updating the client...
     phantom: true
 
-  ProgressBar
+  ForgottenLProgressBar
     id: progress
     anchors.left: status.left
     anchors.top: status.bottom
     margin-top: 6
     width: 146
-    height: 15
-    background-color: #c9962e
     phantom: true
-    @onSetup: self:setPercent(65)
+    @onSetup: |
+      self:setPercent(65)
+      self:getChildById('caption'):setText('65%')
 
   UIWidget
     id: play

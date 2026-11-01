@@ -84,6 +84,14 @@ local function show(status, buttons, progress)
   launcher.mainProgress:setVisible(progress == true)
   launcher.downloadProgress:setVisible(progress == true)
   launcher.downloadStatus:setVisible(progress == true)
+  launcher.downloadInfo:setVisible(progress == true)
+end
+
+-- the bar of the whole update, its percent written inside
+local function setMainProgress(percent)
+  percent = math.floor(math.max(0, math.min(100, percent)))
+  launcher.mainProgress:setPercent(percent)
+  launcher.mainProgress:getChildById('caption'):setText(percent .. "%")
 end
 
 local function downloadFiles(url, files, index, retries, doneCallback)
@@ -95,13 +103,14 @@ local function downloadFiles(url, files, index, retries, doneCallback)
   local file = entry[1]
   local file_checksum = entry[2]
 
+  local status = tr("File %i of %i", index, #files)
   if retries > 0 then
-    launcher.downloadStatus:setText(tr("Downloading (%i retry):\n%s", retries, file))
-  else
-    launcher.downloadStatus:setText(tr("Downloading:\n%s", file))
+    status = status .. " " .. tr("(%i retry)", retries)
   end
+  launcher.downloadStatus:setText(status)
+  launcher.downloadInfo:setText(file)
   launcher.downloadProgress:setPercent(0)
-  launcher.mainProgress:setPercent(math.floor(100 * index / #files))
+  setMainProgress(100 * (index - 1) / #files)
 
   -- the checksum in the address keeps any cache from handing back an older copy
   httpOperationId = HTTP.download(url .. file .. "?" .. file_checksum, file,
@@ -124,7 +133,7 @@ local function downloadFiles(url, files, index, retries, doneCallback)
     function (progress, speed)
       if not launcher then return end
       launcher.downloadProgress:setPercent(progress)
-      launcher.downloadProgress:setText(speed .. " kbps")
+      setMainProgress(100 * (index - 1 + progress / 100) / #files)
     end)
 end
 
@@ -163,13 +172,25 @@ local function downloadGraphics(graphics, dir, parts, index, retries, out, doneC
   end
   local name, part = entry.file["name"], entry.part
 
-  local status = tr("Downloading the new game graphics:\n%s (%i of %i)", name, entry.number, #entry.file["parts"])
+  local status = tr("%s: part %i of %i", name, entry.number, #entry.file["parts"])
   if retries > 0 then
     status = status .. " " .. tr("(%i retry)", retries)
   end
   launcher.downloadStatus:setText(status)
   launcher.downloadProgress:setPercent(0)
-  launcher.mainProgress:setPercent(math.floor(100 * (index - 1) / #parts))
+  -- the whole download in MB (the parts' zips) and its speed since it started (parts.started)
+  local total = parts[#parts].before + parts[#parts].bytes
+  local function transferred(progress)
+    local done = entry.before + entry.bytes * progress / 100
+    local info = tr("%.1f MB of %.1f MB", done / 1048576, total / 1048576)
+    local seconds = (g_clock.millis() - parts.started) / 1000
+    if seconds >= 1 then
+      info = info .. " " .. tr("(%.1f MB/s)", done / 1048576 / seconds)
+    end
+    launcher.downloadInfo:setText(info)
+    setMainProgress(100 * done / total)
+  end
+  transferred(0)
 
   httpOperationId = HTTP.download(graphics["url"] .. part["file"] .. "?" .. part["checksum"], GRAPHICS_DOWNLOAD,
     function(file, checksum, err)
@@ -216,7 +237,7 @@ local function downloadGraphics(graphics, dir, parts, index, retries, out, doneC
     function(progress, speed)
       if not launcher then return end
       launcher.downloadProgress:setPercent(progress)
-      launcher.downloadProgress:setText(speed .. " kbps")
+      transferred(progress)
     end)
 end
 
@@ -231,12 +252,18 @@ local function installGraphics(graphics, doneCallback)
       return Updater.graphicsFailed()
     end
     for number, part in ipairs(file["parts"]) do
-      table.insert(parts, { file = file, part = part, number = number })
+      -- bytes: its download (the zip; an older manifest only has the unpacked size), before: the bytes of the parts
+      -- before it
+      local last = parts[#parts]
+      local bytes = tonumber(part["zip"]) or tonumber(part["size"]) or 0
+      table.insert(parts, { file = file, part = part, number = number, bytes = bytes,
+                            before = last and last.before + last.bytes or 0 })
     end
   end
   if not dir or #parts == 0 then
     return Updater.graphicsFailed()
   end
+  parts.started = g_clock.millis()
 
   downloadGraphics(graphics, dir, parts, 1, 0, nil, function()
     for _, file in ipairs(graphics["files"]) do
@@ -412,7 +439,7 @@ end
 function Updater.update()
   if not launcher or not update then return end
   local todo = update
-  launcher.mainProgress:setPercent(0)
+  setMainProgress(0)
   launcher.downloadProgress:setPercent(0)
 
   local function install()

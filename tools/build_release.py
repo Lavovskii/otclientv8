@@ -129,6 +129,10 @@ def main():
     things_version = '%s-%s-%s' % (THINGS, crc(os.path.join(things, 'Tibia.dat')), crc(os.path.join(things, 'Tibia.spr')))
     open(os.path.join(DIST, 'things-version.txt'), 'w', newline='\n').write(things_version + '\n')
     graphics = graphics_parts(things, things_version)
+    # each part's download size (its zip), for the MB and the speed the launcher shows
+    for file in graphics:
+        for part in file['parts']:
+            part['zip'] = os.path.getsize(os.path.join(DIST, 'graphics', things_version, part['file']))
 
     # "graphics", not the old "things": the launchers of 1.0.6 and 1.0.7 sent the player to the installer when the
     # "things" version changed; without it they take the update of the Lua files, and the new launcher they get then
