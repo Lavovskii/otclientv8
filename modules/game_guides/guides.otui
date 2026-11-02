@@ -1778,6 +1778,56 @@ ArtUpdater < Panel
     margin-top: 10
     text: then the client restarts by itself
 
+// a staff member's name and health bar beside a player's
+GuideNameBar < UIWidget
+  size: 27 4
+  background-color: #000000
+  phantom: true
+
+  UIWidget
+    id: fill
+    anchors.fill: parent
+    margin: 1
+    phantom: true
+
+ArtStaffName < Panel
+  anchors.fill: parent
+
+  Label
+    id: staff
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 40
+    margin-top: 22
+    font: verdana-11px-rounded
+    color: #ffd060
+    text-auto-resize: true
+    phantom: true
+    @onSetup: self:setText(modules.game_staffnames.staffLetters('Gamemaster'))
+
+  GuideNameBar
+    anchors.horizontalCenter: staff.horizontalCenter
+    anchors.top: staff.bottom
+    margin-top: 1
+    @onSetup: self:getChildById('fill'):setBackgroundColor('#ffd060')
+
+  Label
+    id: player
+    anchors.left: staff.right
+    anchors.top: staff.top
+    margin-left: 40
+    font: verdana-11px-rounded
+    color: #00bc00
+    text-auto-resize: true
+    text: Player
+    phantom: true
+
+  GuideNameBar
+    anchors.horizontalCenter: player.horizontalCenter
+    anchors.top: player.bottom
+    margin-top: 1
+    @onSetup: self:getChildById('fill'):setBackgroundColor('#00bc00')
+
 // the points of the account and the Buy Points button
 ArtStorePoints < Panel
   anchors.fill: parent

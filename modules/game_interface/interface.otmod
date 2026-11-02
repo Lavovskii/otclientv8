@@ -9,6 +9,7 @@ Module
     - game_buttons
     - game_questlog
     - game_guides
+    - game_staffnames
     - game_textmessage
     - game_console
     - game_outfit

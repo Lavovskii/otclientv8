@@ -1,0 +1,8 @@
+Module
+  name: game_staffnames
+  description: The names of the staff in red with a gold edge
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ staffnames ]
+  @onLoad: init()
+  @onUnload: terminate()
