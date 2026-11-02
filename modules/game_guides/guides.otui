@@ -1790,6 +1790,51 @@ GuideNameBar < UIWidget
     margin: 1
     phantom: true
 
+// two monsters of one kind with their own levels
+ArtMonsterLevel < Panel
+  anchors.fill: parent
+
+  Label
+    id: lower
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 20
+    margin-top: 14
+    font: verdana-11px-rounded
+    color: #00bc00
+    text-auto-resize: true
+    text: MindFreak [4691]
+    phantom: true
+
+  GuideNameBar
+    anchors.horizontalCenter: lower.horizontalCenter
+    anchors.top: lower.bottom
+    margin-top: 1
+    @onSetup: self:getChildById('fill'):setBackgroundColor('#00bc00')
+
+  Label
+    id: higher
+    anchors.left: lower.right
+    anchors.top: lower.top
+    margin-left: 24
+    font: verdana-11px-rounded
+    color: #00bc00
+    text-auto-resize: true
+    text: MindFreak [5193]
+    phantom: true
+
+  GuideNameBar
+    anchors.horizontalCenter: higher.horizontalCenter
+    anchors.top: higher.bottom
+    margin-top: 1
+    @onSetup: self:getChildById('fill'):setBackgroundColor('#00bc00')
+
+  GuideNote
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.top: lower.bottom
+    margin-top: 16
+    text: higher level: stronger, but more exp and loot
+
 ArtStaffName < Panel
   anchors.fill: parent
 

@@ -81,6 +81,8 @@ local GUIDES = {
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
+      {art = 'ArtMonsterLevel', title = 'Monster levels',
+       text = 'Each monster of a hunt has its own level next to its name, like MindFreak [4691]. A higher level means more health and damage, but also more experience and a better chance of loot.'},
       {art = 'ArtStaffName', title = 'The staff',
        text = 'A name in red gothic letters with a gold health bar is a member of the staff: gamemasters and above. Nobody else can have it, and the staff never asks for your password.'},
       {art = 'ArtUpdater', title = 'Updates',
