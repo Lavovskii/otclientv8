@@ -1,7 +1,7 @@
--- The characters of the staff (Gamemaster and up, the website's list) have their name in red with a thin gold edge.
--- The client draws a name in one font tinted with one colour, so those two colours are letters painted in the name
--- font (tools/make_staff_font.py): the name of a staff creature is set to them and Creature.getName keeps giving its
--- real name to every module. The tint is the health bar's colour too, so a staff health bar is gold.
+-- The characters of the staff (Gamemaster and up, the website's list) have their name in red gothic letters. The client
+-- draws a name in one font tinted with one colour, so those are letters painted in the name font
+-- (tools/make_staff_font.py): the name of a staff creature is set to them and Creature.getName keeps giving its real
+-- name to every module. The tint is the health bar's colour too, so a staff health bar is gold.
 local STAFF_API = Services.website .. "/index.php/api/staff"
 local TINT = "#ffd060"
 
@@ -63,6 +63,7 @@ local function onGameStart()
 end
 
 function init()
+  staffGlyphs[" "] = "  " -- these letters are bigger than the font's space
   local slot = 128
   for letter in LETTERS:gmatch(".") do
     while KEEP[slot] do slot = slot + 1 end

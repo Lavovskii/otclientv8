@@ -82,7 +82,7 @@ local GUIDES = {
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
       {art = 'ArtStaffName', title = 'The staff',
-       text = 'A name in red with a gold edge and a gold health bar is a member of the staff: gamemasters and above. Nobody else can have it, and the staff never asks for your password.'},
+       text = 'A name in red gothic letters with a gold health bar is a member of the staff: gamemasters and above. Nobody else can have it, and the staff never asks for your password.'},
       {art = 'ArtUpdater', title = 'Updates',
        text = 'Each time you open the client or log in it looks for an update and installs it by itself, new game graphics too: only what changed is downloaded, then the client restarts on its own. Nothing to click or install.'},
     }
