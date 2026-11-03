@@ -108,6 +108,8 @@ def graphics_parts(things, version):
 def main():
     version = re.search(r'#define MyAppVersion "([^"]+)"', open(ISS, encoding='utf-8').read()).group(1)
     build = int(re.search(r'^CLIENT_BUILD = (\d+)', open(os.path.join(ROOT, 'init.lua'), encoding='utf-8').read(), re.M).group(1))
+    # the list of the /checkall window follows the server's items and the client's graphics
+    subprocess.run([sys.executable, os.path.join(ROOT, '..', 'ForgottenL', 'tools', 'gen_checkall_data.py')], check=True)
     os.makedirs(DIST, exist_ok=True)
     names = packed_files()
     check_lua(names)

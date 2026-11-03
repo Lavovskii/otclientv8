@@ -33,6 +33,7 @@ Module
     - game_unjustifiedpoints
     - game_walking
     - game_store
+    - game_checkall
     - game_itemselector
     - client_textedit
     - client_profiles

@@ -1,0 +1,254 @@
+CheckAllSprite < UISprite
+  anchors.top: parent.top
+  anchors.left: parent.left
+  phantom: true
+
+CheckAllCellLabel < Label
+  height: 12
+  anchors.left: parent.left
+  anchors.right: parent.right
+  anchors.bottom: parent.bottom
+  margin-bottom: 1
+  text-align: center
+  font: verdana-9px
+  color: #b8b8b8
+  phantom: true
+
+CheckAllCell < UIWidget
+  anchors.top: parent.top
+  anchors.left: parent.left
+  background-color: #ffffff0a
+  border-width: 1
+  border-color: #00000088
+
+  $hover !on:
+    background-color: #ffffff1e
+    border-color: #807040
+
+  $on:
+    background-color: #e0b44c38
+    border-color: #e0b44c
+
+CheckAllItemCell < CheckAllCell
+  size: 45 54
+
+  UIItem
+    id: item
+    size: 38 38
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    virtual: true
+    phantom: true
+
+  CheckAllCellLabel
+    id: idLabel
+
+CheckAllOutfitCell < CheckAllCell
+  size: 78 87
+
+  UICreature
+    id: creature
+    size: 64 64
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 4
+    phantom: true
+
+  CheckAllCellLabel
+    id: idLabel
+    margin-bottom: 3
+
+CheckAllEffectCell < CheckAllCell
+  size: 78 87
+
+  UIWidget
+    id: sprites
+    size: 64 64
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 4
+    phantom: true
+
+  CheckAllCellLabel
+    id: idLabel
+    margin-bottom: 3
+
+CheckAllWindow < MainWindow
+  id: checkAllWindow
+  !text: tr('Check All')
+  size: 800 590
+  @onEscape: modules.game_checkall.hide()
+  @onEnter: modules.game_checkall.activateSelected()
+
+  TabBar
+    id: tabBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+
+  Label
+    id: searchLabel
+    !text: tr('Search:')
+    size: 48 16
+    anchors.left: parent.left
+    anchors.verticalCenter: searchEdit.verticalCenter
+    color: #e0b44c
+
+  TextEdit
+    id: searchEdit
+    width: 220
+    anchors.top: tabBar.bottom
+    anchors.left: searchLabel.right
+    margin-top: 7
+    @onTextChange: modules.game_checkall.onSearchChange()
+
+  CheckBox
+    id: bagOnly
+    !text: tr('Only what goes in a bag')
+    width: 170
+    anchors.left: searchEdit.right
+    anchors.verticalCenter: searchEdit.verticalCenter
+    margin-left: 12
+    @onCheckChange: modules.game_checkall.onSearchChange()
+
+  Label
+    id: countLabel
+    height: 16
+    anchors.right: scroll.right
+    anchors.left: bagOnly.right
+    anchors.verticalCenter: searchEdit.verticalCenter
+    text-align: right
+    color: #b8b8b8
+
+  UIWidget
+    id: grid
+    size: 556 446
+    anchors.top: searchEdit.bottom
+    anchors.left: parent.left
+    margin-top: 5
+    background-color: #00000066
+    border-width: 1
+    border-color: #000000
+
+  Label
+    id: emptyLabel
+    !text: tr('Nothing found.')
+    anchors.centerIn: grid
+    text-auto-resize: true
+    color: #b8b8b8
+    visible: false
+
+  VerticalScrollBar
+    id: scroll
+    anchors.top: grid.top
+    anchors.bottom: grid.bottom
+    anchors.left: grid.right
+    step: 1
+
+  UIWidget
+    id: details
+    anchors.top: grid.top
+    anchors.bottom: grid.bottom
+    anchors.left: scroll.right
+    anchors.right: parent.right
+    margin-left: 7
+    background-color: #00000066
+    border-width: 1
+    border-color: #000000
+
+    UIWidget
+      id: previewBox
+      size: 136 136
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 8
+      background-color: #ffffff0a
+      border-width: 1
+      border-color: #e0b44c66
+      phantom: true
+
+      UIItem
+        id: previewItem
+        size: 128 128
+        anchors.centerIn: parent
+        virtual: true
+        phantom: true
+        visible: false
+
+      UICreature
+        id: previewCreature
+        size: 128 128
+        anchors.centerIn: parent
+        phantom: true
+        visible: false
+
+      UIWidget
+        id: previewSprites
+        size: 128 128
+        anchors.centerIn: parent
+        phantom: true
+        visible: false
+
+    Label
+      id: nameLabel
+      height: 44
+      anchors.top: previewBox.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin: 8 8 0 8
+      text-align: center
+      text-wrap: true
+      color: #e0b44c
+      font: verdana-11px-rounded
+      phantom: true
+
+    Label
+      id: infoLabel
+      anchors.top: nameLabel.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: actionButton.top
+      margin: 6 8 6 8
+      text-wrap: true
+      text-align: topLeft
+      color: #d0d0d0
+      phantom: true
+
+    Button
+      id: actionButton
+      height: 26
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: copyButton.top
+      margin: 0 8 4 8
+      color: #ffe29a
+      @onClick: modules.game_checkall.activateSelected()
+
+    Button
+      id: copyButton
+      !text: tr('Copy id')
+      height: 22
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin: 0 8 8 8
+      @onClick: modules.game_checkall.copySelected()
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_checkall.hide()
+
+  Label
+    id: statusLabel
+    height: 16
+    anchors.left: parent.left
+    anchors.right: closeButton.left
+    anchors.verticalCenter: closeButton.verticalCenter
+    margin-right: 8
+    text-align: left
+    color: #e0b44c

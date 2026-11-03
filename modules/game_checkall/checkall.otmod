@@ -1,0 +1,8 @@
+Module
+  name: game_checkall
+  description: The staff's /checkall window, with every item, outfit, effect and shoot effect
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ checkall ]
+  @onLoad: init()
+  @onUnload: terminate()
