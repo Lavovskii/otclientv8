@@ -82,7 +82,7 @@ local GUIDES = {
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
       {art = 'ArtMonsterLevel', title = 'Monster levels',
-       text = 'Each monster of a hunt has its own level next to its name, like MindFreak [4691]. A higher level means more health and damage, but also more experience and a better chance of loot.'},
+       text = 'Each monster of a hunt has its own level next to its name, like MindFreak [L. 4691]. A higher level means more health and damage, but also more experience and a better chance of loot.'},
       {art = 'ArtEchoes', title = 'Echoes',
        text = 'A monster you kill may leave an echo on the ground for 2 minutes. Step on it: usually 6 stronger monsters of that kind wake up, rarely one boss with a red glow, 10x the experience and much better loot.'},
       {art = 'ArtStaffName', title = 'The staff',

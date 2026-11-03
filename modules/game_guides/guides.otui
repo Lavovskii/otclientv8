@@ -1803,7 +1803,7 @@ ArtMonsterLevel < Panel
     font: verdana-11px-rounded
     color: #00bc00
     text-auto-resize: true
-    text: MindFreak [4691]
+    text: MindFreak [L. 4691]
     phantom: true
 
   GuideNameBar
@@ -1816,11 +1816,11 @@ ArtMonsterLevel < Panel
     id: higher
     anchors.left: lower.right
     anchors.top: lower.top
-    margin-left: 24
+    margin-left: 12
     font: verdana-11px-rounded
     color: #00bc00
     text-auto-resize: true
-    text: MindFreak [5193]
+    text: MindFreak [L. 5193]
     phantom: true
 
   GuideNameBar
@@ -1898,7 +1898,7 @@ ArtEchoes < Panel
     font: verdana-11px-rounded
     color: #00bc00
     text-auto-resize: true
-    text: MindFreak [6250]
+    text: Tanya [L. 5250]
     phantom: true
 
   UICreature
@@ -1907,7 +1907,7 @@ ArtEchoes < Panel
     anchors.top: crowdName.bottom
     anchors.horizontalCenter: crowdName.horizontalCenter
     phantom: true
-    @onSetup: self:setOutfit({type = 12, head = 38, body = 114, legs = 0, feet = 94})
+    @onSetup: self:setOutfit({type = 155, head = 77, body = 0, legs = 76, feet = 132, addons = 3})
 
   UIWidget
     size: 11 11
@@ -1929,7 +1929,7 @@ ArtEchoes < Panel
     font: verdana-11px-rounded-glow
     color: #ffffff
     text-auto-resize: true
-    text: MindFreak [10000]
+    text: Tanya [L. 8400]
     phantom: true
 
   UICreature
@@ -1938,7 +1938,7 @@ ArtEchoes < Panel
     anchors.top: bossName.bottom
     anchors.horizontalCenter: bossName.horizontalCenter
     phantom: true
-    @onSetup: self:setOutfit({type = 12, head = 38, body = 114, legs = 0, feet = 94, shader = 'outfit_echo_boss'})
+    @onSetup: self:setOutfit({type = 155, head = 77, body = 0, legs = 76, feet = 132, addons = 3, shader = 'outfit_echo_boss'})
 
   UIWidget
     size: 11 11
