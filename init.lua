@@ -3,7 +3,7 @@ APP_NAME = "ForgottenL"  -- important, change it, it's name for config dir and f
 APP_VERSION = 1         -- client version for updater and login to identify outdated client
 -- ForgottenL: raise CLIENT_BUILD with every client update (tools/build_release.py --publish), then the server's
 -- minClientBuild (config.lua): the login sends it as its OS value, 1000 + CLIENT_BUILD, and the server refuses older ones
-CLIENT_BUILD = 19
+CLIENT_BUILD = 20
 DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
 
 -- updater: the update manifest of the website (tools/build_release.py --publish); the installed client (data.zip)
@@ -27,6 +27,9 @@ Servers = {
 --Server = "ws://127.0.0.1:88/"
 --USE_NEW_ENERGAME = true -- uses entergamev2 based on websockets instead of entergame
 ALLOW_CUSTOM_SERVERS = false -- ForgottenL-only client: hide the "Another" / custom-server option
+-- ForgottenL's own login RSA key (public modulus; the server holds the private half in config.rsa.lua): the login
+-- and the game encrypt the session key with it instead of the OTServ key every OT shares
+LOGIN_RSA = "142089274808214602192718996701985977544815118934103087023353988931701626703839098582822341854974483921307046731084103287968781596792441110944341962800495285525543652649723795170499999043067960421524405721761450863961993953614195270111816988879317977203262337700660761031214395996112303994816771231378543741567"
 
 g_app.setName("ForgottenL")
 -- CONFIG END
