@@ -523,6 +523,7 @@ function EnterGame.doLogin(account, password, token, host)
   protocolLogin.onLoginError = onProtocolError
   protocolLogin.onSessionKey = onSessionKey
   protocolLogin.onCharacterList = onCharacterList
+  protocolLogin.onVipDays = function(protocol, days) CharacterList.setVipDays(days) end
   protocolLogin.onUpdateNeeded = onUpdateNeeded
   protocolLogin.onProxyList = onProxyList
 

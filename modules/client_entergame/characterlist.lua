@@ -239,6 +239,23 @@ function CharacterList.terminate()
   CharacterList = nil
 end
 
+-- VIP days are each character's own, so the label follows the one selected
+local function showVipDays(widget)
+  local label = charactersWindow and charactersWindow:getChildById('vipDaysLabel')
+  if not label then return end
+  local days = widget and widget.vipDays or 0
+  label:setText(tostring(days))
+  label:setOn(days > 0 and days <= 7)
+end
+
+function CharacterList.setVipDays(days)
+  if not characterList then return end
+  for i, widget in ipairs(characterList:getChildren()) do
+    widget.vipDays = days[i] or 0
+  end
+  showVipDays(characterList:getFocusedChild())
+end
+
 function CharacterList.create(characters, account, otui)
   if not otui then otui = 'characterlist' end
   if charactersWindow then
@@ -254,7 +271,6 @@ function CharacterList.create(characters, account, otui)
   G.characterAccount = account
 
   characterList:destroyChildren()
-  local accountStatusLabel = charactersWindow:getChildById('accountStatusLabel')
   local focusLabel
   for i,characterInfo in ipairs(characters) do
     local widget = g_ui.createWidget('CharacterWidget', characterList)
@@ -293,35 +309,14 @@ function CharacterList.create(characters, account, otui)
     addEvent(function() characterList:ensureChildVisible(focusLabel) end)
   end
   
-  characterList.onChildFocusChange = function()
+  characterList.onChildFocusChange = function(list, focused)
     removeEvent(autoReconnectEvent)
     autoReconnectEvent = nil
+    showVipDays(focused)
   end
 
-  -- account
-  local status = ''
-  if account.status == AccountStatus.Frozen then
-    status = tr(' (Frozen)')
-  elseif account.status == AccountStatus.Suspended then
-    status = tr(' (Suspended)')
-  end
+  showVipDays(focusLabel)
 
-  if account.subStatus == SubscriptionStatus.Free and account.premDays < 1 then
-    accountStatusLabel:setText(('%s%s'):format(tr('Free Account'), status))
-  else
-    if account.premDays == 0 or account.premDays == 65535 then
-      accountStatusLabel:setText(('%s%s'):format(tr('Gratis Premium Account'), status))
-    else
-      accountStatusLabel:setText(('%s%s'):format(tr('Premium Account (%s) days left', account.premDays), status))
-    end
-  end
-
-  if account.premDays > 0 and account.premDays <= 7 then
-    accountStatusLabel:setOn(true)
-  else
-    accountStatusLabel:setOn(false)
-  end
-  
   autoReconnectButton.onClick = function(widget)
     local autoReconnect = not g_settings.getBoolean('autoReconnect', true)
     autoReconnectButton:setOn(autoReconnect)

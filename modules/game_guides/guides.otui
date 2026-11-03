@@ -1952,6 +1952,58 @@ ArtEchoes < Panel
     anchors.top: boss.bottom
     text: rarely 1 boss
 
+// the character list: the VIP days are those of the character selected
+ArtVipDays < Panel
+  anchors.fill: parent
+
+  Label
+    id: chosen
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 30
+    margin-top: 10
+    width: 150
+    height: 18
+    font: verdana-11px-antialised
+    text-offset: 4 2
+    color: #ffffff
+    background-color: #00000080
+    text: Your Knight
+    phantom: true
+
+  Label
+    id: other
+    anchors.left: chosen.left
+    anchors.top: chosen.bottom
+    width: 150
+    height: 18
+    font: verdana-11px-antialised
+    text-offset: 4 2
+    color: #a0a0a0
+    text: Your Mage
+    phantom: true
+
+  Label
+    id: caption
+    anchors.left: chosen.left
+    anchors.top: other.bottom
+    margin-top: 10
+    font: verdana-11px-antialised
+    color: #c9b98f
+    text-auto-resize: true
+    !text: 'VIP Days:'
+    phantom: true
+
+  Label
+    anchors.left: caption.right
+    anchors.top: caption.top
+    margin-left: 4
+    font: verdana-11px-antialised
+    color: #ffffff
+    text-auto-resize: true
+    text: 30
+    phantom: true
+
 // the points of the account and the Buy Points button
 ArtStorePoints < Panel
   anchors.fill: parent

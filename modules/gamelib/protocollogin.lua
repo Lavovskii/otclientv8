@@ -10,6 +10,7 @@ LoginServerUpdateNeeded = 30
 LoginServerSessionKey = 40
 LoginServerCharacterList = 100
 LoginServerExtendedCharacterList = 101
+LoginServerVipDays = 102
 LoginServerProxyList = 110
 
 -- Since 10.76
@@ -181,6 +182,8 @@ function ProtocolLogin:onRecv(msg)
       self:parseCharacterList(msg)
     elseif opcode == LoginServerExtendedCharacterList then
       self:parseExtendedCharacterList(msg)
+    elseif opcode == LoginServerVipDays then
+      self:parseVipDays(msg)
     elseif opcode == LoginServerUpdate then
       local signature = msg:getString()
       signalcall(self.onUpdateNeeded, self, signature)      
@@ -287,6 +290,15 @@ function ProtocolLogin:parseExtendedCharacterList(msg)
   local account = msg:getTable()
   local otui = msg:getString()
   signalcall(self.onCharacterList, self, characters, account, otui)
+end
+
+-- The VIP days of each character, in the order of the list; a server that doesn't send them leaves the list at 0
+function ProtocolLogin:parseVipDays(msg)
+  local days = {}
+  for i = 1, msg:getU8() do
+    days[i] = msg:getU16()
+  end
+  signalcall(self.onVipDays, self, days)
 end
 
 function ProtocolLogin:parseOpcode(opcode, msg)

@@ -85,6 +85,8 @@ local GUIDES = {
        text = 'Each monster of a hunt has its own level next to its name, like MindFreak [L. 4691]. A higher level means more health and damage, but also more experience and a better chance of loot.'},
       {art = 'ArtEchoes', title = 'Echoes',
        text = 'A monster you kill may leave an echo on the ground for 2 minutes. Step on it: usually 6 stronger monsters of that kind wake up, rarely one boss with a red glow, 10x the experience and much better loot.'},
+      {art = 'ArtVipDays', title = 'VIP days',
+       text = 'Before you log in, the character list shows how many VIP days the selected character has left. In red when 7 or fewer remain.'},
       {art = 'ArtStaffName', title = 'The staff',
        text = 'A name in red gothic letters with a gold health bar is a member of the staff: gamemasters and above. Nobody else can have it, and the staff never asks for your password.'},
       {art = 'ArtUpdater', title = 'Updates',

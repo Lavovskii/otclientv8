@@ -60,7 +60,7 @@ StaticMainWindow
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: characterListScrollBar.left
-    anchors.bottom: accountStatusCaption.top
+    anchors.bottom: vipDaysCaption.top
     margin-bottom: 5
     padding: 1
     focusable: false
@@ -70,24 +70,26 @@ StaticMainWindow
   VerticalScrollBar
     id: characterListScrollBar
     anchors.top: parent.top
-    anchors.bottom: accountStatusCaption.top
+    anchors.bottom: vipDaysCaption.top
     anchors.right: parent.right
     margin-bottom: 5
     step: 14
     pixels-scroll: true
 
   Label
-    id: accountStatusCaption
-    !text: tr('Account Status') .. ':'
+    id: vipDaysCaption
+    !text: 'VIP Days:'
     anchors.left: parent.left
     anchors.bottom: separator.top
     margin-bottom: 5
+    text-auto-resize: true
 
   Label
-    id: accountStatusLabel
-    !text: tr('Free Account')
-    anchors.right: parent.right
+    id: vipDaysLabel
+    text: 0
+    anchors.left: vipDaysCaption.right
     anchors.bottom: separator.top
+    margin-left: 4
     margin-bottom: 5
     text-auto-resize: true
 
