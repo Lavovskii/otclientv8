@@ -394,6 +394,8 @@ function removeMenuHook(category, name)
   end
 end
 
+local REWARD_BAG_ID = 19202 -- client id of the bag of a boss's loot
+
 function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
   if not g_game.isOnline() then return end
 
@@ -423,6 +425,10 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
       else
         menu:addOption(tr('Use'), function() g_game.use(useThing) end, shortcut)
       end
+    end
+
+    if useThing:getId() == REWARD_BAG_ID and useThing:getPosition().x == 0xffff and modules.game_actionbar then
+      menu:addOption(tr('Loot all'), function() modules.game_actionbar.lootRewardBag(useThing) end)
     end
 
     if useThing:isRotateable() then

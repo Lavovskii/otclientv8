@@ -1952,6 +1952,48 @@ ArtEchoes < Panel
     anchors.top: boss.bottom
     text: rarely 1 boss
 
+// a boss's corpse with the bag in it, and the chest where the loot waits
+ArtBossReward < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: corpse
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 6
+    &itemId: 5976
+
+  GuideItem
+    id: bag
+    anchors.left: corpse.right
+    anchors.top: corpse.top
+    margin-left: 4
+    &itemId: 19202
+
+  GuideNote
+    anchors.left: corpse.left
+    anchors.top: corpse.bottom
+    text: your bag
+
+  GuideArrow
+    id: arrow
+    anchors.left: bag.right
+    anchors.verticalCenter: bag.verticalCenter
+    margin-left: 6
+
+  GuideItem
+    id: chest
+    anchors.left: arrow.right
+    anchors.top: corpse.top
+    margin-left: 6
+    &itemId: 19250
+
+  GuideNote
+    anchors.left: chest.left
+    anchors.top: chest.bottom
+    text: 7 days
+
 // the character list: the VIP days are those of the character selected
 ArtVipDays < Panel
   anchors.fill: parent

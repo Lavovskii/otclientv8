@@ -1,6 +1,7 @@
 local gameStart = 0
 function init()
   ProtocolGame.registerExtendedOpcode(BROWSE_INFO_OPCODE, onBrowseInfo)
+  ProtocolGame.registerExtendedOpcode(REWARD_PAGES_OPCODE, onRewardPages)
   connect(Container, { onOpen = onContainerOpen,
                        onClose = onContainerClose,
                        onSizeChange = onContainerChangeSize,
@@ -15,6 +16,7 @@ end
 
 function terminate()
   ProtocolGame.unregisterExtendedOpcode(BROWSE_INFO_OPCODE)
+  ProtocolGame.unregisterExtendedOpcode(REWARD_PAGES_OPCODE)
   disconnect(Container, { onOpen = onContainerOpen,
                           onClose = onContainerClose,
                           onSizeChange = onContainerChangeSize,
@@ -151,6 +153,52 @@ local function refreshBrowsePages(container)
       else
         return nextPageButton.onClick()
       end
+    end
+  end
+end
+
+-- Reward chest pages --------------------------------------------------------------------------------------------
+-- The chest has no limit and the server sends it a page at a time, as with Browse Field: "window,page,pages" from the
+-- server, "window,page" to it (extended opcode 9). The footer is always there, also with a single page.
+
+REWARD_PAGES_OPCODE = 9
+
+function onRewardPages(protocol, opcode, buffer)
+  local id, page, pages = buffer:match('^(%d+),(%d+),(%d+)$')
+  local container = id and g_game.getContainers()[tonumber(id)]
+  local window = container and container.window
+  if not window then
+    return
+  end
+
+  page, pages = tonumber(page), tonumber(pages)
+  local function sendPage(to)
+    local protocol = g_game.getProtocolGame()
+    if protocol then
+      protocol:sendExtendedOpcode(REWARD_PAGES_OPCODE, id .. ',' .. to)
+    end
+  end
+
+  toggleContainerPages(window, true)
+  window:recursiveGetChildById('pageLabel'):setText(string.format('Page %i of %i', page, pages))
+
+  local prevPageButton = window:recursiveGetChildById('prevPageButton')
+  prevPageButton:setEnabled(page > 1)
+  prevPageButton.onClick = function() sendPage(page - 1) end
+
+  local nextPageButton = window:recursiveGetChildById('nextPageButton')
+  nextPageButton:setEnabled(page < pages)
+  nextPageButton.onClick = function() sendPage(page + 1) end
+
+  local pagePanel = window:recursiveGetChildById('pagePanel')
+  if pagePanel then
+    pagePanel.onMouseWheel = function(widget, mousePos, mouseWheel)
+      if mouseWheel == MouseWheelUp then
+        if page > 1 then sendPage(page - 1) end
+      elseif page < pages then
+        sendPage(page + 1)
+      end
+      return true
     end
   end
 end

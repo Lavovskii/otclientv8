@@ -85,6 +85,8 @@ local GUIDES = {
        text = 'Each monster of a hunt has its own level next to its name, like MindFreak [L. 4691]. A higher level means more health and damage, but also more experience and a better chance of loot.'},
       {art = 'ArtEchoes', title = 'Echoes',
        text = 'A monster you kill may leave an echo on the ground for 2 minutes. Step on it: usually 6 stronger monsters of that kind wake up, rarely one boss with a red glow, 10x the experience and much better loot.'},
+      {art = 'ArtBossReward', title = 'Boss loot',
+       text = 'Everyone who fights a boss gets their own loot. Open the bag in its corpse and take items one by one, or right click the bag and choose Loot all. What you leave waits 7 days in the reward chest, in the depot room under the temple, with one bag for each boss. The bags themselves stay where they are.'},
       {art = 'ArtVipDays', title = 'VIP days',
        text = 'Before you log in, the character list shows how many VIP days the selected character has left. In red when 7 or fewer remain.'},
       {art = 'ArtStaffName', title = 'The staff',

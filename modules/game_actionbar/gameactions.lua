@@ -287,6 +287,7 @@ local OPCODE_IGNORE = 2
 local OPCODE_SET_BAG = 3
 local OPCODE_CLEAR_BAG = 4
 local OPCODE_EMPTY = 5
+local OPCODE_LOOT_REWARD_BAG = 10
 
 local lastLoot = 0
 
@@ -456,6 +457,14 @@ end
 -- empty backpack -----------------------------------------------------------------------------------------------
 
 -- right click -> "Empty backpack": always asks first, the server then drops everything that is inside on the floor
+-- right click -> Loot all on a reward bag, in a boss's corpse or in the reward chest
+function lootRewardBag(item)
+  local position = item:getPosition()
+  if position and position.x == 65535 then
+    sendOpcode(OPCODE_LOOT_REWARD_BAG, position.x .. ',' .. position.y .. ',' .. position.z .. ',' .. item:getId())
+  end
+end
+
 function emptyBackpack(item)
   closeEmptyConfirm()
 
