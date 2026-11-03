@@ -163,8 +163,8 @@ def main():
         target = '%s/%s' % (REMOTE_GRAPHICS, things_version)
         if subprocess.run(['ssh', 'vps', 'test -f %s/complete' % target]).returncode != 0:
             remote = ('set -e; G=%s; sudo rm -rf $G.new; sudo mkdir -p $G.new; sudo tar -xf - -C $G.new --no-same-owner; '
-                      'sudo touch $G.new/complete; sudo chmod -R a+rX %s; sudo rm -rf $G; sudo mv $G.new $G; '
-                      'echo published graphics $(ls $G | grep -c zip) parts' % (target, REMOTE_GRAPHICS))
+                      'sudo touch $G.new/complete; sudo chown -R root:root %s; sudo chmod -R u=rwX,go=rX %s; sudo rm -rf $G; sudo mv $G.new $G; '
+                      'echo published graphics $(ls $G | grep -c zip) parts' % (target, REMOTE_GRAPHICS, REMOTE_GRAPHICS))
             ssh = subprocess.Popen(['ssh', 'vps', remote], stdin=subprocess.PIPE)
             with tarfile.open(fileobj=ssh.stdin, mode='w|') as tar:
                 for f in graphics:
@@ -173,9 +173,11 @@ def main():
             ssh.stdin.close()
             if ssh.wait() != 0:
                 sys.exit('publish of the graphics failed')
-        # the whole folder goes up and replaces the old one at once, so a manifest never names a file not there yet
+        # the whole folder goes up and replaces the old one at once, so a manifest never names a file not there yet.
+        # The tar carries Windows modes (777/666): the files must end up root-owned and writable by root only, since
+        # every client runs what is in this folder
         remote = ('set -e; D=%s; sudo rm -rf $D.new $D.old; sudo mkdir -p $D.new; sudo tar -xf - -C $D.new --no-same-owner; '
-                  'sudo chmod -R a+rX $D.new; if [ -d $D ]; then sudo mv $D $D.old; fi; sudo mv $D.new $D; sudo rm -rf $D.old; '
+                  'sudo chown -R root:root $D.new; sudo chmod -R u=rwX,go=rX $D.new; if [ -d $D ]; then sudo mv $D $D.old; fi; sudo mv $D.new $D; sudo rm -rf $D.old; '
                   'echo published $(find $D/files -type f | wc -l) files' % REMOTE)
         ssh = subprocess.Popen(['ssh', 'vps', remote], stdin=subprocess.PIPE)
         with tarfile.open(fileobj=ssh.stdin, mode='w|') as tar:
