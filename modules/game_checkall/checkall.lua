@@ -18,6 +18,7 @@ local KINDS = {
   {key = 'I', title = 'Items', cell = 'CheckAllItemCell', pitchX = 46, pitchY = 55, columns = 12, rows = 8, wheel = 2, action = 'Add to bag'},
   {key = 'O', title = 'Outfits', cell = 'CheckAllOutfitCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Wear outfit'},
   {key = 'M', title = 'Mounts', cell = 'CheckAllOutfitCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Wear outfit'},
+  {key = 'H', title = 'Hunts', cell = 'CheckAllHuntCell', pitchX = 111, pitchY = 111, columns = 5, rows = 4, wheel = 1, action = 'Wear outfit'},
   {key = 'E', title = 'Effects', cell = 'CheckAllEffectCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Cast effect', category = ThingCategoryEffect},
   {key = 'S', title = 'Shoot Effects', cell = 'CheckAllEffectCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Shoot', category = ThingCategoryMissile}
 }
@@ -45,10 +46,22 @@ local function loadLists()
   for key, id, client, name in text:gmatch('(%u)\t(%d+)\t(%d+)\t([^\r\n]*)\r?\n') do
     local list = lists[key]
     if list then
-      list[#list + 1] = {id = tonumber(id), client = tonumber(client), name = name, lower = name:lower()}
+      local entry = {id = tonumber(id), client = tonumber(client), name = name}
+      if key == 'H' then
+        -- a hunt monster: id is its looktype, client its level, and it has its own colours
+        local head, body, legs, feet, addons
+        entry.name, head, body, legs, feet, addons = name:match('^(.-)\t(%d+)\t(%d+)\t(%d+)\t(%d+)\t(%d+)$')
+        entry.outfit = {type = entry.id, head = tonumber(head), body = tonumber(body), legs = tonumber(legs), feet = tonumber(feet), addons = tonumber(addons)}
+      end
+      entry.lower = entry.name:lower()
+      list[#list + 1] = entry
     end
   end
   return true
+end
+
+local function formatLevel(level)
+  return (tostring(level):reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^,', ''))
 end
 
 local function fitsBag(entry)
@@ -109,11 +122,12 @@ local function drawThing(box, entry, boxSize, maxTile, when)
   end
 end
 
-local function outfitOf(look)
-  return {type = look, head = colors.head, body = colors.body, legs = colors.legs, feet = colors.feet}
+local function outfitOf(entry)
+  return entry.outfit or {type = entry.id, head = colors.head, body = colors.body, legs = colors.legs, feet = colors.feet}
 end
 
 local function entryLabel(entry)
+  if kind.key == 'H' then return tr('Lv %s', formatLevel(entry.client)) end
   return tostring(entry.id)
 end
 
@@ -127,6 +141,7 @@ local function fillCell(cell, entry)
   if not entry then return end
   cell:setOn(entry == selected)
   cell.idLabel:setText(entryLabel(entry))
+  if cell.nameLabel then cell.nameLabel:setText(entryName(entry)) end
   cell:setTooltip(entryName(entry) .. ' (' .. entryLabel(entry) .. ')')
   cell.moving = nil
   if kind.key == 'I' then
@@ -134,7 +149,7 @@ local function fillCell(cell, entry)
   elseif kind.category then
     drawThing(cell.sprites, entry, CELL_BOX, CELL_TILE)
   else
-    cell.creature:setOutfit(outfitOf(entry.id))
+    cell.creature:setOutfit(outfitOf(entry))
   end
 end
 
@@ -164,6 +179,9 @@ local function detailsText(entry)
     return tr('Looktype: %d', entry.id)
   elseif kind.key == 'M' then
     return tr('Looktype: %d\nMount id: %d', entry.id, entry.client)
+  elseif kind.key == 'H' then
+    local outfit = entry.outfit
+    return tr('Level: %s\nLooktype: %d\nHead: %d\nBody: %d\nLegs: %d\nFeet: %d\nAddons: %d', formatLevel(entry.client), entry.id, outfit.head, outfit.body, outfit.legs, outfit.feet, outfit.addons)
   end
   local thing = thingOf(entry)
   return tr('Server id: %d\nClient id: %d\nSize: %dx%d, %d frames', entry.id, entry.client, thing.w, thing.h, thing.phases)
@@ -173,7 +191,7 @@ local function showDetails(entry)
   local details = win.details
   local box = details.previewBox
   box.previewItem:setVisible(entry ~= nil and kind.key == 'I')
-  box.previewCreature:setVisible(entry ~= nil and (kind.key == 'O' or kind.key == 'M'))
+  box.previewCreature:setVisible(entry ~= nil and kind.key ~= 'I' and not kind.category)
   box.previewSprites:setVisible(entry ~= nil and kind.category ~= nil)
   details.actionButton:setText(tr(kind.action))
   details.actionButton:setEnabled(entry ~= nil)
@@ -190,7 +208,7 @@ local function showDetails(entry)
   elseif kind.category then
     drawThing(box.previewSprites, entry, PREVIEW_BOX, PREVIEW_TILE, tick)
   else
-    box.previewCreature:setOutfit(outfitOf(entry.id))
+    box.previewCreature:setOutfit(outfitOf(entry))
   end
 end
 
@@ -257,7 +275,7 @@ local function activate(entry)
   if not entry or not g_game.isOnline() then return end
   if kind.key == 'I' then
     g_game.talk('/checkall item,' .. entry.id)
-  elseif kind.key == 'O' or kind.key == 'M' then
+  elseif kind.key == 'O' or kind.key == 'M' or kind.key == 'H' then
     g_game.talk('/checkall outfit,' .. entry.id)
   elseif kind.key == 'S' then
     g_game.talk('/checkall shoot,' .. entry.id)

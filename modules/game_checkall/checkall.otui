@@ -74,6 +74,28 @@ CheckAllEffectCell < CheckAllCell
     id: idLabel
     margin-bottom: 3
 
+CheckAllHuntCell < CheckAllCell
+  size: 110 110
+
+  UICreature
+    id: creature
+    size: 64 64
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 6
+    phantom: true
+
+  CheckAllCellLabel
+    id: idLabel
+    margin-bottom: 4
+    color: #e0b44c
+
+  CheckAllCellLabel
+    id: nameLabel
+    anchors.bottom: idLabel.top
+    margin-bottom: 2
+    color: #f0f0f0
+
 CheckAllWindow < MainWindow
   id: checkAllWindow
   !text: tr('Check All')
