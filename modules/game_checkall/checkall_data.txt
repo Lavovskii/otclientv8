@@ -43966,7 +43966,7 @@ O	126	126	monster Staff Member
 O	127	127	
 O	128	128	outfit Citizen, npc Miam Yamm
 O	129	129	outfit Hunter, monster Bandit, monster Hunter
-O	130	130	outfit Mage, monster Dark Sorcerer, monster White Sorcerer, monster Crazy Sorcerer, monster The Impossible, monster Warlock, npc Malak, npc VIP Malak
+O	130	130	outfit Mage, monster Dark Sorcerer, monster Crazy Sorcerer, monster The Impossible, monster White Sorcerer, monster Warlock, npc Malak, npc VIP Malak
 O	131	131	outfit Knight, monster Black Knight, monster Wild Warrior
 O	132	132	outfit Nobleman, npc Aol Seller, npc Banker Benjamin, npc Captain Frodo, npc Postman Jeru, npc Ring Seller, npc VIP Frodo
 O	133	133	outfit Summoner, monster Dark Magician
@@ -44004,7 +44004,7 @@ O	196	196	monster 196, monster Pirate Ghost
 O	197	197	monster Tortoise
 O	198	198	
 O	199	199	
-O	200	200	
+O	200	200	monster Crab Daddy
 O	201	201	
 O	202	202	
 O	203	203	
@@ -44276,7 +44276,7 @@ O	487	487
 O	488	488	
 O	489	489	
 O	490	490	
-O	491	491	
+O	491	491	monster Lava Landlord
 O	492	492	
 O	493	493	
 O	494	494	
@@ -44358,7 +44358,7 @@ O	578	578
 O	579	579	
 O	580	580	mount Shock Head
 O	583	583	
-O	584	584	
+O	584	584	monster Uncle Balloon
 O	585	585	
 O	586	586	
 O	587	587	
@@ -44453,7 +44453,7 @@ O	712	712
 O	714	714	
 O	716	716	
 O	717	717	
-O	720	720	
+O	720	720	monster Sir Naps A Lot
 O	721	721	
 O	724	724	
 O	725	725	
@@ -45228,7 +45228,7 @@ O	1859	1859
 O	1860	1860	
 O	1861	1861	
 O	1862	1862	
-O	1863	1863	monster Sir Naps A Lot
+O	1863	1863	
 O	1864	1864	
 O	1865	1865	
 O	1866	1866	
@@ -45250,7 +45250,7 @@ O	1881	1881
 O	1882	1882	
 O	1883	1883	
 O	1884	1884	
-O	1885	1885	monster Crab Daddy
+O	1885	1885	
 O	1886	1886	
 O	1887	1887	
 O	1888	1888	
@@ -45270,7 +45270,7 @@ O	1901	1901
 O	1902	1902	
 O	1903	1903	
 O	1904	1904	
-O	1905	1905	monster Lava Landlord
+O	1905	1905	
 O	1906	1906	
 O	1907	1907	
 O	1908	1908	
@@ -45304,7 +45304,7 @@ O	1935	1935
 O	1936	1936	
 O	1937	1937	
 O	1938	1938	
-O	1939	1939	monster Uncle Balloon
+O	1939	1939	
 O	1940	1940	
 O	1941	1941	
 O	1942	1942	
@@ -45729,11 +45729,7 @@ M	1833	234	Night Locust
 M	1834	235	Leaf Locust
 M	1835	236	Pearl Locust
 M	2039	237	Gloom Maw
-H	259	10	Chakoya Toolshaper	0	0	0	0	0
-H	13	10	Warning Black Sheep	20	30	40	50	0
 H	226	1000	Evul Frog	109	14	109	114	0
-H	235	1000	OldMom	20	0	0	0	0
-H	130	1000	White Sorcerer	0	0	0	0	3
 H	255	1200	HeadCutter	114	132	113	113	0
 H	218	1400	Winged Fly	0	0	0	0	0
 H	123	2000	Kung Fu Panda	0	0	0	0	0
@@ -45741,13 +45737,11 @@ H	233	2500	Betrayed Wraith	0	0	0	0	0
 H	151	3500	Deadeye Devious	115	76	35	117	2
 H	155	4200	Tanya	77	0	76	132	3
 H	12	5000	MindFreak	38	114	0	94	0
-H	6	6000	Freak Ranges	0	0	0	0	0
 H	243	6000	Hell Boy	0	0	0	0	0
 H	87	7200	Egyptian Mummy	20	30	40	50	0
 H	99	8200	Snakebite Master	95	116	119	115	0
 H	260	10000	Shorty	0	0	0	0	0
 H	245	12000	Captain Freak	0	0	0	0	0
-H	6	12000	Quest Ranger	0	0	0	0	0
 H	232	15000	Strong Freak	0	0	0	0	0
 H	64	20000	Captain Sniper	20	30	40	50	0
 H	116	22000	King Kong	20	30	40	50	0
@@ -45768,10 +45762,10 @@ H	268	108000	Cursed Warrior	58	59	45	114	3
 H	264	115000	Warrior King	78	116	95	121	0
 H	346	122000	Epic Ant	0	0	0	0	0
 H	320	130000	HiDamage	0	0	0	0	0
-H	1885	135000	Crab Daddy	0	0	0	0	0
-H	1939	140000	Uncle Balloon	0	0	0	0	0
-H	1863	145000	Sir Naps A Lot	0	0	0	0	0
-H	1905	150000	Lava Landlord	0	0	0	0	0
+H	200	135000	Crab Daddy	0	0	0	0	0
+H	584	140000	Uncle Balloon	0	0	0	0	0
+H	720	145000	Sir Naps A Lot	0	0	0	0	0
+H	491	150000	Lava Landlord	0	0	0	0	0
 E	0	1	CONST_ME_DRAWBLOOD
 E	1	2	CONST_ME_LOSEENERGY
 E	2	3	CONST_ME_POFF

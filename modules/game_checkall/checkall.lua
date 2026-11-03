@@ -20,7 +20,62 @@ local KINDS = {
   {key = 'M', title = 'Mounts', cell = 'CheckAllOutfitCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Wear outfit'},
   {key = 'H', title = 'Hunts', cell = 'CheckAllHuntCell', pitchX = 111, pitchY = 111, columns = 5, rows = 4, wheel = 1, action = 'Wear outfit'},
   {key = 'E', title = 'Effects', cell = 'CheckAllEffectCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Cast effect', category = ThingCategoryEffect},
-  {key = 'S', title = 'Shoot Effects', cell = 'CheckAllEffectCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Shoot', category = ThingCategoryMissile}
+  {key = 'S', title = 'Shoot Effects', cell = 'CheckAllEffectCell', pitchX = 79, pitchY = 88, columns = 7, rows = 5, wheel = 1, action = 'Shoot', category = ThingCategoryMissile},
+  {key = 'C', title = 'Icons', cell = 'CheckAllIconCell', pitchX = 111, pitchY = 74, columns = 5, rows = 6, wheel = 1, action = 'Show on me'}
+}
+
+-- The icons the client has: group, how to show it on your own character (on your screen only, the server sends the real
+-- ones), the value scripts use for it, name, constant and picture
+local SKULLS, SHIELDS, EMBLEMS = '/images/game/skulls/skull_', '/images/game/shields/shield_', '/images/game/emblems/emblem_'
+local STATES, NPCS, TYPES = '/images/game/states/', '/images/game/npcicons/icon_', '/images/game/creaturetype/'
+local ICONS = {
+  {'Skull', 'skull', 0, 'No skull', 'SKULL_NONE'},
+  {'Skull', 'skull', 1, 'Yellow skull', 'SKULL_YELLOW', SKULLS .. 'yellow'},
+  {'Skull', 'skull', 2, 'Green skull', 'SKULL_GREEN', SKULLS .. 'green'},
+  {'Skull', 'skull', 3, 'White skull', 'SKULL_WHITE', SKULLS .. 'white'},
+  {'Skull', 'skull', 4, 'Red skull', 'SKULL_RED', SKULLS .. 'red'},
+  {'Skull', 'skull', 5, 'Black skull', 'SKULL_BLACK', SKULLS .. 'black'},
+  {'Skull', 'skull', 6, 'Orange skull', 'SKULL_ORANGE', SKULLS .. 'orange'},
+  {'Party shield', 'shield', 0, 'No shield', 'SHIELD_NONE'},
+  {'Party shield', 'shield', 1, 'White and yellow', 'SHIELD_WHITEYELLOW', SHIELDS .. 'yellow_white'},
+  {'Party shield', 'shield', 2, 'White and blue', 'SHIELD_WHITEBLUE', SHIELDS .. 'blue_white'},
+  {'Party shield', 'shield', 3, 'Blue', 'SHIELD_BLUE', SHIELDS .. 'blue'},
+  {'Party shield', 'shield', 4, 'Yellow', 'SHIELD_YELLOW', SHIELDS .. 'yellow'},
+  {'Party shield', 'shield', 5, 'Blue, shared exp', 'SHIELD_BLUE_SHAREDEXP', SHIELDS .. 'blue_shared'},
+  {'Party shield', 'shield', 6, 'Yellow, shared exp', 'SHIELD_YELLOW_SHAREDEXP', SHIELDS .. 'yellow_shared'},
+  {'Party shield', 'shield', 7, 'Blue, no exp, blinks', 'SHIELD_BLUE_NOSHAREDEXP_BLINK', SHIELDS .. 'blue_not_shared'},
+  {'Party shield', 'shield', 8, 'Yellow, no exp, blinks', 'SHIELD_YELLOW_NOSHAREDEXP_BLINK', SHIELDS .. 'yellow_not_shared'},
+  {'Party shield', 'shield', 9, 'Blue, no exp', 'SHIELD_BLUE_NOSHAREDEXP', SHIELDS .. 'blue_not_shared'},
+  {'Party shield', 'shield', 10, 'Yellow, no exp', 'SHIELD_YELLOW_NOSHAREDEXP', SHIELDS .. 'yellow_not_shared'},
+  {'Guild emblem', 'emblem', 0, 'No emblem', 'EMBLEM_NONE'},
+  {'Guild emblem', 'emblem', 1, 'Green', 'EMBLEM_GREEN', EMBLEMS .. 'green'},
+  {'Guild emblem', 'emblem', 2, 'Red', 'EMBLEM_RED', EMBLEMS .. 'red'},
+  {'Guild emblem', 'emblem', 3, 'Blue', 'EMBLEM_BLUE', EMBLEMS .. 'blue'},
+  {'Guild emblem', 'emblem', 4, 'Member', 'client only', EMBLEMS .. 'member'},
+  {'Guild emblem', 'emblem', 5, 'Other', 'client only', EMBLEMS .. 'other'},
+  {'Condition', nil, 1, 'Poisoned', 'ICON_POISON', STATES .. 'poisoned'},
+  {'Condition', nil, 2, 'Burning', 'ICON_BURN', STATES .. 'burning'},
+  {'Condition', nil, 4, 'Electrified', 'ICON_ENERGY', STATES .. 'electrified'},
+  {'Condition', nil, 8, 'Drunk', 'ICON_DRUNK', STATES .. 'drunk'},
+  {'Condition', nil, 16, 'Magic shield', 'ICON_MANASHIELD', STATES .. 'magic_shield'},
+  {'Condition', nil, 32, 'Slowed', 'ICON_PARALYZE', STATES .. 'slowed'},
+  {'Condition', nil, 64, 'Haste', 'ICON_HASTE', STATES .. 'haste'},
+  {'Condition', nil, 128, 'In a fight', 'ICON_SWORDS', STATES .. 'logout_block'},
+  {'Condition', nil, 256, 'Drowning', 'ICON_DROWNING', STATES .. 'drowning'},
+  {'Condition', nil, 512, 'Freezing', 'ICON_FREEZING', STATES .. 'freezing'},
+  {'Condition', nil, 1024, 'Dazzled', 'ICON_DAZZLED', STATES .. 'dazzled'},
+  {'Condition', nil, 2048, 'Cursed', 'ICON_CURSED', STATES .. 'cursed'},
+  {'Condition', nil, 4096, 'Strengthened', 'ICON_BUFF', STATES .. 'strengthened'},
+  {'Condition', nil, 8192, 'Protection zone block', 'ICON_PZBLOCK', STATES .. 'protection_zone_block'},
+  {'Condition', nil, 16384, 'Protection zone', 'ICON_PZ', STATES .. 'protection_zone'},
+  {'Condition', nil, 32768, 'Bleeding', 'ICON_BLEED', STATES .. 'bleeding'},
+  {'Condition', nil, 65536, 'Hungry', 'client only', STATES .. 'hungry'},
+  {'NPC', nil, 1, 'Chat', 'client only', NPCS .. 'chat'},
+  {'NPC', nil, 2, 'Trade', 'client only', NPCS .. 'trade'},
+  {'NPC', nil, 3, 'Quest', 'client only', NPCS .. 'quest'},
+  {'NPC', nil, 4, 'Trade and quest', 'client only', NPCS .. 'tradequest'},
+  {'Summon', nil, 3, 'Your summon', 'client only', TYPES .. 'summon_own'},
+  {'Summon', nil, 4, 'Summon of another', 'client only', TYPES .. 'summon_other'}
 }
 
 local win, lists, kind, view, selected, colors
@@ -56,6 +111,11 @@ local function loadLists()
       entry.lower = entry.name:lower()
       list[#list + 1] = entry
     end
+  end
+  for _, row in ipairs(ICONS) do
+    local group, apply, id, name, constant, image = row[1], row[2], row[3], row[4], row[5], row[6]
+    table.insert(lists.C, {group = group, apply = apply, id = id, client = id, name = name, constant = constant, image = image,
+      lower = (group .. ' ' .. name .. ' ' .. constant):lower()})
   end
   return true
 end
@@ -146,6 +206,8 @@ local function fillCell(cell, entry)
   cell.moving = nil
   if kind.key == 'I' then
     cell.item:setItemId(entry.client)
+  elseif kind.key == 'C' then
+    cell.icon:setImageSource(entry.image or '')
   elseif kind.category then
     drawThing(cell.sprites, entry, CELL_BOX, CELL_TILE)
   else
@@ -182,6 +244,8 @@ local function detailsText(entry)
   elseif kind.key == 'H' then
     local outfit = entry.outfit
     return tr('Level: %s\nLooktype: %d\nHead: %d\nBody: %d\nLegs: %d\nFeet: %d\nAddons: %d', formatLevel(entry.client), entry.id, outfit.head, outfit.body, outfit.legs, outfit.feet, outfit.addons)
+  elseif kind.key == 'C' then
+    return tr('%s\nValue: %d\n%s\n\n%s', entry.group, entry.id, entry.constant, entry.apply and tr('A double click shows it on your character, on your screen only.') or tr('Only a picture here.'))
   end
   local thing = thingOf(entry)
   return tr('Server id: %d\nClient id: %d\nSize: %dx%d, %d frames', entry.id, entry.client, thing.w, thing.h, thing.phases)
@@ -191,10 +255,11 @@ local function showDetails(entry)
   local details = win.details
   local box = details.previewBox
   box.previewItem:setVisible(entry ~= nil and kind.key == 'I')
-  box.previewCreature:setVisible(entry ~= nil and kind.key ~= 'I' and not kind.category)
+  box.previewCreature:setVisible(entry ~= nil and kind.key ~= 'I' and kind.key ~= 'C' and not kind.category)
   box.previewSprites:setVisible(entry ~= nil and kind.category ~= nil)
+  box.previewIcon:setVisible(entry ~= nil and kind.key == 'C')
   details.actionButton:setText(tr(kind.action))
-  details.actionButton:setEnabled(entry ~= nil)
+  details.actionButton:setEnabled(entry ~= nil and (kind.key ~= 'C' or entry.apply ~= nil))
   details.copyButton:setEnabled(entry ~= nil)
   if not entry then
     details.nameLabel:setText('')
@@ -205,6 +270,8 @@ local function showDetails(entry)
   details.infoLabel:setText(detailsText(entry))
   if kind.key == 'I' then
     box.previewItem:setItemId(entry.client)
+  elseif kind.key == 'C' then
+    box.previewIcon:setImageSource(entry.image or '')
   elseif kind.category then
     drawThing(box.previewSprites, entry, PREVIEW_BOX, PREVIEW_TILE, tick)
   else
@@ -271,11 +338,33 @@ local function applyFilter()
   fillCells()
 end
 
+local function showIconOnMe(entry)
+  local player = g_game.getLocalPlayer()
+  if not player or not entry.apply then
+    setStatus(tr('%s is only a picture here.', entry.name))
+    return
+  end
+  local ok = pcall(function()
+    if entry.apply == 'skull' then
+      player:setSkull(entry.id)
+    elseif entry.apply == 'shield' then
+      player:setShield(entry.id)
+    else
+      player:setEmblem(entry.id)
+    end
+  end)
+  setStatus(ok and tr('%s, on your screen only.', entry.name) or tr('This client could not show it.'))
+end
+
 local function activate(entry)
   if not entry or not g_game.isOnline() then return end
-  if kind.key == 'I' then
+  if kind.key == 'C' then
+    showIconOnMe(entry)
+  elseif kind.key == 'I' then
     g_game.talk('/checkall item,' .. entry.id)
-  elseif kind.key == 'O' or kind.key == 'M' or kind.key == 'H' then
+  elseif kind.key == 'H' then
+    g_game.talk('/checkall wear,' .. entry.name)
+  elseif kind.key == 'O' or kind.key == 'M' then
     g_game.talk('/checkall outfit,' .. entry.id)
   elseif kind.key == 'S' then
     g_game.talk('/checkall shoot,' .. entry.id)
@@ -295,13 +384,20 @@ end
 
 local function onCellMouseRelease(cell, mousePos, button)
   local entry = cell.entry
-  if button ~= MouseRightButton or not entry or kind.key ~= 'I' then return false end
+  if button ~= MouseRightButton or not entry or (kind.key ~= 'I' and kind.key ~= 'H') then return false end
   selectEntry(entry)
   local menu = g_ui.createWidget('PopupMenu')
   menu:setGameMenu(true)
-  menu:addOption(tr('Place in inventory'), function() activate(entry) end)
-  menu:addOption(tr('Place in ground'), function() g_game.talk('/checkall ground,' .. entry.id) end)
-  menu:addOption(tr('Send to player'), function() sendToPlayer(entry) end)
+  if kind.key == 'H' then
+    menu:addOption(tr('Summon'), function() g_game.talk('/m ' .. entry.name) end)
+    menu:addOption(tr('Summon echo crowd'), function() g_game.talk('/checkall crowd,' .. entry.name) end)
+    menu:addOption(tr('Summon echo boss'), function() g_game.talk('/checkall boss,' .. entry.name) end)
+    menu:addOption(tr('Change outfit'), function() activate(entry) end)
+  else
+    menu:addOption(tr('Place in inventory'), function() activate(entry) end)
+    menu:addOption(tr('Place in ground'), function() g_game.talk('/checkall ground,' .. entry.id) end)
+    menu:addOption(tr('Send to player'), function() sendToPlayer(entry) end)
+  end
   menu:display(mousePos)
   return true
 end
