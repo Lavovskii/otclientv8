@@ -92,7 +92,8 @@ CheckAllWindow < MainWindow
     !text: tr('Search:')
     size: 48 16
     anchors.left: parent.left
-    anchors.verticalCenter: searchEdit.verticalCenter
+    anchors.top: tabBar.bottom
+    margin-top: 10
     color: #e0b44c
 
   TextEdit
