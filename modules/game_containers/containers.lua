@@ -159,7 +159,7 @@ end
 
 -- Reward chest pages --------------------------------------------------------------------------------------------
 -- The chest has no limit and the server sends it a page at a time, as with Browse Field: "window,page,pages" from the
--- server, "window,page" to it (extended opcode 9). The footer is always there, also with a single page.
+-- server, "window,page" to it (extended opcode 9). The footer only shows with more than one page.
 
 REWARD_PAGES_OPCODE = 9
 
@@ -172,6 +172,11 @@ function onRewardPages(protocol, opcode, buffer)
   end
 
   page, pages = tonumber(page), tonumber(pages)
+  toggleContainerPages(window, pages > 1)
+  if pages <= 1 then
+    return
+  end
+
   local function sendPage(to)
     local protocol = g_game.getProtocolGame()
     if protocol then
@@ -179,7 +184,6 @@ function onRewardPages(protocol, opcode, buffer)
     end
   end
 
-  toggleContainerPages(window, true)
   window:recursiveGetChildById('pageLabel'):setText(string.format('Page %i of %i', page, pages))
 
   local prevPageButton = window:recursiveGetChildById('prevPageButton')
