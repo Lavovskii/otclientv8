@@ -16,6 +16,7 @@ function updateFeatures(version)
     g_game.enableFeature(GameBot)
     g_game.enableFeature(GameExtendedOpcode) -- the server's auto loot (loot hotkey) talks through extended opcodes
     g_game.enableFeature(GameBrowseField) -- right click a tile -> Browse Field (the server lists the items of the tile)
+    g_game.enableFeature(GameMagicEffectU16) -- effects above 255, 2 bytes from build 16 on: ProtocolGame::AddMagicEffect in the server
     --g_game.enableFeature(GameMinimapLimitedToSingleFloor) -- it will generate minimap only for current floor
     --g_game.enableFeature(GameSpritesAlphaChannel)
     -- the the860 assets (data/things/860, game_things): the 8.60 dat layout with the OTClient extensions, Tibia.otfi says

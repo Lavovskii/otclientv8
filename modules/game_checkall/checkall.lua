@@ -8,8 +8,6 @@ local DATA_FILE = '/modules/game_checkall/checkall_data.txt'
 local DOUBLE_CLICK_MS = 450
 local ANIMATE_MS = 100
 local FILTER_DELAY_MS = 150
--- the highest effect the server's protocol can send (LAST_EFFECT in check_all.lua): above it only this client can draw it
-local LAST_SERVER_EFFECT = 254
 local CELL_BOX, CELL_TILE = 64, 32
 local PREVIEW_BOX, PREVIEW_TILE = 128, 64
 -- the pattern of a missile's direction, starting at the east and going around
@@ -116,7 +114,6 @@ local function outfitOf(look)
 end
 
 local function entryLabel(entry)
-  if kind.key == 'E' and entry.id > LAST_SERVER_EFFECT then return 'c' .. entry.client end
   return tostring(entry.id)
 end
 
@@ -169,12 +166,7 @@ local function detailsText(entry)
     return tr('Looktype: %d\nMount id: %d', entry.id, entry.client)
   end
   local thing = thingOf(entry)
-  local text = tr('Server id: %d\nClient id: %d\nSize: %dx%d, %d frames', entry.id, entry.client, thing.w, thing.h, thing.phases)
-  if kind.key == 'E' and entry.id > LAST_SERVER_EFFECT then
-    text = tr('Client id: %d\nSize: %dx%d, %d frames\n\nThe server can only send effects up to %d, so only you see this one.',
-      entry.client, thing.w, thing.h, thing.phases, LAST_SERVER_EFFECT)
-  end
-  return text
+  return tr('Server id: %d\nClient id: %d\nSize: %dx%d, %d frames', entry.id, entry.client, thing.w, thing.h, thing.phases)
 end
 
 local function showDetails(entry)
@@ -261,17 +253,6 @@ local function applyFilter()
   fillCells()
 end
 
-local function playLocally(entry)
-  local position = g_game.getLocalPlayer() and g_game.getLocalPlayer():getPosition()
-  if not position then return end
-  local ok = pcall(function()
-    local effect = Effect.create()
-    effect:setId(entry.client)
-    g_map.addThing(effect, position, -1)
-  end)
-  setStatus(ok and tr('Effect %d, only on your screen.', entry.client) or tr('This client could not draw effect %d.', entry.client))
-end
-
 local function activate(entry)
   if not entry or not g_game.isOnline() then return end
   if kind.key == 'I' then
@@ -280,11 +261,31 @@ local function activate(entry)
     g_game.talk('/checkall outfit,' .. entry.id)
   elseif kind.key == 'S' then
     g_game.talk('/checkall shoot,' .. entry.id)
-  elseif entry.id <= LAST_SERVER_EFFECT then
-    g_game.talk('/checkall effect,' .. entry.id)
   else
-    playLocally(entry)
+    g_game.talk('/checkall effect,' .. entry.id)
   end
+end
+
+local function sendToPlayer(entry)
+  displayTextInputBox(tr('Send to player'), tr('Player name:'), function(name)
+    name = (name or ''):trim()
+    if name ~= '' and g_game.isOnline() then
+      g_game.talk('/checkall send,' .. entry.id .. ',' .. name)
+    end
+  end)
+end
+
+local function onCellMouseRelease(cell, mousePos, button)
+  local entry = cell.entry
+  if button ~= MouseRightButton or not entry or kind.key ~= 'I' then return false end
+  selectEntry(entry)
+  local menu = g_ui.createWidget('PopupMenu')
+  menu:setGameMenu(true)
+  menu:addOption(tr('Place in inventory'), function() activate(entry) end)
+  menu:addOption(tr('Place in ground'), function() g_game.talk('/checkall ground,' .. entry.id) end)
+  menu:addOption(tr('Send to player'), function() sendToPlayer(entry) end)
+  menu:display(mousePos)
+  return true
 end
 
 local function onCellClick(cell)
@@ -314,6 +315,7 @@ local function setKind(newKind)
       cell:setMarginLeft(marginX + column * kind.pitchX)
       cell:setMarginTop(marginY + row * kind.pitchY)
       cell.onClick = onCellClick
+      cell.onMouseRelease = onCellMouseRelease
       if cell.creature then
         cell.creature:setCenter(true)
         cell.creature:setAnimate(true)
@@ -379,9 +381,8 @@ end
 
 function copySelected()
   if not selected then return end
-  local id = (kind.key == 'E' and selected.id > LAST_SERVER_EFFECT) and selected.client or selected.id
-  g_window.setClipboardText(tostring(id))
-  setStatus(tr('Id %d copied.', id))
+  g_window.setClipboardText(tostring(selected.id))
+  setStatus(tr('Id %d copied.', selected.id))
 end
 
 local function onTextMessage(mode, text)
