@@ -1873,6 +1873,85 @@ ArtStaffName < Panel
     margin-top: 1
     @onSetup: self:getChildById('fill'):setBackgroundColor('#00bc00')
 
+// an echo on the ground and what stepping on it awakens: usually a crowd, rarely a boss
+ArtEchoes < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: echo
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 2
+    &itemId: 54133
+
+  GuideArrow
+    id: arrow
+    anchors.left: echo.right
+    anchors.verticalCenter: echo.verticalCenter
+    margin-left: 2
+
+  Label
+    id: crowdName
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 4
+    font: verdana-11px-rounded
+    color: #00bc00
+    text-auto-resize: true
+    text: MindFreak [6250]
+    phantom: true
+
+  UICreature
+    id: crowd
+    size: 48 48
+    anchors.top: crowdName.bottom
+    anchors.horizontalCenter: crowdName.horizontalCenter
+    phantom: true
+    @onSetup: self:setOutfit({type = 12, head = 38, body = 114, legs = 0, feet = 94})
+
+  UIWidget
+    size: 11 11
+    anchors.left: crowd.right
+    anchors.top: crowd.top
+    image-source: /images/game/skulls/skull_white
+    phantom: true
+
+  GuideNote
+    anchors.horizontalCenter: crowd.horizontalCenter
+    anchors.top: crowd.bottom
+    text: usually 6
+
+  Label
+    id: bossName
+    anchors.left: crowdName.right
+    anchors.top: parent.top
+    margin-left: 2
+    font: verdana-11px-rounded-glow
+    color: #ffffff
+    text-auto-resize: true
+    text: MindFreak [10000]
+    phantom: true
+
+  UICreature
+    id: boss
+    size: 48 48
+    anchors.top: bossName.bottom
+    anchors.horizontalCenter: bossName.horizontalCenter
+    phantom: true
+    @onSetup: self:setOutfit({type = 12, head = 38, body = 114, legs = 0, feet = 94, shader = 'outfit_echo_boss'})
+
+  UIWidget
+    size: 11 11
+    anchors.left: boss.right
+    anchors.top: boss.top
+    image-source: /images/game/skulls/skull_red
+    phantom: true
+
+  GuideNote
+    anchors.horizontalCenter: boss.horizontalCenter
+    anchors.top: boss.bottom
+    text: rarely 1 boss
+
 // the points of the account and the Buy Points button
 ArtStorePoints < Panel
   anchors.fill: parent

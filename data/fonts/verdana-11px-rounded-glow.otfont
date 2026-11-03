@@ -1,0 +1,7 @@
+Font
+  name: verdana-11px-rounded-glow
+  texture: verdana-11px-rounded-glow
+  height: 17
+  glyph-size: 24 17
+  spacing: -9 0
+  space-width: 12

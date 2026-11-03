@@ -1,0 +1,8 @@
+Module
+  name: game_echoboss
+  description: An echo boss has a red glow around its name and a red contour
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ echoboss ]
+  @onLoad: init()
+  @onUnload: terminate()

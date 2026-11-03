@@ -10,6 +10,7 @@ Module
     - game_questlog
     - game_guides
     - game_staffnames
+    - game_echoboss
     - game_textmessage
     - game_console
     - game_outfit
