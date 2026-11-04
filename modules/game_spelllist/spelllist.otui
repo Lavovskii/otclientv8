@@ -70,6 +70,14 @@ SpellRow < UIWidget
     color: #9f9f9f
     phantom: true
 
+// the spell under the mouse while it's dragged to an action bar
+SpellDragIcon < UIWidget
+  size: 32 32
+  image-source: /images/game/spells/defaultspells
+  image-clip: 0 0 32 32
+  focusable: false
+  phantom: true
+
 SpellInfoRow < Panel
   height: 15
   margin-top: 1
@@ -545,6 +553,35 @@ MainWindow
     anchors.bottom: parent.bottom
     @onClick: modules.game_spelllist.toggle()
 
+  Button
+    id: assignButton
+    !text: tr('Assign')
+    width: 64
+    anchors.right: closeButton.left
+    anchors.bottom: parent.bottom
+    margin-right: 4
+    @onClick: modules.game_spelllist.assignSelected()
+
+  TextEdit
+    id: paramText
+    anchors.left: replayButton.right
+    anchors.right: assignButton.left
+    anchors.verticalCenter: replayButton.verticalCenter
+    margin-left: 4
+    margin-right: 4
+    placeholder: Parameter
+    visible: false
+
+  Label
+    id: dragHint
+    !text: tr('Drag a spell onto an action bar.')
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin-bottom: 4
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #c9b98f
+
   // admins only: the list is kept on the server (web API), like the Store
   Panel
     id: adminBar
@@ -552,6 +589,7 @@ MainWindow
     anchors.bottom: parent.bottom
     width: 268
     height: 22
+    background-color: #474747
     visible: false
 
     Button

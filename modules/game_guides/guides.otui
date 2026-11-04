@@ -1210,18 +1210,18 @@ ArtStats < Panel
     margin-top: 6
     text: Cap: 14k  (14,000)
 
-// the Spells button and the window it opens: the spells of your vocation by level, with tabs
+// an action bar's slot and the window it opens: the spells of your vocation by level, with tabs
 ArtSpells < Panel
   anchors.fill: parent
 
   UIWidget
     id: button
-    size: 20 20
+    size: 34 34
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-top: 30
-    image-source: /images/topbuttons/spelllist
-    image-clip: 0 0 20 20
+    margin-top: 23
+    image-source: /images/game/actionbar/actionbarslot
+    image-clip: 0 0 34 34
     phantom: true
 
   GuideArrow
@@ -2042,11 +2042,11 @@ ArtTaskBoard < Panel
 
   UIWidget
     id: star
-    size: 12 12
+    size: 14 14
     anchors.left: arrow.right
     anchors.verticalCenter: arrow.verticalCenter
     margin-left: 8
-    image-source: /images/ui/task_points
+    image-source: /images/taskboard/points14
     phantom: true
 
   GuideNote

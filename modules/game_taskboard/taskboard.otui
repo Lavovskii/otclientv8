@@ -1,31 +1,59 @@
-// The Task Board, laid out like today's Tibia: tabs for Bounty, Weekly and Task Shop, with the balances below them.
+// The Task Board, laid out like today's Tibia on the retro layout's stone: tabs for Bounty, Weekly and Task Shop.
+// The pictures are in data/images/taskboard (tools/make_task_art.py).
 
-TaskTab < TabButton
-  height: 30
+TaskTab < UIButton
+  height: 34
+  image-source: /images/taskboard/tab
+  image-clip: 0 0 48 34
+  image-border: 4
   font: verdana-11px-rounded
-  icon-align: left
-  icon-offset: 8 0
+  color: #a0a0a0
+  text-offset: 16 0
   anchors.top: parent.top
 
-TaskFrame < Panel
-  background-color: #00000030
-  border-width: 1
-  border-color: #00000099
+  $hover !on:
+    image-clip: 0 34 48 34
+    color: #d4d4d4
+
+  $on:
+    image-clip: 0 68 48 34
+    color: #f4d68c
+
+  UIWidget
+    id: picture
+    size: 30 30
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 10
+    phantom: true
+
+TaskFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
 
   Label
     id: caption
     anchors.top: parent.top
-    anchors.horizontalCenter: parent.horizontalCenter
-    margin-top: 3
-    text-auto-resize: true
-    color: #c8c8c8
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 2 2 0 2
+    height: 18
+    image-source: /images/taskboard/caption
+    image-border: 2
+    text-align: center
+    color: #d8c08a
     font: verdana-11px-rounded
     phantom: true
 
-TaskBox < Panel
-  background-color: #00000066
-  border-width: 1
-  border-color: #000000
+TaskBox < UIWidget
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+TaskPlate < UIWidget
+  image-source: /images/taskboard/plate
+  image-border: 2
   phantom: true
 
 TaskSmallButton < Button
@@ -33,57 +61,117 @@ TaskSmallButton < Button
   padding: 0 2 0 2
   font: verdana-11px-antialised
 
-TaskCell < Panel
-  size: 102 76
-  background-color: #ffffff0a
-  border-width: 1
-  border-color: #00000088
+// a bar: its groove, the part filled, and the light over it
+TaskBar < UIWidget
+  height: 14
+  image-source: /images/taskboard/track
+  image-border: 2
+  phantom: true
+
+  UIProgressBar
+    id: bar
+    anchors.fill: parent
+    margin: 1
+    background-color: #c8963c
+    phantom: true
+
+  UIWidget
+    id: gloss
+    anchors.fill: parent
+    margin: 1
+    image-source: /images/taskboard/gloss
+    phantom: true
+
+  Label
+    id: count
+    anchors.centerIn: parent
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #ffffff
+    phantom: true
+
+// where a step of the reward falls on the bar
+TaskTick < UIWidget
+  width: 1
+  anchors.top: parent.top
+  anchors.bottom: parent.bottom
+  background-color: #000000b0
+  phantom: true
+
+TaskCell < UIWidget
+  size: 106 78
+  image-source: /images/taskboard/cell
+  image-border: 2
 
   Label
     id: name
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    margin: 2 3 0 3
+    margin: 1 1 0 1
+    height: 16
+    image-source: /images/taskboard/caption
+    image-border: 2
     text-align: center
     font: verdana-11px-antialised
-    color: #dfdfdf
+    color: #e4e4e4
 
   TaskBox
     id: box
-    size: 46 46
+    size: 52 52
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-left: 3
-    margin-top: 18
+    margin-left: 4
+    margin-top: 21
 
   Label
     id: count
     anchors.left: box.right
     anchors.right: parent.right
     anchors.top: box.top
-    margin-left: 2
-    height: 28
+    margin-left: 1
+    margin-right: 1
+    height: 13
     text-align: center
-    text-wrap: true
-    font: verdana-11px-antialised
+    font: verdana-11px-rounded
     color: #e05a4a
     phantom: true
 
+  Label
+    id: need
+    anchors.left: count.left
+    anchors.right: count.right
+    anchors.top: count.bottom
+    height: 13
+    text-align: center
+    font: verdana-11px-antialised
+    color: #b4b4b4
+    phantom: true
+
+  UIWidget
+    id: seal
+    size: 18 18
+    anchors.right: box.right
+    anchors.bottom: box.bottom
+    margin-right: -3
+    margin-bottom: -3
+    image-source: /images/taskboard/seal18
+    phantom: true
+    visible: false
+
   // what a task without the expansion shows over all of this
-  Panel
+  UIWidget
     id: locked
     anchors.fill: parent
-    background-color: #000000d0
-    phantom: false
+    background-color: #000000d8
     visible: false
 
     UIWidget
-      size: 24 24
+      size: 26 26
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 7
-      image-source: /images/ui/task_lock
+      margin-top: 8
+      image-source: /images/taskboard/lock26
       phantom: true
 
     TaskSmallButton
@@ -92,25 +180,13 @@ TaskCell < Panel
       anchors.bottom: parent.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      margin: 0 6 5 6
+      margin: 0 8 7 8
 
 TaskKillCell < TaskCell
   UICreature
     id: creature
-    size: 44 44
+    size: 48 48
     anchors.centerIn: box
-    fixed-creature-size: true
-    phantom: true
-
-  Label
-    id: done
-    anchors.left: box.right
-    anchors.right: parent.right
-    anchors.bottom: box.bottom
-    margin-left: 2
-    text-align: center
-    font: verdana-11px-antialised
-    color: #6ed06e
     phantom: true
 
 TaskDeliveryCell < TaskCell
@@ -129,34 +205,37 @@ TaskDeliveryCell < TaskCell
     anchors.bottom: box.bottom
     margin-left: 2
     margin-right: 2
+    height: 18
 
-TaskOffer < Panel
-  size: 150 112
-  background-color: #ffffff0a
-  border-width: 1
-  border-color: #00000088
+TaskOffer < UIWidget
+  size: 154 128
+  image-source: /images/taskboard/cell
+  image-border: 2
 
   Label
     id: name
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    margin: 3 3 0 3
+    margin: 1 1 0 1
+    height: 18
+    image-source: /images/taskboard/caption
+    image-border: 2
     text-align: center
-    color: #dfdfdf
+    font: verdana-11px-rounded
+    color: #e4e4e4
 
   TaskBox
     id: box
-    size: 50 50
+    size: 66 66
     anchors.top: name.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    margin-top: 2
+    margin-top: 5
 
   UICreature
     id: creature
-    size: 48 48
+    size: 64 64
     anchors.centerIn: box
-    fixed-creature-size: true
     phantom: true
 
   UIItem
@@ -166,51 +245,57 @@ TaskOffer < Panel
     virtual: true
     phantom: true
 
-  TaskSmallButton
+  Button
     id: buy
     anchors.bottom: parent.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin: 0 6 4 6
+    margin: 0 6 5 6
+    text-offset: -8 1
+
+    UIWidget
+      id: coin
+      size: 14 14
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 7
+      image-source: /images/taskboard/points14
+      phantom: true
 
 MainWindow
   id: taskBoardWindow
   !text: tr('Task Board')
-  size: 688 476
+  size: 704 470
   visible: false
   @onEscape: self:hide()
 
   TaskTab
     id: bountyTab
     !text: tr('Bounty Tasks')
-    icon: /images/topbuttons/tasktracker
     anchors.left: parent.left
-    width: 216
+    width: 222
 
   TaskTab
     id: weeklyTab
     !text: tr('Weekly Tasks')
-    icon: /images/topbuttons/taskboard
     anchors.left: bountyTab.right
     margin-left: 3
-    width: 216
+    width: 222
 
   TaskTab
     id: shopTab
     !text: tr('Task Shop')
-    icon: /images/ui/task_points
     anchors.left: weeklyTab.right
     anchors.right: parent.right
     margin-left: 3
 
-  // --------------------------------------------------------------------------------------- bounty
+  // ------------------------------------------------------------------------------------------- bounty
   Panel
     id: bountyPanel
     anchors.top: bountyTab.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: closeButton.top
-    margin-top: 6
     margin-bottom: 6
 
     TaskFrame
@@ -218,191 +303,353 @@ MainWindow
       anchors.top: parent.top
       anchors.left: parent.left
       anchors.right: parent.right
-      height: 52
+      height: 56
+
+      TaskPlate
+        id: tokensBox
+        size: 112 26
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-bottom: 6
+
+        UIWidget
+          id: icon
+          size: 22 22
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 3
+          image-source: /images/taskboard/reroll22
+
+        Label
+          id: tokens
+          anchors.left: icon.right
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 2
+          text-align: center
+          font: verdana-11px-rounded
+          color: #ffffff
 
       Button
         id: rerollButton
         !text: tr('Reroll Task')
-        anchors.bottom: parent.bottom
-        anchors.right: parent.horizontalCenter
-        margin-bottom: 5
-        margin-right: 56
-        width: 110
-
-      TaskBox
-        id: tokensBox
-        size: 92 23
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-bottom: 5
-
-        Label
-          id: tokens
-          anchors.right: icon.left
-          anchors.verticalCenter: parent.verticalCenter
-          margin-right: 4
-          text-auto-resize: true
-          color: #ffffff
-
-        UIWidget
-          id: icon
-          size: 12 12
-          anchors.right: parent.right
-          anchors.verticalCenter: parent.verticalCenter
-          margin-right: 5
-          image-source: /images/ui/task_reroll
+        anchors.verticalCenter: tokensBox.verticalCenter
+        anchors.right: tokensBox.left
+        margin-right: 12
+        width: 124
 
       Button
         id: dailyButton
         !text: tr('Claim Daily')
-        anchors.bottom: parent.bottom
-        anchors.left: parent.horizontalCenter
-        margin-bottom: 5
-        margin-left: 56
-        width: 110
+        anchors.verticalCenter: tokensBox.verticalCenter
+        anchors.left: tokensBox.right
+        margin-left: 12
+        width: 124
+        text-offset: -9 1
 
-    TaskFrame
-      id: card
+        UIWidget
+          size: 14 14
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-right: 6
+          image-source: /images/taskboard/reroll14
+          phantom: true
+
+    UIWidget
+      id: stage
       anchors.top: rerollFrame.bottom
-      anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 8
-      size: 240 268
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin-top: 4
+      image-source: /images/taskboard/stage
+      phantom: true
 
-      Label
-        id: name
-        anchors.top: parent.top
+      TaskFrame
+        id: card
+        size: 258 282
+        anchors.centerIn: parent
+
+        UIWidget
+          id: ribbon
+          size: 244 38
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 5
+          image-source: /images/taskboard/ribbon
+          phantom: true
+
+          Label
+            id: name
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            margin: 10 22 0 44
+            height: 16
+            text-align: center
+            font: verdana-11px-rounded
+            color: #ffffff
+
+        TaskBox
+          id: box
+          size: 84 84
+          anchors.top: ribbon.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 3
+
+        UICreature
+          id: creature
+          size: 76 76
+          anchors.centerIn: box
+          phantom: true
+
+        TaskBar
+          id: kills
+          anchors.top: box.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin: 5 24 0 24
+          height: 16
+
+        UIWidget
+          id: line
+          size: 150 14
+          anchors.top: kills.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 3
+          image-source: /images/taskboard/divider
+          phantom: true
+
+        Label
+          id: rewardCaption
+          !text: tr('Reward:')
+          anchors.top: line.bottom
+          anchors.left: parent.left
+          margin: 1 0 0 16
+          text-auto-resize: true
+          font: verdana-11px-rounded
+          color: #d8c08a
+
+        UIWidget
+          id: xpIcon
+          size: 14 14
+          anchors.top: rewardCaption.bottom
+          anchors.left: parent.left
+          margin: 2 0 0 16
+          image-source: /images/taskboard/star16
+          phantom: true
+
+        Label
+          id: rewardXp
+          anchors.verticalCenter: xpIcon.verticalCenter
+          anchors.left: xpIcon.right
+          margin-left: 5
+          text-auto-resize: true
+          color: #ffffff
+
+        UIWidget
+          id: pointsIcon
+          size: 14 14
+          anchors.top: xpIcon.bottom
+          anchors.left: xpIcon.left
+          margin-top: 2
+          image-source: /images/taskboard/points14
+          phantom: true
+
+        Label
+          id: rewardPoints
+          anchors.verticalCenter: pointsIcon.verticalCenter
+          anchors.left: pointsIcon.right
+          margin-left: 5
+          text-auto-resize: true
+          color: #ffffff
+
+        UIWidget
+          id: tokenIcon
+          size: 14 14
+          anchors.top: pointsIcon.bottom
+          anchors.left: xpIcon.left
+          margin-top: 2
+          image-source: /images/taskboard/reroll14
+          phantom: true
+
+        Label
+          id: rewardToken
+          !text: tr('1 reroll token')
+          anchors.verticalCenter: tokenIcon.verticalCenter
+          anchors.left: tokenIcon.right
+          margin-left: 5
+          text-auto-resize: true
+          color: #ffffff
+
+        Label
+          id: tokenLimit
+          !text: tr('(Limit reached!)')
+          anchors.verticalCenter: tokenIcon.verticalCenter
+          anchors.left: rewardToken.right
+          margin-left: 4
+          text-auto-resize: true
+          color: #e05a4a
+          visible: false
+
+        Button
+          id: claimButton
+          !text: tr('Claim Reward')
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin: 0 14 7 14
+
+        UIWidget
+          size: 18 18
+          anchors.left: parent.left
+          anchors.bottom: parent.bottom
+          margin: 0 0 1 1
+          image-source: /images/taskboard/corner_bl
+          phantom: true
+
+        UIWidget
+          size: 18 18
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          margin: 0 1 1 0
+          image-source: /images/taskboard/corner_br
+          phantom: true
+
+      UIWidget
+        size: 18 18
         anchors.left: parent.left
+        anchors.top: parent.top
+        margin: 2 0 0 2
+        image-source: /images/taskboard/corner_tl
+        phantom: true
+
+      UIWidget
+        size: 18 18
         anchors.right: parent.right
-        margin: 4 4 0 4
-        height: 22
-        text-align: center
-        font: verdana-11px-rounded
-        color: #ffffff
-        background-color: #4a3f2c
+        anchors.top: parent.top
+        margin: 2 2 0 0
+        image-source: /images/taskboard/corner_tr
+        phantom: true
 
-      TaskBox
-        id: box
-        size: 74 74
-        anchors.top: name.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        margin-top: 8
+      UIWidget
+        size: 18 18
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        margin: 0 0 2 2
+        image-source: /images/taskboard/corner_bl
+        phantom: true
 
-      UICreature
-        id: creature
-        size: 72 72
-        anchors.centerIn: box
-        fixed-creature-size: true
+      UIWidget
+        size: 18 18
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 0 2 2 0
+        image-source: /images/taskboard/corner_br
         phantom: true
 
       Label
-        id: kills
-        anchors.top: box.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin-top: 6
-        text-align: center
-        color: #e05a4a
-        font: verdana-11px-rounded
-
-      HorizontalSeparator
-        id: line
-        anchors.top: kills.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin: 6 8 0 8
-
-      Label
-        id: rewardCaption
-        !text: tr('Reward:')
-        anchors.top: line.bottom
-        anchors.left: parent.left
-        margin: 6 0 0 12
+        id: noTask
+        !text: tr('There is no task for you right now.')
+        anchors.centerIn: parent
         text-auto-resize: true
         color: #c8c8c8
-
-      Label
-        id: rewardXp
-        anchors.top: rewardCaption.bottom
-        anchors.left: parent.left
-        margin: 3 0 0 12
-        text-auto-resize: true
-        color: #ffffff
-
-      Label
-        id: rewardPoints
-        anchors.top: rewardXp.bottom
-        anchors.left: parent.left
-        margin: 3 0 0 12
-        text-auto-resize: true
-        color: #ffffff
-
-      UIWidget
-        size: 12 12
-        anchors.left: rewardPoints.right
-        anchors.verticalCenter: rewardPoints.verticalCenter
-        margin-left: 4
-        image-source: /images/ui/task_points
-
-      Label
-        id: rewardToken
-        text: - 1
-        anchors.top: rewardPoints.bottom
-        anchors.left: parent.left
-        margin: 3 0 0 12
-        text-auto-resize: true
-        color: #ffffff
-
-      UIWidget
-        id: tokenIcon
-        size: 12 12
-        anchors.left: rewardToken.right
-        anchors.verticalCenter: rewardToken.verticalCenter
-        margin-left: 4
-        image-source: /images/ui/task_reroll
-
-      Label
-        id: tokenLimit
-        !text: tr('(Limit reached!)')
-        anchors.left: tokenIcon.right
-        anchors.verticalCenter: rewardToken.verticalCenter
-        margin-left: 4
-        text-auto-resize: true
-        color: #e05a4a
         visible: false
 
-      Button
-        id: claimButton
-        !text: tr('Claim Reward')
-        anchors.bottom: parent.bottom
+      // what the left and right of the wall tell
+      TaskFrame
+        id: bonus
+        size: 180 112
         anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 18
+
+        UIWidget
+          id: picture
+          size: 36 36
+          anchors.top: caption.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 4
+          image-source: /images/taskboard/damage36
+
+        Label
+          id: amount
+          anchors.top: picture.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 1
+          text-align: center
+          font: verdana-11px-rounded
+          color: #f4d68c
+
+        Label
+          id: note
+          !text: tr('against this creature')
+          anchors.top: amount.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin-top: 2
+          text-align: center
+          color: #c8c8c8
+
+      TaskFrame
+        id: grades
+        size: 180 112
         anchors.right: parent.right
-        margin: 0 12 8 12
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 18
 
-    Label
-      id: noTask
-      !text: tr('There is no task for you right now.')
-      anchors.centerIn: card
-      text-auto-resize: true
-      color: #c8c8c8
-      visible: false
+        UIWidget
+          id: silver
+          size: 16 16
+          anchors.top: caption.bottom
+          anchors.left: parent.left
+          margin: 8 0 0 10
+          image-source: /images/taskboard/star16
 
-    Label
-      id: damageNote
-      anchors.top: card.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 8
-      text-align: center
-      color: #e0b44c
+        Label
+          !text: tr('Silver: rewards x2')
+          anchors.verticalCenter: silver.verticalCenter
+          anchors.left: silver.right
+          margin-left: 6
+          text-auto-resize: true
+          color: #dcdcdc
 
-  // --------------------------------------------------------------------------------------- weekly
+        UIWidget
+          id: gold
+          size: 14 14
+          anchors.top: silver.bottom
+          anchors.left: silver.left
+          margin-top: 6
+          margin-left: 1
+          image-source: /images/taskboard/points14
+
+        Label
+          !text: tr('Gold: rewards x4')
+          anchors.verticalCenter: gold.verticalCenter
+          anchors.left: gold.right
+          margin-left: 7
+          text-auto-resize: true
+          color: #f4d68c
+
+        Label
+          !text: tr('Claim the reward and a new creature comes.')
+          anchors.top: gold.bottom
+          anchors.left: parent.left
+          anchors.right: parent.right
+          margin: 6 8 0 8
+          height: 28
+          text-wrap: true
+          text-align: center
+          color: #c8c8c8
+
+  // ------------------------------------------------------------------------------------------- weekly
   Panel
     id: weeklyPanel
     anchors.top: bountyTab.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: closeButton.top
-    margin-top: 6
     margin-bottom: 6
     visible: false
 
@@ -410,99 +657,82 @@ MainWindow
       id: killFrame
       anchors.top: parent.top
       anchors.left: parent.left
-      size: 326 262
+      size: 334 268
 
       Panel
         id: cells
         anchors.fill: parent
-        margin: 19 4 4 4
+        margin: 21 3 3 4
         layout:
           type: grid
-          cell-size: 104 77
-          cell-spacing: 2
+          cell-size: 106 78
+          cell-spacing: 3
           flow: true
 
     TaskFrame
       id: deliveryFrame
       anchors.top: parent.top
       anchors.right: parent.right
-      size: 326 262
+      size: 334 268
 
       Panel
         id: cells
         anchors.fill: parent
-        margin: 19 4 4 4
+        margin: 21 3 3 4
         layout:
           type: grid
-          cell-size: 104 77
-          cell-spacing: 2
+          cell-size: 106 78
+          cell-spacing: 3
           flow: true
 
-    Label
-      id: reward
+    TaskPlate
+      id: rewardPlate
       anchors.top: killFrame.bottom
       anchors.left: parent.left
       anchors.right: parent.right
-      margin-top: 4
-      text-align: center
-      color: #ffffff
+      margin-top: 3
+      height: 20
 
-    TaskFrame
-      id: progressFrame
-      anchors.top: reward.bottom
-      anchors.left: parent.left
-      anchors.right: rewardsFrame.left
-      anchors.bottom: parent.bottom
-      margin-top: 4
-      margin-right: 6
-
-      Label
-        !text: tr('Reward Multiplier')
-        anchors.left: parent.left
-        anchors.bottom: bar.top
-        margin-left: 8
-        margin-bottom: 2
-        text-auto-resize: true
-        color: #c8c8c8
-
-      Label
-        !text: tr('Completed Tasks')
-        anchors.left: parent.left
-        anchors.top: bar.bottom
-        margin-left: 8
-        margin-top: 2
-        text-auto-resize: true
-        color: #c8c8c8
-
-      UIProgressBar
-        id: bar
-        anchors.left: parent.left
-        anchors.right: parent.right
+      UIWidget
+        id: icon
+        size: 14 14
         anchors.verticalCenter: parent.verticalCenter
-        margin-top: 8
-        margin-left: 122
-        margin-right: 16
-        height: 12
-        background-color: #e0b44c
-        border-width: 1
-        border-color: #000000
-        phantom: true
+        anchors.right: reward.left
+        margin-right: 5
+        image-source: /images/taskboard/star16
+
+      Label
+        id: reward
+        anchors.centerIn: parent
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #ffffff
 
     TaskFrame
       id: rewardsFrame
-      anchors.top: progressFrame.top
+      anchors.top: rewardPlate.bottom
       anchors.right: parent.right
       anchors.bottom: parent.bottom
-      width: 152
+      margin-top: 3
+      width: 164
 
-      TaskBox
+      TaskPlate
         id: pointsBox
-        anchors.top: parent.top
+        anchors.top: caption.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        margin: 20 8 0 8
-        height: 20
+        margin: 3 8 0 8
+        height: 22
         phantom: false
+
+        UIWidget
+          id: icon
+          size: 14 14
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-right: 5
+          image-source: /images/taskboard/points14
+          phantom: true
 
         Label
           id: points
@@ -510,156 +740,203 @@ MainWindow
           anchors.verticalCenter: parent.verticalCenter
           margin-right: 4
           text-auto-resize: true
+          font: verdana-11px-rounded
           color: #ffffff
           phantom: true
 
-        UIWidget
-          id: icon
-          size: 12 12
-          anchors.right: parent.right
-          anchors.verticalCenter: parent.verticalCenter
-          margin-right: 5
-          image-source: /images/ui/task_points
-          phantom: true
+      UIWidget
+        id: hourglass
+        size: 16 16
+        anchors.top: pointsBox.bottom
+        anchors.left: parent.left
+        margin: 3 0 0 22
+        image-source: /images/taskboard/hourglass16
+        phantom: true
 
       Label
         id: remaining
-        anchors.top: pointsBox.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin-top: 6
-        text-align: center
+        anchors.verticalCenter: hourglass.verticalCenter
+        anchors.left: hourglass.right
+        margin-left: 6
+        text-auto-resize: true
         color: #c8c8c8
 
-  // --------------------------------------------------------------------------------------- shop
+    TaskFrame
+      id: progressFrame
+      anchors.top: rewardPlate.bottom
+      anchors.left: parent.left
+      anchors.right: rewardsFrame.left
+      anchors.bottom: parent.bottom
+      margin-top: 3
+      margin-right: 4
+
+      TaskBar
+        id: track
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: caption.bottom
+        margin-top: 15
+        margin-left: 122
+        margin-right: 16
+        height: 12
+
+      Label
+        !text: tr('Reward Multiplier')
+        anchors.left: parent.left
+        anchors.bottom: track.top
+        margin-left: 8
+        margin-bottom: 1
+        text-auto-resize: true
+        color: #c8c8c8
+
+      Label
+        !text: tr('Completed Tasks')
+        anchors.left: parent.left
+        anchors.top: track.bottom
+        margin-left: 8
+        margin-top: 1
+        text-auto-resize: true
+        color: #c8c8c8
+
+  // ------------------------------------------------------------------------------------------- shop
   Panel
     id: shopPanel
     anchors.top: bountyTab.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: closeButton.top
-    margin-top: 6
     margin-bottom: 6
     visible: false
+
+    UIWidget
+      id: back
+      anchors.fill: parent
+      image-source: /images/taskboard/stage
+      phantom: true
 
     TaskFrame
       id: frame
       anchors.fill: parent
+      margin: 6
+      image-color: #ffffffd0
 
       ScrollablePanel
         id: offers
-        anchors.top: parent.top
+        anchors.top: caption.bottom
         anchors.left: parent.left
         anchors.right: scroll.left
         anchors.bottom: parent.bottom
-        margin: 8 4 8 8
+        margin: 7 4 7 8
         vertical-scrollbar: scroll
         layout:
           type: grid
-          cell-size: 150 112
+          cell-size: 154 128
           cell-spacing: 6
           flow: true
 
       VerticalScrollBar
         id: scroll
-        anchors.top: parent.top
+        anchors.top: caption.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        margin: 2 3 3 0
         step: 28
         pixels-scroll: true
+
+      UIWidget
+        id: chest
+        size: 64 64
+        anchors.centerIn: parent
+        margin-bottom: 24
+        image-source: /images/taskboard/chest64
+        phantom: true
 
       Label
         id: empty
         !text: tr('Nothing on sale yet: keep your Task Points for what is coming.')
-        anchors.centerIn: parent
+        anchors.top: chest.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 8
         text-auto-resize: true
-        color: #c8c8c8
-        visible: false
+        font: verdana-11px-rounded
+        color: #d8c08a
 
-  // --------------------------------------------------------------------------------------- balances
-  TaskBox
+  // ------------------------------------------------------------------------------------------- what the player has
+  TaskPlate
     id: pointsBalance
-    size: 110 23
+    size: 156 23
     anchors.left: parent.left
     anchors.bottom: parent.bottom
     phantom: false
     !tooltip: tr('Task Points: spend them in the Task Shop.')
 
-    Label
-      id: value
-      anchors.right: icon.left
-      anchors.verticalCenter: parent.verticalCenter
-      margin-right: 4
-      text-auto-resize: true
-      color: #ffffff
-      phantom: true
-
     UIWidget
       id: icon
-      size: 12 12
-      anchors.right: parent.right
+      size: 14 14
+      anchors.left: parent.left
       anchors.verticalCenter: parent.verticalCenter
-      margin-right: 5
-      image-source: /images/ui/task_points
+      margin-left: 5
+      image-source: /images/taskboard/points14
       phantom: true
 
-  TaskBox
-    id: tokensBalance
-    size: 70 23
-    anchors.left: pointsBalance.right
-    anchors.bottom: parent.bottom
-    margin-left: 4
-    phantom: false
-    !tooltip: tr('Reroll tokens: they change your bounty task for another.')
+    Label
+      id: caption
+      !text: tr('Task Points:')
+      anchors.left: icon.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 5
+      text-auto-resize: true
+      color: #c8c8c8
+      phantom: true
 
     Label
       id: value
-      anchors.right: icon.left
-      anchors.verticalCenter: parent.verticalCenter
-      margin-right: 4
-      text-auto-resize: true
-      color: #ffffff
-      phantom: true
-
-    UIWidget
-      id: icon
-      size: 12 12
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      margin-right: 5
-      image-source: /images/ui/task_reroll
+      margin-right: 6
+      text-auto-resize: true
+      font: verdana-11px-rounded
+      color: #ffffff
       phantom: true
 
   Button
     id: closeButton
     !text: tr('Close')
-    width: 60
+    width: 70
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     @onClick: self:getParent():hide()
 
-// --------------------------------------------------------------------------------------- tracker
+// ------------------------------------------------------------------------------------------- tracker
 TaskTrackerCaption < Label
-  font: verdana-11px-rounded
-  color: #e0b44c
+  height: 16
   margin-top: 2
+  image-source: /images/taskboard/caption
+  image-border: 2
+  text-align: center
+  font: verdana-11px-rounded
+  color: #d8c08a
 
 TaskTrackerRow < UIWidget
   height: 34
   margin-top: 2
 
-  UICreature
-    id: creature
+  TaskBox
+    id: box
     size: 32 32
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    fixed-creature-size: true
+
+  UICreature
+    id: creature
+    size: 30 30
+    anchors.centerIn: box
     phantom: true
 
   Label
     id: name
     anchors.top: parent.top
-    anchors.left: creature.right
+    anchors.left: box.right
     anchors.right: parent.right
     margin-left: 4
     margin-top: 2
@@ -667,33 +944,13 @@ TaskTrackerRow < UIWidget
     color: #dfdfdf
     phantom: true
 
-  Panel
+  TaskBar
     id: back
     anchors.bottom: parent.bottom
-    anchors.left: creature.right
+    anchors.left: box.right
     anchors.right: parent.right
     margin-left: 4
-    margin-bottom: 2
-    height: 14
-    background-color: #00000099
-    border-width: 1
-    border-color: #000000
-    phantom: true
-
-    UIProgressBar
-      id: bar
-      anchors.fill: parent
-      margin: 1
-      background-color: #8a6d24
-      phantom: true
-
-    Label
-      id: count
-      anchors.centerIn: parent
-      text-auto-resize: true
-      font: verdana-11px-antialised
-      color: #ffffff
-      phantom: true
+    margin-bottom: 1
 
 TaskTracker < MiniWindow
   id: taskTracker

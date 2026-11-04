@@ -1,6 +1,7 @@
 -- The Spells window: only the spells of the character's vocation, grouped and sorted by level, with filters (attack,
 -- healing, support, what the character can already cast, a search). Runes are not listed (they are items). Clicking a spell shows its details and
--- plays a demo of it (spelldemo.lua).
+-- plays a demo of it (spelldemo.lua). It opens from an action bar slot (right click, Assign Spell); any spell of the list can
+-- be dragged onto any slot, or be assigned to that one.
 --
 -- The old protocol does not tell the client the vocation or the spells a character learned, so the website API does
 -- (action "spells", the same call the action bars make). Until it answers, or when it cannot be reached, every spell
@@ -29,11 +30,10 @@ local BRACKETS = {
 local ADDED_SPELL_IDS = 10000
 
 spelllistWindow = nil
-spelllistButton = nil
-local spellList, details, demoPlayer
+local spellList, details, demoPlayer, dragIcon
 local categoryButtons = {}
 local state = {category = 'all', castableOnly = false, search = '', character = nil, info = nil, selected = nil,
-               admin = false, showDeleted = false, editor = nil, builtIn = nil}
+               admin = false, showDeleted = false, editor = nil, builtIn = nil, slot = nil}
 
 local function normalize(name)
   return name:lower():gsub('[^a-z0-9]', '')
@@ -251,8 +251,57 @@ local function updateAdminButtons()
   bar.deleteButton:setText(spell and spell.hidden and tr('Restore') or tr('Delete'))
 end
 
+-- what the spell's words take after them, for a spell that wants it
+local function paramFor(spell)
+  if spell and spell.parameter then
+    local text = spelllistWindow:getChildById('paramText'):getText()
+    return text ~= '' and text or nil
+  end
+  return nil
+end
+
+local function stopDragging()
+  if dragIcon then
+    dragIcon:destroy()
+    dragIcon = nil
+    g_mouse.popCursor('target')
+  end
+end
+
+local function makeDraggable(row)
+  row:setDraggable(true)
+  row.onDragEnter = function(self, mousePos)
+    stopDragging()
+    dragIcon = g_ui.createWidget('SpellDragIcon', rootWidget)
+    dragIcon:setImageClip(iconClip(self.spell))
+    dragIcon:setPosition({x = mousePos.x - 16, y = mousePos.y - 16})
+    g_mouse.pushCursor('target')
+    return true
+  end
+  row.onDragMove = function(self, mousePos)
+    if dragIcon then
+      dragIcon:setPosition({x = mousePos.x - 16, y = mousePos.y - 16})
+    end
+    return true
+  end
+  row.onDragLeave = function(self, droppedWidget, mousePos)
+    if dragIcon then
+      stopDragging()
+      if modules.game_actionbar then
+        modules.game_actionbar.dropSpell(mousePos, self.spell.name, paramFor(self.spell))
+      end
+    end
+    return true
+  end
+  row.onDoubleClick = function(self)
+    assignSelected()
+    return true
+  end
+end
+
 function refresh()
   if not spelllistWindow then return end
+  stopDragging()
   local keep = state.selected
   spellList:destroyChildren()
   local first, focused
@@ -270,6 +319,7 @@ function refresh()
     row.name:setText(titleOf(spell))
     row.words:setText(spell.words)
     row.level:setText(tr('Lv %s', thousands(spell.level)))
+    makeDraggable(row)
     if spell.hidden then
       row.name:setColor('#e05a4a')
       row.name:setText(titleOf(spell) .. '  ' .. tr('(deleted)'))
@@ -302,6 +352,8 @@ end
 function showSpell(spell)
   state.selected = spell and spell.name or nil
   details.info:destroyChildren()
+  spelllistWindow:getChildById('paramText'):setVisible(spell ~= nil and spell.parameter and true or false)
+  spelllistWindow:getChildById('assignButton'):setEnabled(spell ~= nil and state.slot ~= nil)
   local hint = spelllistWindow:recursiveGetChildById('demoHint')
   if not spell then
     details.icon:hide()
@@ -516,7 +568,6 @@ local function askVocation()
 end
 
 function online()
-  spelllistButton:show()
   state.character, state.info, state.asking, state.asked = nil, nil, false, false
   fetchServerList()
 end
@@ -533,8 +584,6 @@ function init()
 
   spelllistWindow = g_ui.displayUI('spelllist', modules.game_interface.getRightPanel())
   spelllistWindow:hide()
-  spelllistButton = modules.client_topmenu.addRightGameToggleButton('spelllistButton', tr('Spells'), '/images/topbuttons/spelllist', toggle, false, 4)
-  spelllistButton:setOn(false)
 
   spellList = spelllistWindow:getChildById('spellList')
   details = spelllistWindow:getChildById('details')
@@ -563,19 +612,52 @@ function terminate()
   disconnect(g_game, {onGameStart = online, onGameEnd = offline})
   if state.editor then state.editor:destroy() state.editor = nil end
   demoPlayer:stop()
+  stopDragging()
   -- leave the global list as it was built into the client
   if state.builtIn then applyServerList({}) end
   spelllistWindow:destroy()
-  spelllistButton:destroy()
+end
+
+-- the spell in the list goes to the slot the window was opened for
+function assignSelected()
+  local spell = selectedSpell()
+  local slot = state.slot
+  if spell and slot and not slot:isDestroyed() and modules.game_actionbar
+    and modules.game_actionbar.setSlotSpell(slot, spell.name, paramFor(spell)) then
+    toggle()
+  end
+end
+
+-- right click on an action bar slot: its spell, if it has one, comes selected
+function assignTo(slot)
+  state.slot = slot
+  spelllistWindow:setText(tr('Assign Spell'))
+  local current = slot.spellData
+  local param = spelllistWindow:getChildById('paramText')
+  param:setText(current and current.param or '')
+  if current then
+    for name, spell in pairs(SpellInfo['Default']) do
+      if spell.id == current.id then
+        state.selected = name
+      end
+    end
+  end
+  if spelllistWindow:isVisible() then
+    refresh()
+    spelllistWindow:raise()
+    spelllistWindow:focus()
+  else
+    toggle()
+  end
 end
 
 function toggle()
   if spelllistWindow:isVisible() then
-    spelllistButton:setOn(false)
+    stopDragging()
     demoPlayer:stop()
+    state.slot = nil
     spelllistWindow:hide()
   else
-    spelllistButton:setOn(true)
     spelllistWindow:show()
     spelllistWindow:raise()
     spelllistWindow:focus()

@@ -4,9 +4,14 @@ local OPCODE = 11
 local SLOTS = 9
 local REFRESH = 4000 -- how often the open board asks again, as the items a player carries change
 local WEEKLY_TOTAL = 18
-local WEEKLY_STEPS = {{0, 'x1'}, {4, 'x2'}, {8, 'x3'}, {12, 'x5'}, {16, 'x8'}}
-local TRACKER_ROW, TRACKER_CAPTION = 36, 16
-local GRADE_COLORS = {Gold = '#8a6a1e', Silver = '#6e6e78'}
+local WEEKLY_STEPS = {{0, 'x1', 1}, {4, 'x2', 2}, {8, 'x3', 3}, {12, 'x5', 5}, {16, 'x8', 8}}
+local TRACKER_ROW, TRACKER_CAPTION = 36, 18
+local GRADES = {
+  Gold = {image = '/images/taskboard/ribbon_gold', color = '#3c2608'},
+  Silver = {image = '/images/taskboard/ribbon_silver', color = '#202020'},
+}
+local PLAIN_GRADE = {image = '/images/taskboard/ribbon', color = '#ffffff'}
+local GREEN, RED, GOLD = '#6ed06e', '#e05a4a', '#c8963c'
 local EXPANSION_NAME = 'Weekly Tasks Expansion'
 
 local window, tracker, boardButton, trackerButton, refreshEvent, box
@@ -40,6 +45,11 @@ local function number(value)
   return tonumber(value) or 0
 end
 
+-- items are named in lower case on the server
+local function titled(name)
+  return (name:gsub('(%a)([%w\']*)', function(first, rest) return first:upper() .. rest end))
+end
+
 local function look(parts, at)
   return {type = number(parts[at]), auxType = number(parts[at + 1]), head = number(parts[at + 2]), body = number(parts[at + 3]),
     legs = number(parts[at + 4]), feet = number(parts[at + 5]), addons = number(parts[at + 6])}
@@ -62,30 +72,39 @@ local function confirm(title, text, action)
   box = displayGeneralBox(title, text, {{text = tr('Yes'), callback = yes}, {text = tr('No'), callback = no}}, yes, no)
 end
 
+local function setBar(track, part, whole, color)
+  track.bar:setPercent(math.min(100, part * 100 / math.max(1, whole)))
+  track.bar:setBackgroundColor(color or GOLD)
+end
+
 -- ---------------------------------------------------------------------------------------------- drawing
 local function drawBounty()
   local panel = window.bountyPanel
   local bounty = state.bounty
-  local card = panel.card
+  local card = panel.stage.card
   card:setVisible(bounty ~= nil)
-  panel.noTask:setVisible(bounty == nil)
+  panel.stage.noTask:setVisible(bounty == nil)
   panel.rerollFrame.tokensBox.tokens:setText(state.tokens .. ' / ' .. state.tokenLimit)
   panel.rerollFrame.dailyButton:setEnabled(state.canClaim and state.tokens < state.tokenLimit)
+  panel.rerollFrame.dailyButton:setTooltip(state.canClaim and tr('One free reroll token a day.') or tr("You already claimed today's reroll token."))
   local finished = bounty ~= nil and bounty.kills >= bounty.need
   panel.rerollFrame.rerollButton:setEnabled(bounty ~= nil and state.tokens > 0 and not finished)
-  panel.damageNote:setText(tr('You deal %d%% more damage to the creatures of your open tasks.', state.damage))
+  panel.rerollFrame.rerollButton:setTooltip(tr('Spend a reroll token to change this task for another.'))
+  panel.stage.bonus.amount:setText(tr('+%d%% damage', state.damage))
   if not bounty then
     return
   end
 
-  card.name:setText(bounty.name)
-  card.name:setBackgroundColor(GRADE_COLORS[bounty.grade] or '#4a3f2c')
-  card.name:setTooltip(bounty.grade ~= '' and tr('%s task: greater rewards.', bounty.grade) or '')
+  local grade = GRADES[bounty.grade] or PLAIN_GRADE
+  card.ribbon:setImageSource(grade.image)
+  card.ribbon.name:setText(bounty.name)
+  card.ribbon.name:setColor(grade.color)
+  card.ribbon:setTooltip(bounty.grade ~= '' and tr('%s task: greater rewards.', bounty.grade) or '')
   card.creature:setOutfit(bounty.look)
-  card.kills:setText(comma_value(bounty.kills) .. ' / ' .. comma_value(bounty.need) .. ' ' .. tr('kills'))
-  card.kills:setColor(finished and '#6ed06e' or '#e05a4a')
-  card.rewardXp:setText('- ' .. comma_value(bounty.xp) .. ' XP')
-  card.rewardPoints:setText('- ' .. comma_value(bounty.points))
+  setBar(card.kills, bounty.kills, bounty.need, finished and '#3f9a3f' or GOLD)
+  card.kills.count:setText(comma_value(bounty.kills) .. ' / ' .. comma_value(bounty.need) .. ' ' .. tr('kills'))
+  card.rewardXp:setText(comma_value(bounty.xp) .. ' XP')
+  card.rewardPoints:setText(comma_value(bounty.points) .. ' ' .. tr('Task Points'))
   card.tokenLimit:setVisible(state.tokens >= state.tokenLimit)
   card.claimButton:setEnabled(finished)
   card.claimButton:setTooltip(finished and '' or tr('Finish the task to claim the reward.'))
@@ -101,6 +120,17 @@ local function showLocked(cell)
   cell.locked.unlock:setTooltip(tr('Buy the %s in the Store for %d points: 3 more kill tasks and 3 more delivery tasks.', EXPANSION_NAME, state.expansionPrice))
 end
 
+local function drawCell(cell, name, finished, count, need)
+  cell.name:setText(name)
+  cell.name:setTooltip(name)
+  cell.count:setText(comma_value(count))
+  cell.count:setColor(finished and GREEN or RED)
+  cell.need:setText(tr('of') .. ' ' .. comma_value(need))
+  cell.seal:setVisible(finished)
+  cell:setImageSource(finished and '/images/taskboard/cell_done' or '/images/taskboard/cell')
+  cell.locked:setVisible(false)
+end
+
 local function drawKillCell(slot)
   local cell = killCells[slot]
   local task = state.kills[slot]
@@ -109,14 +139,8 @@ local function drawKillCell(slot)
     return
   end
 
-  cell.name:setText(task.name)
-  cell.name:setTooltip(task.name)
+  drawCell(cell, task.name, task.kills >= task.need, task.kills, task.need)
   cell.creature:setOutfit(task.look)
-  local finished = task.kills >= task.need
-  cell.count:setText(comma_value(task.kills) .. '\n' .. tr('of') .. ' ' .. comma_value(task.need))
-  cell.count:setColor(finished and '#6ed06e' or '#e05a4a')
-  cell.done:setText(finished and tr('Done') or '')
-  cell.locked:setVisible(false)
   if task.locked then
     showLocked(cell)
   end
@@ -130,11 +154,12 @@ local function drawDeliveryCell(slot)
     return
   end
 
-  cell.name:setText(task.name)
-  cell.name:setTooltip(task.name)
+  local count = task.done and task.need or task.have
+  drawCell(cell, task.name, task.done, count, task.need)
+  if not task.done and task.have >= task.need then
+    cell.count:setColor(GREEN)
+  end
   cell.item:setItemId(task.clientId)
-  cell.count:setText(comma_value(task.done and task.need or task.have) .. '\n' .. tr('of') .. ' ' .. comma_value(task.need))
-  cell.count:setColor((task.done or task.have >= task.need) and '#6ed06e' or '#e05a4a')
   cell.deliver:setText(task.done and tr('Done') or tr('Deliver'))
   cell.deliver:setEnabled(not task.done and task.have >= task.need)
   cell.deliver.onClick = function()
@@ -142,7 +167,6 @@ local function drawDeliveryCell(slot)
       send('deliver,' .. slot)
     end)
   end
-  cell.locked:setVisible(false)
   if task.locked then
     showLocked(cell)
   end
@@ -155,13 +179,18 @@ local function drawWeekly()
     drawDeliveryCell(slot)
   end
 
-  panel.reward:setText(tr('Each task rewards you with %s XP.', comma_value(state.xp)))
-  panel.progressFrame.bar:setPercent(math.min(100, state.done * 100 / WEEKLY_TOTAL))
-  -- a horizontal center anchor moves by half the margin
+  panel.rewardPlate.reward:setText(tr('Each task rewards you with %s XP.', comma_value(state.xp)))
+  local frame = panel.progressFrame
+  setBar(frame.track, state.done, WEEKLY_TOTAL)
+  frame.track:setTooltip(tr('Completed tasks: %d. Reward multiplier: x%d.', state.done, state.multiplier))
+  local width = frame.track:getWidth()
   for _, label in ipairs(stepLabels) do
-    label:setMarginLeft(math.floor(label.step * 2 * panel.progressFrame.bar:getWidth()))
+    label:setMarginLeft(math.floor(label.step * width))
+    if label.multiplier then
+      label:setColor(label.multiplier == state.multiplier and '#f4d68c' or '#9a9a9a')
+    end
   end
-  panel.progressFrame.bar:setTooltip(tr('Completed tasks: %d. Reward multiplier: x%d.', state.done, state.multiplier))
+
   local rewards = panel.rewardsFrame
   rewards.pointsBox.points:setText(comma_value(state.forecast))
   rewards.pointsBox:setTooltip(tr('Task Points when the week ends: (%d kill tasks x %d + %d delivery tasks x %d) x %d.',
@@ -173,7 +202,9 @@ end
 local function drawShop()
   local panel = window.shopPanel.frame
   panel.offers:destroyChildren()
-  panel.empty:setVisible(#state.offers == 0)
+  local empty = #state.offers == 0
+  panel.chest:setVisible(empty)
+  panel.empty:setVisible(empty)
   for _, offer in ipairs(state.offers) do
     local cell = g_ui.createWidget('TaskOffer', panel.offers)
     cell.name:setText(offer.name)
@@ -185,7 +216,8 @@ local function drawShop()
       cell.creature:setOutfit({type = offer.look})
       cell.item:hide()
     end
-    cell.buy:setText(offer.owned and tr('Bought') or comma_value(offer.price) .. ' ' .. tr('points'))
+    cell.buy:setText(offer.owned and tr('Bought') or comma_value(offer.price))
+    cell.buy.coin:setVisible(not offer.owned)
     cell.buy:setEnabled(not offer.owned and state.points >= offer.price)
     cell.buy:setTooltip(not offer.owned and state.points < offer.price and tr("You don't have enough Task Points.") or '')
     cell.buy.onClick = function()
@@ -202,7 +234,6 @@ local function drawBoard()
   end
 
   window.pointsBalance.value:setText(comma_value(state.points))
-  window.tokensBalance.value:setText(state.tokens)
   if activeTab == 'bounty' then
     drawBounty()
   elseif activeTab == 'weekly' then
@@ -214,7 +245,7 @@ end
 
 -- ---------------------------------------------------------------------------------------------- tracker
 local function fillRow(row, task)
-  row.back.bar:setPercent(math.min(100, task.kills * 100 / math.max(1, task.need)))
+  setBar(row.back, task.kills, task.need)
   row.back.count:setText(comma_value(task.kills) .. ' / ' .. comma_value(task.need))
 end
 
@@ -293,7 +324,7 @@ local function parseState(buffer)
     elseif f[1] == 'K' then
       new.kills[number(f[2])] = {name = f[3], kills = number(f[4]), need = number(f[5]), locked = f[6] == '1', look = look(f, 7)}
     elseif f[1] == 'D' then
-      new.deliveries[number(f[2])] = {name = f[3], clientId = number(f[4]), have = number(f[5]), need = number(f[6]), done = f[7] == '1', locked = f[8] == '1'}
+      new.deliveries[number(f[2])] = {name = titled(f[3]), clientId = number(f[4]), have = number(f[5]), need = number(f[6]), done = f[7] == '1', locked = f[8] == '1'}
     elseif f[1] == 'O' then
       table.insert(new.offers, {id = number(f[2]), kind = f[3], name = f[4], price = number(f[5]), clientId = number(f[6]), look = number(f[7]), owned = f[8] == '1'})
     elseif f[1] == 'R' then
@@ -417,31 +448,48 @@ local function makeCells()
   for slot = 1, SLOTS do
     killCells[slot] = g_ui.createWidget('TaskKillCell', window.weeklyPanel.killFrame.cells)
     deliveryCells[slot] = g_ui.createWidget('TaskDeliveryCell', window.weeklyPanel.deliveryFrame.cells)
+    -- over what each kind of cell adds to the common ones
+    killCells[slot].locked:raise()
+    deliveryCells[slot].locked:raise()
   end
 
   -- the steps of the reward over the bar and the tasks they need under it
   local frame = window.weeklyPanel.progressFrame
-  local function addStep(text, color, edge, hook, step)
+  local function addStep(text, color, edge, hook, step, multiplier)
     local label = g_ui.createWidget('Label', frame)
     label:setText(text)
     label:setColor(color)
     label:setTextAutoResize(true)
-    label:addAnchor(edge, 'bar', hook)
-    label:addAnchor(AnchorHorizontalCenter, 'bar', AnchorLeft)
+    label:addAnchor(edge, 'track', hook)
+    label:addAnchor(AnchorHorizontalCenter, 'track', AnchorLeft)
     label.step = step
+    label.multiplier = multiplier
     table.insert(stepLabels, label)
   end
   for _, step in ipairs(WEEKLY_STEPS) do
-    addStep(step[2], '#ffffff', AnchorBottom, AnchorTop, step[1] / WEEKLY_TOTAL)
+    addStep(step[2], '#9a9a9a', AnchorBottom, AnchorTop, step[1] / WEEKLY_TOTAL, step[3])
     addStep(tostring(step[1]), '#c8c8c8', AnchorTop, AnchorBottom, step[1] / WEEKLY_TOTAL)
+    if step[1] > 0 then
+      local tick = g_ui.createWidget('TaskTick', frame.track)
+      tick:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+      tick.step = step[1] / WEEKLY_TOTAL
+      table.insert(stepLabels, tick)
+    end
   end
   addStep(tostring(WEEKLY_TOTAL), '#c8c8c8', AnchorTop, AnchorBottom, 1)
 
   window.bountyPanel.rerollFrame.caption:setText(tr('Reroll Task'))
+  window.bountyPanel.stage.bonus.caption:setText(tr('Hunting Bonus'))
+  window.bountyPanel.stage.grades.caption:setText(tr('Silver and Gold'))
   window.weeklyPanel.killFrame.caption:setText(tr('Kill Tasks'))
   window.weeklyPanel.deliveryFrame.caption:setText(tr('Delivery Tasks'))
   frame.caption:setText(tr('Weekly Progress'))
   window.weeklyPanel.rewardsFrame.caption:setText(tr('Weekly Rewards'))
+  window.shopPanel.frame.caption:setText(tr('Task Shop'))
+  window.bountyPanel.stage.card.caption:hide()
+  window.bountyTab.picture:setImageSource('/images/taskboard/poster30')
+  window.weeklyTab.picture:setImageSource('/images/taskboard/scroll30')
+  window.shopTab.picture:setImageSource('/images/taskboard/pouch30')
 end
 
 function init()
@@ -461,12 +509,12 @@ function init()
     end
   end
   window.bountyPanel.rerollFrame.dailyButton.onClick = function() send('daily') end
-  window.bountyPanel.card.claimButton.onClick = function() send('claim') end
+  window.bountyPanel.stage.card.claimButton.onClick = function() send('claim') end
 
   tracker = g_ui.createWidget('TaskTracker', modules.game_interface.getRightPanel())
   tracker:setup()
-  boardButton = modules.client_topmenu.addLeftGameButton('taskBoardButton', tr('Task Board'), '/images/topbuttons/taskboard', toggle)
-  trackerButton = modules.client_topmenu.addRightGameToggleButton('taskTrackerButton', tr('Task Tracker'), '/images/topbuttons/tasktracker', toggleTracker)
+  boardButton = modules.client_topmenu.addLeftGameButton('taskBoardButton', tr('Task Board'), '/images/topbuttons/taskboard', toggle, false, 4)
+  trackerButton = modules.client_topmenu.addRightGameToggleButton('taskTrackerButton', tr('Task Tracker'), '/images/topbuttons/tasktracker', toggleTracker, false, 5)
   trackerButton:setOn(tracker:isVisible())
   tracker.onOpen = function() trackerButton:setOn(true) end
   tracker.onClose = function() trackerButton:setOn(false) end

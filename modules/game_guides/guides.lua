@@ -13,7 +13,7 @@ local GUIDES = {
       {art = 'ArtRightClick', title = 'Fill a slot',
        text = 'Right click any slot and choose what it does.'},
       {art = 'ArtSpell', title = 'Spell',
-       text = 'Assign Spell: pick one of your spells. Only the spells your vocation can cast are listed.'},
+       text = 'Right click a slot and choose Assign Spell: your spells open. Drag any of them onto a slot of any bar, or pick one and press Assign.'},
       {art = 'ArtObject', title = 'Object',
        text = 'Drag a rune, potion or item from your backpack onto a slot, then choose how to use it.'},
       {art = 'ArtText', title = 'Text',
@@ -88,7 +88,7 @@ local GUIDES = {
       {art = 'ArtBossReward', title = 'Boss loot',
        text = 'Everyone who fights a boss gets their own loot. Open the bag in its corpse and take items one by one, or right click the bag and choose Loot all. What you leave waits 7 days in the reward chest, in the depot room under the temple, with one bag for each boss. The bags themselves stay where they are.'},
       {art = 'ArtTaskBoard', title = 'Task Board',
-       text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop.'},
+       text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20%% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop.'},
       {art = 'ArtVipDays', title = 'VIP days',
        text = 'Before you log in, the character list shows how many VIP days the selected character has left. In red when 7 or fewer remain.'},
       {art = 'ArtStaffName', title = 'The staff',
@@ -101,7 +101,7 @@ local GUIDES = {
     name = 'Spells',
     cards = {
       {art = 'ArtSpells', title = 'Your spells',
-       text = 'The Spells button lists only the spells of your vocation, by level. The tabs show Attack, Healing or Support. Faded spells need a higher level.'},
+       text = 'Assign Spell, on the right click of an action bar slot, lists only the spells of your vocation, by level. The tabs show Attack, Healing or Support. Faded spells need a higher level.'},
       {art = 'ArtSpellDemo', title = 'See a spell',
        text = 'Click a spell: a small demo shows its missile, effect and area as they look in the game. Replay plays it again.'},
     }
