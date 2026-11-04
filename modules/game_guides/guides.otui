@@ -1717,6 +1717,7 @@ ArtStoreButton < Panel
     margin-top: 18
     image-source: /images/ui/store_plate
     image-border: 0
+    image-color: #e6e6e6
     phantom: true
     UIWidget
       anchors.fill: parent
@@ -2106,145 +2107,275 @@ ArtVipDays < Panel
     text: 30
     phantom: true
 
-// the points of the account and the Buy Points button
+// the pieces of the Store window, as game_store draws them (its own styles only load with it)
+GuideStoreFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
+
+GuideStoreBox < UIWidget
+  size: 52 52
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+GuideStoreGold < UIWidget
+  image-source: /images/store/gold_button
+  image-clip: 0 0 40 30
+  image-border: 4
+  font: verdana-11px-rounded
+  color: #ffeab0
+  phantom: true
+
+GuideStoreTab < UIWidget
+  width: 84
+  height: 30
+  image-source: /images/store/tab
+  image-clip: 0 0 48 34
+  image-border: 4
+  font: verdana-11px-rounded
+  text-align: left
+  text-offset: 36 0
+  color: #a8a8a8
+  phantom: true
+
+  $on:
+    image-clip: 0 68 48 34
+    color: #f4d68c
+
+GuideStorePicture < UIWidget
+  size: 26 26
+  anchors.left: parent.left
+  anchors.verticalCenter: parent.verticalCenter
+  margin-left: 5
+  phantom: true
+
+// the top of the Store: the points of the account and the Buy Points button
 ArtStorePoints < Panel
   anchors.fill: parent
 
-  GuideKey
-    id: points
+  GuideStoreFrame
+    id: strip
+    height: 52
     anchors.left: parent.left
+    anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: 10
-    text: Points: 1,250
+    margin-top: 9
 
-  UIWidget
-    id: buy
-    size: 86 22
-    anchors.left: points.right
-    anchors.verticalCenter: points.verticalCenter
-    margin-left: 10
-    image-source: /images/ui/button
-    image-clip: 0 0 22 23
-    image-border: 3
-    image-color: #dfdfdf
-    font: verdana-11px-antialised
-    color: #dfdfdf
-    text: Buy Points
-    phantom: true
+    UIWidget
+      id: coins
+      size: 36 36
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+      image-source: /images/store/coins36
+      phantom: true
 
-  GuideNote
-    anchors.left: points.left
-    anchors.top: points.bottom
-    margin-top: 10
-    text: Buy Points opens the website
+    Label
+      id: caption
+      anchors.left: coins.right
+      anchors.bottom: parent.verticalCenter
+      margin-left: 8
+      margin-bottom: 1
+      text-auto-resize: true
+      color: #c8c8c8
+      text: Your points
+      phantom: true
 
-// a category, an offer and the Buy button
+    Label
+      anchors.left: caption.left
+      anchors.top: parent.verticalCenter
+      margin-top: 1
+      text-auto-resize: true
+      font: verdana-11px-rounded
+      color: #f4d68c
+      text: 1,250
+      phantom: true
+
+    GuideStoreGold
+      id: buy
+      size: 136 36
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 8
+      text-offset: 15 0
+      text: Buy Points
+
+      GuideStorePicture
+        margin-left: 6
+        image-source: /images/store/purse26
+
+  GuideMouse
+    anchors.right: strip.right
+    anchors.top: strip.top
+    margin-right: 6
+    margin-top: 30
+    image-source: /images/game/guides/mouse_left
+
+// left to right: the category, an offer picked in it with its price, and the Buy button
 ArtStoreBuy < Panel
   anchors.fill: parent
 
-  GuideMenu
-    id: categories
-    width: 70
+  GuideStoreTab
+    id: runes
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-top: 4
-    GuideMenuLine
-      text: Runes
-      on: true
-    GuideMenuLine
-      text: Potions
-    GuideMenuLine
-      text: Items
+    margin-top: 11
+    text: Runes
+    on: true
 
-  GuideSlot
-    id: offer
-    anchors.left: categories.right
-    anchors.top: parent.top
-    margin-left: 10
-    margin-top: 4
-    GuideItem
-      anchors.centerIn: parent
-      &itemId: 3160
+    GuideStorePicture
+      image-source: /images/store/rune26
 
-  Label
-    id: name
-    anchors.left: offer.right
-    anchors.top: offer.top
-    margin-left: 6
+  GuideStoreTab
+    anchors.left: runes.left
+    anchors.top: runes.bottom
     margin-top: 2
-    font: verdana-11px-rounded
-    color: #ffd57a
-    text: Rich UH
-    text-auto-resize: true
-    phantom: true
-  Label
-    anchors.left: name.left
-    anchors.top: name.bottom
-    margin-top: 2
-    font: verdana-11px-antialised
-    color: #dcdcdc
-    text: 30 points
-    text-auto-resize: true
-    phantom: true
+    text: Mounts
+
+    GuideStorePicture
+      image-source: /images/store/saddle26
 
   UIWidget
-    id: buy
-    size: 54 22
-    anchors.left: offer.left
-    anchors.top: offer.bottom
-    margin-top: 10
-    image-source: /images/ui/button
-    image-clip: 0 0 22 23
-    image-border: 3
-    image-color: #dfdfdf
-    font: verdana-11px-antialised
-    color: #dfdfdf
-    text: Buy
+    id: offer
+    size: 124 84
+    anchors.left: runes.right
+    anchors.top: parent.top
+    margin-left: 6
+    image-source: /images/store/offer_focus
+    image-border: 2
     phantom: true
-  GuideNote
-    anchors.left: buy.right
-    anchors.verticalCenter: buy.verticalCenter
-    margin-left: 8
-    text: asks first
+
+    Label
+      id: name
+      height: 16
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin: 2 2 0 2
+      image-source: /images/taskboard/caption
+      image-border: 2
+      text-align: center
+      font: verdana-11px-rounded
+      color: #ececec
+      text: Rich UH
+      phantom: true
+
+    GuideStoreBox
+      id: itemBox
+      anchors.left: parent.left
+      anchors.top: name.bottom
+      margin-left: 6
+      margin-top: 7
+
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 3160
+
+    UIWidget
+      height: 24
+      anchors.left: itemBox.right
+      anchors.right: parent.right
+      anchors.verticalCenter: itemBox.verticalCenter
+      margin-left: 6
+      margin-right: 6
+      image-source: /images/taskboard/plate
+      image-border: 2
+      phantom: true
+
+      UIWidget
+        id: coin
+        size: 14 14
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 5
+        image-source: /images/store/coin14
+        phantom: true
+
+      Label
+        anchors.left: parent.left
+        anchors.right: coin.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 2
+        margin-right: 2
+        text-align: center
+        font: verdana-11px-rounded
+        color: #f4d68c
+        text: 30
+        phantom: true
+
+  GuideStoreGold
+    id: buy
+    size: 70 30
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    text: Buy
+
+  GuideMouse
+    anchors.left: buy.left
+    anchors.top: buy.top
+    margin-left: 34
+    margin-top: 18
+    image-source: /images/game/guides/mouse_left
 
 // the character that gets it, and the backpack it lands in
 ArtStoreDelivery < Panel
   anchors.fill: parent
 
-  GuideKey
-    id: deliver
+  GuideStoreFrame
+    id: strip
+    height: 66
     anchors.left: parent.left
+    anchors.right: parent.right
     anchors.top: parent.top
-    margin-top: 16
-    text: Deliver to: Dev
+    margin-top: 9
 
-  GuideArrow
-    id: arrow
-    anchors.left: deliver.right
-    anchors.verticalCenter: deliver.verticalCenter
-    margin-left: 8
+    Label
+      id: deliver
+      height: 14
+      anchors.left: character.left
+      anchors.right: character.right
+      anchors.bottom: character.top
+      margin-bottom: 2
+      text-align: center
+      color: #c8c8c8
+      text: Deliver to
+      phantom: true
 
-  GuideSlot
-    id: bag
-    anchors.left: arrow.right
-    anchors.verticalCenter: deliver.verticalCenter
-    margin-left: 8
-    GuideItem
-      anchors.centerIn: parent
-      &itemId: 2854
-  GuideSlot
-    anchors.left: bag.right
-    anchors.top: bag.top
-    margin-left: 2
-    GuideItem
-      anchors.centerIn: parent
-      &itemId: 3160
+    ComboBox
+      id: character
+      width: 124
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-left: 8
+      margin-top: 30
+      text: Dev
+      phantom: true
 
-  GuideNote
-    anchors.left: deliver.left
-    anchors.top: deliver.bottom
-    margin-top: 12
-    text: in seconds, or at the next login
+    GuideArrow
+      id: arrow
+      anchors.left: character.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+
+    GuideStoreBox
+      id: bag
+      anchors.left: arrow.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 8
+
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 2854
+
+    GuideStoreBox
+      anchors.left: bag.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 6
+
+      GuideItem
+        anchors.centerIn: parent
+        &itemId: 3160
 
 // --- window -----------------------------------------------------------------------------------------------------------
 
