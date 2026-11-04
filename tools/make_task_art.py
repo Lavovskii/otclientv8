@@ -295,10 +295,11 @@ def button(rows, name):
     out.crop((0, 0, 20, 20)).save(os.path.join(ROOT, 'data', 'images', 'topbuttons', name + '.png'))
 
 
-os.makedirs(OUT, exist_ok=True)
-pictures()
-panels()
-stage()
-button(BOARD, 'taskboard')
-button(TRACKER, 'tasktracker')
-print('ok')
+if __name__ == '__main__':
+    os.makedirs(OUT, exist_ok=True)
+    pictures()
+    panels()
+    stage()
+    button(BOARD, 'taskboard')
+    button(TRACKER, 'tasktracker')
+    print('ok')

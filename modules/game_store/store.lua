@@ -36,8 +36,27 @@ local function formatPoints(n)
   return tostring(n):reverse():gsub('(%d%d%d)', '%1,'):reverse():gsub('^,', '')
 end
 
+-- the picture of a category, by what its name says; the staff name them, so any other gets the scroll
+local CATEGORY_PICTURES = {
+  {'consum', 'potion'}, {'potion', 'potion'}, {'rune', 'potion'}, {'cosmet', 'tunic'}, {'outfit', 'tunic'}, {'addon', 'tunic'},
+  {'mount', 'tunic'}, {'boost', 'flask'}, {'exp', 'flask'}, {'extra', 'crate'}, {'item', 'crate'}, {'task', 'stall'}, {'point', 'purse'},
+}
+
+local function categoryPicture(name)
+  local lower = tostring(name):lower()
+  for _, entry in ipairs(CATEGORY_PICTURES) do
+    if lower:find(entry[1], 1, true) then
+      return '/images/store/' .. entry[2] .. '26'
+    end
+  end
+  return '/images/store/scroll26'
+end
+
 local function showOffer(offer)
   state.selected = offer
+  win.details.priceBox:setVisible(offer ~= nil)
+  win.details.line:setVisible(offer ~= nil)
+  win.details.descBox:setVisible(offer ~= nil)
   if not offer then
     win.details.offerName:setText('')
     win.details.priceBox.offerPrice:setText('')
@@ -48,14 +67,21 @@ local function showOffer(offer)
   end
   win.details.bigBox.bigItem:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
   win.details.bigBox.bigItem:setItemCount(math.max(1, tonumber(offer.count) or 1))
-  win.details.offerName:setText(offer.name)
-  win.details.priceBox.offerPrice:setText(formatPoints(offer.price) .. ' ' .. tr('points'))
+  win.details.bigBox.bigItem:setShowCount(false)
+  local total = math.max(1, tonumber(offer.count) or 1) * math.max(1, tonumber(offer.amount) or 1)
+  win.details.offerName:setText(total > 1 and (formatPoints(total) .. 'x ' .. offer.name) or offer.name)
+  win.details.priceBox.offerPrice:setText(formatPoints(offer.price))
   win.details.descBox.offerDesc:setText(offer.description or '')
   win.details.buyButton:setEnabled(true)
 end
 
 local function fillOffers()
   win.offersBox.offers:destroyChildren()
+  for _, cat in ipairs(state.categories) do
+    if tonumber(cat.id) == state.category then
+      win.offersBox.caption:setText(cat.name)
+    end
+  end
   local first
   for _, offer in ipairs(state.offers) do
     if tonumber(offer.category) == state.category then
@@ -63,11 +89,16 @@ local function fillOffers()
       row.offer = offer
       row.itemBox.item:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
       row.itemBox.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
+      row.itemBox.item:setShowCount(false)
       row.name:setText(offer.name)
-      row.priceBox.price:setText(formatPoints(offer.price) .. ' pts')
+      row.name:setTooltip(offer.name)
+      local total = math.max(1, tonumber(offer.count) or 1) * math.max(1, tonumber(offer.amount) or 1)
+      row.amount:setText(total > 1 and ('x' .. formatPoints(total)) or '')
+      row.priceBox.price:setText(formatPoints(offer.price))
       first = first or row
     end
   end
+  win.offersBox.noOffers:setVisible(first == nil)
   if first then first:focus() showOffer(first.offer) else showOffer(nil) end
 end
 
@@ -78,6 +109,7 @@ local function fillCategories()
   for _, cat in ipairs(state.categories) do
     local btn = g_ui.createWidget('StoreCategory', win.categoriesBox.categories)
     btn:setText(cat.name)
+    btn.picture:setImageSource(categoryPicture(cat.name))
     btn.catId = tonumber(cat.id)
     first = first or btn
     if btn.catId == keep then keepBtn = btn end
@@ -94,7 +126,10 @@ local function applyInfo(data)
   state.admin = data.admin == true
   win.bottomBar.adminBar:setVisible(state.admin)
   win.bottomBar.pointsBar:setVisible(state.admin)
-  win.pointsBox.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
+  -- the staff's tools take room only from the staff's window
+  win.bottomBar:setHeight(state.admin and 88 or 28)
+  win:setHeight(state.admin and 565 or 505)
+  win.pointsBox.pointsLabel:setText(formatPoints(data.points or 0))
   win.details.charBox:clearOptions()
   local current = g_game.getLocalPlayer() and g_game.getLocalPlayer():getName()
   for _, name in ipairs(state.characters) do win.details.charBox:addOption(name) end
@@ -142,7 +177,7 @@ function buy()
     setStatus(tr('Processing...'))
     local rid = string.format('%08x%08x', math.random(0, 0x7fffffff), os.time())
     call({ action = 'buy', offer = tonumber(offer.id), character = character, requestId = rid }, function(data)
-      win.pointsBox.pointsLabel:setText(tr('Points: %s', formatPoints(data.points or 0)))
+      win.pointsBox.pointsLabel:setText(formatPoints(data.points or 0))
       setStatus(data.message or tr('Purchase complete.'), '#7fd37a')
     end)
   end
@@ -343,6 +378,8 @@ end
 function init()
   win = g_ui.loadUI('store', g_ui.getRootWidget())
   win:hide()
+  win.categoriesBox.caption:setText(tr('Categories'))
+  win.details.caption:setText(tr('Offer'))
   connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
   connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
   connect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })

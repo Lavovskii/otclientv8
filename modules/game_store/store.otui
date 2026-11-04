@@ -1,26 +1,120 @@
-StoreOffer < UIWidget
-  height: 50
+// The Store, in the style of the Task Board: the stone of the retro layout, with pictures in data/images/store and
+// data/images/taskboard (tools/make_store_art.py, tools/make_task_art.py).
+
+StoreFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
+
+StoreCaptionFrame < StoreFrame
+  Label
+    id: caption
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 2 2 0 2
+    height: 18
+    image-source: /images/taskboard/caption
+    image-border: 2
+    text-align: center
+    color: #d8c08a
+    font: verdana-11px-rounded
+    phantom: true
+
+StoreBox < UIWidget
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+StorePlate < UIWidget
+  image-source: /images/taskboard/plate
+  image-border: 2
+  phantom: true
+
+StoreGoldButton < UIButton
+  font: verdana-11px-rounded
+  color: #ffeab0
+  image-source: /images/store/gold_button
+  image-clip: 0 0 40 30
+  image-border: 4
+  text-offset: 0 0
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover !disabled:
+    image-clip: 0 30 40 30
+    color: #ffffff
+
+  $pressed:
+    image-clip: 0 60 40 30
+    text-offset: 1 1
+
+  $disabled:
+    image-color: #ffffff70
+    color: #ffeab060
+    change-cursor-image: false
+
+StoreCategory < UIButton
+  height: 34
   margin-bottom: 3
   focusable: true
-  background-color: #ffffff0c
-  border-width: 1
-  border-color: #00000099
-  $focus:
-    background-color: #ffffff26
-    border-color: #e0b44c
-  $hover !focus:
-    background-color: #ffffff18
+  image-source: /images/store/tab
+  image-clip: 0 0 48 34
+  image-border: 4
+  font: verdana-11px-rounded
+  text-align: left
+  text-offset: 38 0
+  color: #a8a8a8
 
-  Panel
-    id: itemBox
-    size: 38 38
+  $hover !focus:
+    image-clip: 0 34 48 34
+    color: #dcdcdc
+
+  $focus:
+    image-clip: 0 68 48 34
+    color: #f4d68c
+
+  UIWidget
+    id: picture
+    size: 26 26
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    margin-left: 6
-    background-color: #00000066
-    border-width: 1
-    border-color: #000000
+    margin-left: 7
     phantom: true
+
+StoreOffer < UIWidget
+  size: 168 84
+  focusable: true
+  image-source: /images/store/offer
+  image-border: 2
+
+  $hover !focus:
+    image-source: /images/store/offer_hover
+
+  $focus:
+    image-source: /images/store/offer_focus
+
+  Label
+    id: name
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 2 2 0 2
+    height: 17
+    image-source: /images/taskboard/caption
+    image-border: 2
+    text-align: center
+    font: verdana-11px-rounded
+    color: #ececec
+    phantom: true
+
+  StoreBox
+    id: itemBox
+    size: 52 52
+    anchors.left: parent.left
+    anchors.top: name.bottom
+    margin-left: 6
+    margin-top: 5
 
     UIItem
       id: item
@@ -30,146 +124,159 @@ StoreOffer < UIWidget
       phantom: true
 
   Label
-    id: name
+    id: amount
     anchors.left: itemBox.right
-    anchors.top: parent.top
     anchors.right: parent.right
-    margin: 8 6 0 10
-    color: #f4f4f4
+    anchors.top: itemBox.top
+    margin-left: 6
+    margin-right: 6
+    margin-top: 6
+    text-align: center
+    font: verdana-11px-rounded
+    color: #c8c8c8
     phantom: true
 
-  Panel
+  StorePlate
     id: priceBox
-    height: 16
-    width: 84
+    height: 22
     anchors.left: itemBox.right
-    anchors.bottom: parent.bottom
-    margin-left: 10
-    margin-bottom: 6
-    background-color: #00000099
-    border-width: 1
-    border-color: #3a3a3a
-    phantom: true
+    anchors.right: parent.right
+    anchors.bottom: itemBox.bottom
+    margin-left: 6
+    margin-right: 6
+
+    UIWidget
+      id: coin
+      size: 14 14
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 4
+      image-source: /images/store/coin14
+      phantom: true
 
     Label
       id: price
-      anchors.fill: parent
+      anchors.left: parent.left
+      anchors.right: coin.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 2
+      margin-right: 2
       text-align: center
-      color: #e0b44c
+      font: verdana-11px-rounded
+      color: #f4d68c
       phantom: true
-
-StoreCategory < UIButton
-  height: 26
-  margin-bottom: 3
-  text-align: left
-  text-offset: 12 0
-  focusable: true
-  color: #b8b8b8
-  background-color: #ffffff0c
-  border-width: 1
-  border-color: #00000099
-  $focus:
-    background-color: #ffffff26
-    border-color: #e0b44c
-    color: #ffffff
-  $hover !focus:
-    background-color: #ffffff18
-    color: #e8e8e8
-
-StoreSection < Panel
-  background-color: #00000040
-  border-width: 1
-  border-color: #000000cc
-  padding: 5
 
 MainWindow
   id: storeWindow
   !text: tr('Store')
-  size: 780 520
+  size: 780 505
   visible: false
 
-  StoreSection
+  StoreFrame
     id: pointsBox
-    height: 30
-    width: 190
+    height: 52
     anchors.left: parent.left
+    anchors.right: parent.right
     anchors.top: parent.top
+
+    UIWidget
+      id: coins
+      size: 36 36
+      anchors.left: parent.left
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: 9
+      image-source: /images/store/coins36
+      phantom: true
+
+    Label
+      id: pointsCaption
+      !text: tr('Your points')
+      anchors.left: coins.right
+      anchors.top: coins.top
+      margin-left: 8
+      margin-top: 2
+      text-auto-resize: true
+      color: #c8c8c8
+      phantom: true
 
     Label
       id: pointsLabel
-      text: Points: ...
-      anchors.fill: parent
-      text-align: left
-      color: #e0b44c
-      margin-left: 6
+      text: ...
+      anchors.left: pointsCaption.left
+      anchors.top: pointsCaption.bottom
+      margin-top: 2
+      text-auto-resize: true
       font: verdana-11px-rounded
+      color: #f4d68c
+      phantom: true
 
-  Button
-    id: buyPointsButton
-    !text: tr('Buy Points')
-    width: 130
-    height: 30
-    anchors.right: parent.right
-    anchors.top: parent.top
-    color: #ffe29a
-    @onClick: modules.game_store.openBuyPoints()
+    UIWidget
+      id: ribbon
+      size: 244 38
+      anchors.centerIn: parent
+      image-source: /images/taskboard/ribbon_gold
+      phantom: true
 
-  StoreSection
+      Label
+        id: title
+        !text: tr('ForgottenL Store')
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 10 22 0 44
+        height: 16
+        text-align: center
+        font: verdana-11px-rounded
+        color: #3c2608
+        phantom: true
+
+    StoreGoldButton
+      id: buyPointsButton
+      !text: tr('Buy Points')
+      size: 142 34
+      anchors.right: parent.right
+      anchors.verticalCenter: parent.verticalCenter
+      margin-right: 9
+      text-offset: 14 0
+      @onClick: modules.game_store.openBuyPoints()
+
+      UIWidget
+        size: 26 26
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin-left: 7
+        image-source: /images/store/purse26
+        phantom: true
+
+  StoreCaptionFrame
     id: categoriesBox
-    width: 150
+    width: 158
     anchors.left: parent.left
     anchors.top: pointsBox.bottom
     anchors.bottom: bottomBar.top
-    margin-top: 8
-    margin-bottom: 8
+    margin-top: 4
+    margin-bottom: 5
 
     Panel
       id: categories
       anchors.fill: parent
+      margin: 23 5 4 5
       layout:
         type: verticalBox
 
-  StoreSection
-    id: offersBox
-    width: 300
-    anchors.left: categoriesBox.right
-    anchors.top: categoriesBox.top
-    anchors.bottom: categoriesBox.bottom
-    margin-left: 8
-
-    ScrollablePanel
-      id: offers
-      anchors.fill: parent
-      margin-right: 14
-      vertical-scrollbar: offersScroll
-      layout:
-        type: verticalBox
-
-    VerticalScrollBar
-      id: offersScroll
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      step: 30
-      pixels-scroll: true
-
-  StoreSection
+  StoreCaptionFrame
     id: details
-    anchors.left: offersBox.right
+    width: 216
     anchors.right: parent.right
     anchors.top: categoriesBox.top
     anchors.bottom: categoriesBox.bottom
-    margin-left: 8
 
-    Panel
+    StoreBox
       id: bigBox
-      size: 80 80
+      size: 84 84
       anchors.horizontalCenter: parent.horizontalCenter
-      anchors.top: parent.top
+      anchors.top: caption.bottom
       margin-top: 6
-      background-color: #00000080
-      border-width: 1
-      border-color: #000000
 
       UIItem
         id: bigItem
@@ -177,49 +284,77 @@ MainWindow
         anchors.centerIn: parent
         virtual: true
 
+    UIWidget
+      size: 18 18
+      anchors.left: parent.left
+      anchors.top: caption.bottom
+      margin: 1 0 0 2
+      image-source: /images/taskboard/corner_tl
+      phantom: true
+
+    UIWidget
+      size: 18 18
+      anchors.right: parent.right
+      anchors.top: caption.bottom
+      margin: 1 2 0 0
+      image-source: /images/taskboard/corner_tr
+      phantom: true
+
     Label
       id: offerName
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: bigBox.bottom
-      margin-top: 10
+      margin: 6 8 0 8
       text-align: center
       color: #ffffff
       text-wrap: true
       text-auto-resize: true
       font: verdana-11px-rounded
 
-    Panel
+    StorePlate
       id: priceBox
-      height: 20
+      height: 24
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: offerName.bottom
-      margin-top: 6
-      margin-left: 30
-      margin-right: 30
-      background-color: #00000099
-      border-width: 1
-      border-color: #3a3a3a
+      margin: 5 30 0 30
+
+      UIWidget
+        id: coin
+        size: 14 14
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 6
+        image-source: /images/store/coin14
+        phantom: true
 
       Label
         id: offerPrice
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: coin.left
+        anchors.verticalCenter: parent.verticalCenter
         text-align: center
-        color: #e0b44c
+        font: verdana-11px-rounded
+        color: #f4d68c
 
-    Panel
+    UIWidget
+      id: line
+      size: 150 14
+      anchors.top: priceBox.bottom
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 3
+      image-source: /images/taskboard/divider
+      phantom: true
+
+    StoreBox
       id: descBox
       anchors.left: parent.left
       anchors.right: parent.right
-      anchors.top: priceBox.bottom
+      anchors.top: line.bottom
       anchors.bottom: charLabel.top
-      margin-top: 10
-      margin-bottom: 8
-      background-color: #00000066
-      border-width: 1
-      border-color: #000000
-      padding: 6
+      margin: 3 8 4 8
+      padding: 5
 
       Label
         id: offerDesc
@@ -234,30 +369,71 @@ MainWindow
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: charBox.top
-      margin-bottom: 3
+      margin-bottom: 2
       text-align: center
-      color: #b8b8b8
+      color: #c8c8c8
 
     ComboBox
       id: charBox
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: buyButton.top
-      margin-bottom: 8
+      margin: 0 8 5 8
 
-    Button
+    StoreGoldButton
       id: buyButton
       !text: tr('Buy')
-      height: 28
+      height: 32
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: parent.bottom
-      color: #ffe29a
+      margin: 0 8 6 8
       @onClick: modules.game_store.buy()
+
+  StoreCaptionFrame
+    id: offersBox
+    anchors.left: categoriesBox.right
+    anchors.right: details.left
+    anchors.top: categoriesBox.top
+    anchors.bottom: categoriesBox.bottom
+    margin-left: 4
+    margin-right: 4
+
+    ScrollablePanel
+      id: offers
+      anchors.top: caption.bottom
+      anchors.left: parent.left
+      anchors.right: offersScroll.left
+      anchors.bottom: parent.bottom
+      margin: 4 3 4 5
+      vertical-scrollbar: offersScroll
+      layout:
+        type: grid
+        cell-size: 168 84
+        cell-spacing: 3
+        flow: true
+
+    VerticalScrollBar
+      id: offersScroll
+      anchors.top: caption.bottom
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin: 1 3 3 0
+      step: 30
+      pixels-scroll: true
+
+    Label
+      id: noOffers
+      !text: tr('Nothing here yet.')
+      anchors.centerIn: parent
+      text-auto-resize: true
+      font: verdana-11px-rounded
+      color: #c8c8c8
+      visible: false
 
   Panel
     id: bottomBar
-    height: 92
+    height: 28
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
