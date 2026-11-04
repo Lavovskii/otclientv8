@@ -7,8 +7,8 @@ local WEEKLY_TOTAL = 18
 local WEEKLY_STEPS = {{0, 'x1', 1}, {4, 'x2', 2}, {8, 'x3', 3}, {12, 'x5', 5}, {16, 'x8', 8}}
 local TRACKER_ROW, TRACKER_CAPTION = 36, 18
 local GRADES = {
-  Gold = {image = '/images/taskboard/ribbon_gold', color = '#3c2608'},
-  Silver = {image = '/images/taskboard/ribbon_silver', color = '#202020'},
+  Gold = {image = '/images/taskboard/ribbon_gold', color = '#2a1804'},
+  Silver = {image = '/images/taskboard/ribbon_silver', color = '#141414'},
 }
 local PLAIN_GRADE = {image = '/images/taskboard/ribbon', color = '#ffffff'}
 local GREEN, RED, GOLD = '#6ed06e', '#e05a4a', '#c8963c'
@@ -451,6 +451,8 @@ local function makeCells()
     -- over what each kind of cell adds to the common ones
     killCells[slot].locked:raise()
     deliveryCells[slot].locked:raise()
+    -- a kill task has only its count beside the picture, in the middle of it; a delivery has its button under the count
+    killCells[slot].count:setMarginTop(13)
   end
 
   -- the steps of the reward over the bar and the tasks they need under it

@@ -163,7 +163,7 @@ TaskCell < UIWidget
   UIWidget
     id: locked
     anchors.fill: parent
-    background-color: #000000d8
+    background-color: #0c0c0cf6
     visible: false
 
     UIWidget
@@ -367,7 +367,7 @@ MainWindow
 
       TaskFrame
         id: card
-        size: 258 282
+        size: 258 270
         anchors.centerIn: parent
 
         UIWidget
@@ -384,10 +384,10 @@ MainWindow
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            margin: 10 22 0 44
-            height: 16
+            margin: 11 22 0 44
+            height: 14
             text-align: center
-            font: verdana-11px-rounded
+            font: verdana-11px-antialised
             color: #ffffff
 
         TaskBox
@@ -498,7 +498,7 @@ MainWindow
           anchors.bottom: parent.bottom
           anchors.left: parent.left
           anchors.right: parent.right
-          margin: 0 14 7 14
+          margin: 0 22 8 22
 
         UIWidget
           size: 18 18

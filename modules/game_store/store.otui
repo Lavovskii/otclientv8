@@ -1,5 +1,8 @@
 // The Store, in the style of the Task Board: the stone of the retro layout, with pictures in data/images/store and
 // data/images/taskboard (tools/make_store_art.py, tools/make_task_art.py).
+// The window is a grid of 748 x 474 inside: header 52, gap 4, columns 386 (160 + 4 + 368 + 4 + 212), gap 6, last row 26.
+// A frame's caption ends 20 pixels down. Inside the columns everything stays 6 pixels from the edges and from each other,
+// which gives the offers two columns of 168 and four whole rows of 84.
 
 StoreFrame < UIWidget
   image-source: /images/taskboard/frame
@@ -55,15 +58,14 @@ StoreGoldButton < UIButton
     change-cursor-image: false
 
 StoreCategory < UIButton
-  height: 34
-  margin-bottom: 3
+  height: 30
   focusable: true
   image-source: /images/store/tab
   image-clip: 0 0 48 34
   image-border: 4
   font: verdana-11px-rounded
   text-align: left
-  text-offset: 38 0
+  text-offset: 36 0
   color: #a8a8a8
 
   $hover !focus:
@@ -79,7 +81,7 @@ StoreCategory < UIButton
     size: 26 26
     anchors.left: parent.left
     anchors.verticalCenter: parent.verticalCenter
-    margin-left: 7
+    margin-left: 5
     phantom: true
 
 StoreOffer < UIWidget
@@ -100,7 +102,7 @@ StoreOffer < UIWidget
     anchors.left: parent.left
     anchors.right: parent.right
     margin: 2 2 0 2
-    height: 17
+    height: 16
     image-source: /images/taskboard/caption
     image-border: 2
     text-align: center
@@ -114,7 +116,7 @@ StoreOffer < UIWidget
     anchors.left: parent.left
     anchors.top: name.bottom
     margin-left: 6
-    margin-top: 5
+    margin-top: 7
 
     UIItem
       id: item
@@ -123,25 +125,12 @@ StoreOffer < UIWidget
       virtual: true
       phantom: true
 
-  Label
-    id: amount
-    anchors.left: itemBox.right
-    anchors.right: parent.right
-    anchors.top: itemBox.top
-    margin-left: 6
-    margin-right: 6
-    margin-top: 6
-    text-align: center
-    font: verdana-11px-rounded
-    color: #c8c8c8
-    phantom: true
-
   StorePlate
     id: priceBox
-    height: 22
+    height: 24
     anchors.left: itemBox.right
     anchors.right: parent.right
-    anchors.bottom: itemBox.bottom
+    anchors.verticalCenter: itemBox.verticalCenter
     margin-left: 6
     margin-right: 6
 
@@ -150,7 +139,7 @@ StoreOffer < UIWidget
       size: 14 14
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      margin-right: 4
+      margin-right: 5
       image-source: /images/store/coin14
       phantom: true
 
@@ -166,10 +155,13 @@ StoreOffer < UIWidget
       color: #f4d68c
       phantom: true
 
+StoreStaffButton < Button
+  height: 22
+
 MainWindow
   id: storeWindow
   !text: tr('Store')
-  size: 780 505
+  size: 780 515
   visible: false
 
   StoreFrame
@@ -184,7 +176,7 @@ MainWindow
       size: 36 36
       anchors.left: parent.left
       anchors.verticalCenter: parent.verticalCenter
-      margin-left: 9
+      margin-left: 8
       image-source: /images/store/coins36
       phantom: true
 
@@ -192,9 +184,9 @@ MainWindow
       id: pointsCaption
       !text: tr('Your points')
       anchors.left: coins.right
-      anchors.top: coins.top
+      anchors.bottom: parent.verticalCenter
       margin-left: 8
-      margin-top: 2
+      margin-bottom: 1
       text-auto-resize: true
       color: #c8c8c8
       phantom: true
@@ -203,8 +195,8 @@ MainWindow
       id: pointsLabel
       text: ...
       anchors.left: pointsCaption.left
-      anchors.top: pointsCaption.bottom
-      margin-top: 2
+      anchors.top: parent.verticalCenter
+      margin-top: 1
       text-auto-resize: true
       font: verdana-11px-rounded
       color: #f4d68c
@@ -217,56 +209,69 @@ MainWindow
       image-source: /images/taskboard/ribbon_gold
       phantom: true
 
-      Label
+      UIWidget
         id: title
-        !text: tr('ForgottenL Store')
+        size: 124 16
         anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        margin: 10 22 0 44
-        height: 16
-        text-align: center
-        font: verdana-11px-rounded
-        color: #3c2608
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 11
+        margin-left: 22
+        image-source: /images/store/title
         phantom: true
 
     StoreGoldButton
       id: buyPointsButton
       !text: tr('Buy Points')
-      size: 142 34
+      size: 136 36
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
-      margin-right: 9
-      text-offset: 14 0
+      margin-right: 8
+      text-offset: 15 0
       @onClick: modules.game_store.openBuyPoints()
 
       UIWidget
         size: 26 26
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        margin-left: 7
+        margin-left: 6
         image-source: /images/store/purse26
         phantom: true
 
   StoreCaptionFrame
     id: categoriesBox
-    width: 158
+    width: 160
     anchors.left: parent.left
     anchors.top: pointsBox.bottom
     anchors.bottom: bottomBar.top
     margin-top: 4
-    margin-bottom: 5
+    margin-bottom: 6
 
-    Panel
+    ScrollablePanel
       id: categories
-      anchors.fill: parent
-      margin: 23 5 4 5
+      anchors.top: caption.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin: 6 6 6 6
+      vertical-scrollbar: categoriesScroll
       layout:
         type: verticalBox
+        spacing: 2
+
+    // only with more categories than the column holds
+    VerticalScrollBar
+      id: categoriesScroll
+      anchors.top: caption.bottom
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      margin: 1 3 3 0
+      step: 32
+      pixels-scroll: true
+      visible: false
 
   StoreCaptionFrame
     id: details
-    width: 216
+    width: 212
     anchors.right: parent.right
     anchors.top: categoriesBox.top
     anchors.bottom: categoriesBox.bottom
@@ -276,7 +281,7 @@ MainWindow
       size: 84 84
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: caption.bottom
-      margin-top: 6
+      margin-top: 8
 
       UIItem
         id: bigItem
@@ -314,18 +319,17 @@ MainWindow
 
     StorePlate
       id: priceBox
-      height: 24
-      anchors.left: parent.left
-      anchors.right: parent.right
+      size: 120 24
+      anchors.horizontalCenter: parent.horizontalCenter
       anchors.top: offerName.bottom
-      margin: 5 30 0 30
+      margin-top: 6
 
       UIWidget
         id: coin
         size: 14 14
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        margin-right: 6
+        margin-right: 5
         image-source: /images/store/coin14
         phantom: true
 
@@ -334,6 +338,8 @@ MainWindow
         anchors.left: parent.left
         anchors.right: coin.left
         anchors.verticalCenter: parent.verticalCenter
+        margin-left: 2
+        margin-right: 2
         text-align: center
         font: verdana-11px-rounded
         color: #f4d68c
@@ -343,7 +349,7 @@ MainWindow
       size: 150 14
       anchors.top: priceBox.bottom
       anchors.horizontalCenter: parent.horizontalCenter
-      margin-top: 3
+      margin-top: 4
       image-source: /images/taskboard/divider
       phantom: true
 
@@ -353,8 +359,8 @@ MainWindow
       anchors.right: parent.right
       anchors.top: line.bottom
       anchors.bottom: charLabel.top
-      margin: 3 8 4 8
-      padding: 5
+      margin: 4 8 6 8
+      padding: 6
 
       Label
         id: offerDesc
@@ -370,6 +376,7 @@ MainWindow
       anchors.right: parent.right
       anchors.bottom: charBox.top
       margin-bottom: 2
+      height: 14
       text-align: center
       color: #c8c8c8
 
@@ -378,16 +385,16 @@ MainWindow
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: buyButton.top
-      margin: 0 8 5 8
+      margin: 0 8 6 8
 
     StoreGoldButton
       id: buyButton
       !text: tr('Buy')
-      height: 32
+      height: 30
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.bottom: parent.bottom
-      margin: 0 8 6 8
+      margin: 0 8 8 8
       @onClick: modules.game_store.buy()
 
   StoreCaptionFrame
@@ -405,12 +412,12 @@ MainWindow
       anchors.left: parent.left
       anchors.right: offersScroll.left
       anchors.bottom: parent.bottom
-      margin: 4 3 4 5
+      margin: 6 4 6 6
       vertical-scrollbar: offersScroll
       layout:
         type: grid
         cell-size: 168 84
-        cell-spacing: 3
+        cell-spacing: 6
         flow: true
 
     VerticalScrollBar
@@ -419,7 +426,7 @@ MainWindow
       anchors.bottom: parent.bottom
       anchors.right: parent.right
       margin: 1 3 3 0
-      step: 30
+      step: 45
       pixels-scroll: true
 
     Label
@@ -433,126 +440,129 @@ MainWindow
 
   Panel
     id: bottomBar
-    height: 28
+    height: 26
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: parent.bottom
 
-    Panel
-      id: adminBar
-      height: 26
-      visible: false
+    // only for the staff
+    StoreFrame
+      id: staffFrame
+      height: 58
       anchors.left: parent.left
       anchors.right: parent.right
       anchors.top: parent.top
-
-      Label
-        !text: tr('Admin')
-        color: #ff9a4a
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        width: 44
-
-      Button
-        id: addBtn
-        !text: tr('Add item')
-        width: 80
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        @onClick: modules.game_store.adminEdit(false)
-
-      Button
-        id: editBtn
-        !text: tr('Edit')
-        width: 60
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminEdit(true)
-
-      Button
-        id: removeBtn
-        !text: tr('Remove')
-        width: 70
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminRemove()
-
-      Button
-        id: addCatBtn
-        !text: tr('Add category')
-        width: 100
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 14
-        @onClick: modules.game_store.adminCategory(false)
-
-      Button
-        id: renameCatBtn
-        !text: tr('Rename category')
-        width: 115
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminCategory(true)
-
-      Button
-        id: delCatBtn
-        !text: tr('Remove category')
-        width: 115
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminRemoveCategory()
-
-    Panel
-      id: pointsBar
-      height: 26
       visible: false
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: adminBar.bottom
-      margin-top: 4
 
-      Label
-        !text: tr('Points')
-        color: #ff9a4a
+      Panel
+        id: adminBar
+        height: 22
         anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        width: 44
+        anchors.right: parent.right
+        anchors.top: parent.top
+        margin: 6 8 0 8
 
-      Button
-        !text: tr('Add points')
-        width: 90
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        @onClick: modules.game_store.adminPoints('add')
+        Label
+          !text: tr('Offers')
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          width: 52
+          font: verdana-11px-rounded
+          color: #d8c08a
 
-      Button
-        !text: tr('Remove points')
-        width: 110
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminPoints('remove')
+        StoreStaffButton
+          id: addBtn
+          !text: tr('Add item')
+          width: 76
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 52
+          @onClick: modules.game_store.adminEdit(false)
 
-      Button
-        !text: tr('Edit points')
-        width: 90
-        anchors.left: prev.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        @onClick: modules.game_store.adminPoints('set')
+        StoreStaffButton
+          id: editBtn
+          !text: tr('Edit')
+          width: 76
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminEdit(true)
 
-    Label
-      id: statusLabel
-      anchors.left: parent.left
-      anchors.right: closeButton.left
-      anchors.bottom: parent.bottom
-      margin-right: 8
-      margin-bottom: 6
-      color: #c8c8c8
+        StoreStaffButton
+          id: removeBtn
+          !text: tr('Remove')
+          width: 76
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminRemove()
+
+        StoreStaffButton
+          id: addCatBtn
+          !text: tr('Add category')
+          width: 118
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 16
+          @onClick: modules.game_store.adminCategory(false)
+
+        StoreStaffButton
+          id: renameCatBtn
+          !text: tr('Rename category')
+          width: 118
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminCategory(true)
+
+        StoreStaffButton
+          id: delCatBtn
+          !text: tr('Remove category')
+          width: 118
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminRemoveCategory()
+
+      Panel
+        id: pointsBar
+        height: 22
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: adminBar.bottom
+        margin: 4 8 0 8
+
+        Label
+          !text: tr('Points')
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          width: 52
+          font: verdana-11px-rounded
+          color: #d8c08a
+
+        StoreStaffButton
+          !text: tr('Add')
+          width: 76
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 52
+          @onClick: modules.game_store.adminPoints('add')
+
+        StoreStaffButton
+          !text: tr('Edit')
+          width: 76
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminPoints('set')
+
+        StoreStaffButton
+          !text: tr('Remove')
+          width: 76
+          anchors.left: prev.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          @onClick: modules.game_store.adminPoints('remove')
 
     Button
       id: closeButton
@@ -562,6 +572,15 @@ MainWindow
       anchors.right: parent.right
       anchors.bottom: parent.bottom
       @onClick: modules.game_store.hide()
+
+    Label
+      id: statusLabel
+      anchors.left: parent.left
+      anchors.right: closeButton.left
+      anchors.verticalCenter: closeButton.verticalCenter
+      margin-left: 2
+      margin-right: 8
+      color: #c8c8c8
 
   @onEscape: modules.game_store.hide()
 

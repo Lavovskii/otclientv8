@@ -9,7 +9,7 @@ painted here on the stone of the retro layout.
 """
 import os
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 from make_task_art import ROOT, SHEETS, base_stone, bevel, brightness, cut, shrink, tiled
 
@@ -45,6 +45,16 @@ def pictures():
         for size in sizes:
             save(shrink(picture, size), '%s%d' % (name, size))
 
+    # this sheet came with a transparent background instead of the magenta
+    more = Image.open(os.path.join(SHEETS, 'forgl_store_art_3.png')).convert('RGBA')
+    w, h = more.width / 4, more.height / 2
+    for index, name in enumerate(('armor', 'weapons', 'rune', 'gems', 'saddle', 'crown', 'table', 'sack')):
+        piece = more.crop((int((index % 4) * w), int((index // 4) * h), int((index % 4 + 1) * w), int((index // 4 + 1) * h)))
+        solid = piece.point(lambda v: v) if False else piece
+        alpha = solid.getchannel('A').point(lambda v: 255 if v >= 128 else 0)
+        solid.putalpha(alpha)
+        save(shrink(solid.crop(alpha.getbbox()), 26), name + '26')
+
 
 COIN = (
     "    ######    ",
@@ -75,12 +85,57 @@ def coin():
     save(out, 'coin14')
 
 
+GOLD = [(255, 246, 204), (255, 234, 164), (252, 216, 120), (242, 196, 90), (228, 174, 68), (210, 150, 50), (188, 126, 38), (162, 104, 30)]
+DIM = [tuple(v * 3 // 5 for v in colour) for colour in GOLD]
+FONT = r'C:\Windows\Fonts\georgiab.ttf'
+
+
+def lettering(text, size, ramp, edge=(30, 14, 4, 255), engraved=None):
+    """Hard pixels, no blur: a colour from above to below and a dark edge, or letters cut into the metal."""
+    font = ImageFont.truetype(FONT, size)
+    probe = Image.new('L', (400, 80), 0)
+    d = ImageDraw.Draw(probe)
+    d.fontmode = '1'
+    d.text((10, 10), text, fill=255, font=font)
+    mask = probe.crop(probe.getbbox())
+    w, h = mask.size
+    out = Image.new('RGBA', (w + 2, h + 3), (0, 0, 0, 0))
+    source, target = mask.load(), out.load()
+    for y in range(h):
+        for x in range(w):
+            if source[x, y]:
+                if engraved:
+                    target[x + 1, y + 2] = engraved
+                else:
+                    for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, -1), (-1, 1), (1, 1), (0, 2), (1, 2), (-1, 2)):
+                        target[x + 1 + dx, y + 1 + dy] = edge
+    for y in range(h):
+        colour = ramp[min(len(ramp) - 1, y * len(ramp) // h)]
+        for x in range(w):
+            if source[x, y]:
+                target[x + 1, y + 1] = colour + (255,)
+    return out
+
+
 def plate():
-    """The wide button: the first of the plaques of its sheet, sharp at the size of the button."""
+    """The wide button: the first plaque of its sheet with the word in it, dim, so it always reads; the bright word that
+    pulses over it goes in its own layer."""
     plaques = sheet(2)
     third = plaques.height / 3
-    top = cut(plaques, (0, 0, plaques.width, int(third)))
-    shrink(top, 176, 32, threshold=100).save(os.path.join(ROOT, 'data', 'images', 'ui', 'store_plate.png'))
+    top = shrink(cut(plaques, (0, 0, plaques.width, int(third))), 176, 32, threshold=100)
+    place = lambda letters: ((176 - letters.width) // 2, (32 - letters.height) // 2)
+    dim = lettering('Store', 17, DIM)
+    top.alpha_composite(dim, place(dim))
+    top.save(os.path.join(ROOT, 'data', 'images', 'ui', 'store_plate.png'))
+    bright = lettering('Store', 17, GOLD)
+    neon = Image.new('RGBA', (176, 32), (0, 0, 0, 0))
+    neon.alpha_composite(bright, place(bright))
+    neon.save(os.path.join(ROOT, 'data', 'images', 'ui', 'store_neon.png'))
+
+
+def title():
+    # cut into the gold ribbon: dark letters with a line of light under them
+    save(lettering('ForgottenL Store', 13, [(60, 34, 8)] * 8, engraved=(255, 232, 150, 255)), 'title')
 
 
 def buttons():
@@ -145,6 +200,7 @@ if __name__ == '__main__':
     pictures()
     coin()
     plate()
+    title()
     buttons()
     tabs()
     offers()

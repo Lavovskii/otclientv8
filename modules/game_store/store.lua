@@ -38,8 +38,10 @@ end
 
 -- the picture of a category, by what its name says; the staff name them, so any other gets the scroll
 local CATEGORY_PICTURES = {
-  {'consum', 'potion'}, {'potion', 'potion'}, {'rune', 'potion'}, {'cosmet', 'tunic'}, {'outfit', 'tunic'}, {'addon', 'tunic'},
-  {'mount', 'tunic'}, {'boost', 'flask'}, {'exp', 'flask'}, {'extra', 'crate'}, {'item', 'crate'}, {'task', 'stall'}, {'point', 'purse'},
+  {'equip', 'armor'}, {'armor', 'armor'}, {'weapon', 'weapons'}, {'consum', 'potion'}, {'potion', 'potion'}, {'rune', 'rune'},
+  {'gem', 'gems'}, {'upgrade', 'gems'}, {'mount', 'saddle'}, {'boost', 'flask'}, {'exp', 'flask'}, {'premium', 'crown'},
+  {'vip', 'crown'}, {'decor', 'table'}, {'furnitur', 'table'}, {'house', 'table'}, {'misc', 'sack'}, {'cosmet', 'tunic'},
+  {'outfit', 'tunic'}, {'addon', 'tunic'}, {'extra', 'crate'}, {'task', 'stall'}, {'point', 'purse'},
 }
 
 local function categoryPicture(name)
@@ -89,11 +91,8 @@ local function fillOffers()
       row.offer = offer
       row.itemBox.item:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
       row.itemBox.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
-      row.itemBox.item:setShowCount(false)
       row.name:setText(offer.name)
       row.name:setTooltip(offer.name)
-      local total = math.max(1, tonumber(offer.count) or 1) * math.max(1, tonumber(offer.amount) or 1)
-      row.amount:setText(total > 1 and ('x' .. formatPoints(total)) or '')
       row.priceBox.price:setText(formatPoints(offer.price))
       first = first or row
     end
@@ -114,6 +113,10 @@ local function fillCategories()
     first = first or btn
     if btn.catId == keep then keepBtn = btn end
   end
+  -- the column holds eleven; with more, the scrollbar takes its place beside them
+  local crowded = #state.categories > 11
+  win.categoriesBox.categoriesScroll:setVisible(crowded)
+  win.categoriesBox.categories:setMarginRight(crowded and 18 or 6)
   local f = keepBtn or first
   if f then f:focus() state.category = f.catId fillOffers() end
 end
@@ -124,11 +127,10 @@ local function applyInfo(data)
   state.characters = data.characters or {}
   if data.buyUrl and data.buyUrl:sub(1, 4):lower() == 'http' then state.buyUrl = data.buyUrl end
   state.admin = data.admin == true
-  win.bottomBar.adminBar:setVisible(state.admin)
-  win.bottomBar.pointsBar:setVisible(state.admin)
   -- the staff's tools take room only from the staff's window
-  win.bottomBar:setHeight(state.admin and 88 or 28)
-  win:setHeight(state.admin and 565 or 505)
+  win.bottomBar.staffFrame:setVisible(state.admin)
+  win.bottomBar:setHeight(state.admin and 90 or 26)
+  win:setHeight(state.admin and 579 or 515)
   win.pointsBox.pointsLabel:setText(formatPoints(data.points or 0))
   win.details.charBox:clearOptions()
   local current = g_game.getLocalPlayer() and g_game.getLocalPlayer():getName()
