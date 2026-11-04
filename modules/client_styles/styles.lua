@@ -48,7 +48,7 @@ function init()
   end
 
   g_mouse.loadCursors('/data/cursors/cursors')
-  if layout:len() > 0 and g_resources.directoryExists('/layouts/' .. layout .. '/cursors/cursors') then
+  if layout:len() > 0 and g_resources.fileExists('/layouts/' .. layout .. '/cursors/cursors.otml') then
     g_mouse.loadCursors('/layouts/' .. layout .. '/cursors/cursors')    
   end
 end

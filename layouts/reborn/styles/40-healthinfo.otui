@@ -1,0 +1,192 @@
+ExperienceBar < ProgressBar
+  id: experienceBar
+  background-color: #B6E866
+  anchors.top: prev.bottom
+  anchors.left: parent.left
+  anchors.right: parent.right
+  margin: 1
+  margin-top: 3
+
+SoulLabel < GameLabel
+  id: soulLabel
+  text-align: right
+  color: white
+  font: verdana-11px-rounded
+  anchors.bottom: parent.bottom
+  anchors.right: parent.right
+  anchors.left: parent.horizontalCenter
+  margin-top: 5
+  margin-right: 3
+  on: true
+
+  $!on:
+    visible: false
+    margin-top: 0
+    height: 0
+
+CapLabel < GameLabel
+  id: capLabel
+  color: white
+  font: verdana-11px-rounded
+  anchors.bottom: parent.bottom
+  anchors.left: parent.left
+  anchors.right: parent.horizontalCenter
+  margin-top: 5
+  margin-left: 3
+  on: true
+
+  $!on:
+    visible: false
+    margin-top: 0
+    height: 0
+
+ConditionWidget < UIWidget
+  size: 18 18
+
+  $!first:
+    margin-left: 2
+      
+// one layer of the health or mana arc: the images are 84x212 and healthinfo.lua cuts the fill in those pixels
+CircleLayer < UIWidget
+  size: 84 212
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.verticalCenter: parent.verticalCenter
+  margin-bottom: 16
+  opacity: 0.85
+  phantom: true
+
+HealthCircleLayer < CircleLayer
+  margin-right: 171
+
+ManaCircleLayer < CircleLayer
+  margin-left: 132
+
+// the percentage inside the medallion of an arc
+CirclePercent < Label
+  font: verdana-9px-bold
+  color: #f0e2b6
+  text-auto-resize: true
+  phantom: true
+
+HealthOverlay < UIWidget
+  id: healthOverlay
+  anchors.fill: parent
+  phantom: true
+  
+  HealthBar
+    id: topHealthBar
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.horizontalCenter
+    phantom: true
+
+  ManaBar
+    id: topManaBar
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.left: parent.horizontalCenter
+    phantom: true
+    
+  // the health and mana arcs around the character (tools/gen_health_circles.py): the track, the fill (cut and tinted
+  // by healthinfo.lua) and the bronze frame whose medallion holds the percentage
+  HealthCircleLayer
+    id: healthCircle
+    image-source: /images/game/circle/left_back
+
+  HealthCircleLayer
+    id: healthCircleFront
+    image-source: /images/game/circle/left_fill
+
+  HealthCircleLayer
+    id: healthCircleFrame
+    image-source: /images/game/circle/left_frame
+
+  ManaCircleLayer
+    id: manaCircle
+    image-source: /images/game/circle/right_back
+
+  ManaCircleLayer
+    id: manaCircleFront
+    image-source: /images/game/circle/right_fill
+    image-color: #3a7bff
+
+  ManaCircleLayer
+    id: manaCircleFrame
+    image-source: /images/game/circle/right_frame
+
+  CirclePercent
+    id: healthPercentLabel
+    anchors.horizontalCenter: healthCircleFrame.left
+    anchors.verticalCenter: healthCircleFrame.verticalCenter
+    margin-left: 29
+
+  CirclePercent
+    id: manaPercentLabel
+    anchors.horizontalCenter: manaCircleFrame.right
+    anchors.verticalCenter: manaCircleFrame.verticalCenter
+    margin-right: 29
+  
+HealthInfoWindow < HeadlessMiniWindow
+  icon: 
+  text:
+  height: 100
+  &forceOpen: true
+  icon: /images/topbuttons/healthinfo
+  !text: tr('Health Info')  
+
+  MiniWindowContents
+    margin-top: 2
+    
+    HealthBar
+      id: healthBar
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin: 2
+      margin-top: 0
+      margin-left: 19
+      phantom: true
+      
+    ManaBar
+      id: manaBar
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin: 2
+      margin-bottom: 0
+      margin-left: 19
+      phantom: true
+      
+    ExperienceBar
+    Panel
+      id: conditionPanel
+      layout:
+        type: horizontalBox
+      height: 22
+      margin-top: 4
+      padding: 2
+      anchors.top: prev.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      border-width: 1
+      border-color: #00000077
+      background-color: #ffffff11
+    SoulLabel
+    CapLabel
+
+    UIWidget
+      size: 14 14
+      anchors.left: parent.left
+      anchors.verticalCenter: healthBar.verticalCenter
+      margin-left: 3
+      image-source: /images/ui/flask_health
+      phantom: true
+
+    UIWidget
+      size: 14 14
+      anchors.left: parent.left
+      anchors.verticalCenter: manaBar.verticalCenter
+      margin-left: 3
+      image-source: /images/ui/flask_mana
+      phantom: true
+

@@ -21,14 +21,14 @@ QuestLabel < Label
   height: 18
   text-offset: 2 1
   focusable: true
-  color: #aaaaaa
-  background-color: #484848
+  color: #cfcfcf
+  background-color: alpha
 
   $checked:
-    background-color: #414141
+    background-color: #ffffff0c
 
   $focus:
-    background-color: #ffffff22
+    background-color: #8a6a2e66
 
 QuestLog < Panel
   TextList
@@ -92,7 +92,7 @@ MissionLog < Panel
     anchors.left: parent.left
     anchors.right: missionListScrollBar.right
     anchors.bottom: prev.top
-    background-color: #363636
+    background-color: #00000055
     margin-bottom: 10
     margin-top: 10
     text-wrap: true
@@ -127,7 +127,6 @@ QuestLogWindow < MainWindow
   Button
     id: closeButton
     !text: tr('Close')
-    font: cipsoftFont
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     color: #ffffff
@@ -142,7 +141,6 @@ QuestLogWindow < MainWindow
     color: #ffffff
     size: 45 21
     !text: tr('Show')
-    font: cipsoftFont
     @onClick: modules.game_questlog.showQuestLine()
 
   Button
@@ -151,10 +149,9 @@ QuestLogWindow < MainWindow
     anchors.left: parent.left
     margin-right: 3
     color: #ffffff
-    size: 80 21
+    size: 96 21
     text-align: center
     !text: tr('Quest Tracker')
-    font: cipsoftFont
     @onClick: modules.game_questlog.toggle()
 
 QuestTracker < MiniWindow
@@ -183,6 +180,5 @@ QuestTracker < MiniWindow
         anchors.fill: parent
         margin-left: 30
         margin-right: 30 
-        font: cipsoftFont
         color: #FFFFFF
         @onClick: g_game.requestQuestLog()

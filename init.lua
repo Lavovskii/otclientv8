@@ -3,8 +3,8 @@ APP_NAME = "ForgottenL"  -- important, change it, it's name for config dir and f
 APP_VERSION = 1         -- client version for updater and login to identify outdated client
 -- ForgottenL: raise CLIENT_BUILD with every client update (tools/build_release.py --publish), then the server's
 -- minClientBuild (config.lua): the login sends it as its OS value, 1000 + CLIENT_BUILD, and the server refuses older ones
-CLIENT_BUILD = 29
-DEFAULT_LAYOUT = "retro" -- on android it's forced to "mobile", check code bellow
+CLIENT_BUILD = 30
+DEFAULT_LAYOUT = "reborn" -- on android it's forced to "mobile", check code bellow
 
 -- updater: the update manifest of the website (tools/build_release.py --publish); the installed client (data.zip)
 -- updates itself before the login (modules/updater). No stats/crash-report service: leave those empty.
@@ -51,6 +51,14 @@ g_configs.loadSettings("/config.otml")
 
 -- set layout
 local settings = g_configs.getSettings()
+-- Reborn became the default in build 30. The options save the layout even when nobody chose it, so whoever has the old
+-- default saved moves once; picking Retro again afterwards sticks.
+if not settings:exists('rebornLayoutSeen') then
+  if settings:exists('layout') and tostring(settings:getValue('layout')):lower() == 'retro' then
+    settings:setValue('layout', DEFAULT_LAYOUT)
+  end
+  settings:setValue('rebornLayoutSeen', 'true')
+end
 local layout = DEFAULT_LAYOUT
 if g_app.isMobile() then
   layout = "mobile"

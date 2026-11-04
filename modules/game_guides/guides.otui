@@ -2107,6 +2107,40 @@ ArtVipDays < Panel
     text: 30
     phantom: true
 
+// the look of the client: where to choose it
+ArtReborn < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: path
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 12
+    text: Options > Interface > Layout
+
+  ComboBox
+    id: current
+    width: 112
+    anchors.left: path.left
+    anchors.top: path.bottom
+    margin-top: 8
+    text: Reborn
+    phantom: true
+
+  GuideArrow
+    id: arrow
+    anchors.left: current.right
+    anchors.verticalCenter: current.verticalCenter
+    margin-left: 8
+
+  ComboBox
+    width: 112
+    anchors.left: arrow.right
+    anchors.top: current.top
+    margin-left: 8
+    text: Retro
+    phantom: true
+
 // the pieces of the Store window, as game_store draws them (its own styles only load with it)
 GuideStoreFrame < UIWidget
   image-source: /images/taskboard/frame

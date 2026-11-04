@@ -93,6 +93,8 @@ local GUIDES = {
        text = 'Before you log in, the character list shows how many VIP days the selected character has left. In red when 7 or fewer remain.'},
       {art = 'ArtStaffName', title = 'The staff',
        text = 'A name in red gothic letters with a gold health bar is a member of the staff: gamemasters and above. Nobody else can have it, and the staff never asks for your password.'},
+      {art = 'ArtReborn', title = 'The Reborn look',
+       text = 'Stone, bronze and gold in every window: this is the look of ForgottenL now. If you prefer the old grey one, choose Retro under Options, Interface, Layout, and restart the client.'},
       {art = 'ArtUpdater', title = 'Updates',
        text = 'Each time you open the client or log in it looks for an update and installs it by itself, new game graphics too: only what changed is downloaded, then the client restarts on its own. Nothing to click or install.'},
     }
@@ -152,6 +154,19 @@ end
 
 local guideTabs = {}
 
+-- a long text makes its card taller: the height in the OTUI holds four lines, and a label only knows its height once drawn
+local function fitCards()
+  local tabBar = guidesWindow and guidesWindow:getChildById('guidesTabBar')
+  local page = tabBar and tabBar:getCurrentTabPanel()
+  if not page or not page.cards then return end
+  for _, card in ipairs(page.cards:getChildren()) do
+    local needed = card.text:getY() - card:getY() + card.text:getHeight() + 8
+    if needed > card:getHeight() then
+      card:setHeight(needed)
+    end
+  end
+end
+
 local function build()
   guidesWindow = g_ui.displayUI('guides')
   guidesWindow:hide()
@@ -172,6 +187,7 @@ local function build()
     end
     guideTabs[guide.name] = tabBar:addTab(tr(guide.name), page)
   end
+  tabBar.onTabChange = function() scheduleEvent(fitCards, 60) end
 end
 
 -- the Guides button comes first in the buttons window, in a thin golden frame with a shine running around it: the
@@ -236,6 +252,7 @@ function show()
   guidesWindow:show()
   guidesWindow:raise()
   guidesWindow:focus()
+  scheduleEvent(fitCards, 60)
 end
 
 function hide()

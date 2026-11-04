@@ -106,7 +106,7 @@ function init()
   optionsTabBar:addTab(tr('Game'), generalPanel, '/images/optionstab/game')
   
   interfacePanel = g_ui.loadUI('interface')
-  optionsTabBar:addTab(tr('Interface'), interfacePanel, '/images/optionstab/game')  
+  optionsTabBar:addTab(tr('Interface'), interfacePanel, '/images/optionstab/interface')  
 
   consolePanel = g_ui.loadUI('console')
   optionsTabBar:addTab(tr('Console'), consolePanel, '/images/optionstab/console')

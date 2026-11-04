@@ -1,0 +1,54 @@
+// the whole store_plate image, stretched to the button (the normal Button style clips it to a 22x23 piece and pads it)
+StoreButton < UIButton
+  size: 176 32
+  padding: 0
+  text-offset: 0 0
+  image-source: /images/ui/store_plate
+  image-clip: 0 0 176 32
+  image-border: 0
+  image-color: #e6e6e6
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover:
+    image-color: #ffffff
+
+  $pressed:
+    image-color: #bdbdbd
+
+GameButtonsWindow < HeadlessMiniWindow
+  height: 72
+  &forceOpen: true
+  &autoOpen: 4
+
+  MiniWindowContents
+    margin-top: 2
+
+    // the dragon-wing plate (tools/make_store_art.py) with a golden neon "Store" on top (the neon layer pulses, see game_store)
+    StoreButton
+      id: storeWideButton
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.top: parent.top
+      @onClick: modules.game_store.toggle()
+
+      UIWidget
+        id: neon
+        anchors.fill: parent
+        phantom: true
+        image-source: /images/ui/store_neon
+        image-clip: 0 0 176 32
+        image-border: 0
+
+    Panel
+      id: buttons
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: prev.bottom
+      anchors.bottom: parent.bottom
+      margin-top: 4
+      margin-left: 2
+      layout:
+        type: grid
+        cell-spacing: 3
+        cell-size: 20 20
+        flow: true

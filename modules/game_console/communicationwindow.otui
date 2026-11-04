@@ -6,7 +6,7 @@ IgnoreListLabel < Label
   phantom: false
 
   $focus:
-    background-color: #ffffff22
+    background-color: #8a6a2e66
     color: #ffffff
 
 WhiteListLabel < Label
@@ -17,7 +17,7 @@ WhiteListLabel < Label
   phantom: false
 
   $focus:
-    background-color: #ffffff22
+    background-color: #8a6a2e66
     color: #ffffff
 
 

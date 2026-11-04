@@ -74,7 +74,37 @@ function UIProgressBar:updateBackground()
   end
 end
 
+-- ForgottenL: a bar with a child 'fill' shows its colour there and its text in a child 'caption' (a widget draws its own
+-- text under its children). Those bars come from the Reborn layout's styles.
+function UIProgressBar:setBackgroundColor(color)
+  local fill = self:getChildById('fill')
+  if fill then
+    fill:setBackgroundColor(color)
+  end
+  UIWidget.setBackgroundColor(self, color)
+end
+
+function UIProgressBar:setText(text, ...)
+  local caption = self:getChildById('caption')
+  if caption then
+    return caption:setText(text, ...)
+  end
+  return UIWidget.setText(self, text, ...)
+end
+
+function UIProgressBar:getText()
+  local caption = self:getChildById('caption')
+  if caption then
+    return caption:getText()
+  end
+  return UIWidget.getText(self)
+end
+
 function UIProgressBar:onSetup()
+  local fill = self:getChildById('fill')
+  if fill then
+    fill:setBackgroundColor(self:getBackgroundColor())
+  end
   self:updateBackground()
 end
 

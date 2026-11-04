@@ -4,7 +4,7 @@ RVListLabel < Label
   focusable: true
 
   $focus:
-    background-color: #ffffff22
+    background-color: #8a6a2e66
     color: #ffffff
 
 RVLabel < Label

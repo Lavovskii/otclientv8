@@ -26,7 +26,7 @@ SpellRow < UIWidget
     background-color: #ffffff10
 
   $focus:
-    background-color: #ffffff26
+    background-color: #8a6a2e55
 
   UIWidget
     id: icon

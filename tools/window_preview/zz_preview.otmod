@@ -1,0 +1,9 @@
+Module
+  name: zz_preview
+  description: Preview only, copied in by tools/window_preview.py and never shipped
+  author: ForgottenL
+  sandboxed: true
+  autoload: true
+  autoload-priority: 9990
+  scripts: [ preview ]
+  @onLoad: init()

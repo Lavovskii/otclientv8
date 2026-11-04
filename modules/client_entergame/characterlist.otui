@@ -1,5 +1,5 @@
 CharacterWidget < UIWidget
-  height: 14
+  height: 20
   background-color: alpha
   &updateOnStates: |
     function(self)
@@ -12,25 +12,25 @@ CharacterWidget < UIWidget
   @onSetup: self:updateOnStates()
 
   $focus:
-    background-color: #ffffff22
+    background-color: #8a6a2e66
 
   Label
     id: name
-    color: #bbbbbb
-    anchors.top: parent.top
+    color: #c8c8c8
+    anchors.verticalCenter: parent.verticalCenter
     anchors.left: parent.left
-    font: verdana-11px-monochrome
+    margin-left: 4
+    font: verdana-11px-rounded
     text-auto-resize: true
     background-color: alpha
-    text-offset: 2 0
 
     $on:
-      color: #ffffff
+      color: #f4d68c
 
   Label
     id: worldName
-    color: #bbbbbb
-    anchors.top: parent.top
+    color: #8f8f8f
+    anchors.verticalCenter: parent.verticalCenter
     anchors.right: parent.right
     margin-right: 5
     font: verdana-11px-monochrome
@@ -39,10 +39,11 @@ CharacterWidget < UIWidget
     &baseText: '(%s)'
 
     $on:
-      color: #ffffff
+      color: #d8c08a
 
 StaticMainWindow
   id: charactersWindow
+  margin-top: 90
   !text: tr('Character List')
   visible: false
   size: 350 400
@@ -73,7 +74,7 @@ StaticMainWindow
     anchors.bottom: vipDaysCaption.top
     anchors.right: parent.right
     margin-bottom: 5
-    step: 14
+    step: 20
     pixels-scroll: true
 
   Label

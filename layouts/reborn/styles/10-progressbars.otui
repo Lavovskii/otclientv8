@@ -1,0 +1,54 @@
+// A groove, and inside it the colour with a shine over it: the bar's own background would be under the groove.
+// UIProgressBar (corelib) sends the width, the colour and the text to the children 'fill' and 'caption'.
+ProgressBar < UIProgressBar
+  height: 16
+  background-color: red
+  background-border: 1
+  image-source: /images/ui/progressbar
+  image-border: 2
+  font: verdana-11px-rounded
+  text-offset: 0 2
+
+  $!on:
+    visible: false
+    margin-top: 0
+    margin-bottom: 0
+    height: 0
+
+  UIWidget
+    id: fill
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    margin: 1
+    image-source: /images/ui/bar_gloss
+    phantom: true
+
+  UILabel
+    id: caption
+    anchors.fill: parent
+    text-align: center
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true
+
+LifeProgressBar < UIProgressBar
+  height: 16
+  background-color: green
+  border: 1 black
+  font: verdana-11px-rounded
+  text-offset: 0 2
+  margin: 2
+
+ProgressRect < UIProgressRect
+  anchors.fill: parent
+  phantom: true
+  color: white
+  background-color: #00000088
+  font: verdana-11px-rounded
+
+HealthBar < ProgressBar
+  background-color: #d83030
+
+ManaBar < ProgressBar
+  background-color: #3060e0

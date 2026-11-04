@@ -1,0 +1,127 @@
+MoveableTabBar < UIMoveableTabBar
+  size: 80 21
+MoveableTabBarPanel < Panel
+MoveableTabBarButton < UIButton
+  size: 96 18
+  image-source: /images/ui/tabbutton_square
+  image-clip: 0 0 48 21
+  image-border: 3
+  image-border-bottom: 0
+  color: #909090
+  anchors.top: parent.top
+  anchors.left: parent.left
+  margin-top: 2
+  padding: 3
+
+  $hover !checked:
+    image-clip: 0 21 48 21
+    color: #d8d8d8
+
+  $checked:
+    image-clip: 0 42 48 21
+    color: #f4d68c
+
+  $on !checked:
+    color: #F75F5F
+
+TabBar < UITabBar
+  size: 80 21
+  Panel
+    id: buttonsPanel
+    anchors.fill: parent
+TabBarPanel < Panel
+TabBarButton < UIButton
+  size: 17 18
+  image-source: /images/ui/tabbutton_square
+  image-clip: 0 0 48 21
+  image-border: 3
+  image-border-bottom: 0
+  icon-color: #dfdfdf
+  color: #a8a8a8
+  anchors.top: parent.top
+  padding: 5
+
+  $first:
+    anchors.left: parent.left
+
+  $!first:
+    anchors.left: prev.right
+    margin-left: 2
+
+  $hover !checked:
+    image-clip: 0 21 48 21
+    color: #dfdfdf
+
+  $disabled:
+    image-color: #ffffff88
+    icon-color: #dfdfdf
+
+  $checked:
+    image-clip: 0 42 48 21
+    color: #f4d68c
+
+  $on !checked:
+    color: #de6f6f
+
+TabBarRounded < TabBar
+TabBarRoundedPanel < TabBarPanel
+TabBarRoundedButton < TabBarButton
+  image-source: /images/ui/tabbutton_rounded
+
+TabBarVertical < UITabBar
+  width: 96
+  ScrollableFlatPanel
+    id: buttonsPanel
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: scrollBar.left
+    anchors.bottom: parent.bottom
+    vertical-scrollbar: scrollBar
+    margin-right: 1
+    padding-top: 3
+    
+  VerticalScrollBar
+    id: scrollBar
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    step: 16
+    pixels-scroll: true
+    $!on:
+      width: 0
+
+TabBarVerticalPanel < Panel 
+TabBarVerticalButton < UIButton
+  size: 48 54
+  color: #a8a8a8
+  anchors.left: parent.left
+  anchors.right: parent.right
+  margin-left: 3
+  margin-right: 3
+  text-align: bottom
+  text-offset: 0 -3
+  icon-align: top
+  icon-offset-y: 4
+  icon-color: #b0b0b0
+  image-source: /images/store/tab
+  image-clip: 0 0 48 34
+  image-border: 4
+  font: verdana-11px-rounded
+
+  $first:
+    anchors.top: parent.top
+  $!first:
+    anchors.top: prev.bottom
+    margin-top: 2
+  $hover !checked:
+    color: #e0e0e0
+    icon-color: #e0e0e0
+    image-clip: 0 34 48 34
+  $disabled:
+    icon-color: #333333
+  $checked:
+    icon-color: #ffffff
+    color: #f4d68c
+    image-clip: 0 68 48 34
+  $on !checked:
+    color: #de6f6f

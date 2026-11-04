@@ -1,0 +1,16 @@
+TextList < UIScrollArea
+  layout: verticalBox
+  image-source: /images/ui/panel_flat
+  image-border: 1
+  padding: 2
+  auto-focus: none
+
+HorizontalList < UIScrollArea
+  layout: horizontalBox
+  image-source: /images/ui/panel_flat
+  image-border: 1
+
+VerticalList < UIScrollArea
+  layout: verticalBox
+  image-source: /images/ui/panel_flat
+  image-border: 1

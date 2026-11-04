@@ -2,7 +2,7 @@ OptionPanel
   Label
     width: 130
     id: layoutLabel
-    !text: tr("Layout (change requries client restart)")
+    !text: tr("Layout (change requires client restart)")
     $mobile:
       visible: false
   
@@ -17,9 +17,13 @@ OptionPanel
     @onSetup: |
       self:addOption("Default")
       for _, file in ipairs(g_resources.listDirectoryFiles("/layouts", false, true)) do
-        if g_resources.directoryExists("/layouts/" .. file) then
+        if file ~= "mobile" and g_resources.directoryExists("/layouts/" .. file) then
           self:addOption(file:gsub("^%l", string.upper))
         end
+      end
+      local current = g_resources.getLayout()
+      if current:len() > 0 then
+        self:setCurrentOption(current:gsub("^%l", string.upper), true)
       end
 
   OptionCheckBox

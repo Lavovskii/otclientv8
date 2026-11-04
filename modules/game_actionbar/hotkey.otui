@@ -33,7 +33,6 @@ MainWindow
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     size: 45 21
-    font: cipsoftFont
     text: Close
     @onClick: self:getParent():destroy()
 
@@ -43,7 +42,6 @@ MainWindow
     margin-right: 5
     anchors.bottom: parent.bottom
     size: 45 21
-    font: cipsoftFont
     text: Clear
 
   Button
@@ -52,5 +50,4 @@ MainWindow
     margin-right: 5
     anchors.bottom: parent.bottom
     size: 45 21
-    font: cipsoftFont
     text: Ok

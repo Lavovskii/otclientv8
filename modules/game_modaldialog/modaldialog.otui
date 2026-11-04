@@ -5,7 +5,7 @@ ChoiceListLabel < Label
   focusable: true
 
   $focus:
-    background-color: #00000055
+    background-color: #8a6a2e66
     color: #ffffff
 
 ChoiceList < TextList
