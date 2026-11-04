@@ -1,0 +1,5 @@
+// the plate of the frame rate and the ping (modules/game_stats). Reborn has a picture for it
+GameStatsBackground < UIWidget
+  background-color: #000000a8
+  border-width: 1
+  border-color: #4a4032

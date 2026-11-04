@@ -235,6 +235,17 @@ local function define()
     panel:lowerChild(stand)
     panel:lowerChild(panel:getChildById('gameMapBackdrop'))
     modules.game_interface.updateMapBackdrop()
+    -- the answer to the ping, late by previewPingDelay ms, or never when it is nil
+    g_game.getProtocolGame = function()
+      return {
+        isConnecting = function() return false end,
+        sendExtendedOpcode = function(self, opcode)
+          if opcode == 12 and previewPingDelay then
+            scheduleEvent(function() ProtocolGame.onExtendedOpcode(self, 12, '') end, previewPingDelay)
+          end
+        end
+      }
+    end
     g_game.close = function() end
     g_game.open = function() end
     for _, child in ipairs(rootWidget:getChildren()) do
@@ -256,6 +267,84 @@ local function define()
       modules.game_console.addTabText('19:13 Loot of a hell boy: 10 crystal coins.', {color = '#33FF33'}, tab)
     end
   end, 1200)
+  -- what adds up to each stat, with an answer shaped like the server's
+  step('skills_tips', function()
+    closeWindows()
+    local answer = table.concat({
+      'rate=150', 'vocation=Elite Knight', 'premium=65535', 'bank=1000', 'vip=86400', 'supervip=1', 'viptp=1', 'potion=0', 'paper=0', 'boost=0',
+      'boostpercent=5', 'boostactive=0', 'expburst=1', 'healthbooster=200000', 'manabooster=50000', 'blockorb=0', 'reflectorb=0',
+      'element=8,50', 'attack=1500', 'defense=340', 'armor=95', 'critical=6,1.2', 'absorb=1,12', 'absorb=8,20', 'reflect=8,5,20',
+      'increment=30,10,0,5', 'food=3600', 'regen=250,125',
+      'src=attack,weapon,1000', 'src=attack,ammo,500', 'src=element,weapon,50', 'src=defense,shield,300', 'src=defense,weapon,40',
+      'src=armor,helmet,20', 'src=armor,armor,40', 'src=armor,legs,20', 'src=armor,boots,15', 'src=hpboost,small,50000', 'src=hpboost,scroll,150000',
+      'src=mpboost,small,50000', 'src=skill2,base,110', 'src=skill2,ring,5', 'src=skill2,weapon,10', 'src=skill2,others,3', 'src=health,level,12000',
+      'src=health,booster,200000', 'src=health,armor,1000', 'src=mana,level,3000', 'src=mana,booster,50000', 'src=magic,base,18', 'src=magic,necklace,2',
+      'src=soul,base,100', 'src=speed,level,1300', 'src=speed,boots,40', 'src=speed,mount,20', 'src=speed,others,70', 'src=hpregen,vocation,50',
+      'src=hpregen,ring,200', 'src=mpregen,vocation,25', 'src=mpregen,ring,100', 'src=abs1,armor,5', 'src=abs1,legs,7', 'src=abs8,armor,8', 'src=abs8,ring,2',
+      'src=abs8,vocation,10', 'src=ref8,armor,5,20', 'src=healv,necklace,30', 'src=healp,ring,10', 'src=mdmgp,necklace,5', 'src=capacity,total,20000', 'src=capacity,carried,-6000',
+    }, '\n')
+    modules.game_skills.skillsWindow:open()
+    modules.game_skills.skillsWindow:maximize()
+    modules.game_skills.onStats(nil, 8, answer)
+    for _, panelId in ipairs({'combatPanel', 'protectionPanel', 'bonusPanel'}) do
+      for _, row in ipairs(byId(panelId):getChildren()) do
+        log('tip ' .. row.name:getText() .. ' = ' .. tostring(row:getTooltip()):gsub('\n', ' | '))
+      end
+    end
+    for _, id in ipairs({'health', 'mana', 'soul', 'capacity', 'speed', 'magiclevel', 'skillId2'}) do
+      log('tip ' .. id .. ' = ' .. tostring(byId(id):getTooltip()):gsub('\n', ' | '))
+    end
+    g_tooltip.display(byId('combatPanel'):getChildren()[1]:getTooltip())
+  end, 700)
+  step('skills_tips_defense', function()
+    g_tooltip.hide()
+    g_tooltip.display(byId('combatPanel'):getChildren()[3]:getTooltip())
+  end, 400)
+  step('skills_tips_speed', function()
+    g_tooltip.hide()
+    g_tooltip.display(byId('speed'):getTooltip())
+  end, 400)
+  step('skills_tips_fire', function()
+    g_tooltip.hide()
+    g_tooltip.display(byId('protectionPanel'):getChildren()[2]:getTooltip())
+  end, 400)
+  -- the frame rate and the ping
+  local function plate(name, wait, setup)
+    step(name, setup, wait)
+  end
+  plate('stats_wait', 600, function()
+    previewPingDelay = nil
+    local ui = modules.game_stats.ui
+    local rootPanel = modules.game_interface.getRootPanel()
+    local rect = modules.game_interface.getMapPanel():getRect()
+    ui:setParent(rootPanel)
+    ui:setMarginLeft(rect.x - rootPanel:getX() + 5)
+    ui:setMarginTop(rect.y - rootPanel:getY() + 5)
+    modules.game_stats.show()
+  end)
+  plate('stats_good', 4600, function()
+    previewPingDelay = 34
+    modules.game_stats.show()
+  end)
+  plate('stats_fair', 4600, function()
+    previewPingDelay = 310
+    g_app.getFps = function() return 24 end
+  end)
+  plate('stats_bad', 4600, function()
+    previewPingDelay = 780
+    g_app.getFps = function() return 11 end
+  end)
+  plate('stats_frozen', 5200, function() previewPingDelay = nil end)
+  plate('stats_back', 12000, function()
+    previewPingDelay = 34
+    g_app.getFps = function() return 60 end
+  end)
+  plate('stats_no_ping', 500, function() modules.game_stats.setRowVisible('ping', false) end)
+  plate('stats_none', 500, function() modules.game_stats.setRowVisible('fps', false) end)
+  plate('stats_both', 700, function()
+    modules.game_stats.setRowVisible('fps', true)
+    modules.game_stats.setRowVisible('ping', true)
+  end)
   -- the health and mana circles and their controls
   step('circles', function()
     closeWindows()

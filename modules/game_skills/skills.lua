@@ -4,8 +4,8 @@
 -- logs in, every few seconds while the window is open and when the equipment changes. The server answers with
 -- "key=value" lines.
 --
--- Every line explains itself when the mouse is over it. Admins (the Store's admin check) get a second explanation over
--- the number: where that value comes from on the server (storage, script, item, config).
+-- Every line shows what adds up to its number when the mouse is over it, then what it means: the server sends each source of each
+-- stat ("src=stat,source,value" lines) and they add up to the stat.
 
 skillsWindow = nil
 skillsButton = nil
@@ -17,7 +17,6 @@ local stats = nil        -- the last answer of the server
 local statsTime = 0      -- when it arrived (the timers count down from it)
 local rows = {}          -- the fixed lines of the window, by id
 local panelKeys = {}     -- the lines each list panel shows now, to update them in place when only values change
-local adminShown = nil   -- whether the admin explanations are on
 local sections = {}      -- the section titles, by id
 local SECTIONS = {characterSection = 'Character', skillsSection = 'Skills', combatSection = 'Combat',
                   protectionSection = 'Protection', bonusSection = 'Bonuses'}
@@ -40,7 +39,7 @@ for _, e in ipairs(ELEMENTS) do ELEMENT_BY_TYPE[e.type] = e end
 
 local GREEN, RED, GREY, GOLD, NORMAL = '#44ad25', '#e05a4a', '#9f9f9f', '#e8c66a', '#bbbbbb'
 
--- what every fixed line means (everyone) and where its value comes from (admins)
+-- what every fixed line means
 local EXPLAIN = {
   level = 'Your level. The bar shows how far you are from the next one.',
   experience = 'Experience points. Killing monsters gives experience; enough of it raises your level.',
@@ -62,32 +61,31 @@ local EXPLAIN = {
   skillId5 = 'Shielding: how much a shield blocks.',
   skillId6 = 'Fishing: chance to catch a fish.',
 }
-local SOURCE = {
-  level = 'Protocol (players.level).',
-  experience = 'Protocol (players.experience).',
-  xpRate = 'doPlayerSetRate(SKILL__LEVEL), set every minute by globalevents/scripts/boosts/experience_boost_timer.lua and at login (creaturescripts/scripts/player/login.lua): experience potion x1.5 (storage 14035 = end time), experience paper x1.25 (17004 = end time), Experience Boost (17039 on, 17041 type).',
-  xpBoost = 'Storages 17040 (seconds left), 17041 (type: x5 %), 17039 (1 = on). Charged by actions/scripts/items/boosters/experience_charger.lua, turned on and off by !expburst (talkactions/scripts/player/expburst.lua, needs 17061).',
-  health = 'Protocol. Boosters raise the maximum: storages 17005, 35049, 35055.',
-  mana = 'Protocol. Boosters raise the maximum: storages 17006, 35050, 35055.',
-  soul = 'Protocol (players.soul).',
-  capacity = 'Protocol: free capacity (vocations.xml gaincap, items weight).',
-  speed = 'Protocol: speed now (base speed from level, haste conditions, items speed).',
-  food = 'Server: time left of the regeneration condition (CONDITION_REGENERATION).',
-  stamina = 'Protocol (players.stamina).',
-  magiclevel = 'Protocol: magic level (players.maglevel); equipment bonus from items.xml magiclevelpoints.',
-  skillId0 = 'Protocol: player_skills (skill 0); equipment bonus from items.xml skillFist.',
-  skillId1 = 'Protocol: player_skills (skill 1); equipment bonus from items.xml skillClub.',
-  skillId2 = 'Protocol: player_skills (skill 2); equipment bonus from items.xml skillSword.',
-  skillId3 = 'Protocol: player_skills (skill 3); equipment bonus from items.xml skillAxe.',
-  skillId4 = 'Protocol: player_skills (skill 4); equipment bonus from items.xml skillDist.',
-  skillId5 = 'Protocol: player_skills (skill 5); equipment bonus from items.xml skillShield.',
-  skillId6 = 'Protocol: player_skills (skill 6); equipment bonus from items.xml skillFish.',
+-- the fixed lines that have sources, with the stat the server calls them and what follows the number
+local FIXED_SOURCES = {
+  health = {stat = 'health', unit = ' HP'},
+  mana = {stat = 'mana', unit = ' mana'},
+  soul = {stat = 'soul'},
+  capacity = {stat = 'capacity', unit = ' oz'},
+  speed = {stat = 'speed'},
+  magiclevel = {stat = 'magic'},
+  skillId0 = {stat = 'skill0'},
+  skillId1 = {stat = 'skill1'},
+  skillId2 = {stat = 'skill2'},
+  skillId3 = {stat = 'skill3'},
+  skillId4 = {stat = 'skill4'},
+  skillId5 = {stat = 'skill5'},
+  skillId6 = {stat = 'skill6'},
 }
 
-local function isAdmin()
-  local store = modules.game_store
-  return (store ~= nil and store.isAdmin ~= nil and store.isAdmin() == true) == true
-end
+-- what the server calls a source (statsSource and statsSlotName in its game.cpp) and how the player reads it
+local SOURCE_NAMES = {
+  helmet = 'Helmet', necklace = 'Necklace', backpack = 'Backpack', armor = 'Armor', weapon = 'Weapon', shield = 'Shield',
+  righthand = 'Right hand', lefthand = 'Left hand', legs = 'Legs', boots = 'Boots', ring = 'Ring', ammo = 'Ammo', trinket = 'Trinket',
+  item = 'Equipment', level = 'Level', base = 'Trained', own = 'Yours', vocation = 'Vocation', booster = 'Boosters', mount = 'Mount',
+  others = 'Spells and effects', total = 'Total', carried = 'Carrying', small = 'Small boosters', scroll = 'Booster scroll',
+  ozzo = 'Ozzo scroll',
+}
 
 function init()
   connect(LocalPlayer, {
@@ -170,28 +168,6 @@ function fillIcons(widget)
   end
 end
 
--- the admins' explanation sits on the number of the line (the line keeps the everyday one)
-local function setSource(row, source)
-  local value = row:getChildById('value')
-  if adminShown and source then
-    value:setPhantom(false)
-    value:setTooltip(tr('Admin - where it comes from:') .. '\n' .. source)
-  else
-    value:setPhantom(true)
-    value:removeTooltip()
-  end
-end
-
-local function applyAdminTooltips()
-  local admin = isAdmin()
-  if admin == adminShown then return end
-  adminShown = admin
-  for id, row in pairs(rows) do
-    setSource(row, SOURCE[id])
-  end
-  panelKeys = {} -- the lists are made again with or without the admin explanations
-end
-
 function expForLevel(level)
   return math.floor((50*level*level*level)/3 - 100*level*level + (850*level)/3 - 200)
 end
@@ -210,17 +186,20 @@ function setSkillBase(id, value, baseValue)
   end
   local skill = rows[id]
   local widget = skill:getChildById('value')
-  local explain = tr(EXPLAIN[id])
+  local tip = tr(EXPLAIN[id])
 
   if value > baseValue then
     widget:setColor('#008b00') -- green
-    skill:setTooltip(explain .. '\n' .. tr('Yours: %d, +%d from equipment or spells', baseValue, value - baseValue))
+    tip = tip .. '\n' .. tr('Yours: %d, +%d from equipment or spells', baseValue, value - baseValue)
   elseif value < baseValue then
     widget:setColor('#b22222') -- red
-    skill:setTooltip(explain .. '\n' .. tr('Yours: %d, %d from conditions', baseValue, value - baseValue))
+    tip = tip .. '\n' .. tr('Yours: %d, %d from conditions', baseValue, value - baseValue)
   else
     widget:setColor(NORMAL)
-    skill:setTooltip(explain)
+  end
+  -- until the server answers: from then on showStats says where the number comes from
+  if not stats then
+    skill:setTooltip(tip)
   end
 end
 
@@ -336,10 +315,16 @@ local function pollStats()
 end
 
 function parseStats(buffer)
-  local s = {absorb = {}, reflect = {}}
+  local s = {absorb = {}, reflect = {}, sources = {}}
   for line in buffer:gmatch('[^\n]+') do
     local key, value = line:match('^(%w+)=(.*)$')
-    if key == 'absorb' then
+    if key == 'src' then
+      local stat, name, amount, chance = value:match('^(%w+),(%w+),(%-?%d+),?(%d*)$')
+      if stat then
+        s.sources[stat] = s.sources[stat] or {}
+        table.insert(s.sources[stat], {name = name, value = tonumber(amount), chance = tonumber(chance)})
+      end
+    elseif key == 'absorb' then
       local t, v = value:match('^(%d+),(%-?%d+)$')
       if t then s.absorb[tonumber(t)] = tonumber(v) end
     elseif key == 'reflect' then
@@ -392,9 +377,35 @@ local function percentText(v)
   return (v > 0 and '+' or '') .. v .. '%'
 end
 
--- one line of a list: {key, name, value, color, tip (everyone), source (admins), item or image}
-local function line(list, key, name, value, color, tip, source, item, image)
-  table.insert(list, {key = key, name = name, value = value, color = color or NORMAL, tip = tip, source = source, item = item, image = image})
+-- one line of a list: {key, name, value, color, tip, item or image}
+local function line(list, key, name, value, color, tip, item, image)
+  table.insert(list, {key = key, name = name, value = value, color = color or NORMAL, tip = tip, item = item, image = image})
+end
+
+local function signed(value)
+  return (value < 0 and '-' or '+') .. comma_value(math.abs(value))
+end
+
+-- what the mouse shows over a line: everything that adds up to its number, and then what the number means
+local function tipFor(stat, explain, unit, show)
+  local list = stats and stats.sources and stats.sources[stat]
+  if not list or #list == 0 then
+    return explain
+  end
+  local lines = {}
+  for _, source in ipairs(list) do
+    local name = SOURCE_NAMES[source.name] or source.name
+    table.insert(lines, tr(name) .. ': ' .. (show and show(source) or signed(source.value) .. (unit or '')))
+  end
+  return table.concat(lines, '\n') .. '\n\n' .. explain
+end
+
+local function perSecond(source)
+  return string.format('%+.1f/s', source.value / 10)
+end
+
+local function percent(source)
+  return percentText(source.value)
 end
 
 -- shows the lines of a list panel: the widgets are kept and only their texts change while the same lines are shown
@@ -418,7 +429,6 @@ local function fillPanel(panelId, list)
       end
       row.name:setText(l.name)
       if l.tip then row:setTooltip(l.tip) end
-      setSource(row, l.source)
     end
     panelKeys[panelId] = keys
   end
@@ -432,8 +442,6 @@ local function fillPanel(panelId, list)
 end
 
 function showStats()
-  applyAdminTooltips()
-
   -- experience rate and the experience modifiers
   local rate = stats and stats.rate
   setSkillValue('xpRate', rate and (rate .. '%') or '-')
@@ -459,7 +467,7 @@ function showStats()
 
   local combat, protection, bonus = {}, {}, {}
   if not stats then
-    line(combat, 'wait', tr('Waiting for the server...'), '', GREY, tr('The server sends these values a moment after you log in.'), nil, 112)
+    line(combat, 'wait', tr('Waiting for the server...'), '', GREY, tr('The server sends these values a moment after you log in.'), 112)
     fillPanel('combatPanel', combat)
     fillPanel('protectionPanel', protection)
     fillPanel('bonusPanel', bonus)
@@ -470,66 +478,57 @@ function showStats()
 
   -- combat: what the equipment gives
   line(combat, 'attack', tr('Attack Value'), tostring(stats.attack or 0), nil,
-    tr('Attack of your weapon (and of its ammunition): the higher, the harder you hit.'),
-    'Server: items.xml attack + extraattack of the weapon in your hands (and of the ammunition it fires).', 3278)
+    tipFor('attack', tr('Attack of your weapon (and of its ammunition): the higher, the harder you hit.'), ' atk'), 3278)
   if stats.element then
     local e = ELEMENT_BY_TYPE[stats.element[1]]
     if e then
       line(combat, 'element', '  ' .. tr(e.name) .. ' ' .. tr('damage'), '+' .. stats.element[2], GOLD,
-        tr('Your weapon also deals %d %s damage with every hit.', stats.element[2], tr(e.name):lower()),
-        'Server: items.xml element' .. e.name:gsub(' ', '') .. ' of the weapon.', e.item)
+        tipFor('element', tr('Your weapon also deals %d %s damage with every hit.', stats.element[2], tr(e.name):lower()), ' ' .. tr(e.name):lower()), e.item)
     end
   end
   line(combat, 'defense', tr('Defence Value'), tostring(stats.defense or 0), nil,
-    tr('Defence of your shield (or of your weapon without one): blocks part of every melee hit.'),
-    'Server: items.xml defense + extradef of your shield or weapon.', 3414)
+    tipFor('defense', tr('Defence of your shield (or of your weapon without one): blocks part of every melee hit.'), ' def'), 3414)
   line(combat, 'armor', tr('Armor Value'), tostring(stats.armor or 0), nil,
-    tr('Armor of everything you wear: takes away part of the physical damage you get.'),
-    'Server: Player::getArmor, items.xml armor of what you wear (x vocations.xml armor multiplier).', 3366)
+    tipFor('armor', tr('Armor of everything you wear: takes away part of the physical damage you get.'), ' arm'), 3366)
   -- the server's critical hit (weapons only, weapons.cpp) raises the maximum damage to the power of
   -- criticalHitMultiplier when random(1, 100) < criticalHitChance: with a multiplier of 1 it does nothing
   local critChance, critPower = stats.critical and (stats.critical[1] or 0) - 1 or 0, stats.critical and stats.critical[2] or 1
   if critChance > 0 and critPower > 1 then
     line(combat, 'crit', tr('Critical Hit Chance'), critChance .. '%', nil,
-      tr('Chance that a weapon hit (not a spell) is a critical hit.'),
-      'Server: config.lua criticalHitChance (the same for every player; the server checks random(1, 100) < it, so it is one less).', 3037)
+      tr('The same for every player: %d%%', critChance) .. '\n\n' .. tr('Chance that a weapon hit (not a spell) is a critical hit.'), 3037)
     line(combat, 'critx', tr('Critical Damage'), '^' .. critPower, nil,
-      tr('A critical hit raises your maximum damage to the power of %s: the stronger you hit, the more it adds.', critPower),
-      'Server: config.lua criticalHitMultiplier (weapons.cpp: maxDamage ^ multiplier).', 3037)
+      tr('A critical hit raises your maximum damage to the power of %s: the stronger you hit, the more it adds.', critPower), 3037)
   end
   local inc = stats.increment or {}
-  if (inc[4] or 0) ~= 0 then line(combat, 'mdmgp', tr('Magic Damage'), percentText(inc[4]), GREEN, tr('Your equipment makes your attack spells and runes stronger.'), 'Server: items.xml increaseMagicPercent of what you wear.', 3071) end
-  if (inc[3] or 0) ~= 0 then line(combat, 'mdmgv', tr('Magic Damage'), '+' .. inc[3], GREEN, tr('Your equipment adds damage to your attack spells and runes.'), 'Server: items.xml increaseMagicValue of what you wear.', 3071) end
-  if (inc[2] or 0) ~= 0 then line(combat, 'healp', tr('Healing'), percentText(inc[2]), GREEN, tr('Your equipment makes your healing stronger.'), 'Server: items.xml increaseHealingPercent of what you wear.', 3160) end
-  if (inc[1] or 0) ~= 0 then line(combat, 'healv', tr('Healing'), '+' .. inc[1], GREEN, tr('Your equipment adds to your healing.'), 'Server: items.xml increaseHealingValue of what you wear.', 3160) end
+  if (inc[4] or 0) ~= 0 then line(combat, 'mdmgp', tr('Magic Damage'), percentText(inc[4]), GREEN, tipFor('mdmgp', tr('Your equipment makes your attack spells and runes stronger.'), nil, percent), 3071) end
+  if (inc[3] or 0) ~= 0 then line(combat, 'mdmgv', tr('Magic Damage'), '+' .. inc[3], GREEN, tipFor('mdmgv', tr('Your equipment adds damage to your attack spells and runes.')), 3071) end
+  if (inc[2] or 0) ~= 0 then line(combat, 'healp', tr('Healing'), percentText(inc[2]), GREEN, tipFor('healp', tr('Your equipment makes your healing stronger.'), nil, percent), 3160) end
+  if (inc[1] or 0) ~= 0 then line(combat, 'healv', tr('Healing'), '+' .. inc[1], GREEN, tipFor('healv', tr('Your equipment adds to your healing.')), 3160) end
   local regen = stats.regen or {}
   line(combat, 'hpregen', tr('Health Regen.'), string.format('%.1f/s', (regen[1] or 0) / 10), nil,
-    tr('Health you regain every second while you have food time.'),
-    'Server: vocations.xml gainhpamount / gainhpticks + items.xml healthGain / healthTicks of what you wear.', 3052)
+    tipFor('hpregen', tr('Health you regain every second while you have food time.'), nil, perSecond), 3052)
   line(combat, 'mpregen', tr('Mana Regen.'), string.format('%.1f/s', (regen[2] or 0) / 10), nil,
-    tr('Mana you regain every second while you have food time.'),
-    'Server: vocations.xml gainmanaamount / gainmanaticks + items.xml manaGain / manaTicks of what you wear.', 3098)
+    tipFor('mpregen', tr('Mana you regain every second while you have food time.'), nil, perSecond), 3098)
 
   -- protections (equipment and vocation) and reflection
   for _, e in ipairs(ELEMENTS) do
     local v = stats.absorb[e.type]
     if v and v ~= 0 then
       line(protection, 'abs' .. e.type, tr(e.name), percentText(v), v > 0 and GREEN or RED,
-        v > 0 and tr('You take %d%% less %s damage.', v, tr(e.name):lower()) or tr('You take %d%% more %s damage.', -v, tr(e.name):lower()),
-        'Server: items.xml absorbPercent' .. e.name:gsub(' ', '') .. ' (or absorbPercentAll) of what you wear + vocations.xml absorb.', e.item)
+        tipFor('abs' .. e.type, v > 0 and tr('You take %d%% less %s damage.', v, tr(e.name):lower()) or tr('You take %d%% more %s damage.', -v, tr(e.name):lower()), nil, percent), e.item)
     end
   end
   for _, e in ipairs(ELEMENTS) do
     local r = stats.reflect[e.type]
     if r then
       line(protection, 'ref' .. e.type, tr('Reflect') .. ' ' .. tr(e.name), r.percent .. '% (' .. r.chance .. '%)', GOLD,
-        tr('%d%% chance to send %d%% of the %s damage back to the attacker.', r.chance, r.percent, tr(e.name):lower()),
-        'Server: items.xml reflectPercent' .. e.name:gsub(' ', '') .. ' / reflectChance' .. e.name:gsub(' ', '') .. ' of what you wear.', e.item)
+        tipFor('ref' .. e.type, tr('%d%% chance to send %d%% of the %s damage back to the attacker.', r.chance, r.percent, tr(e.name):lower()), nil, function(source)
+          return tr('%d%% at %d%% chance', source.value, source.chance or 0)
+        end), e.item)
     end
   end
   if #protection == 0 then
-    line(protection, 'none', tr('Protection'), tr('none'), GREY, tr('Equipment that protects you from damage shows here.'),
-      'Server: absorbPercent* and reflect* of the worn items (none now).', 3084)
+    line(protection, 'none', tr('Protection'), tr('none'), GREY, tr('Equipment that protects you from damage shows here.'), 3084)
   end
   sections.protectionSection:show()
   sections.bonusSection:show()
@@ -538,35 +537,32 @@ function showStats()
   local vip = left('vip')
   line(bonus, 'vip', tr('VIP'), vip > 0 and days(vip) or tr('No'), vip > 0 and GREEN or GREY,
     vip > 0 and tr('VIP for %s more: VIP areas and doors, !vipstatus. A VIP Medal adds 15 days.', days(vip))
-      or tr('Not VIP. A VIP Medal gives 15 days of VIP: VIP areas and doors.'),
-    'Storage 11552 = time the VIP ends (data/lib/101-vip.lua). VIP Medal: actions/scripts/items/vip/vip_medal.lua (+15 days).', 5785)
+      or tr('Not VIP. A VIP Medal gives 15 days of VIP: VIP areas and doors.'), 5785)
   line(bonus, 'svip', tr('Super VIP'), stats.supervip == 1 and tr('Forever') or tr('No'), stats.supervip == 1 and GOLD or GREY,
-    stats.supervip == 1 and tr('Super VIP for ever.') or tr('Not Super VIP. The Super VIP Medal gives it for ever (you must be VIP to use it).'),
-    'Storage 17009 = 1. Super VIP Medal: actions/scripts/items/vip/super_vip.lua.', 9218)
+    stats.supervip == 1 and tr('Super VIP for ever.') or tr('Not Super VIP. The Super VIP Medal gives it for ever (you must be VIP to use it).'), 9218)
   if stats.viptp == 1 then
-    line(bonus, 'viptp', tr('VIP Teleport'), tr('Yes'), GREEN, tr('You can use !viptp.'),
-      'Storage 17016 = 1. VIP Scroll: actions/scripts/items/vip/vip_scroll.lua.', 5957)
+    line(bonus, 'viptp', tr('VIP Teleport'), tr('Yes'), GREEN, tr('You can use !viptp.'), 5957)
   end
   if (stats.premium or 0) > 0 then
     local unlimited = stats.premium >= 65535 -- the server's way of saying premium for ever (free premium)
     line(bonus, 'prem', tr('Premium'), unlimited and tr('Unlimited') or days(stats.premium * 86400), GREEN,
-      unlimited and tr('Your account is premium for ever.') or tr('Premium days left on your account.'),
-      'Account: accounts.premdays (65535 = for ever, or config.lua freePremium).', 3011)
+      unlimited and tr('Your account is premium for ever.') or tr('Premium days left on your account.'), 3011)
   end
   line(bonus, 'burst', tr('Exp Burst'), stats.expburst == 1 and tr('Unlocked') or tr('Locked'), stats.expburst == 1 and GREEN or GREY,
-    stats.expburst == 1 and tr('Type !expburst to turn your Experience Boost on and off.') or tr('Finish the !expburst quest to be able to turn on your Experience Boost.'),
-    'Storage 17061 = 1 (the !expburst quest). Command: talkactions/scripts/player/expburst.lua.', 138)
+    stats.expburst == 1 and tr('Type !expburst to turn your Experience Boost on and off.') or tr('Finish the !expburst quest to be able to turn on your Experience Boost.'), 138)
   if (stats.healthbooster or 0) > 0 then
-    line(bonus, 'hpboost', tr('Health Boosters'), '+' .. comma_value(stats.healthbooster), GREEN, tr('Hit points the boosters you used added for good.'),
-      'Storages 17005 (+50,000 each, up to 3), 35049 (+150,000 scroll), 35055 (+150,000 Ozzo scroll): actions/scripts/items/boosters/.', 236)
+    line(bonus, 'hpboost', tr('Health Boosters'), '+' .. comma_value(stats.healthbooster), GREEN, tipFor('hpboost', tr('Hit points the boosters you used added for good.'), ' HP'), 236)
   end
   if (stats.manabooster or 0) > 0 then
-    line(bonus, 'mpboost', tr('Mana Boosters'), '+' .. comma_value(stats.manabooster), GREEN, tr('Mana the boosters you used added for good.'),
-      'Storages 17006 (+50,000 each, up to 3), 35050 (+150,000 scroll), 35055 (+150,000 Ozzo scroll): actions/scripts/items/boosters/.', 238)
+    line(bonus, 'mpboost', tr('Mana Boosters'), '+' .. comma_value(stats.manabooster), GREEN, tipFor('mpboost', tr('Mana the boosters you used added for good.'), ' mana'), 238)
   end
-  if stats.blockorb == 1 then line(bonus, 'block', tr('Block Orb'), tr('On'), GREEN, tr('Your Block Orb is protecting you.'), 'Storage 17025 = 1 (reset to 0 at login).', 3084) end
-  if stats.reflectorb == 1 then line(bonus, 'reflect', tr('Reflect Orb'), tr('On'), GREEN, tr('Your Reflect Orb sends damage back.'), 'Storage 17027 = 1 (reset to 0 at login).', 3014) end
-  line(bonus, 'bank', tr('Bank'), comma_value(stats.bank or 0) .. ' gp', nil, tr('Gold in your bank account. Bankers keep it for you.'), 'Player: players.balance.', 3043)
+  if stats.blockorb == 1 then line(bonus, 'block', tr('Block Orb'), tr('On'), GREEN, tr('Your Block Orb is protecting you.'), 3084) end
+  if stats.reflectorb == 1 then line(bonus, 'reflect', tr('Reflect Orb'), tr('On'), GREEN, tr('Your Reflect Orb sends damage back.'), 3014) end
+  line(bonus, 'bank', tr('Bank'), comma_value(stats.bank or 0) .. ' gp', nil, tr('Gold in your bank account. Bankers keep it for you.'), 3043)
+
+  for id, source in pairs(FIXED_SOURCES) do
+    rows[id]:setTooltip(tipFor(source.stat, tr(EXPLAIN[id]), source.unit))
+  end
 
   fillPanel('combatPanel', combat)
   fillPanel('protectionPanel', protection)
@@ -576,9 +572,6 @@ end
 -- counts the timers down every second, and asks again when the equipment changes
 local function tick()
   tickEvent = scheduleEvent(tick, 1000)
-  if skillsWindow:isVisible() and isAdmin() ~= adminShown then
-    showStats() -- the Store found out (or forgot) that this account is an admin
-  end
   if stats and skillsWindow:isVisible() then
     local food = left('food')
     setSkillValue('food', clock(food))
@@ -596,7 +589,6 @@ function online()
   fillIcons(skillsWindow)
   refresh()
   stats = nil
-  adminShown = nil
   panelKeys = {}
   showStats()
   removeEvent(statsEvent)

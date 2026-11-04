@@ -1,0 +1,4 @@
+// the plate of the frame rate and the ping (modules/game_stats)
+GameStatsBackground < UIWidget
+  image-source: /images/ui/stats_plate
+  image-border: 4

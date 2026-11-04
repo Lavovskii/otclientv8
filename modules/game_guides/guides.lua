@@ -76,9 +76,11 @@ local GUIDES = {
       {art = 'ArtWindows', title = 'Your screen stays as you left it',
        text = 'Move, resize and minimize your windows and open your backpacks: at the next login, even days later, everything is back in its place. Each character keeps its own.'},
       {art = 'ArtSkills', title = 'Skills window',
-       text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see what it means.'},
+       text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see everything that adds up to its number, and what it means.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
+      {art = 'ArtPlate', title = 'Frame rate and ping',
+       text = 'The plate in the corner of the map. FPS: the pictures your client draws each second. Ping: how long a message takes to reach the server and come back. More bars are better, one red bar means lag. Options, Graphics and Interface can hide them.'},
       {art = 'ArtCircles', title = 'Your circles, your way',
        text = 'Hold Alt with the mouse over a health or mana circle: a small window opens. Drag the circle anywhere on the screen, with Shift to move both. The wheel changes its size and Ctrl with the wheel how see-through it is. Reset puts it back. The same window is under Options, Custom.'},
       {art = 'ArtGuidesButton', title = 'Guides',
@@ -136,6 +138,9 @@ local function fillArt(art)
     end
     if child.outfitType then
       child:setOutfit({type = tonumber(child.outfitType), head = 78, body = 69, legs = 58, feet = 76})
+    end
+    if child.statsFps and modules.game_stats and modules.game_stats.drawPlate then
+      modules.game_stats.drawPlate(child, child.statsFps, child.statsPing)
     end
     if child.circleKey and modules.game_healthinfo and modules.game_healthinfo.drawCircleInto then
       modules.game_healthinfo.drawCircleInto(child, child.circleKey, 100, tonumber(child.circleLevel) or 100, tostring(child.circleColor))

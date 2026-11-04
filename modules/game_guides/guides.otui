@@ -1169,6 +1169,38 @@ ArtStats < Panel
     margin-top: 6
     text: Cap: 14k  (14,000)
 
+// the plate in the corner of the map, when all is well and when it lags
+ArtPlate < Panel
+  anchors.fill: parent
+
+  GameStatsPlate
+    id: good
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 8
+    &statsFps: 60
+    &statsPing: 34
+
+  GuideNote
+    anchors.horizontalCenter: good.horizontalCenter
+    anchors.top: good.bottom
+    margin-top: 5
+    text: all well
+
+  GameStatsPlate
+    id: bad
+    anchors.left: good.right
+    anchors.top: good.top
+    margin-left: 12
+    &statsFps: 22
+    &statsPing: 640
+
+  GuideNote
+    anchors.horizontalCenter: bad.horizontalCenter
+    anchors.top: bad.bottom
+    margin-top: 5
+    text: lag
+
 // Alt over a circle: the circle in its frame and what the controls change
 GuideCircleRow < Label
   width: 50
@@ -1671,7 +1703,7 @@ ArtSkills < Panel
     background-color: #111111dd
     border-width: 1
     border-color: #6b5a2c
-    text: Attack of your weapon: the higher, the harder you hit.
+    !text: 'Weapon: +40 atk\nAmmo: +10 atk'
     phantom: true
 
 // the Guides button: first of the buttons window, in a golden frame, and again in the inventory under Options

@@ -1,17 +1,90 @@
-UIWidget
+// one bar of a row's signal: stats.lua lights them
+StatsBar < UIWidget
+  width: 3
+  anchors.bottom: parent.bottom
+  background-color: #2c2820
+  phantom: true
+  focusable: false
+
+StatsRow < UIWidget
+  height: 15
+  phantom: true
+  focusable: false
+
+  Label
+    id: name
+    width: 29
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    font: verdana-11px-rounded
+    color: #c9b98f
+    phantom: true
+
+  UIWidget
+    id: meter
+    size: 15 9
+    anchors.left: name.right
+    anchors.verticalCenter: parent.verticalCenter
+    phantom: true
+    focusable: false
+
+    StatsBar
+      id: bar1
+      height: 3
+      anchors.left: parent.left
+
+    StatsBar
+      id: bar2
+      height: 5
+      anchors.left: bar1.right
+      margin-left: 1
+
+    StatsBar
+      id: bar3
+      height: 7
+      anchors.left: bar2.right
+      margin-left: 1
+
+    StatsBar
+      id: bar4
+      height: 9
+      anchors.left: bar3.right
+      margin-left: 1
+
+  // the number's end stays in place while it changes
+  Label
+    id: value
+    anchors.left: meter.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    text-align: right
+    font: verdana-11px-rounded
+    color: #9a927e
+    text: --
+    phantom: true
+
+// its look comes from the layout: GameStatsBackground in 40-gamestats.otui
+GameStatsPlate < GameStatsBackground
+  width: 102
+  padding: 5
+  phantom: true
+  focusable: false
+  layout:
+    type: verticalBox
+    fit-children: true
+
+  StatsRow
+    id: fps
+    @onSetup: self:getChildById('name'):setText('FPS')
+
+  StatsRow
+    id: ping
+    @onSetup: self:getChildById('name'):setText('Ping')
+
+GameStatsPlate
   id: game_stats
   anchors.top: parent.top
   anchors.left: parent.left
-  margin-left: 3
-  size: 100 100
+  margin-top: 5
+  margin-left: 5
   visible: false
-  layout:
-    type: verticalBox  
-  
-  Label
-    id: fps
-    font: verdana-11px-rounded
-
-  Label
-    id: ping
-    font: verdana-11px-rounded

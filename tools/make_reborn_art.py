@@ -1145,6 +1145,16 @@ def map_backdrop(pieces):
     save(Image.fromarray(np.uint8(glow), 'RGBA'), 'ui/map_torch_glow')
 
 
+def stats_plate():
+    """The frame rate and the ping in the corner of the map: a dark well in bronze, a little see-through in case it lies on the map."""
+    W = 4 + PERIOD + 4
+    plate = scale(tile(M.dark, W, W), 0.72).convert('RGBA')
+    plate.putalpha(232)
+    rings(plate, [INK, (B_LIGHT, B_LOW), (B_DARK, B_DARK), (10, 9, 8)])
+    metal_noise(plate, (1, 1, W - 1, 2), 0.14)
+    save(clear_corners(plate, 1), 'ui/stats_plate')
+
+
 def main():
     load_materials()
     pieces = ornaments()
@@ -1166,6 +1176,7 @@ def main():
     extras()
     circles()
     map_backdrop(pieces)
+    stats_plate()
     print('ok')
 
 

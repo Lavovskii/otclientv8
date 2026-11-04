@@ -83,9 +83,12 @@ function g_tooltip.display(text)
   if text == nil or text:len() == 0 then return end
   if not toolTipLabel then return end
 
+  -- a list reads down its left edge; one line stays in the middle of its box
+  toolTipLabel:setTextAlign(text:find('\n', 1, true) and AlignLeft or AlignCenter)
   toolTipLabel:setText(text)
   toolTipLabel:resizeToText()
-  toolTipLabel:resize(toolTipLabel:getWidth() + 4, toolTipLabel:getHeight() + 4)
+  toolTipLabel:resize(toolTipLabel:getWidth() + 8, toolTipLabel:getHeight() + 6)
+  toolTipLabel:setTextOffset({x = text:find('\n', 1, true) and 4 or 0, y = 0})
   toolTipLabel:show()
   toolTipLabel:raise()
   toolTipLabel:enable()

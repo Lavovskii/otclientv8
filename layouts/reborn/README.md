@@ -55,6 +55,13 @@ picture and those numbers change with it. The next bigger picture is shown, so t
 Alt with the mouse over a circle opens the controls after 300 ms (Alt with a quick click still attacks what stands behind it). Only the
 circle itself reacts to the mouse, not its whole square (`band`). Retro uses the same code with its old pictures.
 
+## The frame rate and the ping
+
+`modules/game_stats` shows them on a plate in the corner of the map, with bars so the colour never says it alone. The plate's look is
+`GameStatsBackground` in `styles/40-gamestats.otui`. Protocol 8.70 has no ping the client can start, so `g_game.getPing()` stays at -1:
+the module asks with extended opcode 12 and `data/creaturescripts/scripts/player/client_ping.lua` on the server answers at once. Don't use
+the engine's own extended ping, it sends opcode 2, which is the loot ignore list on this server.
+
 ## Checking
 
 `python tools/window_preview.py reborn` shows every window with made-up data and no login, from a throw-away copy of the client with
