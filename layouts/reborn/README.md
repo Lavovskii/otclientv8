@@ -38,7 +38,27 @@ A widget repeats the middle of its image, so:
 `ProgressBar` here is an opaque groove with children: `fill` (the colour, with the shine `bar_gloss` stretched over it) and `caption`
 (the text). `UIProgressBar` in corelib sends the width, the colour and the text to them. Bars without those children work as before.
 
+## Beside the map
+
+The map keeps its 15 x 11 proportions, so its panel has room left on two sides. `ui/panel_map` is only an edge with an empty middle, and
+`GameMapBackdrop` (`styles/40-mapbackdrop.otui`) lies under the panel: the wall, the pillars, the banners, the torches and the map's frame.
+The engine draws the map over all of it, so what reaches too far is simply covered. `updateMapBackdrop` in `gameinterface.lua` works out
+where the map is (`getMapRect`, the same sums as the engine's) and shows the pieces that fit; `data/styles` has an empty backdrop, which
+is why Retro doesn't change.
+
+## The health and mana circles
+
+`modules/game_healthinfo/circles.lua`. One ChatGPT picture has its channel in pure cyan and the medallion's glass in pure yellow, so both
+can be cut exactly. `tools/make_reborn_art.py` writes three layers per side at seven sizes and prints the numbers in `PICTURES`; change the
+picture and those numbers change with it. The next bigger picture is shown, so they stay sharp between sizes.
+
+Alt with the mouse over a circle opens the controls after 300 ms (Alt with a quick click still attacks what stands behind it). Only the
+circle itself reacts to the mouse, not its whole square (`band`). Retro uses the same code with its old pictures.
+
 ## Checking
 
 `python tools/window_preview.py reborn` shows every window with made-up data and no login, from a throw-away copy of the client with
 its own settings, and leaves the screenshots in a temporary folder. The map itself can't be drawn without a real player.
+
+`python tools/window_preview_input.py` with `python tools/window_preview.py reborn 1920x1080 online game_full circles_input` sends real mouse
+messages to that copy's window alone, to try a real press and drag on the circles.

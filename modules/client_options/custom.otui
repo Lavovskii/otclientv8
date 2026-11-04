@@ -34,6 +34,18 @@ OptionPanel
     $mobile:
       visible: false
 
+  Button
+    id: adjustCircles
+    margin-top: 2
+    !text: tr('Adjust the circles')
+    !tooltip: tr('Move them, resize them and make them see-through. Holding Alt with the mouse over a circle does the same.')
+    @onClick: |
+      if modules.game_healthinfo.openCircleEditor() then
+        modules.client_options.hide()
+      end
+    $mobile:
+      visible: false
+
   Label
     margin-top: 5
     text: Show Bottom Action Bars:

@@ -138,6 +138,12 @@ function show()
     
   updateStretchShrink()
   logoutButton:setTooltip(tr('Logout'))
+  if not torchEvent then
+    local backdrop = gameRootPanel:getChildById('gameMapBackdrop')
+    if backdrop and backdrop:getChildById('leftSide') then
+      torchEvent = cycleEvent(animateTorches, 130)
+    end
+  end
   
   addEvent(function()
     if not limitedZoom or g_game.isGM() then
@@ -151,6 +157,10 @@ function show()
 end
 
 function hide()
+  if torchEvent then
+    removeEvent(torchEvent)
+    torchEvent = nil
+  end
   disconnect(g_app, { onClose = tryExit })
   logoutButton:setTooltip(tr('Exit'))
 
@@ -1039,7 +1049,105 @@ function limitZoom()
   limitedZoom = true
 end
 
+-- Where the engine draws the map inside its panel (UIMap::updateMapSize, its 15 x 11 proportions and its centre included). It keeps its
+-- proportions, so there is room left on two sides, and the layout decides what shows there.
+function getMapRect()
+  local area = gameMapPanel:getPaddingRect()
+  local width, height = math.max(1, area.width - 2), math.max(1, area.height - 2)
+  if gameMapPanel:isKeepAspectRatioEnabled() then
+    local zoom = math.max(1, gameMapPanel:getZoom())
+    local mapWidth = math.floor(15 / 11 * zoom)
+    local fitted = math.floor(height * mapWidth / zoom)
+    if fitted <= width then
+      width = fitted
+    else
+      height = math.floor(width * zoom / mapWidth)
+    end
+  end
+  local centerX = math.floor((2 * area.x + area.width - 1) / 2)
+  local centerY = math.floor((2 * area.y + area.height - 1) / 2)
+  return { x = centerX - math.floor((width - 1) / 2), y = centerY - math.floor((height - 1) / 2), width = width, height = height }
+end
+
+-- the pieces of a side of the wall, the ones that fit (GameMapBackdrop in the layout's styles)
+local BANNERS = { { cloth = 132, width = 148, height = 235 }, { cloth = 96, width = 112, height = 175 }, { cloth = 72, width = 88, height = 135 } }
+local PILLAR_WIDTH = 66
+local TORCH_WIDTH, TORCH_HEIGHT = 62, 187
+
+local function updateMapSide(side, name, gap, height)
+  side:setWidth(math.max(0, gap))
+  local pillar = side:getChildById('pillar')
+  local banner = side:getChildById('banner')
+  local torch = side:getChildById('torch')
+  local glow = side:getChildById('glow')
+  local showPillar = gap >= PILLAR_WIDTH + 4 and height >= 200
+  pillar:setVisible(showPillar)
+  -- what the pillar leaves, between it and the end of the wall
+  local room = gap - (showPillar and PILLAR_WIDTH or 0)
+  local center = math.floor(room / 2) + (name == 'left' and 0 or gap - room)
+  local fits = nil
+  for _, each in ipairs(BANNERS) do
+    if room >= each.width - 8 then
+      fits = each
+      break
+    end
+  end
+  local bannerHeight = 0
+  if fits and height >= 260 then
+    banner:setImageSource('/images/ui/map_banner_' .. name .. '_' .. fits.cloth)
+    bannerHeight = fits.height
+    banner:setSize({ width = fits.width, height = fits.height })
+    banner:setMarginLeft(center - math.floor(fits.width / 2))
+    banner:show()
+  else
+    banner:hide()
+  end
+  local torchTop = banner:isVisible() and banner:getMarginTop() + bannerHeight + 40 or math.floor((height - TORCH_HEIGHT) / 3)
+  local showTorch = room >= TORCH_WIDTH and height >= torchTop + TORCH_HEIGHT + 30
+  torch:setVisible(showTorch)
+  glow:setVisible(showTorch)
+  if showTorch then
+    torch:setMarginLeft(center - math.floor(TORCH_WIDTH / 2))
+    torch:setMarginTop(torchTop)
+  end
+end
+
+function updateMapBackdrop()
+  local backdrop = gameRootPanel:getChildById('gameMapBackdrop')
+  if not backdrop then return end
+  local frame = backdrop:getChildById('frame')
+  backdrop:setVisible(gameMapPanel:isKeepAspectRatioEnabled())
+  if not frame or not backdrop:isVisible() then return end
+  local rect = getMapRect()
+  local panel = gameMapPanel:getRect()
+  local left, top = rect.x - panel.x, rect.y - panel.y
+  local right, bottom = panel.width - left - rect.width, panel.height - top - rect.height
+  frame:setMarginLeft(left - 27)
+  frame:setMarginTop(top - 27)
+  frame:setMarginRight(right - 27)
+  frame:setMarginBottom(bottom - 27)
+  updateMapSide(backdrop:getChildById('leftSide'), 'left', left - 1, panel.height)
+  updateMapSide(backdrop:getChildById('rightSide'), 'right', right - 1, panel.height)
+end
+
+-- the flames of the torches, and their light on the wall
+local torchFrame = 0
+function animateTorches()
+  local backdrop = gameRootPanel:getChildById('gameMapBackdrop')
+  if not backdrop or not backdrop:isVisible() then return end
+  torchFrame = (torchFrame + 1) % 4
+  for _, id in ipairs({ 'leftSide', 'rightSide' }) do
+    local side = backdrop:getChildById(id)
+    if side then
+      local torch = side:getChildById('torch')
+      torch:setImageClip({ x = TORCH_WIDTH * ((torchFrame + (id == 'leftSide' and 0 or 2)) % 4), y = 0, width = TORCH_WIDTH, height = TORCH_HEIGHT })
+      side:getChildById('glow'):setOpacity(0.78 + 0.22 * math.abs(math.sin(g_clock.millis() / 410 + (id == 'leftSide' and 0 or 1.7))))
+    end
+  end
+end
+
 function updateSize()
+  updateMapBackdrop()
   if g_app.isMobile() then return end
 
   local classic = g_settings.getBoolean("classicView")

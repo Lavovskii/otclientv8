@@ -1119,11 +1119,11 @@ GuideBar < Label
   border-color: #000000
   phantom: true
 
-// the middle of the circles around the character, at their real size (the images are cut to the medallions), and the
-// bars with the real numbers
+// the middle of a circle around the character at its real size, and the bars with the real numbers. game_healthinfo draws the
+// circle, so these are the pictures of the look in use
 GuideCircle < UIWidget
-  size: 84 84
-  image-clip: 0 64 84 84
+  size: 78 84
+  clipping: true
   phantom: true
 
 ArtStats < Panel
@@ -1133,59 +1133,18 @@ ArtStats < Panel
     id: hBack
     anchors.left: parent.left
     anchors.top: parent.top
-    image-source: /images/game/circle/left_back
-  GuideCircle
-    anchors.left: hBack.left
-    anchors.top: hBack.top
-    image-source: /images/game/circle/left_fill
-    image-color: #00bc00
-  GuideCircle
-    id: hFrame
-    anchors.left: hBack.left
-    anchors.top: hBack.top
-    image-source: /images/game/circle/left_frame
-  Label
-    anchors.horizontalCenter: hFrame.left
-    anchors.verticalCenter: hFrame.top
-    margin-left: 29
-    margin-top: 42
-    font: verdana-9px-bold
-    color: #f0e2b6
-    text: 100%
-    text-auto-resize: true
-    phantom: true
+    &circleKey: 'health'
+    &circleLevel: 100
+    &circleColor: '#00bc00'
 
   GuideCircle
     id: mBack
     anchors.left: hBack.right
     anchors.top: parent.top
     margin-left: 2
-    image-source: /images/game/circle/right_back
-  // mana at 40%: the fill starts below the medallion
-  UIWidget
-    size: 84 22
-    anchors.left: mBack.left
-    anchors.top: mBack.top
-    margin-top: 62
-    image-source: /images/game/circle/right_fill
-    image-clip: 0 126 84 22
-    image-color: #3a7bff
-    phantom: true
-  GuideCircle
-    id: mFrame
-    anchors.left: mBack.left
-    anchors.top: mBack.top
-    image-source: /images/game/circle/right_frame
-  Label
-    anchors.horizontalCenter: mFrame.right
-    anchors.verticalCenter: mFrame.top
-    margin-right: 29
-    margin-top: 42
-    font: verdana-9px-bold
-    color: #f0e2b6
-    text: 40%
-    text-auto-resize: true
-    phantom: true
+    &circleKey: 'mana'
+    &circleLevel: 40
+    &circleColor: '#3a7bff'
 
   GuideBar
     id: hp
@@ -1209,6 +1168,95 @@ ArtStats < Panel
     anchors.top: mp.bottom
     margin-top: 6
     text: Cap: 14k  (14,000)
+
+// Alt over a circle: the circle in its frame and what the controls change
+GuideCircleRow < Label
+  width: 50
+  font: verdana-11px-antialised
+  color: #dcdcdc
+  phantom: true
+
+GuideCircleValue < Label
+  width: 36
+  text-align: right
+  font: verdana-11px-antialised
+  color: #f4d68c
+  phantom: true
+
+ArtCircles < Panel
+  anchors.fill: parent
+
+  GuideCircle
+    id: circle
+    anchors.left: parent.left
+    anchors.top: parent.top
+    &circleKey: 'health'
+    &circleLevel: 82
+    &circleColor: '#50a150'
+
+  UIWidget
+    anchors.fill: circle
+    border-width: 1
+    border-color: #f4d68c
+    background-color: #f4d68c18
+    phantom: true
+
+  GuideKey
+    id: alt
+    anchors.left: circle.right
+    anchors.top: parent.top
+    margin-left: 10
+    text: Alt
+
+  GuideNote
+    anchors.left: alt.right
+    anchors.verticalCenter: alt.verticalCenter
+    margin-left: 6
+    text: mouse over a circle
+
+  GuideCircleRow
+    id: sizeName
+    anchors.left: alt.left
+    anchors.top: alt.bottom
+    margin-top: 8
+    text: Size
+
+  HorizontalScrollBar
+    id: sizeBar
+    width: 104
+    anchors.left: sizeName.right
+    anchors.verticalCenter: sizeName.verticalCenter
+    minimum: 50
+    maximum: 200
+    value: 100
+    phantom: true
+
+  GuideCircleValue
+    anchors.left: sizeBar.right
+    anchors.top: sizeName.top
+    text: 100%
+
+  GuideCircleRow
+    id: opacityName
+    anchors.left: alt.left
+    anchors.top: sizeName.bottom
+    margin-top: 8
+    text: Opacity
+
+  HorizontalScrollBar
+    id: opacityBar
+    width: 104
+    anchors.left: opacityName.right
+    anchors.verticalCenter: opacityName.verticalCenter
+    minimum: 15
+    maximum: 100
+    value: 90
+    phantom: true
+
+  GuideCircleValue
+    anchors.left: opacityBar.right
+    anchors.top: opacityName.top
+    text: 90%
 
 // an action bar's slot and the window it opens: the spells of your vocation by level, with tabs
 ArtSpells < Panel

@@ -42,6 +42,10 @@ GameAction < UIButton
 UIWidget
   id: gameRootPanel
   anchors.fill: parent
+
+  GameMapBackdrop
+    id: gameMapBackdrop
+    anchors.fill: gameMapPanel
   
   GameMapPanel
     id: gameMapPanel

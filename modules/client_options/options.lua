@@ -299,14 +299,7 @@ function setOption(key, value, force)
     end
     audioPanel:getChildById('botSoundVolumeLabel'):setText(tr('Bot sound volume: %d', value))    
   elseif key == 'showHealthManaCircle' then
-    modules.game_healthinfo.healthCircle:setVisible(value)
-    modules.game_healthinfo.healthCircleFront:setVisible(value)
-    modules.game_healthinfo.manaCircle:setVisible(value)
-    modules.game_healthinfo.manaCircleFront:setVisible(value)
-    modules.game_healthinfo.healthCircleFrame:setVisible(value)
-    modules.game_healthinfo.manaCircleFrame:setVisible(value)
-    modules.game_healthinfo.healthPercentLabel:setVisible(value)
-    modules.game_healthinfo.manaPercentLabel:setVisible(value)
+    modules.game_healthinfo.setCirclesVisible(value)
   elseif key == 'backgroundFrameRate' then
     local text, v = value, value
     if value <= 0 or value >= 201 then text = 'max' v = 0 end

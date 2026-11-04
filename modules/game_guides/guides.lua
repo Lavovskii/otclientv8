@@ -79,6 +79,8 @@ local GUIDES = {
        text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see what it means.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
+      {art = 'ArtCircles', title = 'Your circles, your way',
+       text = 'Hold Alt with the mouse over a health or mana circle: a small window opens. Drag the circle anywhere on the screen, with Shift to move both. The wheel changes its size and Ctrl with the wheel how see-through it is. Reset puts it back. The same window is under Options, Custom.'},
       {art = 'ArtGuidesButton', title = 'Guides',
        text = 'The golden button, first of the buttons window, opens these guides. The inventory has a Guides button too, under Options.'},
       {art = 'ArtMonsterLevel', title = 'Monster levels',
@@ -134,6 +136,9 @@ local function fillArt(art)
     end
     if child.outfitType then
       child:setOutfit({type = tonumber(child.outfitType), head = 78, body = 69, legs = 58, feet = 76})
+    end
+    if child.circleKey and modules.game_healthinfo and modules.game_healthinfo.drawCircleInto then
+      modules.game_healthinfo.drawCircleInto(child, child.circleKey, 100, tonumber(child.circleLevel) or 100, tostring(child.circleColor))
     end
   end
 end

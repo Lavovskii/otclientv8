@@ -215,15 +215,26 @@ local function define()
     map:hide() -- the engine can't draw the map without a real player
     local stand = g_ui.createWidget('UIWidget', modules.game_interface.getRootPanel())
     stand:setId('previewMap')
-    stand:addAnchor(AnchorLeft, 'gameMapPanel', AnchorLeft)
-    stand:addAnchor(AnchorRight, 'gameMapPanel', AnchorRight)
-    stand:addAnchor(AnchorTop, 'gameMapPanel', AnchorTop)
-    stand:addAnchor(AnchorBottom, 'gameMapPanel', AnchorBottom)
     stand:setImageSource('/images/game/floor')
     stand:setImageRepeated(true)
     stand:setImageColor('#6a8a5a')
     stand:setPhantom(true)
-    modules.game_interface.getRootPanel():lowerChild(stand)
+    -- it stands where the map would, on what the layout shows beside the map
+    local dummy = g_ui.createWidget('UICreature', stand)
+    dummy:setOutfit({type = 128, head = 78, body = 69, legs = 58, feet = 76, addons = 3, mount = 0})
+    local function placeStand()
+      local rect = modules.game_interface.getMapRect()
+      stand:setRect(rect)
+      local tile = rect.height / 11
+      dummy:setSize({width = tile * 2, height = tile * 2})
+      dummy:setPosition({x = rect.x + rect.width / 2 - tile * 1.5, y = rect.y + rect.height / 2 - tile * 1.5})
+    end
+    connect(map, {onGeometryChange = placeStand})
+    placeStand()
+    local panel = modules.game_interface.getRootPanel()
+    panel:lowerChild(stand)
+    panel:lowerChild(panel:getChildById('gameMapBackdrop'))
+    modules.game_interface.updateMapBackdrop()
     g_game.close = function() end
     g_game.open = function() end
     for _, child in ipairs(rootWidget:getChildren()) do
@@ -245,6 +256,114 @@ local function define()
       modules.game_console.addTabText('19:13 Loot of a hell boy: 10 crystal coins.', {color = '#33FF33'}, tab)
     end
   end, 1200)
+  -- the health and mana circles and their controls
+  step('circles', function()
+    closeWindows()
+    modules.game_healthinfo.onHealthChange(player, 8200, 10000)
+    modules.game_healthinfo.onManaChange(player, 5300, 9000)
+    modules.game_healthinfo.placeCircles()
+    modules.game_interface.updateMapBackdrop()
+  end, 600)
+  step('circles_edit', function()
+    log('circle editor opens: ' .. tostring(modules.game_healthinfo.openCircleEditor()))
+  end, 500)
+  step('circles_mana', function()
+    byId('manaTab').onClick(byId('manaTab'))
+  end, 300)
+  step('circles_big', function()
+    byId('sizeBar'):setValue(150)
+    byId('opacityBar'):setValue(60)
+  end, 400)
+  step('circles_small', function()
+    byId('sizeBar'):setValue(50)
+    byId('opacityBar'):setValue(100)
+  end, 400)
+  step('circles_75', function()
+    byId('sizeBar'):setValue(75)
+  end, 400)
+  step('circles_200', function()
+    byId('sizeBar'):setValue(200)
+  end, 400)
+  step('circles_apart', function()
+    byId('together'):setChecked(false)
+    byId('sizeBar'):setValue(100)
+    byId('healthTab').onClick(byId('healthTab'))
+    byId('sizeBar'):setValue(125)
+    byId('opacityBar'):setValue(40)
+    local widget = byId('healthCircle')
+    local pos = {x = widget:getX() + 20, y = widget:getY() + 100}
+    log('drag enter: ' .. tostring(widget:onDragEnter(pos)))
+    log('drag move: ' .. tostring(widget:onDragMove({x = 300, y = 200})))
+    log('drag leave: ' .. tostring(widget:onDragLeave(nil, {x = 300, y = 200})))
+  end, 500)
+  step('circles_wheel', function()
+    local health, mana = byId('healthCircle'), byId('manaCircle')
+    local pos = {x = health:getX() + 10, y = health:getY() + 10}
+    local report = function(what)
+      log(what .. ': health ' .. health:getWidth() .. 'x' .. health:getHeight() .. ' opacity ' .. health:getOpacity() ..
+        ', mana ' .. mana:getWidth() .. ' opacity ' .. mana:getOpacity() .. ' at ' .. mana:getX() .. ',' .. mana:getY())
+    end
+    report('before')
+    health:onMouseWheel(pos, MouseWheelUp)
+    report('wheel up')
+    for _ = 1, 40 do health:onMouseWheel(pos, MouseWheelUp) end
+    report('wheel up to the top')
+    for _ = 1, 60 do health:onMouseWheel(pos, MouseWheelDown) end
+    report('wheel down to the bottom')
+    local ctrl = g_keyboard.isCtrlPressed
+    g_keyboard.isCtrlPressed = function() return true end
+    for _ = 1, 40 do health:onMouseWheel(pos, MouseWheelDown) end
+    report('ctrl and wheel down to the bottom')
+    g_keyboard.isCtrlPressed = ctrl
+    -- with Shift both move
+    local shift = g_keyboard.isShiftPressed
+    g_keyboard.isShiftPressed = function() return true end
+    local start = {x = health:getX() + 5, y = health:getY() + 5}
+    health:onDragEnter(start)
+    health:onDragMove({x = start.x + 40, y = start.y + 30})
+    health:onDragLeave(nil, start)
+    g_keyboard.isShiftPressed = shift
+    report('dragged 40,30 with Shift')
+  end, 300)
+  step('circles_reset', function()
+    byId('reset').onClick(byId('reset'))
+    byId('manaTab').onClick(byId('manaTab'))
+    byId('reset').onClick(byId('reset'))
+    byId('together'):setChecked(true)
+    log('saved: ' .. tostring(g_settings.getNode('healthCircles') ~= nil))
+  end, 500)
+  step('circles_low', function()
+    modules.game_healthinfo.closeCircleEditor()
+    VALUES.getHealthPercent = 22
+    modules.game_healthinfo.onHealthChange(player, 2200, 10000)
+    modules.game_healthinfo.onManaChange(player, 900, 9000)
+  end, 400)
+  -- only when asked for by name: it waits for real window messages (a test script sends them to this window alone)
+  step('circles_input', function()
+    closeWindows()
+    modules.game_healthinfo.onHealthChange(player, 8200, 10000)
+    modules.game_healthinfo.onManaChange(player, 5300, 9000)
+    local widget = byId('healthCircle')
+    local rect = widget:getRect()
+    local x, y = rect.x + math.floor(rect.width * 0.27), rect.y + math.floor(rect.height * 0.5)
+    g_resources.writeFileContents('/input_ready.txt', table.concat({x, y, x - 200, y - 180, 900, 200}, ' '))
+    -- the engine reads the real state of the keyboard, which messages don't change: the script sets these through files
+    g_keyboard.isAltPressed = function() return g_resources.fileExists('/alt_on.txt') end
+    g_keyboard.isCtrlPressed = function() return g_resources.fileExists('/ctrl_on.txt') end
+    g_window.hasFocus = function() return true end
+    local started = g_clock.millis()
+    local function report()
+      local editor = byId('circleEditor')
+      local r = widget:getRect()
+      log(string.format('t=%d mouse=%d,%d alt=%s circle=%d,%d %dx%d opacity=%.2f editor=%s phantom=%s', g_clock.millis() - started,
+        g_window.getMousePosition().x, g_window.getMousePosition().y, tostring(g_keyboard.isAltPressed()), r.x, r.y, r.width, r.height,
+        widget:getOpacity(), tostring(editor and editor:isVisible()), tostring(widget:isPhantom())))
+      if g_clock.millis() - started < 12000 then scheduleEvent(report, 400) end
+    end
+    report()
+    scheduleEvent(function() shot('circles_input_open') end, 2600)
+  end, 13000)
+  steps[#steps].explicit = true
   step('containers', function()
     local a = fakeContainer(0, 'backpack of holding', {3160, 3351, 3357, 3358, 3079, 3420, 3280, 3043, 3031, 3028, 3582, 3492}, 20)
     local b = fakeContainer(1, 'bag', {3027, 5944, 3587}, 8)
@@ -458,7 +577,7 @@ local function run(i)
     log('done')
     return g_app.exit()
   end
-  if only and not only[s.name] and s.name ~= 'online' then
+  if (only and not only[s.name] and s.name ~= 'online') or (s.explicit and not only) then
     return run(i + 1)
   end
   local ok, err = pcall(s.f)

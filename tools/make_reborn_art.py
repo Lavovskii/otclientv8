@@ -11,11 +11,13 @@ textures (PERIOD), and shading only goes in the borders. See layouts/reborn/READ
 
   python tools/make_reborn_art.py        running it again gives the same files
 """
+import math
 import os
 import random
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from scipy import ndimage
 
 from make_task_art import cut, shrink
 
@@ -322,12 +324,6 @@ def panels():
     a.line([(W + 7, 0), (W + 7, H + 7)], fill=(12, 10, 8))
     a.line([(W + 6, 0), (W + 6, H + 7)], fill=B_DARK)
     save(side, 'ui/panel_side')
-    # the frame around the map
-    W = 4 + PERIOD + 4
-    around = Image.new('RGBA', (W, W), (0, 0, 0, 255))
-    rings(around, [INK, (B_LIGHT, B_LOW), (B_MID, B_DARK), EDGE])
-    metal_noise(around, (1, 1, W - 1, 3), 0.14)
-    save(around, 'ui/panel_map')
     # the bar over the map
     strip = tile(M.stone, 942, 60)
     strip = scale(strip, 0.86)
@@ -902,6 +898,253 @@ def extras():
     save(shrink(piece(2, 1), 14, 14, threshold=100), 'ui/flask_mana')
 
 
+# ------------------------------------------------------------------------------------------- the health and mana circles
+CIRCLE_SIZES = (50, 75, 100, 125, 150, 175, 200)
+CIRCLE_HEIGHT = 232  # at 100%
+
+
+def biggest_blobs(mask, count):
+    labels, found = ndimage.label(mask)
+    sizes = ndimage.sum(mask, labels, range(1, found + 1))
+    return np.isin(labels, np.argsort(sizes)[-count:] + 1)
+
+
+def to_size(layer, size):
+    """A float RGBA layer down to game size, averaging premultiplied, so the keyed colours don't creep in at the edges."""
+    alpha = layer[..., 3:4]
+    channels = [layer[..., i] * alpha[..., 0] for i in range(3)] + [alpha[..., 0]]
+    small = [np.array(Image.fromarray(c.astype(np.float32), 'F').resize(size, Image.BOX)) for c in channels]
+    a = np.maximum(small[3], 1e-4)
+    rgb = [np.clip(c / a, 0, 255) for c in small[:3]]
+    out = np.stack(rgb + [np.clip(small[3] * 255, 0, 255)], -1)
+    return Image.fromarray(np.uint8(out + 0.5), 'RGBA')
+
+
+def circles():
+    """One picture from ChatGPT with its channel in cyan and the glass of its medallion in yellow, so both can be cut out exactly.
+    Each side has three layers per size: back, fill (grey: the client tints it and cuts it from the bottom up), frame.
+    Prints what modules/game_healthinfo/circles.lua has in PICTURES."""
+    source = np.array(Image.open(os.path.join(ART, 'reborn_circle.png')).convert('RGB')).astype(int)
+    R, G, B = source[..., 0], source[..., 1], source[..., 2]
+    magenta = (R > 150) & (B > 150) & (G < 110)
+    channel = biggest_blobs((G - R > 60) & (B - R > 60) & (G > 120) & (B > 120), 2)
+    glass = ndimage.binary_fill_holes(biggest_blobs((R - B > 60) & (G - B > 60) & (R > 200) & (G > 200) & (B < 110), 1))
+    ys, xs = np.where(~magenta)
+    x0, x1, y0, y1 = xs.min(), xs.max() + 1, ys.min(), ys.max() + 1
+    source, magenta, channel, glass = source[y0:y1, x0:x1], magenta[y0:y1, x0:x1], channel[y0:y1, x0:x1], glass[y0:y1, x0:x1]
+    h, w = channel.shape
+    # the rim of the keyed colours went a little into the frame: the back and the fill reach under it
+    under = ndimage.binary_dilation(channel, iterations=6) & ~magenta
+    frame_mask = ~magenta & ~ndimage.binary_dilation(channel, iterations=2) & ~ndimage.binary_dilation(glass, iterations=2)
+
+    rows = np.where(channel.any(1))[0]
+    top, bottom = rows.min(), rows.max() + 1
+    depth = ndimage.distance_transform_edt(channel)
+    across = np.clip(depth / max(1, depth.max()), 0, 1)
+    gy, gx = np.gradient(ndimage.gaussian_filter(depth, 3))
+    lit = -(gx * -0.7 + gy * -0.7)
+
+    # back: a dark groove, darker along its edges
+    back = np.zeros((h, w, 4))
+    back[..., :3] = np.stack([8 + 14 * across, 7 + 11 * across, 6 + 9 * across], -1)
+    back[..., 3] = np.where(under, 0.90, 0)
+
+    # fill: a tube of liquid in grey, in bands like the rest of the pixel art, darker to the bottom right
+    tube = 0.40 + 0.60 * across ** 0.55
+    tube = tube + np.clip(lit, -1, 1) * 0.07
+    tube = np.round(np.clip(tube, 0, 1) * 7) / 7
+    rnd = np.random.RandomState(11)
+    grain = ndimage.zoom(rnd.uniform(-0.05, 0.05, (h // 6 + 1, w // 6 + 1)), 6, order=0)[:h, :w]
+    tube = np.clip(np.where(channel, tube, 0.42) + grain, 0, 1) * 255
+    fill = np.zeros((h, w, 4))
+    fill[..., :3] = np.stack([tube, tube, tube], -1)
+    fill[..., 3] = np.where(under, 1.0, 0)
+
+    def frame_layer(tint):
+        layer = np.zeros((h, w, 4))
+        layer[..., :3] = source
+        layer[..., 3] = np.where(frame_mask, 1.0, 0)
+        # a glass tube over the channel: a highlight along its upper left side that shows on full and on empty alike
+        gloss = channel & (lit > 0.35) & (across > 0.30) & (across < 0.62) & ~glass
+        breaks = ((np.arange(h)[:, None] // 6) % 34 < 3)
+        gloss = gloss & ~breaks
+        layer[gloss] = (255, 250, 235, 0.30)
+        # the marks at every 10%: the level of a liquid is flat, so they are too
+        for k in range(1, 10):
+            row = int(top + (bottom - top) * k / 10)
+            band = np.zeros((h, w), bool)
+            band[row - 3:row + 3] = True
+            layer[band & channel & ~glass] = (6, 5, 4, 0.60)
+            band = np.zeros((h, w), bool)
+            band[row + 3:row + 8] = True
+            layer[band & channel & ~glass] = (255, 240, 200, 0.14)
+        # the medallion's glass holds the number
+        ys, xs = np.where(glass)
+        cx, cy, radius = xs.mean(), ys.mean(), (xs.max() - xs.min()) / 2
+        yy, xx = np.mgrid[0:h, 0:w]
+        dist = np.hypot(xx - cx, yy - cy) / radius
+        inside = ndimage.binary_dilation(glass, iterations=3)
+        shade = np.clip(1.15 - dist ** 2.2, 0.15, 1)[..., None]
+        colour = np.array(tint, float) * shade
+        layer[inside, :3] = colour[inside]
+        layer[inside, 3] = 1.0
+        glint = glass & (np.hypot((xx - (cx - radius * 0.32)) / 0.5, (yy - (cy - radius * 0.46)) / 0.24) < radius)
+        layer[glint, :3] = layer[glint, :3] * 0.8 + np.array((255, 245, 225)) * 0.2
+        layer[inside & (dist > 0.92), :3] = (6, 5, 4)
+        return layer
+
+    frames = {'left': frame_layer((48, 16, 14)), 'right': frame_layer((14, 22, 56))}
+    for size in CIRCLE_SIZES:
+        height = round(CIRCLE_HEIGHT * size / 100)
+        width = round(w * height / h)
+        for side in ('left', 'right'):
+            for name, layer in (('back', back), ('fill', fill), ('frame', frames[side])):
+                image = to_size(layer, (width, height))
+                if side == 'right':
+                    image = image.transpose(Image.FLIP_LEFT_RIGHT)
+                save(image, 'game/circle/%s_%s_%d' % (side, name, size))
+    ys, xs = np.where(glass)
+    print('circles: PICTURES width=%d height=%d fillTop=%.4f fillBottom=%.4f glassX=%.4f glassY=%.4f glass=%.4f' % (
+        round(w * CIRCLE_HEIGHT / h), CIRCLE_HEIGHT, top / h, bottom / h, xs.mean() / w, ys.mean() / h, (xs.max() - xs.min()) / h))
+    # the part of the width it fills, row by row, for the mouse
+    solid = ~magenta
+    band = []
+    for row in range(16):
+        part = solid[h * row // 16:h * (row + 1) // 16].any(0)
+        cols = np.where(part)[0]
+        band.append('{ %.2f, %.2f }' % (cols.min() / w, (cols.max() + 1) / w))
+    print('band = { ' + ', '.join(band) + ' }')
+
+
+# ------------------------------------------------------------------------------------------- what shows beside the map
+def with_shadow(image, offset=(3, 4), strength=0.5, pad=8):
+    """A hard shadow on the wall, down and to the right, on a canvas a little bigger than the picture."""
+    canvas = Image.new('RGBA', (image.width + pad * 2, image.height + pad * 2), (0, 0, 0, 0))
+    alpha = np.array(image.split()[3]).astype(float) * strength
+    shadow = Image.new('L', canvas.size, 0)
+    shadow.paste(Image.fromarray(np.uint8(alpha)), (pad + offset[0], pad + offset[1]))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(1.2))
+    canvas.paste((4, 3, 2, 255), (0, 0), shadow)
+    canvas.alpha_composite(image, (pad, pad))
+    return canvas
+
+
+def to_game(piece, width, height):
+    """A piece of a sheet down to game size, keeping its alpha."""
+    a = np.array(piece.convert('RGBA')).astype(float)
+    a[..., 3] /= 255
+    return to_size(a, (width, height))
+
+
+def map_backdrop(pieces):
+    """The map keeps its proportions, so its panel has room left on two sides: a castle wall, with pillars, banners and torches
+    where there is room for them (GameMapBackdrop in styles/40-mapbackdrop.otui, placed by gameinterface.lua)."""
+    # the panel itself: only its edge, the middle is the map or shows the wall behind it
+    W = 4 + PERIOD + 4
+    around = Image.new('RGBA', (W, W), (0, 0, 0, 0))
+    rings(around, [INK, (B_LIGHT, B_LOW), (B_MID, B_DARK), EDGE])
+    metal_noise(around, (1, 1, W - 1, 3), 0.14)
+    save(around, 'ui/panel_map')
+
+    save(bricks(PERIOD, PERIOD, mean=(44, 42, 40)), 'ui/map_wall')
+
+    # the frame of the map and its shadow on the wall. The engine draws a black line on its inside
+    SHADOW, TRIM = 20, 7
+    B = SHADOW + TRIM
+    # the slice goes further in than the frame, under the map, so the corners don't repeat along the sides
+    SLICE = 44
+    W = SLICE + PERIOD + SLICE
+    a = np.zeros((W, W, 4))
+    yy, xx = np.mgrid[0:W, 0:W]
+    edge = np.minimum(np.minimum(xx, W - 1 - xx), np.minimum(yy, W - 1 - yy))
+    a[..., 3] = np.clip((edge + 1) / SHADOW, 0, 1) ** 1.8 * 150
+    a[edge >= B, 3] = 0
+    frame = Image.fromarray(np.uint8(a), 'RGBA')
+    metal = tile(M.bronze, W, W).convert('RGBA')
+    for inset in range(SHADOW, B):
+        strip = Image.new('L', (W, W), 0)
+        ImageDraw.Draw(strip).rectangle((inset, inset, W - inset - 1, W - inset - 1), outline=255)
+        frame.paste(metal, (0, 0), strip)
+    d = (SHADOW, SHADOW, W - SHADOW, W - SHADOW)
+    ring(frame, 0, INK, INK, d)
+    ring(frame, 1, B_HI, B_LOW, d)
+    ring(frame, 2, B_LIGHT, B_MID, d)
+    ring(frame, 4, B_LOW, B_LIGHT, d)
+    ring(frame, 5, B_DARK, B_MID, d)
+    ring(frame, 6, INK, INK, d)
+    metal_noise(frame, (SHADOW + 1, SHADOW + 1, W - SHADOW - 1, SHADOW + 3), 0.14)
+    corner = shrink(pieces['corner'], 26, 26, threshold=110)
+    frame.alpha_composite(corner, (SHADOW - 5, SHADOW - 5))
+    frame.alpha_composite(corner.transpose(Image.FLIP_LEFT_RIGHT), (W - SHADOW - 21, SHADOW - 5))
+    frame.alpha_composite(corner.transpose(Image.FLIP_TOP_BOTTOM), (SHADOW - 5, W - SHADOW - 21))
+    frame.alpha_composite(corner.transpose(Image.ROTATE_180), (W - SHADOW - 21, W - SHADOW - 21))
+    save(frame, 'ui/map_frame')
+
+    # a banner on each side, the dragons looking at the map
+    banner = cut(Image.open(os.path.join(ART, 'reborn_banner.png')).convert('RGB'), (0, 0, 1024, 1536))
+    for width in (132, 96, 72):
+        height = round(banner.height * width / banner.width)
+        left = with_shadow(to_game(banner, width, height))
+        save(left, 'ui/map_banner_left_%d' % width)
+        save(left.transpose(Image.FLIP_LEFT_RIGHT), 'ui/map_banner_right_%d' % width)
+        print('banner', width, left.size)
+
+    # the sheet's pillar and torch
+    sheet = Image.open(os.path.join(ART, 'reborn_wall_pieces.png')).convert('RGB')
+    k = sheet.width / 1536
+    pillar = cut(sheet, (int(900 * k), 0, sheet.width, sheet.height))
+    torch = cut(sheet, (0, 0, int(700 * k), sheet.height))
+
+    # the pillar: a top, a shaft that repeats, a base. Its width stays; only the shaft repeats
+    W = 66
+    factor = W / pillar.width
+    H = round(pillar.height * factor)
+    small = to_game(pillar, W, H)
+    top_slice = round(225 * k * factor) + 2
+    base_slice = round(190 * k * factor)
+    shaft_h = PERIOD // 2
+    shaft = small.crop((0, top_slice + 6, W, top_slice + 6 + shaft_h))
+    # the shaft's ends fade into each other, so it repeats without a seam
+    s = np.array(shaft).astype(float)
+    fade = 8
+    for i in range(fade):
+        m = i / fade
+        s[i] = s[i] * m + s[-fade + i] * (1 - m)
+    shaft = Image.fromarray(np.uint8(s[:shaft_h - fade]), 'RGBA')
+    out = Image.new('RGBA', (W, top_slice + shaft.height + base_slice), (0, 0, 0, 0))
+    out.paste(small.crop((0, 0, W, top_slice)), (0, 0))
+    out.paste(shaft, (0, top_slice))
+    out.paste(small.crop((0, H - base_slice, W, H)), (0, top_slice + shaft.height))
+    save(out, 'ui/map_pillar_left')
+    save(out.transpose(Image.FLIP_LEFT_RIGHT), 'ui/map_pillar_right')
+    print('pillar', out.size, 'top', top_slice, 'bottom', base_slice)
+
+    # the torch: four frames side by side, where the flame moves row by row
+    TW = 46
+    TH = round(torch.height * TW / torch.width)
+    base = to_game(torch, TW, TH)
+    flame_rows = round(TH * 0.335)
+    a = np.array(base)
+    frames = Image.new('RGBA', ((TW + 16) * 4, TH + 16), (0, 0, 0, 0))
+    for frame_no in range(4):
+        wave = a.copy()
+        for row in range(flame_rows):
+            amount = 1 - row / flame_rows
+            shift = int(round(math.sin(frame_no * math.pi / 2 + row * 0.42) * 2.4 * amount))
+            wave[row] = np.roll(a[row], shift, axis=0)
+        frames.alpha_composite(with_shadow(Image.fromarray(wave, 'RGBA')), ((TW + 16) * frame_no, 0))
+    save(frames, 'ui/map_torch')
+    print('torch frame', TW + 16, TH + 16)
+    # its light on the wall
+    G = 220
+    yy, xx = np.mgrid[0:G, 0:G]
+    dist = np.hypot(xx - G / 2, yy - G / 2) / (G / 2)
+    glow = np.zeros((G, G, 4))
+    glow[..., 0], glow[..., 1], glow[..., 2] = 255, 150, 60
+    glow[..., 3] = np.clip(1 - dist, 0, 1) ** 2.0 * 92
+    save(Image.fromarray(np.uint8(glow), 'RGBA'), 'ui/map_torch_glow')
+
+
 def main():
     load_materials()
     pieces = ornaments()
@@ -921,6 +1164,8 @@ def main():
     small_panels()
     store_and_tasks()
     extras()
+    circles()
+    map_backdrop(pieces)
     print('ok')
 
 

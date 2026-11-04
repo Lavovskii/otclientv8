@@ -46,28 +46,6 @@ ConditionWidget < UIWidget
   $!first:
     margin-left: 2
       
-// one layer of the health or mana arc: the images are 84x212 and healthinfo.lua cuts the fill in those pixels
-CircleLayer < UIWidget
-  size: 84 212
-  anchors.horizontalCenter: parent.horizontalCenter
-  anchors.verticalCenter: parent.verticalCenter
-  margin-bottom: 16
-  opacity: 0.85
-  phantom: true
-
-HealthCircleLayer < CircleLayer
-  margin-right: 171
-
-ManaCircleLayer < CircleLayer
-  margin-left: 132
-
-// the percentage inside the medallion of an arc
-CirclePercent < Label
-  font: verdana-9px-bold
-  color: #f0e2b6
-  text-auto-resize: true
-  phantom: true
-
 HealthOverlay < UIWidget
   id: healthOverlay
   anchors.fill: parent
@@ -86,46 +64,7 @@ HealthOverlay < UIWidget
     anchors.right: parent.right
     anchors.left: parent.horizontalCenter
     phantom: true
-    
-  // the health and mana arcs around the character (tools/gen_health_circles.py): the track, the fill (cut and tinted
-  // by healthinfo.lua) and the bronze frame whose medallion holds the percentage
-  HealthCircleLayer
-    id: healthCircle
-    image-source: /images/game/circle/left_back
 
-  HealthCircleLayer
-    id: healthCircleFront
-    image-source: /images/game/circle/left_fill
-
-  HealthCircleLayer
-    id: healthCircleFrame
-    image-source: /images/game/circle/left_frame
-
-  ManaCircleLayer
-    id: manaCircle
-    image-source: /images/game/circle/right_back
-
-  ManaCircleLayer
-    id: manaCircleFront
-    image-source: /images/game/circle/right_fill
-    image-color: #3a7bff
-
-  ManaCircleLayer
-    id: manaCircleFrame
-    image-source: /images/game/circle/right_frame
-
-  CirclePercent
-    id: healthPercentLabel
-    anchors.horizontalCenter: healthCircleFrame.left
-    anchors.verticalCenter: healthCircleFrame.verticalCenter
-    margin-left: 29
-
-  CirclePercent
-    id: manaPercentLabel
-    anchors.horizontalCenter: manaCircleFrame.right
-    anchors.verticalCenter: manaCircleFrame.verticalCenter
-    margin-right: 29
-  
 HealthInfoWindow < MiniWindow
   icon: /images/topbuttons/healthinfo
   !text: tr('Health Info')

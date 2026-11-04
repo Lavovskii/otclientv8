@@ -28,14 +28,6 @@ manaTooltip = 'Your character mana is %d out of %d.'
 experienceTooltip = 'You have %d%% to advance to level %d.'
 
 overlay = nil
-healthCircleFront = nil
-manaCircleFront = nil
-healthCircle = nil
-manaCircle = nil
-healthCircleFrame = nil
-manaCircleFrame = nil
-healthPercentLabel = nil
-manaPercentLabel = nil
 topHealthBar = nil
 topManaBar = nil
 
@@ -68,18 +60,11 @@ function init()
   capLabel = healthInfoWindow:recursiveGetChildById('capLabel')
 
   overlay = g_ui.createWidget('HealthOverlay', modules.game_interface.getMapPanel())  
-  healthCircleFront = overlay:getChildById('healthCircleFront')
-  manaCircleFront = overlay:getChildById('manaCircleFront')
-  healthCircle = overlay:getChildById('healthCircle')
-  manaCircle = overlay:getChildById('manaCircle')
-  healthCircleFrame = overlay:getChildById('healthCircleFrame')
-  manaCircleFrame = overlay:getChildById('manaCircleFrame')
-  healthPercentLabel = overlay:getChildById('healthPercentLabel')
-  manaPercentLabel = overlay:getChildById('manaPercentLabel')
   topHealthBar = overlay:getChildById('topHealthBar')
   topManaBar = overlay:getChildById('topManaBar')
   
   connect(overlay, { onGeometryChange = onOverlayGeometryChange })
+  initCircles()
   
   -- load condition icons
   for k,v in pairs(Icons) do
@@ -118,6 +103,7 @@ function terminate()
 
   disconnect(g_game, { onGameEnd = offline })
   disconnect(overlay, { onGeometryChange = onOverlayGeometryChange })
+  terminateCircles()
   
   healthInfoWindow:destroy()
   if healthInfoButton then
@@ -168,19 +154,6 @@ function onMiniWindowClose()
   end
 end
 
--- the arcs around the character (images made by tools/gen_health_circles.py): 84x212, the track goes from y 6 to 206;
--- the fill shows from the bottom of the track up to the percentage
-local CIRCLE_W, CIRCLE_H = 84, 212
-local FILL_TOP, FILL_BOTTOM = 6, 206
-
-function fillCircle(widget, percent)
-  percent = math.max(0, math.min(100, percent))
-  local top = math.floor(FILL_TOP + (FILL_BOTTOM - FILL_TOP) * (1 - percent / 100))
-  local rect = { x = 0, y = top, width = CIRCLE_W, height = CIRCLE_H - top }
-  widget:setImageClip(rect)
-  widget:setImageRect(rect)
-end
-
 function onHealthChange(localPlayer, health, maxHealth)
   if health > maxHealth then
     maxHealth = health
@@ -195,22 +168,19 @@ function onHealthChange(localPlayer, health, maxHealth)
   topHealthBar:setValue(health, 0, maxHealth)
 
   local healthPercent = math.floor(g_game.getLocalPlayer():getHealthPercent())
-  healthPercentLabel:setText((maxHealth > 0 and math.floor(health * 100 / maxHealth + 0.5) or 0) .. '%')
-  fillCircle(healthCircleFront, healthPercent)
-
+  local color = "#850C0CFF"
   if healthPercent > 92 then
-    healthCircleFront:setImageColor("#00BC00FF")
+    color = "#00BC00FF"
   elseif healthPercent > 60 then
-    healthCircleFront:setImageColor("#50A150FF")
+    color = "#50A150FF"
   elseif healthPercent > 30 then
-    healthCircleFront:setImageColor("#A1A100FF")
+    color = "#A1A100FF"
   elseif healthPercent > 8 then
-    healthCircleFront:setImageColor("#BF0A0AFF")
+    color = "#BF0A0AFF"
   elseif healthPercent > 3 then
-    healthCircleFront:setImageColor("#910F0FFF")
-  else
-    healthCircleFront:setImageColor("#850C0CFF")
+    color = "#910F0FFF"
   end
+  setCircleLevel('health', healthPercent, maxHealth > 0 and math.floor(health * 100 / maxHealth + 0.5) or 0, color)
 end
 
 function onManaChange(localPlayer, mana, maxMana)
@@ -226,8 +196,7 @@ function onManaChange(localPlayer, mana, maxMana)
   topManaBar:setTooltip(tr(manaTooltip, mana, maxMana))
   topManaBar:setValue(mana, 0, maxMana)
 
-  manaPercentLabel:setText((maxMana > 0 and math.floor(mana * 100 / maxMana + 0.5) or 0) .. '%')
-  fillCircle(manaCircleFront, maxMana > 0 and math.floor(mana * 100 / maxMana) or 0)
+  setCircleLevel('mana', maxMana > 0 and math.floor(mana * 100 / maxMana) or 0, maxMana > 0 and math.floor(mana * 100 / maxMana + 0.5) or 0)
 end
 
 function onLevelChange(localPlayer, value, percent)

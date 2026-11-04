@@ -1,0 +1,69 @@
+// The map keeps its proportions, so its panel has room left on two sides: a castle wall shows there. It lies under the map, which
+// covers anything that reaches too far. gameinterface.lua (updateMapBackdrop) sizes the sides and shows the pieces that fit.
+MapPiece < UIWidget
+  phantom: true
+  focusable: false
+
+MapSide < MapPiece
+  anchors.top: parent.top
+  anchors.bottom: parent.bottom
+
+  // its light on the wall, around the flame
+  MapPiece
+    id: glow
+    size: 220 220
+    anchors.horizontalCenter: torch.horizontalCenter
+    anchors.verticalCenter: torch.top
+    margin-top: 44
+    image-source: /images/ui/map_torch_glow
+
+  MapPiece
+    id: banner
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 46
+
+  MapPiece
+    id: torch
+    size: 62 187
+    anchors.left: parent.left
+    anchors.top: parent.top
+    image-source: /images/ui/map_torch
+    image-clip: 0 0 62 187
+
+  MapPiece
+    id: pillar
+    width: 66
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    image-border-top: 49
+    image-border-bottom: 40
+
+GameMapBackdrop < UIWidget
+  image-source: /images/ui/map_wall
+  image-repeated: true
+  phantom: true
+  focusable: false
+
+  MapSide
+    id: leftSide
+    anchors.left: parent.left
+    @onSetup: |
+      local pillar = self:getChildById('pillar')
+      pillar:setImageSource('/images/ui/map_pillar_left')
+      pillar:addAnchor(AnchorRight, 'parent', AnchorRight)
+
+  MapSide
+    id: rightSide
+    anchors.right: parent.right
+    @onSetup: |
+      local pillar = self:getChildById('pillar')
+      pillar:setImageSource('/images/ui/map_pillar_right')
+      pillar:addAnchor(AnchorLeft, 'parent', AnchorLeft)
+
+  // the bronze around the map and its shadow on the wall. Its margins come from where the map is
+  MapPiece
+    id: frame
+    anchors.fill: parent
+    image-source: /images/ui/map_frame
+    image-border: 44

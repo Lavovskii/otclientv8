@@ -1,0 +1,4 @@
+// What shows beside the map where it doesn't fill its panel: nothing, the panel's own picture. Reborn has a wall here
+GameMapBackdrop < UIWidget
+  phantom: true
+  focusable: false
