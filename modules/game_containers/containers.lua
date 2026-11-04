@@ -177,6 +177,12 @@ function onRewardPages(protocol, opcode, buffer)
     return
   end
 
+  -- the footer takes room from the slots: the window grows by it, so all the lines still show
+  local layout = window.contentsPanel:getLayout()
+  local linesHeight = layout:getCellSize().height*layout:getNumLines()
+  window:setContentMaximumHeight(linesHeight)
+  window:setContentHeight(linesHeight)
+
   local function sendPage(to)
     local protocol = g_game.getProtocolGame()
     if protocol then
@@ -315,10 +321,8 @@ function onContainerOpen(container, previousContainer)
     end
   end
 
-  if not previousContainer then
-    local filledLines = math.max(math.ceil(container:getItemsCount() / layout:getNumColumns()), 1)
-    containerWindow:setContentHeight(filledLines*cellSize.height)
-  end
+  -- every container opens with all its lines showing; setup() (fitAll) shrinks it when the panel has no room
+  containerWindow:setContentHeight(cellSize.height*layout:getNumLines())
 
   containerWindow:setup()
 

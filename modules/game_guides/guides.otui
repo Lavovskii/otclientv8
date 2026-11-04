@@ -1994,6 +1994,66 @@ ArtBossReward < Panel
     anchors.top: chest.bottom
     text: 7 days
 
+// the Task Board: a monster to hunt, with more damage, items to deliver, and points for the shop
+ArtTaskBoard < Panel
+  anchors.fill: parent
+
+  UICreature
+    id: monster
+    size: 40 40
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 2
+    phantom: true
+    @onSetup: self:setOutfit({type = 226, head = 109, body = 14, legs = 109, feet = 114})
+
+  GuideNote
+    anchors.left: monster.left
+    anchors.top: monster.bottom
+    text: 0 / 500
+    color: #e05a4a
+
+  GuideNote
+    anchors.left: monster.left
+    anchors.bottom: monster.top
+    text: +20%
+    color: #e0b44c
+
+  GuideItem
+    id: ham
+    anchors.left: monster.right
+    anchors.top: monster.top
+    margin-left: 10
+    margin-top: 4
+    &itemId: 3582
+
+  GuideNote
+    anchors.left: ham.left
+    anchors.top: ham.bottom
+    text: 3 of 40
+    color: #e05a4a
+
+  GuideArrow
+    id: arrow
+    anchors.left: ham.right
+    anchors.verticalCenter: ham.verticalCenter
+    margin-left: 8
+
+  UIWidget
+    id: star
+    size: 12 12
+    anchors.left: arrow.right
+    anchors.verticalCenter: arrow.verticalCenter
+    margin-left: 8
+    image-source: /images/ui/task_points
+    phantom: true
+
+  GuideNote
+    anchors.left: star.left
+    anchors.top: star.bottom
+    text: shop
+
 // the character list: the VIP days are those of the character selected
 ArtVipDays < Panel
   anchors.fill: parent

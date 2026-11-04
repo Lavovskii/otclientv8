@@ -101,11 +101,32 @@ local function applyInfo(data)
   if current then win.details.charBox:setCurrentOption(current, true) end
 end
 
+-- opens straight on an offer, for who comes to buy that one (the Task Board's Unlock)
+local function pickOffer(name)
+  for _, offer in ipairs(state.offers) do
+    if offer.name == name then
+      state.category = tonumber(offer.category)
+      fillCategories()
+      for _, row in ipairs(win.offersBox.offers:getChildren()) do
+        if row.offer == offer then
+          row:focus()
+          showOffer(offer)
+        end
+      end
+      return
+    end
+  end
+end
+
 function refresh()
   setStatus(tr('Loading...'))
   call({ action = 'info' }, function(data)
     applyInfo(data)
     fillCategories()
+    if state.pick then
+      pickOffer(state.pick)
+      state.pick = nil
+    end
     setStatus('')
   end)
 end
@@ -262,8 +283,9 @@ function openBuyPoints()
   g_platform.openUrl(state.buyUrl)
 end
 
-function show()
+function show(offerName)
   if not g_game.isOnline() then return end
+  state.pick = offerName
   win:show()
   win:raise()
   win:focus()
