@@ -49579,20 +49579,10 @@ O	2125	2125
 O	2126	2126	
 O	2127	2127	outfit citizen-angel
 O	2128	2128	outfit citizen-angel
-O	2129	2129	
-O	2130	2130	
-O	2131	2131	
-O	2132	2132	
-O	2133	2133	outfit citizen-staff
-O	2134	2134	outfit citizen-staff
-O	2135	2135	outfit citizen-gm
-O	2136	2136	outfit citizen-gm
-O	2137	2137	outfit citizen-cm
-O	2138	2138	outfit citizen-cm
-O	2139	2139	outfit citizen-god
-O	2140	2140	outfit citizen-god
-O	2141	2141	outfit citizen-admin
-O	2142	2142	outfit citizen-admin
+O	2129	2129	outfit citizen-king
+O	2130	2130	outfit citizen-king
+O	2131	2131	outfit citizen-crown
+O	2132	2132	outfit citizen-crown
 M	368	1	Widow Queen
 M	369	2	Racing Bird
 M	370	3	War Bear
