@@ -62,6 +62,13 @@ circle itself reacts to the mouse, not its whole square (`band`). Retro uses the
 the module asks with extended opcode 12 and `data/creaturescripts/scripts/player/client_ping.lua` on the server answers at once. Don't use
 the engine's own extended ping, it sends opcode 2, which is the loot ignore list on this server.
 
+## The set bonus
+
+`modules/game_setbonus` shows a banner when the server sends extended opcode 13 (`on|Name|pct`, `off|Name`). Its look is
+`GameSetBonusBackground` in `styles/40-setbonus.otui`, with `ui/set_banner` from `set_banner` in `tools/make_reborn_art.py`; Retro has the
+same widget with no picture. The hands in `styles/40-inventory.otui` are the opposite of the slot names: slot 6, the left column, shows the
+sword, and slot 5 the shield, because the server keeps weapons in the left hand of the screen.
+
 ## Checking
 
 `python tools/window_preview.py reborn` shows every window with made-up data and no login, from a throw-away copy of the client with

@@ -83,7 +83,7 @@ local SOURCE_NAMES = {
   helmet = 'Helmet', necklace = 'Necklace', backpack = 'Backpack', armor = 'Armor', weapon = 'Weapon', shield = 'Shield',
   righthand = 'Right hand', lefthand = 'Left hand', legs = 'Legs', boots = 'Boots', ring = 'Ring', ammo = 'Ammo', trinket = 'Trinket',
   item = 'Equipment', level = 'Level', base = 'Trained', own = 'Yours', vocation = 'Vocation', booster = 'Boosters', mount = 'Mount',
-  others = 'Spells and effects', total = 'Total', carried = 'Carrying', small = 'Small boosters', scroll = 'Booster scroll',
+  others = 'Spells and effects', set = 'Set bonus', total = 'Total', carried = 'Carrying', small = 'Small boosters', scroll = 'Booster scroll',
   ozzo = 'Ozzo scroll',
 }
 
@@ -395,6 +395,7 @@ local function tipFor(stat, explain, unit, show)
   local lines = {}
   for _, source in ipairs(list) do
     local name = SOURCE_NAMES[source.name] or source.name
+    if source.name == 'set' and stats.setname then name = stats.setname .. ' Set' end
     table.insert(lines, tr(name) .. ': ' .. (show and show(source) or signed(source.value) .. (unit or '')))
   end
   return table.concat(lines, '\n') .. '\n\n' .. explain
@@ -478,7 +479,7 @@ function showStats()
 
   -- combat: what the equipment gives
   line(combat, 'attack', tr('Attack Value'), tostring(stats.attack or 0), nil,
-    tipFor('attack', tr('Attack of your weapon (and of its ammunition): the higher, the harder you hit.'), ' atk'), 3278)
+    tipFor('attack', tr('Attack of your weapon: the higher, the harder you hit.'), ' atk'), 3278)
   if stats.element then
     local e = ELEMENT_BY_TYPE[stats.element[1]]
     if e then
@@ -558,6 +559,10 @@ function showStats()
   end
   if stats.blockorb == 1 then line(bonus, 'block', tr('Block Orb'), tr('On'), GREEN, tr('Your Block Orb is protecting you.'), 3084) end
   if stats.reflectorb == 1 then line(bonus, 'reflect', tr('Reflect Orb'), tr('On'), GREEN, tr('Your Reflect Orb sends damage back.'), 3014) end
+  if stats.setname then
+    line(bonus, 'setbonus', tr('%s Set', tostring(stats.setname)), tr('All') .. ' +' .. tostring(stats.setprotection or 0) .. '%', GOLD,
+      tr('You wear the whole set: helmet, armor, legs, boots and shield. It protects you from every kind of damage.'), 3366)
+  end
   line(bonus, 'bank', tr('Bank'), comma_value(stats.bank or 0) .. ' gp', nil, tr('Gold in your bank account. Bankers keep it for you.'), 3043)
 
   for id, source in pairs(FIXED_SOURCES) do

@@ -124,11 +124,11 @@ local function storeAnswer(url, body, cb)
     categories = {{id = 1, name = 'Equipment'}, {id = 2, name = 'Weapons'}, {id = 3, name = 'Consumables'}, {id = 4, name = 'Runes'},
       {id = 5, name = 'Upgrades & Gems'}, {id = 6, name = 'Mounts'}, {id = 7, name = 'Boosts'}, {id = 8, name = 'Premium'}, {id = 9, name = 'Decoration'}, {id = 10, name = 'Misc'}},
     offers = {
-      offer(1, 1, 'Rich Helmet', 5, 3351, 1, 'Arm: 1000, It gives 8% protection against everything.'),
-      offer(2, 1, 'Rich Armor', 5, 3357, 1, 'Arm: 1000, It gives 8% protection against everything.'),
-      offer(3, 1, 'Rich Legs', 5, 3358, 1, 'Arm: 1000.'),
-      offer(4, 1, 'Rich Boots', 5, 3079, 1, 'Arm: 1000.'),
-      offer(5, 1, 'Rich Shield', 5, 3420, 1, 'Def: 1000.'),
+      offer(1, 1, 'Prestige Helmet', 5, 3351, 1, 'Arm: 1000, It gives 8% protection against everything.'),
+      offer(2, 1, 'Prestige Armor', 5, 3357, 1, 'Arm: 1000, It gives 8% protection against everything.'),
+      offer(3, 1, 'Prestige Legs', 5, 3358, 1, 'Arm: 1000.'),
+      offer(4, 1, 'Prestige Boots', 5, 3079, 1, 'Arm: 1000.'),
+      offer(5, 1, 'Prestige Shield', 5, 3420, 1, 'Def: 1000.'),
       offer(6, 1, "Wayme's Backpack", 10, 2854, 1, 'Holds more than any other.'),
       offer(7, 1, 'Weekly Tasks Expansion', 900, 3041, 1, 'Opens the last 3 kill tasks and the last 3 delivery tasks of the Weekly Tasks.'),
       offer(8, 1, 'Ultimate Health Potions', 20, 3031, 100, '100 ultimate health potions.'),
@@ -262,7 +262,7 @@ local function define()
     if modules.game_console.addText then
       local tab = modules.game_console.getCurrentTab and modules.game_console.getCurrentTab()
       modules.game_console.addTabText('19:12 Dev [6445]: Reborn looks good', {color = '#F0F000'}, tab)
-      modules.game_console.addTabText('19:12 You see a rich helmet (Arm:1000).', {color = '#33FF33'}, tab)
+      modules.game_console.addTabText('19:12 You see a prestige helmet (Arm:1000).', {color = '#33FF33'}, tab)
       modules.game_console.addTabText('19:13 You advanced to level 6445.', {color = '#FFFFFF'}, tab)
       modules.game_console.addTabText('19:13 Loot of a hell boy: 10 crystal coins.', {color = '#33FF33'}, tab)
     end
@@ -308,6 +308,24 @@ local function define()
     g_tooltip.hide()
     g_tooltip.display(byId('protectionPanel'):getChildren()[2]:getTooltip())
   end, 400)
+  -- the banner of a complete set
+  step('setbonus', function()
+    closeWindows()
+    local banner = modules.game_setbonus.banner
+    local rootPanel = modules.game_interface.getRootPanel()
+    local rect = modules.game_interface.getMapRect()
+    banner:setParent(rootPanel)
+    banner:breakAnchors()
+    banner:setPosition({x = rect.x + math.floor((rect.width - banner:getWidth()) / 2), y = rect.y + 62})
+    modules.game_setbonus.onSetBonus(nil, 13, 'on|Corrupted Prestige Archer|28')
+  end, 700)
+  step('setbonus_tip', function()
+    local answer = 'attack=7000\ndefense=1250\narmor=5000\nsetname=Hellborn\nsetprotection=10\nabsorb=8,10\nregen=25,33\nsrc=attack,weapon,7000\nsrc=abs8,set,10\n'
+    modules.game_skills.skillsWindow:open()
+    modules.game_skills.skillsWindow:maximize()
+    modules.game_skills.onStats(nil, 8, answer)
+    g_tooltip.display(byId('protectionPanel'):getChildren()[1]:getTooltip())
+  end, 500)
   -- the frame rate and the ping
   local function plate(name, wait, setup)
     step(name, setup, wait)
@@ -484,6 +502,16 @@ local function define()
     local cards = panel:recursiveGetChildById('cards')
     local children = cards:getChildren()
     cards:ensureChildVisible(children[#children])
+  end, 700)
+  step('guides_hands', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      if tab:getText() == 'Interface' then bar:selectTab(tab) end
+    end
+    local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+    for _, card in ipairs(cards:getChildren()) do
+      if card.text and card.text:getText():find('Weapons go in the left hand', 1, true) then cards:ensureChildVisible(card) end
+    end
   end, 700)
   step('guides_check', function()
     local bar = byId('guidesTabBar')

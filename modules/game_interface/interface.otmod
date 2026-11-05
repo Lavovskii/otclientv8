@@ -11,6 +11,7 @@ Module
     - game_guides
     - game_staffnames
     - game_echoboss
+    - game_setbonus
     - game_textmessage
     - game_console
     - game_outfit

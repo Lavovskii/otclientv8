@@ -1169,6 +1169,76 @@ ArtStats < Panel
     margin-top: 6
     text: Cap: 14k  (14,000)
 
+// the banner of a complete set, and what makes one
+ArtSetBonus < Panel
+  anchors.fill: parent
+
+  GameSetBonusBackground
+    id: banner
+    size: 278 56
+    anchors.left: parent.left
+    anchors.top: parent.top
+    phantom: true
+
+    Label
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 8
+      text-align: center
+      font: verdana-11px-rounded
+      color: #f4d68c
+      text: Hellborn Set
+      phantom: true
+
+    Label
+      anchors.bottom: parent.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-bottom: 8
+      text-align: center
+      font: verdana-11px-rounded
+      color: #f0e6cc
+      text: Protection All +10%
+      phantom: true
+
+  GuideNote
+    anchors.left: banner.left
+    anchors.top: banner.bottom
+    margin-top: 8
+    text: helmet + armor + legs + boots + shield
+
+// a weapon in the left hand, a shield in the right
+ArtHands < Panel
+  anchors.fill: parent
+
+  GuideSlot
+    id: left
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 20
+    margin-top: 6
+    &itemId: 3264
+
+  GuideNote
+    anchors.horizontalCenter: left.horizontalCenter
+    anchors.top: left.bottom
+    margin-top: 6
+    text: left hand
+
+  GuideSlot
+    id: right
+    anchors.left: left.right
+    anchors.top: left.top
+    margin-left: 80
+    &itemId: 3414
+
+  GuideNote
+    anchors.horizontalCenter: right.horizontalCenter
+    anchors.top: right.bottom
+    margin-top: 6
+    text: right hand
+
 // the plate in the corner of the map, when all is well and when it lags
 ArtPlate < Panel
   anchors.fill: parent
@@ -1703,7 +1773,7 @@ ArtSkills < Panel
     background-color: #111111dd
     border-width: 1
     border-color: #6b5a2c
-    !text: 'Weapon: +40 atk\nAmmo: +10 atk'
+    !text: 'Weapon: +50 atk'
     phantom: true
 
 // the Guides button: first of the buttons window, in a golden frame, and again in the inventory under Options
@@ -2372,7 +2442,7 @@ ArtStoreBuy < Panel
       text-align: center
       font: verdana-11px-rounded
       color: #ececec
-      text: Rich UH
+      text: Prestige UH
       phantom: true
 
     GuideStoreBox

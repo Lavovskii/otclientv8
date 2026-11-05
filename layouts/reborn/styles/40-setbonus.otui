@@ -1,0 +1,4 @@
+// the banner when a set of items is complete (modules/game_setbonus)
+GameSetBonusBackground < UIWidget
+  size: 360 68
+  image-source: /images/ui/set_banner

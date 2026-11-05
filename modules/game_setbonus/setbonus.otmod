@@ -1,0 +1,8 @@
+Module
+  name: game_setbonus
+  description: The banner when a set of items is complete
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ setbonus ]
+  @onLoad: init()
+  @onUnload: terminate()

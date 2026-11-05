@@ -1155,6 +1155,22 @@ def stats_plate():
     save(clear_corners(plate, 1), 'ui/stats_plate')
 
 
+def set_banner(pieces):
+    """The banner when the last piece of a set goes on: a dark well in bronze, between two golden wings."""
+    W, H = 360, 68
+    plate = scale(tile(M.dark, W, H), 0.7).convert('RGBA')
+    plate.putalpha(244)
+    rings(plate, [INK, (B_LIGHT, B_LOW), (B_MID, B_DARK), (10, 9, 8)])
+    metal_noise(plate, (1, 1, W - 1, 3), 0.14)
+    left = shrink(pieces['wing_left'], 66, 46, threshold=110)
+    right = shrink(pieces['wing_right'], 66, 46, threshold=110)
+    plate.alpha_composite(left, (10, (H - left.height) // 2))
+    plate.alpha_composite(right, (W - right.width - 10, (H - right.height) // 2))
+    divider = shrink(pieces['divider'], 170, 8, threshold=110)
+    plate.alpha_composite(divider, ((W - divider.width) // 2, 35))
+    save(clear_corners(plate, 1), 'ui/set_banner')
+
+
 def main():
     load_materials()
     pieces = ornaments()
@@ -1177,6 +1193,7 @@ def main():
     circles()
     map_backdrop(pieces)
     stats_plate()
+    set_banner(pieces)
     print('ok')
 
 

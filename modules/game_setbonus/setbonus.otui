@@ -1,0 +1,30 @@
+// its look comes from the layout: GameSetBonusBackground in 40-setbonus.otui
+GameSetBonusBackground
+  id: setBonusBanner
+  anchors.horizontalCenter: parent.horizontalCenter
+  anchors.top: parent.top
+  margin-top: 62
+  phantom: true
+  focusable: false
+
+  Label
+    id: title
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 11
+    text-align: center
+    font: sans-bold-16px
+    color: #f4d68c
+    phantom: true
+
+  Label
+    id: bonus
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-bottom: 10
+    text-align: center
+    font: verdana-11px-rounded
+    color: #f0e6cc
+    phantom: true

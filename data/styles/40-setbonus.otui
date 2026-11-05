@@ -1,0 +1,6 @@
+// the banner when a set of items is complete (modules/game_setbonus). Reborn has a picture for it
+GameSetBonusBackground < UIWidget
+  size: 360 68
+  background-color: #000000c8
+  border-width: 1
+  border-color: #8a6a2e
