@@ -524,6 +524,21 @@ local function define()
       end
     end
   end, 300)
+  -- /checkall: its Items tab and the sub tabs from the map editor's tabs
+  local function checkAllSubTab(name)
+    local bar = byId('checkAllWindow') and byId('checkAllWindow'):getChildById('subTabBar')
+    for _, tab in ipairs(bar and bar:getTabs() or {}) do
+      if tab:getText() == name then bar:selectTab(tab) end
+    end
+  end
+  step('checkall', function()
+    closeWindows()
+    modules.game_checkall.show()
+  end, 900)
+  step('checkall_sets', function() checkAllSubTab('Sets') end)
+  step('checkall_weapons', function() checkAllSubTab('Weapons') end)
+  step('checkall_spells', function() checkAllSubTab('Spells') end)
+  step('checkall_close', function() modules.game_checkall.hide() end, 100)
   step('store', function()
     modules.game_guides.hide()
     modules.game_store.show()

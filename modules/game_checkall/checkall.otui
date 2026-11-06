@@ -44,6 +44,17 @@ CheckAllItemCell < CheckAllCell
   CheckAllCellLabel
     id: idLabel
 
+  Label
+    id: titleLabel
+    anchors.fill: parent
+    margin: 3
+    text-wrap: true
+    text-align: center
+    font: verdana-11px-rounded
+    color: #e0b44c
+    phantom: true
+    visible: false
+
 CheckAllOutfitCell < CheckAllCell
   size: 78 87
 
@@ -123,7 +134,7 @@ CheckAllIconCell < CheckAllCell
 CheckAllWindow < MainWindow
   id: checkAllWindow
   !text: tr('Check All')
-  size: 800 590
+  size: 800 616
   @onEscape: modules.game_checkall.hide()
   @onEnter: modules.game_checkall.activateSelected()
 
@@ -133,19 +144,26 @@ CheckAllWindow < MainWindow
     anchors.left: parent.left
     anchors.right: parent.right
 
+  TabBar
+    id: subTabBar
+    anchors.top: tabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 5
+
   Label
     id: searchLabel
     !text: tr('Search:')
     size: 48 16
     anchors.left: parent.left
-    anchors.top: tabBar.bottom
+    anchors.top: subTabBar.bottom
     margin-top: 10
     color: #e0b44c
 
   TextEdit
     id: searchEdit
     width: 220
-    anchors.top: tabBar.bottom
+    anchors.top: subTabBar.bottom
     anchors.left: searchLabel.right
     margin-top: 7
     @onTextChange: modules.game_checkall.onSearchChange()

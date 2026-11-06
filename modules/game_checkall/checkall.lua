@@ -1,7 +1,8 @@
 -- The staff's Check All window: every item, outfit, mount, effect and shoot effect the client has a picture of.
 -- The server's /checkall (data/talkactions/scripts/gamemaster/check_all.lua) opens it and does what a double click asks,
 -- so who may use it is decided there. The list, with the names only the server knows, is checkall_data.txt
--- (tools/gen_checkall_data.py in the server's repository).
+-- (tools/gen_checkall_data.py in the server's repository). Items has sub tabs, the map editor's tabs of custom items:
+-- each section of a sub tab starts a row with a card that names it.
 local MESSAGE_PREFIX = 'Check All: '
 local OPENING = 'opening the window'
 local DATA_FILE = '/modules/game_checkall/checkall_data.txt'
@@ -78,7 +79,7 @@ local ICONS = {
   {'Summon', nil, 4, 'Summon of another', 'client only', TYPES .. 'summon_other'}
 }
 
-local win, lists, kind, view, selected, colors
+local win, lists, kind, view, selected, colors, page
 local cells = {}
 local firstRow = 0
 local tick = 0
@@ -110,6 +111,33 @@ local function loadLists()
       end
       entry.lower = entry.name:lower()
       list[#list + 1] = entry
+    end
+  end
+  -- the sub tabs of Items: page, section, server ids
+  local byId = {}
+  for _, entry in ipairs(lists.I) do
+    if entry.id > 0 then byId[entry.id] = entry end
+  end
+  lists.pages = {}
+  local pageByName = {}
+  for name, title, ids in text:gmatch('P\t([^\t\r\n]*)\t([^\t\r\n]*)\t([%d ]*)\r?\n') do
+    local p = pageByName[name]
+    if not p then
+      p = {name = name, sections = {}, count = 0}
+      pageByName[name] = p
+      table.insert(lists.pages, p)
+    end
+    local section = {title = title, lower = title:lower(), entries = {},
+      header = {header = true, id = 0, client = 0, name = title, lower = title:lower()}}
+    for id in ids:gmatch('%d+') do
+      local entry = byId[tonumber(id)]
+      if entry then
+        table.insert(section.entries, setmetatable({section = title}, {__index = entry}))
+      end
+    end
+    if #section.entries > 0 then
+      table.insert(p.sections, section)
+      p.count = p.count + #section.entries
     end
   end
   for _, row in ipairs(ICONS) do
@@ -196,9 +224,21 @@ local function entryName(entry)
 end
 
 local function fillCell(cell, entry)
-  cell.entry = entry
-  cell:setVisible(entry ~= nil)
+  cell.entry = entry or nil
+  cell:setVisible(entry and true or false)
   if not entry then return end
+  if kind.key == 'I' then
+    cell:setWidth(entry.header and (2 * kind.pitchX - 1) or kind.pitchX - 1)
+    cell.item:setVisible(not entry.header)
+    cell.titleLabel:setVisible(entry.header == true)
+    if entry.header then
+      cell:setOn(false)
+      cell.titleLabel:setText(entry.name)
+      cell.idLabel:setText('')
+      cell:setTooltip(entry.name)
+      return
+    end
+  end
   cell:setOn(entry == selected)
   cell.idLabel:setText(entryLabel(entry))
   if cell.nameLabel then cell.nameLabel:setText(entryName(entry)) end
@@ -236,7 +276,9 @@ end
 local function detailsText(entry)
   if kind.key == 'I' then
     local thing = g_things.getThingType(entry.client, ThingCategoryItem)
-    return tr('Server id: %d\nClient id: %d\nSize: %dx%d\n\n%s', entry.id, entry.client, thing:getWidth(), thing:getHeight(), itemFlags(thing))
+    local text = tr('Server id: %d\nClient id: %d\nSize: %dx%d\n\n%s', entry.id, entry.client, thing:getWidth(), thing:getHeight(), itemFlags(thing))
+    if entry.section and entry.section ~= '' then text = text .. '\n\n' .. entry.section end
+    return text
   elseif kind.key == 'O' then
     return tr('Looktype: %d', entry.id)
   elseif kind.key == 'M' then
@@ -305,12 +347,52 @@ local function animate()
   end
 end
 
+local function matches(entry, query, number)
+  if query == '' then return true end
+  if number then return entry.client == number or tostring(entry.id):find(query, 1, true) == 1 end
+  return entry.lower:find(query, 1, true) ~= nil
+end
+
+-- a sub tab of Items: each section that has something to show starts a row with its card (two cells), then its items;
+-- false is an empty cell. A search that names a section shows all of it.
+local function pageView(query, number, bagOnly)
+  local out, shown = {}, 0
+  for _, section in ipairs(page.sections) do
+    local whole = query ~= '' and not number and section.lower:find(query, 1, true) ~= nil
+    local found = {}
+    for _, entry in ipairs(section.entries) do
+      if (whole or matches(entry, query, number)) and (not bagOnly or fitsBag(entry)) then found[#found + 1] = entry end
+    end
+    if #found > 0 then
+      if section.title ~= '' then
+        out[#out + 1] = section.header
+        out[#out + 1] = false
+      end
+      for _, entry in ipairs(found) do out[#out + 1] = entry end
+      shown = shown + #found
+      while #out % kind.columns ~= 0 do out[#out + 1] = false end
+    end
+  end
+  return out, shown
+end
+
 local function applyFilter()
   filterEvent = nil
   if not win then return end
   local source = lists[kind.key]
   local query = win.searchEdit:getText():trim():lower()
   local bagOnly = kind.key == 'I' and win.bagOnly:isChecked()
+  if kind.key == 'I' and page then
+    local shown
+    view, shown = pageView(query, query:match('^%d+$') and tonumber(query), bagOnly)
+    win.countLabel:setText(tr('%d of %d', shown, page.count))
+    win.emptyLabel:setVisible(shown == 0)
+    firstRow = 0
+    win.scroll:setRange(0, math.max(0, math.ceil(#view / kind.columns) - kind.rows))
+    win.scroll:setValue(0)
+    fillCells()
+    return
+  end
   if query == '' and not bagOnly then
     view = source
   else
@@ -384,7 +466,7 @@ end
 
 local function onCellMouseRelease(cell, mousePos, button)
   local entry = cell.entry
-  if button ~= MouseRightButton or not entry or (kind.key ~= 'I' and kind.key ~= 'H') then return false end
+  if button ~= MouseRightButton or not entry or entry.header or (kind.key ~= 'I' and kind.key ~= 'H') then return false end
   selectEntry(entry)
   local menu = g_ui.createWidget('PopupMenu')
   menu:setGameMenu(true)
@@ -404,7 +486,7 @@ end
 
 local function onCellClick(cell)
   local entry = cell.entry
-  if not entry then return end
+  if not entry or entry.header then return end
   local now = g_clock.millis()
   if lastClicked == entry and now - lastClickTime <= DOUBLE_CLICK_MS then
     lastClicked = nil
@@ -421,6 +503,7 @@ local function setKind(newKind)
   win.grid:destroyChildren()
   cells = {}
   win.bagOnly:setVisible(kind.key == 'I')
+  win.subTabBar:setVisible(kind.key == 'I' and #lists.pages > 0)
   local marginX = math.floor((win.grid:getWidth() - kind.columns * kind.pitchX) / 2)
   local marginY = math.floor((win.grid:getHeight() - kind.rows * kind.pitchY) / 2)
   for row = 0, kind.rows - 1 do
@@ -458,6 +541,22 @@ local function create()
     tab.kind = k
   end
   win.tabBar.onTabChange = function(_, tab) setKind(tab.kind) end
+  -- the sub tabs of Items: All (every item, as before) and the map editor's tabs
+  local all = win.subTabBar:addTab(tr('All'))
+  all.page = false -- a field set to nil isn't there, and a widget may answer for it
+  for _, p in ipairs(lists.pages) do
+    local tab = win.subTabBar:addTab(tr(p.name))
+    tab.page = p
+    tab:setTooltip(tr('%d items', p.count))
+  end
+  win.subTabBar.onTabChange = function(_, tab)
+    page = tab.page or nil
+    selected, lastClicked = nil, nil
+    if kind and kind.key == 'I' then
+      showDetails(nil)
+      applyFilter()
+    end
+  end
   setKind(KINDS[1])
   animateEvent = cycleEvent(animate, ANIMATE_MS)
 end
@@ -480,7 +579,7 @@ function hide()
     win:destroy()
     win = nil
   end
-  cells, view, selected, lastClicked = {}, nil, nil, nil
+  cells, view, selected, lastClicked, page = {}, nil, nil, nil, nil
 end
 
 function onSearchChange()
