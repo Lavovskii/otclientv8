@@ -47922,6 +47922,47 @@ I	63387	59342	placeholder sprite 531189
 I	63388	59343	placeholder sprite 531201
 I	63389	59344	placeholder sprite 531213
 I	63390	59345	placeholder sprite 531225
+I	63391	59346	placeholder sprite 531530
+I	63392	59347	placeholder sprite 531551
+I	63393	59348	placeholder sprite 531573
+I	63394	59349	placeholder sprite 531597
+I	63395	59350	placeholder sprite 531619
+I	63396	59351	placeholder sprite 531641
+I	63397	59352	placeholder sprite 531665
+I	63398	59353	placeholder sprite 531689
+I	63399	59354	placeholder sprite 531713
+I	63400	59355	placeholder sprite 531737
+I	63401	59356	placeholder sprite 531761
+I	63402	59357	placeholder sprite 531784
+I	63403	59358	placeholder sprite 531807
+I	63404	59359	placeholder sprite 531831
+I	63405	59360	placeholder sprite 531854
+I	63406	59361	placeholder sprite 531876
+I	63407	59362	placeholder sprite 531898
+I	63408	59363	placeholder sprite 531922
+I	63409	59364	placeholder sprite 531946
+I	63410	59365	placeholder sprite 531970
+I	63411	59366	placeholder sprite 531994
+I	63412	59367	placeholder sprite 532018
+I	63413	59368	placeholder sprite 532042
+I	63414	59369	placeholder sprite 532066
+I	63415	59370	placeholder sprite 532090
+I	63416	59371	placeholder sprite 532114
+I	63417	59372	placeholder sprite 532138
+I	63418	59373	placeholder sprite 532162
+I	63419	59374	placeholder sprite 532186
+I	63420	59375	placeholder sprite 532210
+I	63421	59376	placeholder sprite 532234
+I	63422	59377	placeholder sprite 532258
+I	63423	59378	placeholder sprite 532280
+I	63424	59379	placeholder sprite 532303
+I	63425	59380	placeholder sprite 532327
+I	63426	59381	placeholder sprite 532363
+I	63427	59382	placeholder sprite 532387
+I	63428	59383	placeholder sprite 532411
+I	63429	59384	placeholder sprite 532435
+I	63430	59385	placeholder sprite 532459
+I	63431	59386	placeholder sprite 532495
 O	1	1	
 O	2	2	monster Cursed Orc, monster Orc Warlord
 O	3	3	
