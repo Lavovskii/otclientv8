@@ -1459,19 +1459,19 @@ I	2179	3063	gold ring
 I	2180	3064	orb of nature
 I	2181	3065	terra rod
 I	2182	3066	snakebite rod
-I	2183	3067	Dread Mage Rod
+I	2183	3067	hailstorm rod
 I	2184	3068	crystal wand
 I	2185	3069	necrotic rod
 I	2186	3070	moonlight rod
 I	2187	3071	wand of inferno
-I	2188	3072	Beginner Mage Wand
+I	2188	3072	wand of decay
 I	2189	3073	wand of cosmic energy
 I	2190	3074	wand of vortex
 I	2191	3075	wand of dragonbreath
 I	2192	3076	crystal ball
 I	2193	3077	ankh
 I	2194	3078	mysterious fetish
-I	2195	3079	Elvenforged Boots
+I	2195	3079	boots of haste
 I	2196	3080	Forever Aol
 I	2197	3081	stone skin amulet
 I	2198	3082	elven amulet
@@ -1669,7 +1669,7 @@ I	2389	3277	spear
 I	2390	3278	magic longsword
 I	2391	3279	war hammer
 I	2392	3280	fire sword
-I	2393	3281	Cursed Sword
+I	2393	3281	giant sword
 I	2394	3282	morning star
 I	2395	3283	carlin sword
 I	2396	3284	ice rapier
@@ -1746,11 +1746,11 @@ I	2466	3360	golden armor
 I	2467	3361	leather armor
 I	2468	3362	studded legs
 I	2469	3363	dragon scale legs
-I	2470	3364	Cursed Legs
+I	2470	3364	golden legs
 I	2471	3365	golden helmet
 I	2472	3366	magic plate armor
 I	2473	3367	viking helmet
-I	2474	3368	Prestige Archer Helmet
+I	2474	3368	winged helmet
 I	2475	3369	warrior helmet
 I	2476	3370	knight armor
 I	2477	3371	knight legs
@@ -1777,13 +1777,13 @@ I	2497	3391	crusader helmet
 I	2498	3392	royal helmet
 I	2499	3393	amazon helmet
 I	2500	3394	amazon armor
-I	2501	3395	Arcane Helmet
+I	2501	3395	ceremonial mask
 I	2502	3396	dwarven helmet
 I	2503	3397	dwarven armor
 I	2504	3398	dwarven legs
-I	2505	3399	Hellborn Armor
+I	2505	3399	elven mail
 I	2506	3400	dragon scale helmet
-I	2507	3401	Hellborn Legs
+I	2507	3401	elven legs
 I	2508	3402	native armor
 I	2509	3409	steel shield
 I	2510	3410	plate shield
@@ -1917,22 +1917,22 @@ I	2637	3546	black king
 I	2638	3547	tic-tac-toe token
 I	2639	3548	tic-tac-toe token
 I	2640	3549	soft boots
-I	2641	3550	Beginner Mage Boots
+I	2641	3550	patched boots
 I	2642	3551	sandals
 I	2643	3552	leather boots
 I	2644	3553	bunnyslippers
-I	2645	3554	Cursed Boots
+I	2645	3554	steel boots
 I	2646	3555	golden boots
 I	2647	3557	plate legs
 I	2648	3558	chain legs
-I	2649	3559	Beginner Legs
+I	2649	3559	leather legs
 I	2650	3561	jacket
 I	2651	3562	coat
 I	2652	3563	green tunic
 I	2653	3564	red tunic
 I	2654	3565	cape
 I	2655	3566	red robe
-I	2656	3567	Beginner Mage Armor
+I	2656	3567	blue robe
 I	2657	3568	simple dress
 I	2658	3569	white dress
 I	2659	3570	ball gown
@@ -3166,14 +3166,14 @@ I	3971	3407	charmer tiara
 I	3972	3408	beholder helmet
 I	3973	3443	tusk shield
 I	3974	3444	sentinel shield
-I	3975	3445	Hellborn Shield
+I	3975	3445	salamander shield
 I	3976	3492	worm
 I	3977	3493	crane
 I	3978	3494	crane
 I	3979	3495	crane
 I	3980	3496	crane
 I	3981	3508	mailbox
-I	3982	3556	Beginner Boots
+I	3982	3556	crocodile boots
 I	3983	3560	bast skirt
 I	3984	3701	jungle grass
 I	3985	3702	jungle grass
@@ -3941,7 +3941,7 @@ I	4861	4850	cobra statue
 I	4862	4851	metal trash
 I	4863	4852	ectoplasm container
 I	4864	131	ectoplasm container
-I	4865	4863	Beginner Quiver
+I	4865	4863	butterfly conservation kit
 I	4866	4864	butterfly conservation kit
 I	4867	4865	butterfly conservation kit
 I	4868	4866	butterfly conservation kit
@@ -4537,7 +4537,7 @@ I	5458	5457	damaged ship
 I	5459	5458	damaged ship
 I	5460	5459	damaged ventilation grill
 I	5461	5460	helmet of the deep
-I	5462	5461	Beginner Boots
+I	5462	5461	pirate boots
 I	5463	5462	garden bed for sugar
 I	5464	5463	sugar cane
 I	5465	5464	burning sugar cane
@@ -4815,7 +4815,7 @@ I	5737	5737	open bars
 I	5738	5738	shark
 I	5739	5739	fountain
 I	5740	5740	fountain
-I	5741	5741	Cursed Helmet
+I	5741	5741	skull helmet
 I	5743	5743	wooden flooring
 I	5744	5744	wooden flooring
 I	5745	5745	closed door
@@ -4977,7 +4977,7 @@ I	5903	5903	ferumbras' hat
 I	5904	5904	magic sulphur
 I	5905	5905	vampire dust
 I	5906	5906	demon dust
-I	5907	5907	Beginner Slingshot
+I	5907	5907	slingshot
 I	5908	5908	obsidian knife
 I	5909	5909	Rapid Boar Cloth
 I	5910	5910	Titantica Cloth
@@ -5199,7 +5199,7 @@ I	6128	6128	hole
 I	6129	6129	hole
 I	6130	6130	hole
 I	6131	6131	tortoise shield
-I	6132	6529	Arcane Boots
+I	6132	6529	pair of soft boots
 I	6133	6132	tree wall
 I	6134	6133	tree wall
 I	6135	6134	tree wall
@@ -6440,7 +6440,7 @@ I	7386	7386	mercenary sword
 I	7387	7387	diamond sceptre
 I	7388	7388	vile axe
 I	7389	7389	heroic axe
-I	7390	7390	Hellborn Sword
+I	7390	7390	justice seeker
 I	7391	7391	thaian sword
 I	7392	7392	orcish maul (old)
 I	7393	7393	demon trophy
@@ -6463,10 +6463,10 @@ I	7409	7409	northern star
 I	7410	7410	queen's sceptre
 I	7411	7411	ornamented axe
 I	7412	7412	butcher's axe
-I	7413	7413	Cursed Axe
+I	7413	7413	titan axe
 I	7414	7414	abyss hammer
-I	7415	7415	Cursed Club
-I	7416	7416	Beginner Sword
+I	7415	7415	cranial basher
+I	7416	7416	bloody edge
 I	7417	7417	runed sword
 I	7418	7418	nightmare blade
 I	7419	7419	dreaded cleaver
@@ -6477,18 +6477,18 @@ I	7423	7423	skullcrusher
 I	7424	7424	lunar staff
 I	7425	7425	taurus mace
 I	7426	7426	amber staff
-I	7427	7427	Hellborn Club
+I	7427	7427	chaos mace
 I	7428	7428	bonebreaker
 I	7429	7429	blessed sceptre
 I	7430	7430	dragonbone staff
-I	7431	7431	Beginner Club
+I	7431	7431	demonbone
 I	7432	7432	furry club
 I	7433	7433	ravenwing
 I	7434	7434	royal axe
-I	7435	7435	Hellborn Axe
+I	7435	7435	impaler
 I	7436	7436	angelic axe
 I	7437	7437	sapphire hammer
-I	7438	7438	Ruff Bow
+I	7438	7438	elvish bow
 I	7439	7439	Mana Booster
 I	7440	7440	experience potion
 I	7441	7441	ice cube
@@ -6511,7 +6511,7 @@ I	7457	7457	fur boots
 I	7458	7458	fur cap
 I	7459	7459	earmuffs
 I	7460	7460	norse shield
-I	7461	7461	Hellborn Helmet
+I	7461	7461	krimhorn helmet
 I	7462	7462	ragnir helmet
 I	7463	7463	mammoth fur cape
 I	7464	7464	mammoth fur shorts
@@ -6780,7 +6780,7 @@ I	7726	641	paper
 I	7727	642	blank paper
 I	7728	643	crumpled piece of paper
 I	7729	644	torn piece of paper
-I	7730	645	Beginner Mage Legs
+I	7730	645	blue legs
 I	7731	646	elvenhair rope
 I	7732	647	seeds
 I	7733	649	flower
@@ -6942,7 +6942,7 @@ I	7888	815	glacier amulet
 I	7889	816	lightning pendant
 I	7890	817	magma amulet
 I	7891	818	magma boots
-I	7892	819	Shadowforged Boots
+I	7892	819	glacier shoes
 I	7893	820	lightning boots
 I	7894	821	magma legs
 I	7895	822	lightning legs
@@ -7856,7 +7856,7 @@ I	8885	8057	divine plate
 I	8886	8058	molten plate
 I	8887	8059	frozen plate
 I	8888	8060	master archer's armor
-I	8889	8061	Cursed Armor
+I	8889	8061	skullcracker armor
 I	8890	8062	robe of the underworld
 I	8891	8063	paladin armor
 I	8892	8064	ethno coat
@@ -7886,7 +7886,7 @@ I	8916	8088	earth
 I	8917	8089	earth
 I	8918	8090	spellbook of dark mysteries
 I	8919	8091	spell rune
-I	8920	8092	Shadowforged Wand
+I	8920	8092	wand of starstorm
 I	8921	8093	wand of draconia
 I	8922	8094	wand of voodoo
 I	8923	8095	ranger legs
@@ -8899,7 +8899,7 @@ I	9929	9015	flower dress
 I	9930	9016	rust remover
 I	9931	9017	coconut shoes
 I	9932	9018	firewalker boots
-I	9933	9019	Corrupt Prestige Mage Boots
+I	9933	9019	firewalker boots
 I	9934	3123	worn firewalker boots
 I	9935	9021	dead gozzler
 I	9936	9022	dead gozzler
@@ -8982,7 +8982,7 @@ I	10012	9099	black candle
 I	10013	9100	mystic flame
 I	10014	9101	stand
 I	10015	9102	dead rift creature
-I	10016	9103	Shadowforged Helmet
+I	10016	9103	batwing hat
 I	10017	9104	football
 I	10019	5404	ocean floor
 I	10020	9611	dragon claw
@@ -10255,8 +10255,8 @@ I	11299	10382	drakinata
 I	11300	10383	sais
 I	11301	10384	zaoan armor
 I	11302	10385	zaoan helmet
-I	11303	10386	Ruff Boots
-I	11304	10387	Ruff Legs
+I	11303	10386	zaoan shoes
+I	11304	10387	zaoan legs
 I	11305	10388	drakinata
 I	11306	10389	sai
 I	11307	10390	Zaoan sword
@@ -11583,9 +11583,9 @@ I	12642	11686	royal draken mail
 I	12643	11687	royal scale robe
 I	12644	11688	shield of corruption
 I	12645	11689	elite draken helmet
-I	12646	4033	Hellborn Boots
+I	12646	4033	draken boots
 I	12647	11691	snake god's wristguard
-I	12648	11692	Arcane Sceptre
+I	12648	11692	snake god's sceptre
 I	12649	11693	blade of corruption
 I	12650	11694	snake god trophy
 I	12651	11695	black jade cobra
@@ -12711,7 +12711,7 @@ I	13943	12806	flintstone
 I	13944	12807	shimmer ball
 I	13945	12808	lever
 I	13946	12809	The Epic Wisdom
-I	13947	12810	Prestige Mage Helmet
+I	13947	12810	the epic wisdom
 I	13948	12811	imortus
 I	13949	12812	imortus
 I	13950	12813	old radio
@@ -13840,13 +13840,13 @@ I	15400	13987	deepling staff
 I	15401	13988	shallow water
 I	15402	13989	shallow water
 I	15403	13990	necklace of the deep
-I	15404	13991	Warbringer Axe
+I	15404	13991	deepling axe
 I	15405	13992	sandfish
 I	15406	13993	ornate chestplate
-I	15407	13994	Prestige Armor
+I	15407	13994	depth lorica
 I	15408	13995	depth galea
-I	15409	13996	Prestige Legs
-I	15410	13997	Prestige Boots
+I	15409	13996	depth ocrea
+I	15410	13997	depth calcei
 I	15411	13998	depth scutum
 I	15412	13999	ornate legs
 I	15413	14000	ornate shield
@@ -13925,8 +13925,8 @@ I	15485	14082	spidris mandible
 I	15486	14083	compound eye
 I	15487	14084	larvae
 I	15488	14085	deepling filet
-I	15489	14086	Arcane Armor
-I	15490	14087	Marksman Legs
+I	15489	14086	calopteryx cape
+I	15490	14087	grasshopper legs
 I	15491	14088	carapace shield
 I	15492	14089	hive scythe
 I	15493	14090	dead poodle
@@ -14079,15 +14079,15 @@ I	15639	14242	true heart of the sea
 I	15640	14243	treasure chest
 I	15641	14244	treasure chest
 I	15642	14245	treasure chest
-I	15643	14246	Elvenforged Bow
+I	15643	14246	hive bow
 I	15644	14247	ornate crossbow
 I	15645	14248	deepling backpack
 I	15646	14249	buggy backpack
-I	15647	14250	Warbringer Club
+I	15647	14250	deepling squelcher
 I	15648	14251	tarsal arrow
 I	15649	14252	vortex bolt
 I	15650	14255	swarmer drum
-I	15651	14258	Prestige Helmet
+I	15651	14258	depth galea
 I	15652	14259	machine
 I	15791	1210	chess board
 I	15792	1211	chess board
@@ -14145,7 +14145,7 @@ I	16108	14765	doll of Durin The Almighty
 I	16109	14766	majestic shield
 I	16110	14767	majestic shield
 I	16111	14768	thorn spitter
-I	16112	14769	Corrupt Prestige Mage Spellbook
+I	16112	14769	spellbook of ancient arcana
 I	16259	9044	stone
 I	16282	12372	white flowers
 I	16283	12373	purple flowers
@@ -15293,7 +15293,7 @@ I	18386	16090	dead Deathstrike
 I	18387	16091	dead Deathstrike
 I	18388	16094	crystal lamp
 I	18389	16095	lit crystal lamp
-I	18390	16096	Prestige Mage Wand
+I	18390	16096	wand of defiance
 I	18391	16097	glowing mushroom
 I	18392	16098	lit glowing mushroom
 I	18393	16099	mushroom backpack
@@ -15301,19 +15301,19 @@ I	18394	16100	crystal backpack
 I	18395	16101	muck remover
 I	18396	16102	mucus plug
 I	18397	16103	mushroom pie
-I	18398	16104	Elvenforged Helmet
-I	18399	16105	Elvenforged Armor
-I	18400	16106	Elvenforged Legs
-I	18401	16107	Shadowforged Spellbook
+I	18398	16104	gill gugel
+I	18399	16105	gill coat
+I	18400	16106	gill legs
+I	18401	16107	spellbook of vigilance
 I	18402	16108	gill necklace
-I	18403	16109	Warbringer Helmet
-I	18404	16110	Warbringer Armor
-I	18405	16111	Warbringer Legs
-I	18406	16112	Warbringer Boots
+I	18403	16109	prismatic helmet
+I	18404	16110	prismatic armor
+I	18405	16111	prismatic legs
+I	18406	16112	prismatic boots
 I	18407	16113	prismatic necklace
 I	18408	16114	prismatic ring
 I	18409	16115	wand of everblazing
-I	18410	16116	Warbringer Shield
+I	18410	16116	prismatic shield
 I	18411	16117	muck rod
 I	18412	16118	glacial rod
 I	18413	16119	blue crystal shard
@@ -15353,7 +15353,7 @@ I	18446	16152	dead gnome horticulist
 I	18447	16153	iron loadstone
 I	18448	16154	glow wine
 I	18449	16155	decorative ribbon
-I	18450	16160	Warbringer Sword
+I	18450	16160	crystalline sword
 I	18451	16161	crystalline axe
 I	18452	16162	mycological mace
 I	18453	16163	crystal crossbow
@@ -16716,7 +16716,7 @@ I	20086	17806	roof
 I	20087	17807	blocked cave entrance
 I	20088	17808	blocked cave entrance
 I	20089	17809	bola
-I	20090	17810	Beginner Shield
+I	20090	17810	spike shield
 I	20092	17812	ratana
 I	20093	17813	life preserver
 I	20094	17814	swamp lichen
@@ -17233,7 +17233,7 @@ I	20618	18337	obsidian Zaoan rook
 I	20619	18338	obsidian Zaoan pawn
 I	20620	18339	Zaoan chess box
 I	20624	18343	bookworm doll
-I	20625	18344	Beginner Mage Spellbook
+I	20625	18344	bookworm doll
 I	20667	18386	assassin
 I	20668	748	shadowy statue
 I	20669	10181	magic wall
@@ -18153,7 +18153,7 @@ I	21695	19361	sun mirror
 I	21696	19362	icicle bow
 I	21697	19363	runic ice shield
 I	21699	19365	trapped lightning
-I	21700	19366	Dread Mage Legs
+I	21700	19366	icy culottes
 I	21703	19369	eye of the storm
 I	21705	19371	glass of goo
 I	21706	19372	goo shell
@@ -18174,7 +18174,7 @@ I	21721	19387	large crystal teleporter
 I	21722	19388	opticorder forge
 I	21723	19389	opticorder forge
 I	21724	19390	strangely shaped block
-I	21725	19391	Shadowforged Armor
+I	21725	19391	furious frock
 I	21726	19392	aligned opticording sphere
 I	21727	19393	stone tablet
 I	21731	19397	memory box
@@ -18765,28 +18765,28 @@ I	22399	20065	umbral blade
 I	22400	20066	umbral masterblade
 I	22401	20067	crude umbral slayer
 I	22402	20068	umbral slayer
-I	22403	20069	Prestige Sword
+I	22403	20069	umbral master slayer
 I	22404	20070	crude umbral axe
 I	22405	20071	umbral axe
 I	22406	20072	umbral master axe
 I	22407	20073	crude umbral chopper
 I	22408	20074	umbral chopper
-I	22409	20075	Prestige Axe
+I	22409	20075	umbral master chopper
 I	22410	20076	crude umbral mace
 I	22411	20077	umbral mace
 I	22412	20078	umbral master mace
 I	22413	20079	crude umbral hammer
 I	22414	20080	umbral hammer
-I	22415	20081	Prestige Club
+I	22415	20081	umbral master hammer
 I	22416	20082	crude umbral bow
 I	22417	20083	umbral bow
-I	22418	20084	Prestige Archer Bow
+I	22418	20084	umbral master bow
 I	22419	20085	crude umbral crossbow
 I	22420	20086	umbral crossbow
 I	22421	20087	umbral master crossbow
 I	22422	20088	crude umbral spellbook
 I	22423	20089	umbral spellbook
-I	22424	20090	Prestige Mage Spellbook
+I	22424	20090	umbral master spellbook
 I	22425	20091	cot
 I	22426	20092	water wheel
 I	22427	20093	water wheel
@@ -19858,8 +19858,8 @@ I	23542	21171	metal bat
 I	23543	21172	glooth whip
 I	23544	21173	moohtant cudgel
 I	23545	21174	mino lance
-I	23546	21175	Cursed Shield
-I	23547	21176	Beginner Axe
+I	23546	21175	mino shield
+I	23547	21176	execowtioner axe
 I	23548	21177	cowtana
 I	23549	21178	glooth club
 I	23550	21179	glooth blade
@@ -21188,7 +21188,7 @@ I	25426	22770	Ferumbras' mana keg
 I	25427	22771	scroll of ascension
 I	25428	22772	scroll of ascension
 I	25429	22773	boots of homecoming
-I	25430	22774	Prestige Mage Boots
+I	25430	22774	boots of homecoming
 I	25431	22775	Ferumbras' teddy
 I	25432	22776	slain vexclaw
 I	25433	22777	slain vexclaw
@@ -21226,7 +21226,7 @@ I	25469	22813	depot box XVII
 I	25519	22863	test voodoo doll
 I	25520	22864	dead Elgar
 I	25521	22865	mysterious scroll
-I	25522	22866	Marksman Bow
+I	25522	22866	rift bow
 I	25523	22867	rift crossbow
 I	25524	22868	golden goblet
 I	25525	22869	demon oak wood
@@ -24275,15 +24275,15 @@ I	30101	27445	silver nuggets
 I	30102	27446	gold dust
 I	30103	27447	silver dust
 I	30104	27448	bookcase
-I	30105	27449	Corrupted Prestige Sword
+I	30105	27449	blade of destruction
 I	30106	27450	slayer of destruction
 I	30107	27451	axe of destruction
-I	30108	27452	Corrupted Prestige Axe
+I	30108	27452	chopper of destruction
 I	30109	27453	mace of destruction
-I	30110	27454	Corrupted Prestige Club
-I	30111	27455	Corrupted Prestige Archer Bow
+I	30110	27454	hammer of destruction
+I	30111	27455	bow of destruction
 I	30112	27456	crossbow of destruction
-I	30113	27457	Corrupt Prestige Mage Wand
+I	30113	27457	wand of destruction
 I	30114	27458	rod of destruction
 I	30115	27459	shadow bite plant
 I	30116	27460	shadow bite berries
@@ -24348,7 +24348,7 @@ I	30174	27518	remains of a werefox
 I	30175	27519	remains of a werefox
 I	30176	27520	remains of a werefox
 I	30177	27521	remains of a werefox
-I	30178	27522	Dread Mage Helmet
+I	30178	27522	blue spectacles
 I	30179	27523	strange mallet
 I	30180	27524	mallet head
 I	30181	27525	mallet handle
@@ -25907,7 +25907,7 @@ I	32070	29414	carrion casserole
 I	32071	29415	consecrated beef
 I	32072	29416	overcooked noodles
 I	32073	29417	living vine bow
-I	32074	29418	Ruff Armor
+I	32074	29418	living armor
 I	32075	29419	resizer
 I	32076	29420	shoulder plate
 I	32077	29421	summerblade
@@ -25920,7 +25920,7 @@ I	32083	29427	dark whispers
 I	32084	29428	sleep shawl
 I	32085	29429	pendulet
 I	32086	29430	ectoplasmic shield
-I	32087	29431	Dread Mage Spellbook
+I	32087	29431	spirit guide
 I	32088	29432	hireling lamp
 I	32089	29433	chest
 I	32091	29435	chest
@@ -26320,7 +26320,7 @@ I	33027	30371	black raven kit
 I	33028	30372	grey raven kit
 I	33029	30373	white raven kit
 I	33049	30393	cobra crossbow
-I	33050	30394	Marksman Boots
+I	33050	30394	cobra boots
 I	33051	30395	cobra club
 I	33052	30396	cobra axe
 I	33053	30397	cobra hood
@@ -27125,7 +27125,7 @@ I	34024	31368	flask with lamp oil
 I	34025	31369	gryphon mask
 I	34026	31370	silver mask
 I	34027	31371	ivory mask
-I	34028	31372	Beginner Mage Helmet
+I	34028	31372	mirror mask
 I	34030	31374	ancient sarcophagus
 I	34031	31375	harvested honey palm
 I	34032	31376	harvested honey palm
@@ -27320,7 +27320,7 @@ I	34234	31578	bear skin
 I	34235	31579	embrace of nature
 I	34236	31580	mortal mace
 I	34237	31581	bow of cataclysm
-I	34238	31582	Corrupted Prestige Helmet
+I	34238	31582	galea mortis
 I	34239	31583	toga mortis
 I	34240	31584	dead gryphon
 I	34241	31585	dead gryphon
@@ -27643,10 +27643,10 @@ I	34746	32090	dead cow
 I	34747	32091	dead cow
 I	34749	32093	schnitzel meat grinder
 I	34752	32096	lot
-I	34753	32097	Beginner Legs
+I	34753	32097	lederhosen
 I	34754	32098	traditional leather shoes
-I	34755	32099	Beginner Armor
-I	34756	32100	Beginner Helmet
+I	34755	32099	traditional shirt
+I	34756	32100	traditional gamsbart hat
 I	34757	32101	traditional neckerchief
 I	34758	32102	traditional stein
 I	34759	32103	decorative blue sheet
@@ -28063,7 +28063,7 @@ I	35271	32615	blue wall hangings
 I	35272	32616	phantasmal axe
 I	35273	32617	fabulous legs
 I	35274	32618	soulful legs
-I	35275	32619	Dread Mage Boots
+I	35275	32619	pair of nightmare boots
 I	35276	32620	ghost backpack
 I	35277	32621	ring of souls
 I	35278	32622	giant amethyst
@@ -29164,14 +29164,14 @@ I	36744	34088	soulbleeder
 I	36745	34089	soulpiercer
 I	36746	34090	soultainter
 I	36747	34091	soulhexer
-I	36748	34092	Corrupted Prestige Legs
-I	36749	34093	Corrupt Prestige Mage Legs
-I	36750	34094	Corrupted Prestige Armor
+I	36748	34092	soulshanks
+I	36749	34093	soulstrider
+I	36750	34094	soulshell
 I	36751	34095	soulmantle
-I	36752	34096	Corrupt Prestige Mage Armor
-I	36753	34097	Corrupted Prestige Boots
+I	36752	34096	soulshroud
+I	36753	34097	pair of soulwalkers
 I	36754	34098	pair of soulstalkers
-I	36755	34099	Corrupted Prestige Shield
+I	36755	34099	soulbastion
 I	36756	34100	Katex' blood
 I	36757	34101	Utua's poison
 I	36758	34102	Yirkas' egg
@@ -30196,7 +30196,7 @@ I	38176	35520	make-do boots
 I	38177	35521	jungle rod
 I	38178	35522	jungle wand
 I	38179	35523	exotic amulet
-I	38180	35524	Prestige Archer Quiver
+I	38180	35524	jungle quiver
 I	38218	35562	quiver
 I	38219	35563	magic shield potion
 I	38223	35567	quiver
@@ -30243,7 +30243,7 @@ I	38265	35609	amethyst necklace
 I	38266	35610	Tentugly's eye
 I	38267	35611	tentacle of Tentugly
 I	38268	35612	Tentugly's jaws
-I	38269	35613	Beginner Helmet
+I	38269	35613	ratmiral's hat
 I	38270	35614	cheesy membership card
 I	38311	35655	kelp
 I	38312	35656	kelp
@@ -30843,7 +30843,7 @@ I	39318	36662	gilded eldritch greataxe
 I	39319	36663	eldritch cuirass
 I	39320	36664	eldritch bow
 I	39321	36665	gilded eldritch bow
-I	39322	36666	Corrupted Prestige Archer Quiver
+I	39322	36666	eldritch quiver
 I	39323	36667	eldritch greaves
 I	39324	36668	eldritch wand
 I	39325	36669	gilded eldritch wand
@@ -31147,7 +31147,7 @@ I	39641	36985	Neferi's remains
 I	39647	36991	bronze cup
 I	39648	36992	silver cup
 I	39649	36993	gold cup
-I	39650	36994	Prestige Shield
+I	39650	36994	golden blessed shield
 I	39651	36995	gilded magic longsword
 I	39652	36996	Luna
 I	39653	36997	Luna
@@ -31155,7 +31155,7 @@ I	39654	36998	Luna
 I	39655	36999	Luna
 I	39656	37000	magic forcefield
 I	39657	37001	magic forcefield
-I	39658	37002	Marksman Quiver
+I	39658	37002	tagralt-inlaid scabbard
 I	39659	37003	eye-embroidered veil
 I	39660	37004	leaf chair
 I	39661	37005	leaf chair
@@ -32991,9 +32991,9 @@ I	44177	39146	stony pond
 I	44178	39147	spiritthorn armor
 I	44179	39148	spiritthorn helmet
 I	44180	39149	alicorn headguard
-I	44181	39150	Ruff Quiver
-I	44182	39151	Corrupted Prestige Archer Helmet
-I	44183	39152	Arcane Spellbook
+I	44181	39150	alicorn quiver
+I	44182	39151	arcanomancer regalia
+I	44183	39152	arcanomancer folio
 I	44184	39153	arboreal crown
 I	44185	39154	arboreal tome
 I	44186	39155	naga sword
@@ -33001,14 +33001,14 @@ I	44187	39156	naga axe
 I	44188	39157	naga club
 I	44189	39158	frostflower boots
 I	44190	39159	naga crossbow
-I	44191	39160	Elvenforged Quiver
+I	44191	39160	naga quiver
 I	44192	39161	feverbloom boots
 I	44193	39162	naga wand
 I	44194	39163	naga rod
 I	44195	39164	dawnfire sherwani
 I	44196	39165	midnight tunic
 I	44197	39166	dawnfire pantaloons
-I	44198	39167	Prestige Mage Legs
+I	44198	39167	midnight sarong
 I	44199	39168	fire crystal
 I	44200	39169	polarity reversed crystal
 I	44201	39170	extremly hot fire
@@ -34146,7 +34146,7 @@ I	45578	40587	rhindeer antlers
 I	45579	40588	antler-horn helmet
 I	45580	40589	stitched mutant hide legs
 I	45581	40590	mutated skin legs
-I	45582	40591	Marksman Armor
+I	45582	40591	marksman armor (old)
 I	45583	40592	alchemist's boots
 I	45584	40593	mutant bone boots
 I	45585	40594	alchemist's notepad
@@ -35749,7 +35749,7 @@ I	48871	43880	grand sanguine crossbow
 I	48872	43881	sanguine greaves
 I	48873	43882	sanguine coil
 I	48874	43883	grand sanguine coil
-I	48875	43884	Corrupted Prestige Archer Boots
+I	48875	43884	corrupted prestige archer boots (old)
 I	48876	43885	sanguine rod
 I	48877	43886	grand sanguine rod
 I	48878	43887	sanguine galoshes
@@ -39211,7 +39211,7 @@ I	54519	49528	inferniarch wand
 I	54520	49529	inferniarch rod
 I	54521	49530	inferniarch slayer
 I	54522	49531	maliceforged helmet
-I	54523	49532	Marksman Helmet
+I	54523	49532	marksman helmet (old)
 I	54524	49533	dreadfire headpiece
 I	54525	49534	demonfang mask
 I	54526	49535	sandstone floor
@@ -39786,7 +39786,7 @@ I	55133	50142	wooden stick
 I	55134	50143	wooden stick
 I	55135	50144	blue flower vine
 I	55136	50145	blue flower vine
-I	55137	50146	Corrupted Prestige Archer Legs
+I	55137	50146	corrupted prestige archer legs (old)
 I	55138	50147	charged ethereal ring
 I	55139	50148	charged ethereal ring
 I	55140	50149	ethereal ring
@@ -39824,13 +39824,13 @@ I	55171	50180	sickbay cabinet
 I	55172	50181	pair of monk fists
 I	55173	50182	nunchaku
 I	55174	50183	sai
-I	55175	50184	Prestige Archer Legs
+I	55175	50184	prestige archer legs (old)
 I	55176	50185	jade legs
 I	55177	50186	jungle survivor legs
-I	55178	50187	Shadowforged Legs
+I	55178	50187	shadowforged legs (old)
 I	55179	50188	ethereal coned hat
 I	55180	50189	demon mengu
-I	55181	50190	Ruff Helmet
+I	55181	50190	ruff helmet (old)
 I	55182	50191	enchanted werewolf helmet
 I	55183	50192	enchanted werewolf helmet
 I	55184	50193	jade conical hat
@@ -39887,12 +39887,12 @@ I	55241	50250	inferniarch claws
 I	55242	50251	rending inferniarch claws
 I	55243	50252	draining inferniarch claws
 I	55244	50253	siphoning inferniarch claws
-I	55245	50254	Corrupted Prestige Archer Armor
-I	55246	50255	Prestige Mage Armor
+I	55245	50254	corrupted prestige archer armor (old)
+I	55246	50255	prestige mage armor (old)
 I	55248	50257	plain monk robe
 I	55249	50258	monk robe
 I	55250	50259	zaoan monk robe
-I	55251	50260	Prestige Archer Armor
+I	55251	50260	prestige archer armor (old)
 I	55252	50261	merudri nanbando
 I	55253	50262	naga tanko
 I	55254	50263	merudri scale mail
@@ -39900,7 +39900,7 @@ I	55255	50264	merudri battle mail
 I	55257	50266	eldritch monk boots
 I	55258	50267	boots of enlightenment
 I	55259	50268	robe of enlightenment
-I	55260	50269	Arcane Legs
+I	55260	50269	arcane legs (old)
 I	55261	50270	bambus jo
 I	55262	50271	fists of enlightenment
 I	55263	50272	sai of enlightenment
@@ -39908,7 +39908,7 @@ I	55264	50273	nunchaku of enlightenment
 I	55265	50274	coned hat of enlightenment
 I	55266	50275	ghazbaran oyoroi
 I	55267	50276	gnomish cuirass
-I	55268	50277	Beginner Armor
+I	55268	50277	beginner armor (old)
 I	55269	50278	magma robe
 I	55270	50279	energy robe
 I	55271	50280	ice robe
@@ -39921,7 +39921,7 @@ I	55277	50286	open gate
 I	55278	50287	open gate
 I	55279	50288	open gate
 I	55280	50289	yalahari footwraps
-I	55281	50290	Prestige Archer Boots
+I	55281	50290	prestige archer boots (old)
 I	55282	50291	iks footwraps
 I	55283	50292	training wraps
 I	55284	50293	exercise wraps
@@ -40865,7 +40865,7 @@ I	56277	51286	skull decorated wall
 I	56278	51287	skull decorated wall
 I	56279	51288	skull decorated wall
 I	56283	51292	red stone button
-I	56285	51294	Dread Mage Armor
+I	56285	51294	dread mage armor (old)
 I	56286	51295	genesis serenity armor
 I	56287	51296	wooden plank
 I	56288	51297	blue mist
@@ -40881,7 +40881,7 @@ I	56297	51306	transcendent trousers
 I	56298	51307	transcendent footwraps
 I	56299	51308	transcendent bo
 I	56300	51309	parchment part
-I	56305	51314	Corrupt Prestige Mage Helmet
+I	56305	51314	corrupt prestige mage helmet (old)
 I	56306	51315	banor doll
 I	56307	51316	bard doll
 I	56308	51317	aylie
@@ -44261,14 +44261,14 @@ I	59726	55681	placeholder sprite 486004
 I	59727	55682	placeholder sprite 486005
 I	59728	55683	placeholder sprite 486006
 I	59729	55684	placeholder sprite 486007
-I	59730	55685	placeholder sprite 486008
-I	59731	55686	placeholder sprite 486009
-I	59732	55687	placeholder sprite 486010
-I	59733	55688	placeholder sprite 486011
-I	59734	55689	placeholder sprite 486012
-I	59735	55690	placeholder sprite 486013
-I	59736	55691	placeholder sprite 486014
-I	59737	55692	placeholder sprite 486015
+I	59730	55685	Beginner Helmet
+I	59731	55686	Beginner Armor
+I	59732	55687	Beginner Legs
+I	59733	55688	Beginner Boots
+I	59734	55689	Beginner Shield
+I	59735	55690	Beginner Sword
+I	59736	55691	Beginner Axe
+I	59737	55692	Beginner Club
 I	59738	55693	placeholder sprite 486016
 I	59739	55694	placeholder sprite 486017
 I	59740	55695	placeholder sprite 486018
@@ -44317,14 +44317,14 @@ I	59782	55737	placeholder sprite 486060
 I	59783	55738	placeholder sprite 486061
 I	59784	55739	placeholder sprite 486062
 I	59785	55740	placeholder sprite 486063
-I	59786	55741	placeholder sprite 486064
-I	59787	55742	placeholder sprite 486065
-I	59788	55743	placeholder sprite 486066
-I	59789	55744	placeholder sprite 486067
-I	59790	55745	placeholder sprite 486068
-I	59791	55746	placeholder sprite 486069
-I	59792	55747	placeholder sprite 486070
-I	59793	55748	placeholder sprite 486071
+I	59786	55741	Cursed Helmet
+I	59787	55742	Cursed Armor
+I	59788	55743	Cursed Legs
+I	59789	55744	Cursed Boots
+I	59790	55745	Cursed Shield
+I	59791	55746	Cursed Sword
+I	59792	55747	Cursed Axe
+I	59793	55748	Cursed Club
 I	59794	55749	placeholder sprite 486072
 I	59795	55750	placeholder sprite 486073
 I	59796	55751	placeholder sprite 486074
@@ -44373,14 +44373,14 @@ I	59838	55793	placeholder sprite 486116
 I	59839	55794	placeholder sprite 486117
 I	59840	55795	placeholder sprite 486118
 I	59841	55796	placeholder sprite 486119
-I	59842	55797	placeholder sprite 486120
-I	59843	55798	placeholder sprite 486121
-I	59844	55799	placeholder sprite 486122
-I	59845	55800	placeholder sprite 486123
-I	59846	55801	placeholder sprite 486124
-I	59847	55802	placeholder sprite 486125
-I	59848	55803	placeholder sprite 486126
-I	59849	55804	placeholder sprite 486127
+I	59842	55797	Hellborn Helmet
+I	59843	55798	Hellborn Armor
+I	59844	55799	Hellborn Legs
+I	59845	55800	Hellborn Boots
+I	59846	55801	Hellborn Shield
+I	59847	55802	Hellborn Sword
+I	59848	55803	Hellborn Axe
+I	59849	55804	Hellborn Club
 I	59850	55805	placeholder sprite 486128
 I	59851	55806	placeholder sprite 486129
 I	59852	55807	placeholder sprite 486130
@@ -44501,14 +44501,14 @@ I	59966	55921	placeholder sprite 486244
 I	59967	55922	placeholder sprite 486245
 I	59968	55923	placeholder sprite 486246
 I	59969	55924	placeholder sprite 486247
-I	59970	55925	placeholder sprite 486248
-I	59971	55926	placeholder sprite 486249
-I	59972	55927	placeholder sprite 486250
-I	59973	55928	placeholder sprite 486251
-I	59974	55929	placeholder sprite 486252
-I	59975	55930	placeholder sprite 486253
-I	59976	55931	placeholder sprite 486254
-I	59977	55932	placeholder sprite 486255
+I	59970	55925	Warbringer Helmet
+I	59971	55926	Warbringer Armor
+I	59972	55927	Warbringer Legs
+I	59973	55928	Warbringer Boots
+I	59974	55929	Warbringer Shield
+I	59975	55930	Warbringer Sword
+I	59976	55931	Warbringer Axe
+I	59977	55932	Warbringer Club
 I	59978	55933	placeholder sprite 486256
 I	59979	55934	placeholder sprite 486257
 I	59980	55935	placeholder sprite 486258
@@ -44701,12 +44701,12 @@ I	60166	56121	placeholder sprite 486444
 I	60167	56122	placeholder sprite 486445
 I	60168	56123	placeholder sprite 486446
 I	60169	56124	placeholder sprite 486447
-I	60170	56125	placeholder sprite 486448
-I	60171	56126	placeholder sprite 486449
-I	60172	56127	placeholder sprite 486450
-I	60173	56128	placeholder sprite 486451
-I	60174	56129	placeholder sprite 486452
-I	60175	56130	placeholder sprite 486453
+I	60170	56125	Beginner Helmet
+I	60171	56126	Beginner Armor
+I	60172	56127	Beginner Legs
+I	60173	56128	Beginner Boots
+I	60174	56129	Beginner Quiver
+I	60175	56130	Beginner Slingshot
 I	60176	56131	placeholder sprite 486454
 I	60177	56132	placeholder sprite 486455
 I	60178	56133	placeholder sprite 486456
@@ -44737,11 +44737,11 @@ I	60202	56157	placeholder sprite 486480
 I	60203	56158	placeholder sprite 486481
 I	60204	56159	placeholder sprite 486482
 I	60205	56160	placeholder sprite 486483
-I	60206	56161	placeholder sprite 486484
-I	60207	56162	placeholder sprite 486485
-I	60208	56163	placeholder sprite 486486
-I	60209	56164	placeholder sprite 486487
-I	60210	56165	placeholder sprite 486488
+I	60206	56161	Ruff Helmet
+I	60207	56162	Ruff Armor
+I	60208	56163	Ruff Legs
+I	60209	56164	Ruff Boots
+I	60210	56165	Ruff Quiver
 I	60211	56166	placeholder sprite 486489
 I	60212	56167	placeholder sprite 486490
 I	60213	56168	placeholder sprite 486491
@@ -44790,7 +44790,7 @@ I	60255	56210	placeholder sprite 486533
 I	60256	56211	placeholder sprite 486534
 I	60257	56212	placeholder sprite 486535
 I	60258	56213	placeholder sprite 486536
-I	60259	56214	placeholder sprite 486537
+I	60259	56214	Ruff Bow
 I	60260	56215	placeholder sprite 486538
 I	60261	56216	placeholder sprite 486539
 I	60262	56217	placeholder sprite 486540
@@ -44869,18 +44869,18 @@ I	60334	56289	placeholder sprite 486612
 I	60335	56290	placeholder sprite 486613
 I	60336	56291	placeholder sprite 486614
 I	60337	56292	placeholder sprite 486615
-I	60338	56293	placeholder sprite 486616
-I	60339	56294	placeholder sprite 486617
-I	60340	56295	placeholder sprite 486618
-I	60341	56296	placeholder sprite 486619
-I	60342	56297	placeholder sprite 486620
-I	60343	56298	placeholder sprite 486621
-I	60344	56299	placeholder sprite 486622
-I	60345	56300	placeholder sprite 486623
-I	60346	56301	placeholder sprite 486624
-I	60347	56302	placeholder sprite 486625
-I	60348	56303	placeholder sprite 486626
-I	60349	56304	placeholder sprite 486627
+I	60338	56293	Marksman Helmet
+I	60339	56294	Marksman Armor
+I	60340	56295	Marksman Legs
+I	60341	56296	Marksman Boots
+I	60342	56297	Marksman Quiver
+I	60343	56298	Marksman Bow
+I	60344	56299	Elvenforged Helmet
+I	60345	56300	Elvenforged Armor
+I	60346	56301	Elvenforged Legs
+I	60347	56302	Elvenforged Boots
+I	60348	56303	Elvenforged Quiver
+I	60349	56304	Elvenforged Bow
 I	60350	56305	placeholder sprite 486628
 I	60351	56306	placeholder sprite 486629
 I	60352	56307	placeholder sprite 486630
@@ -45085,12 +45085,12 @@ I	60550	56505	placeholder sprite 486828
 I	60551	56506	placeholder sprite 486829
 I	60552	56507	placeholder sprite 486830
 I	60553	56508	placeholder sprite 486831
-I	60554	56509	placeholder sprite 486832
-I	60555	56510	placeholder sprite 486833
-I	60556	56511	placeholder sprite 486834
-I	60557	56512	placeholder sprite 486835
-I	60558	56513	placeholder sprite 486836
-I	60559	56514	placeholder sprite 486837
+I	60554	56509	Beginner Mage Helmet
+I	60555	56510	Beginner Mage Armor
+I	60556	56511	Beginner Mage Legs
+I	60557	56512	Beginner Mage Boots
+I	60558	56513	Beginner Mage Spellbook
+I	60559	56514	Beginner Mage Wand
 I	60560	56515	placeholder sprite 486838
 I	60561	56516	placeholder sprite 486839
 I	60562	56517	placeholder sprite 486840
@@ -45109,12 +45109,12 @@ I	60574	56529	placeholder sprite 486852
 I	60575	56530	placeholder sprite 486853
 I	60576	56531	placeholder sprite 486854
 I	60577	56532	placeholder sprite 486855
-I	60578	56533	placeholder sprite 486856
-I	60579	56534	placeholder sprite 486857
-I	60580	56535	placeholder sprite 486858
-I	60581	56536	placeholder sprite 486859
-I	60582	56537	placeholder sprite 486860
-I	60583	56538	placeholder sprite 486861
+I	60578	56533	Dread Mage Helmet
+I	60579	56534	Dread Mage Armor
+I	60580	56535	Dread Mage Legs
+I	60581	56536	Dread Mage Boots
+I	60582	56537	Dread Mage Spellbook
+I	60583	56538	Dread Mage Rod
 I	60584	56539	placeholder sprite 486862
 I	60585	56540	placeholder sprite 486863
 I	60586	56541	placeholder sprite 486864
@@ -45157,12 +45157,12 @@ I	60622	56577	placeholder sprite 486900
 I	60623	56578	placeholder sprite 486901
 I	60624	56579	placeholder sprite 486902
 I	60625	56580	placeholder sprite 486903
-I	60626	56581	placeholder sprite 486904
-I	60627	56582	placeholder sprite 486905
-I	60628	56583	placeholder sprite 486906
-I	60629	56584	placeholder sprite 486907
-I	60630	56585	placeholder sprite 486908
-I	60631	56586	placeholder sprite 486909
+I	60626	56581	Shadowforged Helmet
+I	60627	56582	Shadowforged Armor
+I	60628	56583	Shadowforged Legs
+I	60629	56584	Shadowforged Boots
+I	60630	56585	Shadowforged Spellbook
+I	60631	56586	Shadowforged Wand
 I	60632	56587	placeholder sprite 486910
 I	60633	56588	placeholder sprite 486911
 I	60634	56589	placeholder sprite 486912
@@ -45247,12 +45247,12 @@ I	60712	56667	placeholder sprite 486990
 I	60713	56668	placeholder sprite 486991
 I	60714	56669	placeholder sprite 486992
 I	60715	56670	placeholder sprite 486993
-I	60716	56671	placeholder sprite 486994
-I	60717	56672	placeholder sprite 486995
-I	60718	56673	placeholder sprite 486996
-I	60719	56674	placeholder sprite 486997
-I	60720	56675	placeholder sprite 486998
-I	60721	56676	placeholder sprite 486999
+I	60716	56671	Arcane Helmet
+I	60717	56672	Arcane Armor
+I	60718	56673	Arcane Legs
+I	60719	56674	Arcane Boots
+I	60720	56675	Arcane Spellbook
+I	60721	56676	Arcane Sceptre
 I	60722	56677	placeholder sprite 487000
 I	60723	56678	placeholder sprite 487001
 I	60724	56679	placeholder sprite 487002
@@ -47922,47 +47922,85 @@ I	63387	59342	placeholder sprite 531189
 I	63388	59343	placeholder sprite 531201
 I	63389	59344	placeholder sprite 531213
 I	63390	59345	placeholder sprite 531225
-I	63391	59346	placeholder sprite 531530
-I	63392	59347	placeholder sprite 531551
-I	63393	59348	placeholder sprite 531573
-I	63394	59349	placeholder sprite 531597
-I	63395	59350	placeholder sprite 531619
-I	63396	59351	placeholder sprite 531641
-I	63397	59352	placeholder sprite 531665
-I	63398	59353	placeholder sprite 531689
-I	63399	59354	placeholder sprite 531713
-I	63400	59355	placeholder sprite 531737
-I	63401	59356	placeholder sprite 531761
-I	63402	59357	placeholder sprite 531784
-I	63403	59358	placeholder sprite 531807
-I	63404	59359	placeholder sprite 531831
-I	63405	59360	placeholder sprite 531854
+I	63391	59346	Prestige Helmet
+I	63392	59347	Prestige Armor
+I	63393	59348	Prestige Legs
+I	63394	59349	Prestige Boots
+I	63395	59350	Prestige Shield
+I	63396	59351	Corrupted Prestige Helmet
+I	63397	59352	Corrupted Prestige Armor
+I	63398	59353	Corrupted Prestige Legs
+I	63399	59354	Corrupted Prestige Boots
+I	63400	59355	Corrupted Prestige Shield
+I	63401	59356	Prestige Archer Helmet
+I	63402	59357	Prestige Archer Armor
+I	63403	59358	Prestige Archer Legs
+I	63404	59359	Prestige Archer Boots
+I	63405	59360	Prestige Archer Quiver
 I	63406	59361	placeholder sprite 531876
-I	63407	59362	placeholder sprite 531898
-I	63408	59363	placeholder sprite 531922
-I	63409	59364	placeholder sprite 531946
-I	63410	59365	placeholder sprite 531970
-I	63411	59366	placeholder sprite 531994
-I	63412	59367	placeholder sprite 532018
-I	63413	59368	placeholder sprite 532042
-I	63414	59369	placeholder sprite 532066
-I	63415	59370	placeholder sprite 532090
-I	63416	59371	placeholder sprite 532114
-I	63417	59372	placeholder sprite 532138
-I	63418	59373	placeholder sprite 532162
-I	63419	59374	placeholder sprite 532186
-I	63420	59375	placeholder sprite 532210
-I	63421	59376	placeholder sprite 532234
-I	63422	59377	placeholder sprite 532258
-I	63423	59378	placeholder sprite 532280
-I	63424	59379	placeholder sprite 532303
-I	63425	59380	placeholder sprite 532327
-I	63426	59381	placeholder sprite 532363
-I	63427	59382	placeholder sprite 532387
-I	63428	59383	placeholder sprite 532411
-I	63429	59384	placeholder sprite 532435
-I	63430	59385	placeholder sprite 532459
-I	63431	59386	placeholder sprite 532495
+I	63407	59362	Corrupted Prestige Archer Helmet
+I	63408	59363	Corrupted Prestige Archer Armor
+I	63409	59364	Corrupted Prestige Archer Legs
+I	63410	59365	Corrupted Prestige Archer Boots
+I	63411	59366	Corrupted Prestige Archer Quiver
+I	63412	59367	Prestige Mage Helmet
+I	63413	59368	Prestige Mage Armor
+I	63414	59369	Prestige Mage Legs
+I	63415	59370	Prestige Mage Boots
+I	63416	59371	Prestige Mage Spellbook
+I	63417	59372	Corrupt Prestige Mage Helmet
+I	63418	59373	Corrupt Prestige Mage Armor
+I	63419	59374	Corrupt Prestige Mage Legs
+I	63420	59375	Corrupt Prestige Mage Boots
+I	63421	59376	Corrupt Prestige Mage Spellbook
+I	63422	59377	Prestige Sword
+I	63423	59378	Prestige Axe
+I	63424	59379	Prestige Club
+I	63425	59380	Prestige Archer Bow
+I	63426	59381	Prestige Mage Wand
+I	63427	59382	Corrupted Prestige Sword
+I	63428	59383	Corrupted Prestige Axe
+I	63429	59384	Corrupted Prestige Club
+I	63430	59385	Corrupted Prestige Archer Bow
+I	63431	59386	Corrupt Prestige Mage Wand
+I	63432	59387	placeholder sprite 532519
+I	63433	59388	placeholder sprite 532530
+I	63434	59389	placeholder sprite 532552
+I	63435	59390	placeholder sprite 532558
+I	63436	59391	placeholder sprite 532569
+I	63437	59392	placeholder sprite 532583
+I	63438	59393	placeholder sprite 532569
+I	63439	59394	placeholder sprite 532621
+I	63440	59395	placeholder sprite 532648
+I	63441	59396	placeholder sprite 532653
+I	63442	59397	placeholder sprite 532660
+I	63443	59398	placeholder sprite 532672
+I	63444	59399	placeholder sprite 532687
+I	63445	59400	placeholder sprite 532681
+I	63446	59401	placeholder sprite 532723
+I	63447	59402	placeholder sprite 532746
+I	63448	59403	placeholder sprite 532751
+I	63449	59404	placeholder sprite 532757
+I	63450	59405	placeholder sprite 532766
+I	63451	59406	placeholder sprite 532780
+I	63452	59407	placeholder sprite 532775
+I	63453	59408	placeholder sprite 532809
+I	63454	59409	placeholder sprite 532836
+I	63455	59410	placeholder sprite 532842
+I	63456	59411	placeholder sprite 532848
+I	63457	59412	placeholder sprite 532857
+I	63458	59413	placeholder sprite 532870
+I	63459	59414	placeholder sprite 532862
+I	63460	59415	placeholder sprite 532900
+I	63461	59416	placeholder sprite 532969
+I	63462	59417	placeholder sprite 533056
+I	63463	59418	placeholder sprite 533136
+I	63464	59419	placeholder sprite 533218
+I	63465	59420	placeholder sprite 533301
+I	63466	59421	placeholder sprite 533395
+I	63467	59422	placeholder sprite 533480
+I	63468	59423	placeholder sprite 533547
+I	63469	59424	placeholder sprite 533630
 O	1	1	
 O	2	2	monster Cursed Orc, monster Orc Warlord
 O	3	3	
