@@ -2249,6 +2249,59 @@ ArtMagicChest < Panel
     text: a backpack
 
 // the Task Board: a monster to hunt, with more damage, items to deliver, and points for the shop
+// the daily rewards: days claimed, today's Claim, a day still locked, and the streak
+ArtDailyRewards < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: day1
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 6
+    &itemId: 3043
+
+  UIWidget
+    size: 18 18
+    anchors.right: day1.right
+    anchors.bottom: day1.bottom
+    margin: 0 -4 -4 0
+    image-source: /images/taskboard/seal18
+    phantom: true
+
+  GuideItem
+    id: day2
+    anchors.left: day1.right
+    anchors.top: day1.top
+    margin-left: 10
+    &itemId: 3040
+
+  Button
+    !text: tr('Claim')
+    anchors.horizontalCenter: day2.horizontalCenter
+    anchors.top: day2.bottom
+    margin-top: 4
+    width: 52
+    height: 18
+    color: #f4d68c
+    phantom: true
+
+  UIWidget
+    id: lock
+    size: 26 26
+    anchors.left: day2.right
+    anchors.verticalCenter: day2.verticalCenter
+    margin-left: 12
+    image-source: /images/taskboard/lock26
+    phantom: true
+
+  GuideNote
+    anchors.left: day1.left
+    anchors.top: day1.bottom
+    margin-top: 6
+    text: 9 day streak
+    color: #e0b44c
+
 ArtTaskBoard < Panel
   anchors.fill: parent
 

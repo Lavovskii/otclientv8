@@ -1,0 +1,9 @@
+Module
+  name: game_dailyrewards
+  description: Daily Rewards: a reward a day, the streak and its bonuses
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ dailyrewards ]
+  dependencies: [ client_topmenu ]
+  @onLoad: init()
+  @onUnload: terminate()

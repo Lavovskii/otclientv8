@@ -37,6 +37,7 @@ Module
     - game_walking
     - game_store
     - game_taskboard
+    - game_dailyrewards
     - game_checkall
     - game_itemselector
     - client_textedit

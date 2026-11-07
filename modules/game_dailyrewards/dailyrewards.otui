@@ -1,0 +1,337 @@
+// Daily Rewards, on the Task Board's frames and stone (data/images/taskboard): the streak and its three bonuses on top, the
+// seven days of the week on show below, then when the next reward comes. Grid: 7 days of 80 with 4 between, 5 inside a frame.
+
+DailyFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
+
+  Label
+    id: caption
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 2 2 0 2
+    height: 18
+    image-source: /images/taskboard/caption
+    image-border: 2
+    text-align: center
+    color: #d8c08a
+    font: verdana-11px-rounded
+    phantom: true
+
+DailyBox < UIWidget
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+// a bonus of the streak: its picture, from what streak, and what it gives; dim and locked until the streak gets there
+DailyBonus < UIWidget
+  size: 154 76
+  image-source: /images/taskboard/cell
+  image-border: 2
+
+  DailyBox
+    id: box
+    size: 42 42
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 6 0 0 6
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.centerIn: box
+    virtual: true
+    phantom: true
+
+  UIWidget
+    id: seal
+    size: 18 18
+    anchors.right: box.right
+    anchors.bottom: box.bottom
+    margin-right: -4
+    margin-bottom: -4
+    image-source: /images/taskboard/seal18
+    phantom: true
+    visible: false
+
+  Label
+    id: from
+    anchors.left: box.right
+    anchors.right: parent.right
+    anchors.top: box.top
+    margin-left: 6
+    margin-right: 4
+    height: 14
+    font: verdana-11px-rounded
+    color: #f4d68c
+    phantom: true
+
+  Label
+    id: text
+    anchors.left: from.left
+    anchors.right: from.right
+    anchors.top: from.bottom
+    anchors.bottom: parent.bottom
+    margin-top: 2
+    margin-bottom: 4
+    text-wrap: true
+    text-align: topLeft
+    font: verdana-11px-antialised
+    color: #c4c4c4
+    phantom: true
+
+  // over everything while the streak is shorter
+  UIWidget
+    id: locked
+    anchors.fill: parent
+    background-color: #0c0c0c9c
+    phantom: true
+
+    UIWidget
+      size: 26 26
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      margin: 0 4 4 0
+      image-source: /images/taskboard/lock26
+      phantom: true
+
+// a day of the week: its reward, and below it claimed, the Claim button, or the lock of a day still to come
+DailyDay < UIWidget
+  size: 80 122
+  image-source: /images/taskboard/cell
+  image-border: 2
+
+  $on:
+    image-source: /images/taskboard/cell_done
+
+  Label
+    id: day
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 1 1 0 1
+    height: 18
+    image-source: /images/taskboard/caption
+    image-border: 2
+    text-align: center
+    font: verdana-11px-rounded
+    color: #e4e4e4
+    phantom: true
+
+  DailyBox
+    id: box
+    size: 52 52
+    anchors.top: day.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 7
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.centerIn: box
+    virtual: true
+    phantom: true
+
+  UIWidget
+    id: seal
+    size: 18 18
+    anchors.right: box.right
+    anchors.bottom: box.bottom
+    margin-right: -4
+    margin-bottom: -4
+    image-source: /images/taskboard/seal18
+    phantom: true
+    visible: false
+
+  Label
+    id: kind
+    anchors.top: box.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    height: 13
+    text-align: center
+    font: verdana-11px-antialised
+    color: #a8a8a8
+    phantom: true
+
+  Button
+    id: claim
+    !text: tr('Claim')
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 0 5 5 5
+    height: 20
+    color: #f4d68c
+    visible: false
+
+  UIWidget
+    id: lock
+    size: 26 26
+    anchors.bottom: parent.bottom
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-bottom: 2
+    image-source: /images/taskboard/lock26
+    phantom: true
+    visible: false
+
+  Label
+    id: done
+    !text: tr('Claimed')
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-bottom: 8
+    text-align: center
+    font: verdana-11px-rounded
+    color: #6ed06e
+    phantom: true
+    visible: false
+
+MainWindow
+  id: dailyRewardsWindow
+  !text: tr('Daily Rewards')
+  size: 626 448
+  visible: false
+  @onEscape: self:hide()
+
+  // ------------------------------------------------------------------------------------------- the streak and its bonuses
+  DailyFrame
+    id: streakFrame
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 106
+
+  DailyBox
+    id: streakBox
+    size: 92 76
+    anchors.left: streakFrame.left
+    anchors.top: streakFrame.top
+    margin: 24 0 0 6
+
+  Label
+    id: streakCount
+    anchors.top: streakBox.top
+    anchors.left: streakBox.left
+    anchors.right: streakBox.right
+    margin-top: 10
+    height: 24
+    text-align: center
+    font: sans-bold-16px
+    color: #f4d68c
+    phantom: true
+
+  Label
+    id: streakLabel
+    !text: tr('day streak')
+    anchors.top: streakCount.bottom
+    anchors.left: streakBox.left
+    anchors.right: streakBox.right
+    margin-top: 6
+    height: 14
+    text-align: center
+    font: verdana-11px-antialised
+    color: #c4c4c4
+    phantom: true
+
+  DailyBonus
+    id: bonus1
+    anchors.top: streakBox.top
+    anchors.left: streakBox.right
+    margin-left: 6
+
+  DailyBonus
+    id: bonus2
+    anchors.top: streakBox.top
+    anchors.left: bonus1.right
+    margin-left: 6
+
+  DailyBonus
+    id: bonus3
+    anchors.top: streakBox.top
+    anchors.left: bonus2.right
+    margin-left: 6
+
+  // ------------------------------------------------------------------------------------------- the days of the week
+  DailyFrame
+    id: daysFrame
+    anchors.top: streakFrame.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    height: 152
+
+  Panel
+    id: days
+    anchors.top: daysFrame.top
+    anchors.left: daysFrame.left
+    anchors.right: daysFrame.right
+    margin: 24 0 0 5
+    height: 122
+    layout:
+      type: horizontalBox
+      spacing: 4
+
+  // ------------------------------------------------------------------------------------------- when, and the rules
+  UIWidget
+    id: timePlate
+    anchors.top: daysFrame.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 6
+    height: 26
+    image-source: /images/taskboard/plate
+    image-border: 2
+    phantom: true
+
+  UIWidget
+    id: hourglass
+    size: 16 16
+    anchors.left: timePlate.left
+    anchors.verticalCenter: timePlate.verticalCenter
+    margin-left: 8
+    image-source: /images/taskboard/hourglass16
+    phantom: true
+
+  Label
+    id: time
+    anchors.left: hourglass.right
+    anchors.right: timePlate.right
+    anchors.verticalCenter: timePlate.verticalCenter
+    margin-left: 8
+    margin-right: 8
+    font: verdana-11px-rounded
+    color: #e4e4e4
+    phantom: true
+
+  DailyBox
+    id: rulesBox
+    anchors.top: timePlate.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 6
+    margin-bottom: 8
+
+  Label
+    id: rules
+    anchors.fill: rulesBox
+    margin: 6 8 6 8
+    text-wrap: true
+    text-align: topLeft
+    font: verdana-11px-antialised
+    color: #c4c4c4
+    phantom: true
+    !text: tr('Claim one reward a day, once between two server saves (08:00 UTC). Each day in a row adds to your streak; miss a day and the streak and its bonuses are lost, and you start again at day 1. The bonuses of days 2, 4 and 6 add up and last as long as the streak does. Rewards marked bound stay with you: they cannot be dropped, traded or lost on death.')
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 70
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_dailyrewards.hide()

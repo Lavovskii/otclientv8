@@ -175,6 +175,33 @@ local function characters()
   return list
 end
 
+local DAILY = table.concat({
+  'S|9|0|38135|10|2|5000|10|1',
+  'R|1|item|3043|10|done|0|10 crystal coins',
+  'R|2|item|3040|2|done|0|2 gold nuggets',
+  'R|3|scroll|43948|1|today|1|1 Magic Level Scroll, bound to you',
+  'R|4|item|3040|5|locked|0|5 gold nuggets',
+  'R|5|item|9057|2|locked|1|2 Buffary Coins, bound to you',
+  'R|6|item|3040|10|locked|0|10 gold nuggets',
+  'R|7|item|11587|1|locked|1|1 ForgottenL Coin, bound to you',
+  'B|2|7643|1|+1,000 health and mana every 2 seconds while your streak is 2 or more',
+  'B|4|7643|1|+4,000 health and mana every 2 seconds while your streak is 4 or more',
+  'B|6|7440|1|+10% experience while your streak is 6 or more',
+}, '\n')
+local DAILY_NEW = table.concat({
+  'S|0|0|38135|1|1|0|0|1',
+  'R|1|item|3043|10|today|0|10 crystal coins',
+  'R|2|bonus|7643|1|locked|0|+1,000 health and mana every 2 seconds while your streak is 2 or more',
+  'R|3|scroll|43946|1|locked|1|1 Melee Scroll, bound to you',
+  'R|4|bonus|7643|1|locked|0|+4,000 health and mana every 2 seconds while your streak is 4 or more',
+  'R|5|item|9057|2|locked|1|2 Buffary Coins, bound to you',
+  'R|6|bonus|7440|1|locked|0|+10% experience while your streak is 6 or more',
+  'R|7|item|11587|1|locked|1|1 ForgottenL Coin, bound to you',
+  'B|2|7643|0|+1,000 health and mana every 2 seconds while your streak is 2 or more',
+  'B|4|7643|0|+4,000 health and mana every 2 seconds while your streak is 4 or more',
+  'B|6|7440|0|+10% experience while your streak is 6 or more',
+}, '\n')
+
 local function define()
   step('login', function() end, 1000)
   step('char_list', function()
@@ -202,6 +229,14 @@ local function define()
     local w = byId('previewUpdater')
     if w then w:destroy() end
   end)
+  step('daily_new', function()
+    closeWindows()
+    modules.game_dailyrewards.onDailyMessage(nil, 30, DAILY_NEW)
+  end, 700)
+  step('daily_week2', function()
+    modules.game_dailyrewards.onDailyMessage(nil, 30, DAILY)
+  end, 700)
+  step('daily_end', function() modules.game_dailyrewards.hide() end)
   step('msgbox', function()
     closeWindows()
     displayInfoBox('Restart required', 'The interface layout was changed.\nRestart the client for the change to take effect.')
