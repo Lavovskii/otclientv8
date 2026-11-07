@@ -100,7 +100,7 @@ local GUIDES = {
       {art = 'ArtMagicChest', title = 'Magic chest',
        text = 'One floor above the temple stands the magic chest. Use a key from the hunts on it, or standing beside it: its lid floats open and gives you set pieces and weapons of the tier of the key, in a backpack. Bronze 10 of tier 1, Iron 8 of tier 2, Silver 6 of tier 3, Gold 4 of tier 4, Prestige 2 of tier 5, Corrupt Prestige 1 of tier 6. The key is used up.'},
       {art = 'ArtDailyRewards', title = 'Daily Rewards',
-       text = 'The chest button opens Daily Rewards: claim one reward a day, between two server saves (08:00 UTC). Days in a row build your streak, and its bonuses (more health and mana, +10%% experience) last while it does. Miss a day and you start again at day 1. Bound rewards stay with you.'},
+       text = 'Use a reward shrine to open Daily Rewards and claim one reward a day, between two server saves (08:00 UTC). Days in a row build your streak, and its bonuses (more health and mana, +10%% experience) last while it does. Miss a day and you start again at day 1. Bound rewards stay with you.'},
       {art = 'ArtTaskBoard', title = 'Task Board',
        text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20%% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop.'},
       {art = 'ArtVipDays', title = 'VIP days',

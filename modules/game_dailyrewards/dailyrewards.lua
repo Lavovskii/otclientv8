@@ -45,8 +45,10 @@ local function tick()
   clockEvent = nil
   state.seconds = state.seconds - 1
   if state.seconds <= 0 then
-    -- a new day: the server says what it is now
-    send('open')
+    -- a new day: the server says what it is now, while the window is open
+    if window and window:isVisible() then
+      send('open')
+    end
     return
   end
   drawTime()
@@ -159,7 +161,7 @@ function init()
     widget.claim.onClick = function() send('claim') end
     dayWidgets[i] = widget
   end
-  button = modules.client_topmenu.addLeftGameButton('dailyRewardsButton', tr('Daily Rewards'), '/images/topbuttons/dailyrewards', toggle, false, 3)
+  -- no button: the window opens only when the player uses a reward shrine in the game (the server sends open)
   ProtocolGame.registerExtendedOpcode(OPCODE, onDailyMessage)
   connect(g_game, {onGameEnd = onGameEnd})
 end
