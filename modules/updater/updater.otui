@@ -17,19 +17,21 @@ ForgottenLWindow
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 16
-    height: 46
+    margin-top: 14
+    height: 32
     text-align: center
     text-wrap: true
     !text: tr('Checking for updates...')
 
-  // the whole update, its percent inside
+  // the whole update, its percent inside; the bars keep clear of the frame's inner edge
   ForgottenLProgressBar
     id: mainProgress
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 6
+    margin-top: 8
+    margin-left: 20
+    margin-right: 20
     visible: false
 
   // the file (or graphics part) on its way, then its thin bar, then the MB and the speed
@@ -38,7 +40,7 @@ ForgottenLWindow
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 10
+    margin-top: 12
     height: 14
     text-align: center
     visible: false
@@ -48,7 +50,9 @@ ForgottenLWindow
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 4
+    margin-top: 6
+    margin-left: 20
+    margin-right: 20
     height: 10
     visible: false
 
@@ -57,7 +61,7 @@ ForgottenLWindow
     anchors.top: prev.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    margin-top: 5
+    margin-top: 6
     height: 14
     color: #a98c5a
     text-align: center
