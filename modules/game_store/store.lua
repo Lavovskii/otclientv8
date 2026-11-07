@@ -1,6 +1,6 @@
 local STORE_API = Services.website .. "/index.php/api/store"
 local win, topButton
-local state = { admin = false, editor = nil, offers = {}, categories = {}, characters = {}, buyUrl = Services.website, selected = nil, category = nil, busy = false }
+local state = { admin = false, editor = nil, offers = {}, categories = {}, characters = {}, buyUrl = Services.website, selected = nil, category = nil, busy = false, sexes = {}, xpBoost = {} }
 
 local function setStatus(text, color)
   win.bottomBar.statusLabel:setText(text or '')
@@ -54,6 +54,54 @@ local function categoryPicture(name)
   return '/images/store/scroll26'
 end
 
+-- Offers that are not items (type 2 outfit, 3 mount, 4 XP Boost): the outfit is drawn for the chosen character's sex, in the
+-- Citizen's default colours with both addons; the XP Boost's price is the chosen character's (it climbs with each one bought today).
+local OFFER_ITEM, OFFER_OUTFIT, OFFER_MOUNT, OFFER_XPBOOST = 1, 2, 3, 4
+local XP_BOOST_PICTURE = 7440 -- the experience potion
+
+local function chosenCharacter()
+  local opt = win and win.details.charBox:getCurrentOption()
+  return opt and opt.text or nil
+end
+
+local function offerLook(offer)
+  local kind = tonumber(offer.type) or OFFER_ITEM
+  if type(offer.looks) ~= 'table' or not offer.looks[1] then return nil end
+  if kind == OFFER_MOUNT then return { type = tonumber(offer.looks[1]) or 0 } end
+  if kind ~= OFFER_OUTFIT then return nil end
+  local sex = state.sexes[chosenCharacter() or ''] or 1
+  local look = tonumber(offer.looks[sex == 0 and 1 or 2]) or tonumber(offer.looks[1]) or 0
+  return { type = look, head = 78, body = 69, legs = 58, feet = 76, addons = math.max(0, math.min(3, tonumber(offer.count) or 0)) }
+end
+
+local function offerPrice(offer)
+  if (tonumber(offer.type) or OFFER_ITEM) == OFFER_XPBOOST then
+    local b = state.xpBoost[chosenCharacter() or '']
+    if b then return tonumber(b.price) or 0, b end
+  end
+  return tonumber(offer.price) or 0
+end
+
+-- the picture of an offer in a 32 px item slot or a creature widget
+local function paintOffer(itemWidget, creatureWidget, offer)
+  local look = offer and offerLook(offer)
+  creatureWidget:setVisible(look ~= nil)
+  itemWidget:setVisible(look == nil)
+  if look then
+    creatureWidget:setOutfit(look)
+    creatureWidget:setCenter(true)
+    creatureWidget:setAnimate(true)
+    itemWidget:setItemId(0)
+    return
+  end
+  if not offer then itemWidget:setItemId(0) return end
+  local id = (tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0
+  local kind = tonumber(offer.type) or OFFER_ITEM
+  if kind == OFFER_XPBOOST then id = XP_BOOST_PICTURE end
+  if kind ~= OFFER_ITEM and kind ~= OFFER_XPBOOST and not (tonumber(offer.clientItem) and tonumber(offer.clientItem) > 0) then id = 0 end
+  itemWidget:setItemId(id)
+end
+
 local function showOffer(offer)
   state.selected = offer
   win.details.priceBox:setVisible(offer ~= nil)
@@ -63,18 +111,33 @@ local function showOffer(offer)
     win.details.offerName:setText('')
     win.details.priceBox.offerPrice:setText('')
     win.details.descBox.offerDesc:setText('')
-    win.details.bigBox.bigItem:setItemId(0)
+    paintOffer(win.details.bigBox.bigItem, win.details.bigBox.bigCreature, nil)
     win.details.buyButton:setEnabled(false)
     return
   end
-  win.details.bigBox.bigItem:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
-  win.details.bigBox.bigItem:setItemCount(math.max(1, tonumber(offer.count) or 1))
+  local kind = tonumber(offer.type) or OFFER_ITEM
+  paintOffer(win.details.bigBox.bigItem, win.details.bigBox.bigCreature, offer)
+  win.details.bigBox.bigItem:setItemCount(kind == OFFER_ITEM and math.max(1, tonumber(offer.count) or 1) or 1)
   win.details.bigBox.bigItem:setShowCount(false)
-  local total = math.max(1, tonumber(offer.count) or 1) * math.max(1, tonumber(offer.amount) or 1)
+  local total = kind == OFFER_ITEM and math.max(1, tonumber(offer.count) or 1) * math.max(1, tonumber(offer.amount) or 1) or 1
   win.details.offerName:setText(total > 1 and (formatPoints(total) .. 'x ' .. offer.name) or offer.name)
-  win.details.priceBox.offerPrice:setText(formatPoints(offer.price))
-  win.details.descBox.offerDesc:setText(offer.description or '')
-  win.details.buyButton:setEnabled(true)
+  local price, boost = offerPrice(offer)
+  local desc = offer.description or ''
+  local canBuy = true
+  if boost then
+    if boost.active then
+      desc = tr('%s still has an experience boost running.', chosenCharacter()) .. '\n\n' .. desc
+      canBuy = false
+    elseif price <= 0 then
+      desc = tr('%s already bought 5 XP Boosts today. More from 10:00 server time.', chosenCharacter()) .. '\n\n' .. desc
+      canBuy = false
+    else
+      desc = tr('XP Boosts bought today by %s: %d of 5.', chosenCharacter(), tonumber(boost.bought) or 0) .. '\n\n' .. desc
+    end
+  end
+  win.details.priceBox.offerPrice:setText(price > 0 and formatPoints(price) or '-')
+  win.details.descBox.offerDesc:setText(desc)
+  win.details.buyButton:setEnabled(canBuy)
 end
 
 local function fillOffers()
@@ -89,11 +152,12 @@ local function fillOffers()
     if tonumber(offer.category) == state.category then
       local row = g_ui.createWidget('StoreOffer', win.offersBox.offers)
       row.offer = offer
-      row.itemBox.item:setItemId((tonumber(offer.clientItem) ~= nil and tonumber(offer.clientItem) > 0 and tonumber(offer.clientItem)) or tonumber(offer.item) or 0)
-      row.itemBox.item:setItemCount(math.max(1, tonumber(offer.count) or 1))
+      paintOffer(row.itemBox.item, row.itemBox.creature, offer)
+      row.itemBox.item:setItemCount((tonumber(offer.type) or OFFER_ITEM) == OFFER_ITEM and math.max(1, tonumber(offer.count) or 1) or 1)
       row.name:setText(offer.name)
       row.name:setTooltip(offer.name)
-      row.priceBox.price:setText(formatPoints(offer.price))
+      local price = offerPrice(offer)
+      row.priceBox.price:setText(price > 0 and formatPoints(price) or '-')
       first = first or row
     end
   end
@@ -125,6 +189,8 @@ local function applyInfo(data)
   state.offers = data.offers or {}
   state.categories = data.categories or {}
   state.characters = data.characters or {}
+  state.sexes = type(data.sexes) == 'table' and data.sexes or {}
+  state.xpBoost = type(data.xpBoost) == 'table' and data.xpBoost or {}
   if data.buyUrl and data.buyUrl:sub(1, 4):lower() == 'http' then state.buyUrl = data.buyUrl end
   state.admin = data.admin == true
   -- the staff's tools take room only from the staff's window
@@ -173,19 +239,23 @@ function buy()
   if not offer or state.busy then return end
   local character = win.details.charBox:getCurrentOption().text
   if not character or character == '' then return end
+  local price = offerPrice(offer)
+  if price <= 0 then return end
   local box
   local function yes()
     box:destroy()
     setStatus(tr('Processing...'))
     local rid = string.format('%08x%08x', math.random(0, 0x7fffffff), os.time())
-    call({ action = 'buy', offer = tonumber(offer.id), character = character, requestId = rid }, function(data)
+    call({ action = 'buy', offer = tonumber(offer.id), character = character, requestId = rid, price = price }, function(data)
       win.pointsBox.pointsLabel:setText(formatPoints(data.points or 0))
       setStatus(data.message or tr('Purchase complete.'), '#7fd37a')
+      -- the next XP Boost costs more, and outfits look different per character: the offers again
+      if (tonumber(offer.type) or OFFER_ITEM) ~= OFFER_ITEM then refresh() end
     end)
   end
   local function no() box:destroy() end
   box = displayGeneralBox(tr('Confirm purchase'),
-    tr('Buy %s for %s points?\nIt will be delivered to %s.', offer.name, formatPoints(offer.price), character),
+    tr('Buy %s for %s points?\nIt will be delivered to %s.', offer.name, formatPoints(price), character),
     { { text = tr('Yes'), callback = yes }, { text = tr('No'), callback = no }, anchor = AnchorHorizontalCenter },
     yes, no)
 end
@@ -233,7 +303,7 @@ function adminEdit(editing)
       count = math.max(1, numberOf(w.count)), amount = math.max(1, numberOf(w.amount)),
       type = offer and tonumber(offer.type) or 0
     }
-    if o.name == '' or not o.category or o.item == 0 then return end
+    if o.name == '' or not o.category or (o.item == 0 and o.type ~= OFFER_XPBOOST) then return end
     close()
     adminCall({ action = 'admin_save', offer = o }, tr('Offer saved.'))
   end
@@ -384,6 +454,17 @@ function init()
   win.details.caption:setText(tr('Offer'))
   connect(win.categoriesBox.categories, { onChildFocusChange = function(_, c) if c and c.catId and state.category ~= c.catId then state.category = c.catId fillOffers() end end })
   connect(win.offersBox.offers, { onChildFocusChange = function(_, c) if c and c.offer then showOffer(c.offer) end end })
+  -- another character: outfits drawn for its sex, the XP Boost at its own price
+  connect(win.details.charBox, { onOptionChange = function()
+    for _, row in ipairs(win.offersBox.offers:getChildren()) do
+      if row.offer and (tonumber(row.offer.type) or OFFER_ITEM) ~= OFFER_ITEM then
+        paintOffer(row.itemBox.item, row.itemBox.creature, row.offer)
+        local price = offerPrice(row.offer)
+        row.priceBox.price:setText(price > 0 and formatPoints(price) or '-')
+      end
+    end
+    if state.selected then showOffer(state.selected) end
+  end })
   connect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })
   if g_game.isOnline() then
     adminEvent = scheduleEvent(checkAdmin, 500)

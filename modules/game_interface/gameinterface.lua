@@ -18,6 +18,24 @@ limitedZoom = false
 hookedMenuOptions = {}
 lastDirTime = g_clock.millis()
 
+-- /cliport: while the server says it is on (opcode CLIPORT_OPCODE "1"), a left click on the map or the minimap sends
+-- the sqm to the server, which puts the staff member there whatever is on it (water, walls); no path is looked for
+CLIPORT_OPCODE = 20
+cliportOn = false
+
+function onCliportState(protocol, opcode, buffer)
+  cliportOn = buffer == '1'
+end
+
+-- true when the click was sent as a cliport
+function cliportTo(pos)
+  if not cliportOn or not pos then return false end
+  local protocol = g_game.getProtocolGame()
+  if not protocol then return false end
+  protocol:sendExtendedOpcode(CLIPORT_OPCODE, pos.x .. ',' .. pos.y .. ',' .. pos.z)
+  return true
+end
+
 function init()
   g_ui.importStyle('styles/countwindow')
 
@@ -26,6 +44,7 @@ function init()
     onGameEnd = onGameEnd,
     onLoginAdvice = onLoginAdvice,
   }, true)
+  ProtocolGame.registerExtendedOpcode(CLIPORT_OPCODE, onCliportState)
 
   -- Call load AFTER game window has been created and 
   -- resized to a stable state, otherwise the saved 
@@ -104,6 +123,7 @@ function terminate()
     onGameEnd = onGameEnd,
     onLoginAdvice = onLoginAdvice
   })
+  ProtocolGame.unregisterExtendedOpcode(CLIPORT_OPCODE)
 
   disconnect(gameMapPanel, { onGeometryChange = updateSize })
   connect(gameMapPanel, { onGeometryChange = updateSize, onVisibleDimensionChange = updateSize })
@@ -114,6 +134,9 @@ end
 
 function onGameStart()
   refreshViewMode()
+  -- is /cliport on? (it is kept with the character)
+  local protocol = g_game.getProtocolGame()
+  if protocol then protocol:sendExtendedOpcode(CLIPORT_OPCODE, '?') end
   show()
   
   -- open tibia has delay in auto walking
@@ -125,6 +148,7 @@ function onGameStart()
 end
 
 function onGameEnd()
+  cliportOn = false
   hide()
   modules.client_topmenu.getTopMenu():setImageColor('white')
 end
@@ -752,6 +776,9 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
   player:stopAutoWalk()  
 
   if autoWalkPos and keyboardModifiers == KeyboardNoModifier and (mouseButton == MouseLeftButton or mouseButton == MouseTouch2 or mouseButton == MouseTouch3) then
+    if cliportTo(autoWalkPos) then
+      return true
+    end
     local autoWalkTile = g_map.getTile(autoWalkPos)
     if autoWalkTile and not autoWalkTile:isWalkable(true) then
       modules.game_textmessage.displayFailureMessage(tr('Sorry, not possible.'))

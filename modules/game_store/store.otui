@@ -125,6 +125,13 @@ StoreOffer < UIWidget
       virtual: true
       phantom: true
 
+    UICreature
+      id: creature
+      size: 48 48
+      anchors.centerIn: parent
+      phantom: true
+      visible: false
+
   StorePlate
     id: priceBox
     height: 24
@@ -288,6 +295,13 @@ MainWindow
         size: 64 64
         anchors.centerIn: parent
         virtual: true
+
+      UICreature
+        id: bigCreature
+        size: 80 80
+        anchors.centerIn: parent
+        phantom: true
+        visible: false
 
     UIWidget
       size: 18 18

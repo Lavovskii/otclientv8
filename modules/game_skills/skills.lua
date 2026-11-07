@@ -501,6 +501,8 @@ function showStats()
       tr('A critical hit raises your maximum damage to the power of %s: the stronger you hit, the more it adds.', critPower), 3037)
   end
   local inc = stats.increment or {}
+  -- the fifth: damageBoost of the amulets and rings of destruction, on every damage
+  if (inc[5] or 0) ~= 0 then line(combat, 'dmgp', tr('Damage'), percentText(inc[5]), GREEN, tipFor('dmgp', tr('Your equipment makes all the damage you do stronger: weapons, spells and runes.'), nil, percent), 3071) end
   if (inc[4] or 0) ~= 0 then line(combat, 'mdmgp', tr('Magic Damage'), percentText(inc[4]), GREEN, tipFor('mdmgp', tr('Your equipment makes your attack spells and runes stronger.'), nil, percent), 3071) end
   if (inc[3] or 0) ~= 0 then line(combat, 'mdmgv', tr('Magic Damage'), '+' .. inc[3], GREEN, tipFor('mdmgv', tr('Your equipment adds damage to your attack spells and runes.')), 3071) end
   if (inc[2] or 0) ~= 0 then line(combat, 'healp', tr('Healing'), percentText(inc[2]), GREEN, tipFor('healp', tr('Your equipment makes your healing stronger.'), nil, percent), 3160) end

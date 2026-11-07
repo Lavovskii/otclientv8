@@ -227,6 +227,10 @@ function UIMinimap:onMouseRelease(pos, button)
 
   if button == MouseLeftButton then
     local player = g_game.getLocalPlayer()
+    -- /cliport on: straight to the clicked sqm (modules/game_interface)
+    if self.autowalk and modules.game_interface and modules.game_interface.cliportTo(mapPos) then
+      return true
+    end
     if self.autowalk then
       player:autoWalk(mapPos)
     end

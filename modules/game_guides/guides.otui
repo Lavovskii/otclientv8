@@ -2145,6 +2145,109 @@ ArtBossReward < Panel
     anchors.top: chest.bottom
     text: 7 days
 
+// the magic chest: the six keys from the hunts, each with how many items of its tier it gives, and the legendary chest
+// floating open over its hoard
+ArtMagicChest < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: key1
+    size: 26 26
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 2
+    margin-top: 18
+    &itemId: 58238
+
+  GuideNote
+    anchors.horizontalCenter: key1.horizontalCenter
+    anchors.top: key1.bottom
+    text: 10
+
+  GuideItem
+    id: key2
+    size: 26 26
+    anchors.left: key1.right
+    anchors.top: key1.top
+    margin-left: 2
+    &itemId: 58239
+
+  GuideNote
+    anchors.horizontalCenter: key2.horizontalCenter
+    anchors.top: key2.bottom
+    text: 8
+
+  GuideItem
+    id: key3
+    size: 26 26
+    anchors.left: key2.right
+    anchors.top: key2.top
+    margin-left: 2
+    &itemId: 58240
+
+  GuideNote
+    anchors.horizontalCenter: key3.horizontalCenter
+    anchors.top: key3.bottom
+    text: 6
+
+  GuideItem
+    id: key4
+    size: 26 26
+    anchors.left: key3.right
+    anchors.top: key3.top
+    margin-left: 2
+    &itemId: 58241
+
+  GuideNote
+    anchors.horizontalCenter: key4.horizontalCenter
+    anchors.top: key4.bottom
+    text: 4
+
+  GuideItem
+    id: key5
+    size: 26 26
+    anchors.left: key4.right
+    anchors.top: key4.top
+    margin-left: 2
+    &itemId: 58242
+
+  GuideNote
+    anchors.horizontalCenter: key5.horizontalCenter
+    anchors.top: key5.bottom
+    text: 2
+
+  GuideItem
+    id: key6
+    size: 26 26
+    anchors.left: key5.right
+    anchors.top: key5.top
+    margin-left: 2
+    &itemId: 58243
+
+  GuideNote
+    anchors.horizontalCenter: key6.horizontalCenter
+    anchors.top: key6.bottom
+    text: 1
+
+  GuideArrow
+    id: arrow
+    anchors.left: key6.right
+    anchors.verticalCenter: key6.verticalCenter
+    margin-left: 6
+
+  GuideItem
+    id: chest
+    size: 64 64
+    anchors.left: arrow.right
+    anchors.top: parent.top
+    margin-left: 4
+    &itemId: 59431
+
+  GuideNote
+    anchors.horizontalCenter: chest.horizontalCenter
+    anchors.top: chest.bottom
+    text: a backpack
+
 // the Task Board: a monster to hunt, with more damage, items to deliver, and points for the shop
 ArtTaskBoard < Panel
   anchors.fill: parent

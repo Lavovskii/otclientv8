@@ -1399,11 +1399,11 @@ I	2119	3000	rocking horse
 I	2120	3003	rope
 I	2121	3004	wedding ring
 I	2122	3005	elven brooch
-I	2123	3006	Health Ring
+I	2123	3006	Old Health Ring
 I	2124	3007	crystal ring
 I	2125	3008	crystal necklace
 I	2126	3009	bronzen necklace
-I	2127	3010	Mana Ring
+I	2127	3010	Old Mana Ring
 I	2128	3011	crown (old)
 I	2129	3012	wolf tooth chain
 I	2130	3013	golden amulet
@@ -6489,11 +6489,11 @@ I	7435	7435	impaler
 I	7436	7436	angelic axe
 I	7437	7437	sapphire hammer
 I	7438	7438	elvish bow
-I	7439	7439	Mana Booster
+I	7439	7439	Old Mana Booster
 I	7440	7440	experience potion
 I	7441	7441	ice cube
 I	7442	7442	ice cube
-I	7443	7443	Health Booster
+I	7443	7443	Old Health Booster
 I	7444	7444	ice cube
 I	7445	7445	ice cube
 I	7446	7446	small ice statue
@@ -6747,7 +6747,7 @@ I	7693	344	flower bowl
 I	7694	345	flower bowl
 I	7695	346	flower bowl
 I	7696	5956	parchment
-I	7697	349	Pro Health Ring
+I	7697	349	Old Pro Health Ring
 I	7698	350	jewel case
 I	7699	396	beard
 I	7700	397	furniture package
@@ -7016,7 +7016,7 @@ I	7963	901	shark fish
 I	7964	902	marlin trophy
 I	7965	903	badger fur
 I	7966	904	birthday cake
-I	7967	908	Pro Mana Ring
+I	7967	908	Old Pro Mana Ring
 I	7968	908	shapeshifter ring
 I	7969	909	dead frost dragon hatchling
 I	7970	910	dead frost dragon hatchling
@@ -11480,7 +11480,7 @@ I	12539	11583	dead brimstone bug
 I	12540	11584	coconut shrimp bake
 I	12541	11585	helmet of the deep
 I	12542	11586	pot of blackjack
-I	12543	11587	Donation Coin
+I	12543	11587	ForgottenL Coin
 I	12544	11588	sweet mangonaise elixir
 I	12545	11589	the dead Glitterscale
 I	12546	11590	the dead Heoni
@@ -43865,8 +43865,8 @@ I	59330	55285	Polished Spirit Rune
 I	59331	55286	Bronze Spirit Rune
 I	59332	55287	Silver Spirit Rune
 I	59333	55288	Golden Spirit Rune
-I	59334	55289	Royal Spirit Rune
-I	59335	55290	Legendary Spirit Rune
+I	59334	55289	Spirit Booster
+I	59335	55290	Max Spirit Booster
 I	59336	55291	Crude Fire Rune
 I	59337	55292	Worn Fire Rune
 I	59338	55293	Common Fire Rune
@@ -43925,8 +43925,8 @@ I	59390	55345	Polished Holy Rune
 I	59391	55346	Bronze Holy Rune
 I	59392	55347	Silver Holy Rune
 I	59393	55348	Golden Holy Rune
-I	59394	55349	Royal Holy Rune
-I	59395	55350	Legendary Holy Rune
+I	59394	55349	Mana Booster
+I	59395	55350	Max Health Booster
 I	59396	55351	Crude Physical Rune
 I	59397	55352	Worn Physical Rune
 I	59398	55353	Common Physical Rune
@@ -44175,8 +44175,8 @@ I	59640	55595	Polished Rose Quartz Rune
 I	59641	55596	Bronze Rose Quartz Rune
 I	59642	55597	Silver Rose Quartz Rune
 I	59643	55598	Golden Rose Quartz Rune
-I	59644	55599	Royal Rose Quartz Rune
-I	59645	55600	Legendary Rose Quartz Rune
+I	59644	55599	Health Booster
+I	59645	55600	Max Mana Booster
 I	59646	55601	Crude Basalt Rune
 I	59647	55602	Worn Basalt Rune
 I	59648	55603	Common Basalt Rune
@@ -46013,7 +46013,7 @@ I	61478	57433	placeholder sprite 487756
 I	61479	57434	placeholder sprite 487757
 I	61480	57435	placeholder sprite 487758
 I	61481	57436	placeholder sprite 487759
-I	61482	57437	Spell
+I	61482	57437	Spellbook of Teaching
 I	61483	57438	Spell
 I	61484	57439	Spell
 I	61485	57440	placeholder sprite 488583
@@ -46188,14 +46188,14 @@ I	61653	57608	placeholder sprite 491730
 I	61654	57609	placeholder sprite 491754
 I	61655	57610	placeholder sprite 491778
 I	61656	57611	placeholder sprite 491814
-I	61657	57612	placeholder sprite 491850
-I	61658	57613	placeholder sprite 491874
+I	61657	57612	Amulet of Destruction
+I	61658	57613	Prestige Amulet of Destruction
 I	61659	57614	placeholder sprite 491910
 I	61660	57615	placeholder sprite 491933
 I	61661	57616	placeholder sprite 491969
 I	61662	57617	placeholder sprite 491989
-I	61663	57618	placeholder sprite 492025
-I	61664	57619	placeholder sprite 492049
+I	61663	57618	Berserker's Ring
+I	61664	57619	Prestige Berserker's Ring
 I	61665	57620	placeholder sprite 492085
 I	61666	57621	placeholder sprite 492090
 I	61667	57622	placeholder sprite 492100
@@ -46412,12 +46412,12 @@ I	61877	57832	placeholder sprite 496587
 I	61878	57833	placeholder sprite 496611
 I	61879	57834	placeholder sprite 496635
 I	61880	57835	placeholder sprite 496671
-I	61881	57836	placeholder sprite 496707
+I	61881	57836	Amulet of Protection
 I	61882	57837	placeholder sprite 496726
 I	61883	57838	placeholder sprite 496744
 I	61884	57839	placeholder sprite 496764
 I	61885	57840	placeholder sprite 496785
-I	61886	57841	placeholder sprite 496821
+I	61886	57841	Prestige Amulet of Protection
 I	61887	57842	placeholder sprite 496857
 I	61888	57843	placeholder sprite 496881
 I	61889	57844	placeholder sprite 496905
@@ -46601,9 +46601,9 @@ I	62066	58021	placeholder sprite 501389
 I	62067	58022	placeholder sprite 501425
 I	62068	58023	placeholder sprite 501443
 I	62069	58024	placeholder sprite 501463
-I	62070	58025	placeholder sprite 501486
-I	62071	58026	placeholder sprite 501510
-I	62072	58027	placeholder sprite 501546
+I	62070	58025	Mana Ring
+I	62071	58026	Pro Mana Ring
+I	62072	58027	Max Mana Ring
 I	62073	58028	placeholder sprite 501582
 I	62074	58029	placeholder sprite 501596
 I	62075	58030	placeholder sprite 501611
@@ -46631,9 +46631,9 @@ I	62096	58051	placeholder sprite 502145
 I	62097	58052	placeholder sprite 502181
 I	62098	58053	placeholder sprite 502205
 I	62099	58054	placeholder sprite 502229
-I	62100	58055	placeholder sprite 502253
-I	62101	58056	placeholder sprite 502277
-I	62102	58057	placeholder sprite 502313
+I	62100	58055	Health Ring
+I	62101	58056	Pro Health Ring
+I	62102	58057	Max Health Ring
 I	62103	58058	placeholder sprite 502349
 I	62104	58059	placeholder sprite 502358
 I	62105	58060	placeholder sprite 502371
@@ -46648,8 +46648,8 @@ I	62113	58068	placeholder sprite 502575
 I	62114	58069	placeholder sprite 502611
 I	62115	58070	placeholder sprite 502647
 I	62116	58071	placeholder sprite 502664
-I	62117	58072	placeholder sprite 502682
-I	62118	58073	placeholder sprite 502703
+I	62117	58072	Archer's Ring
+I	62118	58073	Prestige Archer's Ring
 I	62119	58074	placeholder sprite 502725
 I	62120	58075	placeholder sprite 502761
 I	62121	58076	placeholder sprite 502797
@@ -46814,12 +46814,12 @@ I	62279	58234	placeholder sprite 506857
 I	62280	58235	placeholder sprite 506874
 I	62281	58236	placeholder sprite 506894
 I	62282	58237	placeholder sprite 506930
-I	62283	58238	placeholder sprite 506966
-I	62284	58239	placeholder sprite 506976
-I	62285	58240	placeholder sprite 506987
-I	62286	58241	placeholder sprite 507003
-I	62287	58242	placeholder sprite 507020
-I	62288	58243	placeholder sprite 507055
+I	62283	58238	Bronze Key
+I	62284	58239	Iron Key
+I	62285	58240	Silver Key
+I	62286	58241	Gold Key
+I	62287	58242	Prestige Key
+I	62288	58243	Corrupt Prestige Key
 I	62289	58244	placeholder sprite 507091
 I	62290	58245	placeholder sprite 507103
 I	62291	58246	placeholder sprite 507118
@@ -47800,8 +47800,8 @@ I	63265	59220	placeholder sprite 528791
 I	63266	59221	placeholder sprite 528815
 I	63267	59222	placeholder sprite 528839
 I	63268	59223	placeholder sprite 528860
-I	63269	59224	placeholder sprite 528884
-I	63270	59225	placeholder sprite 528908
+I	63269	59224	Blessed Amulet of Loss
+I	63270	59225	Prestige Amulet of Loss
 I	63271	59226	placeholder sprite 528932
 I	63272	59227	placeholder sprite 528956
 I	63273	59228	placeholder sprite 528980
@@ -47860,9 +47860,9 @@ I	63325	59280	placeholder sprite 530099
 I	63326	59281	placeholder sprite 530123
 I	63327	59282	placeholder sprite 530147
 I	63328	59283	placeholder sprite 530171
-I	63329	59284	placeholder sprite 530195
-I	63330	59285	placeholder sprite 530218
-I	63331	59286	placeholder sprite 530242
+I	63329	59284	Prestige Seer's Ring
+I	63330	59285	Seer's Ring
+I	63331	59286	Beginner Amulet of Loss
 I	63332	59287	placeholder sprite 530251
 I	63333	59288	placeholder sprite 530275
 I	63334	59289	placeholder sprite 530299
@@ -48001,6 +48001,615 @@ I	63466	59421	placeholder sprite 533395
 I	63467	59422	placeholder sprite 533480
 I	63468	59423	placeholder sprite 533547
 I	63469	59424	placeholder sprite 533630
+I	63470	59425	violet legendary chest
+I	63471	59426	violet legendary chest
+I	63472	59427	violet legendary chest
+I	63473	59428	violet legendary chest
+I	63474	59429	violet legendary chest
+I	63475	59430	violet legendary chest
+I	63476	59431	violet legendary chest
+I	63477	59432	red legendary chest
+I	63478	59433	red legendary chest
+I	63479	59434	red legendary chest
+I	63480	59435	red legendary chest
+I	63481	59436	red legendary chest
+I	63482	59437	red legendary chest
+I	63483	59438	red legendary chest
+I	63484	59439	brown legendary chest
+I	63485	59440	brown legendary chest
+I	63486	59441	brown legendary chest
+I	63487	59442	brown legendary chest
+I	63488	59443	brown legendary chest
+I	63489	59444	brown legendary chest
+I	63490	59445	brown legendary chest
+I	63491	59446	black legendary chest
+I	63492	59447	black legendary chest
+I	63493	59448	black legendary chest
+I	63494	59449	black legendary chest
+I	63495	59450	black legendary chest
+I	63496	59451	black legendary chest
+I	63497	59452	black legendary chest
+I	63498	59453	red crystal coin
+I	63499	59454	orange crystal coin
+I	63500	59455	yellow crystal coin
+I	63501	59456	green crystal coin
+I	63502	59457	blue crystal coin
+I	63503	59458	purple crystal coin
+I	63504	59459	pink crystal coin
+I	63505	59460	white crystal coin
+I	63506	59461	black crystal coin
+I	63507	59462	rainbow coin
+I	63508	59463	placeholder sprite 534597
+I	63509	59464	placeholder sprite 534598
+I	63510	59465	placeholder sprite 534599
+I	63511	59466	placeholder sprite 534600
+I	63512	59467	placeholder sprite 534601
+I	63513	59468	placeholder sprite 534602
+I	63514	59469	placeholder sprite 534603
+I	63515	59470	placeholder sprite 534604
+I	63516	59471	placeholder sprite 534605
+I	63517	59472	placeholder sprite 534606
+I	63518	59473	placeholder sprite 534607
+I	63519	59474	placeholder sprite 534608
+I	63520	59475	placeholder sprite 534609
+I	63521	59476	placeholder sprite 534610
+I	63522	59477	placeholder sprite 534611
+I	63523	59478	placeholder sprite 534612
+I	63524	59479	placeholder sprite 534613
+I	63525	59480	placeholder sprite 534614
+I	63526	59481	placeholder sprite 534615
+I	63527	59482	placeholder sprite 534616
+I	63528	59483	placeholder sprite 534617
+I	63529	59484	placeholder sprite 534618
+I	63530	59485	placeholder sprite 534619
+I	63531	59486	placeholder sprite 534620
+I	63532	59487	placeholder sprite 534621
+I	63533	59488	placeholder sprite 534622
+I	63534	59489	placeholder sprite 534623
+I	63535	59490	placeholder sprite 534624
+I	63536	59491	placeholder sprite 534625
+I	63537	59492	placeholder sprite 534626
+I	63538	59493	placeholder sprite 534627
+I	63539	59494	placeholder sprite 534628
+I	63540	59495	placeholder sprite 534629
+I	63541	59496	placeholder sprite 534630
+I	63542	59497	placeholder sprite 534631
+I	63543	59498	placeholder sprite 534632
+I	63544	59499	placeholder sprite 534633
+I	63545	59500	placeholder sprite 534634
+I	63546	59501	placeholder sprite 534635
+I	63547	59502	placeholder sprite 534636
+I	63548	59503	placeholder sprite 534637
+I	63549	59504	placeholder sprite 534638
+I	63550	59505	placeholder sprite 534639
+I	63551	59506	placeholder sprite 534640
+I	63552	59507	placeholder sprite 534641
+I	63553	59508	placeholder sprite 534642
+I	63554	59509	placeholder sprite 534643
+I	63555	59510	placeholder sprite 534644
+I	63556	59511	placeholder sprite 534645
+I	63557	59512	placeholder sprite 534646
+I	63558	59513	placeholder sprite 534647
+I	63559	59514	placeholder sprite 534648
+I	63560	59515	placeholder sprite 534649
+I	63561	59516	placeholder sprite 534650
+I	63562	59517	placeholder sprite 534651
+I	63563	59518	placeholder sprite 534652
+I	63564	59519	placeholder sprite 534653
+I	63565	59520	placeholder sprite 534654
+I	63566	59521	placeholder sprite 534655
+I	63567	59522	placeholder sprite 534656
+I	63568	59523	placeholder sprite 534657
+I	63569	59524	placeholder sprite 534658
+I	63570	59525	placeholder sprite 534659
+I	63571	59526	placeholder sprite 534660
+I	63572	59527	placeholder sprite 534661
+I	63573	59528	placeholder sprite 534662
+I	63574	59529	placeholder sprite 534663
+I	63575	59530	placeholder sprite 534664
+I	63576	59531	placeholder sprite 534665
+I	63577	59532	placeholder sprite 534666
+I	63578	59533	placeholder sprite 534667
+I	63579	59534	placeholder sprite 534668
+I	63580	59535	placeholder sprite 534669
+I	63581	59536	placeholder sprite 534670
+I	63582	59537	placeholder sprite 534671
+I	63583	59538	placeholder sprite 534672
+I	63584	59539	placeholder sprite 534673
+I	63585	59540	placeholder sprite 534674
+I	63586	59541	placeholder sprite 534675
+I	63587	59542	placeholder sprite 534676
+I	63588	59543	placeholder sprite 534677
+I	63589	59544	placeholder sprite 534678
+I	63590	59545	placeholder sprite 534679
+I	63591	59546	placeholder sprite 534680
+I	63592	59547	placeholder sprite 534681
+I	63593	59548	placeholder sprite 534682
+I	63594	59549	placeholder sprite 534683
+I	63595	59550	placeholder sprite 534684
+I	63596	59551	placeholder sprite 534685
+I	63597	59552	placeholder sprite 534686
+I	63598	59553	placeholder sprite 534687
+I	63599	59554	placeholder sprite 534688
+I	63600	59555	placeholder sprite 534689
+I	63601	59556	placeholder sprite 534690
+I	63602	59557	placeholder sprite 534691
+I	63603	59558	placeholder sprite 534692
+I	63604	59559	placeholder sprite 534693
+I	63605	59560	placeholder sprite 534694
+I	63606	59561	placeholder sprite 534695
+I	63607	59562	placeholder sprite 534696
+I	63608	59563	placeholder sprite 534697
+I	63609	59564	placeholder sprite 534698
+I	63610	59565	placeholder sprite 534699
+I	63611	59566	placeholder sprite 534700
+I	63612	59567	placeholder sprite 534701
+I	63613	59568	placeholder sprite 534702
+I	63614	59569	placeholder sprite 534703
+I	63615	59570	placeholder sprite 534704
+I	63616	59571	placeholder sprite 534705
+I	63617	59572	placeholder sprite 534706
+I	63618	59573	placeholder sprite 534707
+I	63619	59574	placeholder sprite 534708
+I	63620	59575	placeholder sprite 534709
+I	63621	59576	placeholder sprite 534710
+I	63622	59577	placeholder sprite 534711
+I	63623	59578	placeholder sprite 534712
+I	63624	59579	placeholder sprite 534713
+I	63625	59580	placeholder sprite 534714
+I	63626	59581	placeholder sprite 534715
+I	63627	59582	placeholder sprite 534716
+I	63628	59583	placeholder sprite 534717
+I	63629	59584	placeholder sprite 534718
+I	63630	59585	placeholder sprite 534719
+I	63631	59586	placeholder sprite 534720
+I	63632	59587	placeholder sprite 534721
+I	63633	59588	placeholder sprite 534722
+I	63634	59589	placeholder sprite 534723
+I	63635	59590	placeholder sprite 534724
+I	63636	59591	placeholder sprite 534725
+I	63637	59592	placeholder sprite 534726
+I	63638	59593	placeholder sprite 534727
+I	63639	59594	placeholder sprite 534728
+I	63640	59595	placeholder sprite 534729
+I	63641	59596	placeholder sprite 534730
+I	63642	59597	placeholder sprite 534731
+I	63643	59598	placeholder sprite 534732
+I	63644	59599	placeholder sprite 534733
+I	63645	59600	placeholder sprite 534734
+I	63646	59601	placeholder sprite 534735
+I	63647	59602	placeholder sprite 534736
+I	63648	59603	placeholder sprite 534737
+I	63649	59604	placeholder sprite 534738
+I	63650	59605	placeholder sprite 534739
+I	63651	59606	placeholder sprite 534740
+I	63652	59607	placeholder sprite 534741
+I	63653	59608	placeholder sprite 534742
+I	63654	59609	placeholder sprite 534743
+I	63655	59610	placeholder sprite 534744
+I	63656	59611	placeholder sprite 534745
+I	63657	59612	placeholder sprite 534746
+I	63658	59613	placeholder sprite 534747
+I	63659	59614	placeholder sprite 534748
+I	63660	59615	placeholder sprite 534749
+I	63661	59616	placeholder sprite 534750
+I	63662	59617	placeholder sprite 534751
+I	63663	59618	placeholder sprite 534752
+I	63664	59619	placeholder sprite 534753
+I	63665	59620	placeholder sprite 534754
+I	63666	59621	placeholder sprite 534755
+I	63667	59622	placeholder sprite 534756
+I	63668	59623	placeholder sprite 534757
+I	63669	59624	placeholder sprite 534758
+I	63670	59625	placeholder sprite 534759
+I	63671	59626	placeholder sprite 534760
+I	63672	59627	placeholder sprite 534761
+I	63673	59628	placeholder sprite 534762
+I	63674	59629	placeholder sprite 534763
+I	63675	59630	placeholder sprite 534764
+I	63676	59631	placeholder sprite 534765
+I	63677	59632	placeholder sprite 534766
+I	63678	59633	placeholder sprite 534767
+I	63679	59634	placeholder sprite 534768
+I	63680	59635	placeholder sprite 534769
+I	63681	59636	placeholder sprite 534770
+I	63682	59637	placeholder sprite 534771
+I	63683	59638	placeholder sprite 534772
+I	63684	59639	placeholder sprite 534773
+I	63685	59640	placeholder sprite 534774
+I	63686	59641	placeholder sprite 534775
+I	63687	59642	placeholder sprite 534776
+I	63688	59643	placeholder sprite 534777
+I	63689	59644	placeholder sprite 534778
+I	63690	59645	placeholder sprite 534779
+I	63691	59646	placeholder sprite 534780
+I	63692	59647	placeholder sprite 534781
+I	63693	59648	placeholder sprite 534782
+I	63694	59649	placeholder sprite 534783
+I	63695	59650	placeholder sprite 534784
+I	63696	59651	placeholder sprite 534785
+I	63697	59652	placeholder sprite 534786
+I	63698	59653	placeholder sprite 534787
+I	63699	59654	placeholder sprite 534788
+I	63700	59655	placeholder sprite 534789
+I	63701	59656	placeholder sprite 534790
+I	63702	59657	placeholder sprite 534791
+I	63703	59658	placeholder sprite 534792
+I	63704	59659	placeholder sprite 534793
+I	63705	59660	placeholder sprite 534794
+I	63706	59661	placeholder sprite 534795
+I	63707	59662	placeholder sprite 534796
+I	63708	59663	placeholder sprite 534797
+I	63709	59664	placeholder sprite 534798
+I	63710	59665	placeholder sprite 534799
+I	63711	59666	placeholder sprite 534800
+I	63712	59667	placeholder sprite 534801
+I	63713	59668	placeholder sprite 534802
+I	63714	59669	placeholder sprite 534803
+I	63715	59670	placeholder sprite 534804
+I	63716	59671	placeholder sprite 534805
+I	63717	59672	placeholder sprite 534806
+I	63718	59673	placeholder sprite 534807
+I	63719	59674	placeholder sprite 534808
+I	63720	59675	placeholder sprite 534809
+I	63721	59676	placeholder sprite 534810
+I	63722	59677	placeholder sprite 534811
+I	63723	59678	placeholder sprite 534812
+I	63724	59679	placeholder sprite 534813
+I	63725	59680	placeholder sprite 534814
+I	63726	59681	placeholder sprite 534815
+I	63727	59682	placeholder sprite 534816
+I	63728	59683	placeholder sprite 534817
+I	63729	59684	placeholder sprite 534818
+I	63730	59685	placeholder sprite 534819
+I	63731	59686	placeholder sprite 534820
+I	63732	59687	placeholder sprite 534821
+I	63733	59688	placeholder sprite 534822
+I	63734	59689	placeholder sprite 534823
+I	63735	59690	placeholder sprite 534824
+I	63736	59691	placeholder sprite 534825
+I	63737	59692	placeholder sprite 534826
+I	63738	59693	placeholder sprite 534827
+I	63739	59694	placeholder sprite 534828
+I	63740	59695	placeholder sprite 534829
+I	63741	59696	placeholder sprite 534830
+I	63742	59697	placeholder sprite 534831
+I	63743	59698	placeholder sprite 534832
+I	63744	59699	placeholder sprite 534833
+I	63745	59700	placeholder sprite 534834
+I	63746	59701	placeholder sprite 534835
+I	63747	59702	placeholder sprite 534836
+I	63748	59703	placeholder sprite 534837
+I	63749	59704	placeholder sprite 534838
+I	63750	59705	placeholder sprite 534839
+I	63751	59706	placeholder sprite 534840
+I	63752	59707	placeholder sprite 534841
+I	63753	59708	placeholder sprite 534842
+I	63754	59709	placeholder sprite 534843
+I	63755	59710	placeholder sprite 534844
+I	63756	59711	placeholder sprite 534845
+I	63757	59712	placeholder sprite 534846
+I	63758	59713	placeholder sprite 534847
+I	63759	59714	placeholder sprite 534848
+I	63760	59715	placeholder sprite 534849
+I	63761	59716	placeholder sprite 534850
+I	63762	59717	placeholder sprite 534851
+I	63763	59718	placeholder sprite 534852
+I	63764	59719	placeholder sprite 534853
+I	63765	59720	placeholder sprite 534854
+I	63766	59721	placeholder sprite 534855
+I	63767	59722	placeholder sprite 534856
+I	63768	59723	placeholder sprite 534857
+I	63769	59724	placeholder sprite 534858
+I	63770	59725	placeholder sprite 534859
+I	63771	59726	placeholder sprite 534860
+I	63772	59727	placeholder sprite 534861
+I	63773	59728	placeholder sprite 534862
+I	63774	59729	placeholder sprite 534863
+I	63775	59730	placeholder sprite 534864
+I	63776	59731	placeholder sprite 534865
+I	63777	59732	placeholder sprite 534866
+I	63778	59733	placeholder sprite 534867
+I	63779	59734	placeholder sprite 534868
+I	63780	59735	placeholder sprite 534869
+I	63781	59736	placeholder sprite 534870
+I	63782	59737	placeholder sprite 534871
+I	63783	59738	placeholder sprite 534872
+I	63784	59739	placeholder sprite 534873
+I	63785	59740	placeholder sprite 534874
+I	63786	59741	placeholder sprite 534875
+I	63787	59742	placeholder sprite 534876
+I	63788	59743	placeholder sprite 534877
+I	63789	59744	placeholder sprite 534878
+I	63790	59745	placeholder sprite 534879
+I	63791	59746	placeholder sprite 534880
+I	63792	59747	placeholder sprite 534881
+I	63793	59748	placeholder sprite 534882
+I	63794	59749	placeholder sprite 534883
+I	63795	59750	placeholder sprite 534884
+I	63796	59751	placeholder sprite 534885
+I	63797	59752	placeholder sprite 534886
+I	63798	59753	placeholder sprite 534887
+I	63799	59754	placeholder sprite 534888
+I	63800	59755	placeholder sprite 534889
+I	63801	59756	placeholder sprite 534890
+I	63802	59757	placeholder sprite 534891
+I	63803	59758	placeholder sprite 534892
+I	63804	59759	placeholder sprite 534893
+I	63805	59760	placeholder sprite 534894
+I	63806	59761	placeholder sprite 534895
+I	63807	59762	placeholder sprite 534896
+I	63808	59763	placeholder sprite 534897
+I	63809	59764	placeholder sprite 534898
+I	63810	59765	placeholder sprite 534899
+I	63811	59766	placeholder sprite 534900
+I	63812	59767	placeholder sprite 534901
+I	63813	59768	placeholder sprite 534902
+I	63814	59769	placeholder sprite 534903
+I	63815	59770	placeholder sprite 534904
+I	63816	59771	placeholder sprite 534905
+I	63817	59772	placeholder sprite 534906
+I	63818	59773	placeholder sprite 534907
+I	63819	59774	placeholder sprite 534908
+I	63820	59775	placeholder sprite 534909
+I	63821	59776	placeholder sprite 534910
+I	63822	59777	placeholder sprite 534911
+I	63823	59778	placeholder sprite 534912
+I	63824	59779	placeholder sprite 534913
+I	63825	59780	placeholder sprite 534914
+I	63826	59781	placeholder sprite 534915
+I	63827	59782	placeholder sprite 534916
+I	63828	59783	placeholder sprite 534917
+I	63829	59784	placeholder sprite 534918
+I	63830	59785	placeholder sprite 534919
+I	63831	59786	placeholder sprite 534920
+I	63832	59787	placeholder sprite 534921
+I	63833	59788	placeholder sprite 534922
+I	63834	59789	placeholder sprite 534923
+I	63835	59790	placeholder sprite 534924
+I	63836	59791	placeholder sprite 534925
+I	63837	59792	placeholder sprite 534926
+I	63838	59793	placeholder sprite 534927
+I	63839	59794	placeholder sprite 534928
+I	63840	59795	placeholder sprite 534929
+I	63841	59796	placeholder sprite 534930
+I	63842	59797	placeholder sprite 534931
+I	63843	59798	placeholder sprite 534932
+I	63844	59799	placeholder sprite 534933
+I	63845	59800	placeholder sprite 534934
+I	63846	59801	placeholder sprite 534935
+I	63847	59802	placeholder sprite 534936
+I	63848	59803	placeholder sprite 534937
+I	63849	59804	placeholder sprite 534938
+I	63850	59805	placeholder sprite 534939
+I	63851	59806	placeholder sprite 534940
+I	63852	59807	placeholder sprite 534941
+I	63853	59808	placeholder sprite 534942
+I	63854	59809	placeholder sprite 534943
+I	63855	59810	placeholder sprite 534944
+I	63856	59811	placeholder sprite 534945
+I	63857	59812	placeholder sprite 534946
+I	63858	59813	placeholder sprite 534947
+I	63859	59814	placeholder sprite 534948
+I	63860	59815	placeholder sprite 534949
+I	63861	59816	placeholder sprite 534950
+I	63862	59817	placeholder sprite 534951
+I	63863	59818	placeholder sprite 534952
+I	63864	59819	placeholder sprite 534953
+I	63865	59820	placeholder sprite 534954
+I	63866	59821	placeholder sprite 534955
+I	63867	59822	placeholder sprite 534956
+I	63868	59823	placeholder sprite 534957
+I	63869	59824	placeholder sprite 534958
+I	63870	59825	placeholder sprite 534959
+I	63871	59826	placeholder sprite 534960
+I	63872	59827	placeholder sprite 534961
+I	63873	59828	placeholder sprite 534962
+I	63874	59829	placeholder sprite 534963
+I	63875	59830	placeholder sprite 534964
+I	63876	59831	placeholder sprite 534965
+I	63877	59832	placeholder sprite 534966
+I	63878	59833	placeholder sprite 534967
+I	63879	59834	placeholder sprite 534968
+I	63880	59835	placeholder sprite 534969
+I	63881	59836	placeholder sprite 534970
+I	63882	59837	placeholder sprite 534971
+I	63883	59838	placeholder sprite 534972
+I	63884	59839	placeholder sprite 534973
+I	63885	59840	placeholder sprite 534974
+I	63886	59841	placeholder sprite 534975
+I	63887	59842	placeholder sprite 534976
+I	63888	59843	placeholder sprite 534977
+I	63889	59844	placeholder sprite 534978
+I	63890	59845	placeholder sprite 534979
+I	63891	59846	placeholder sprite 534980
+I	63892	59847	placeholder sprite 534981
+I	63893	59848	placeholder sprite 534982
+I	63894	59849	placeholder sprite 534983
+I	63895	59850	placeholder sprite 534984
+I	63896	59851	placeholder sprite 534985
+I	63897	59852	placeholder sprite 534986
+I	63898	59853	placeholder sprite 534987
+I	63899	59854	placeholder sprite 534988
+I	63900	59855	placeholder sprite 534989
+I	63901	59856	placeholder sprite 534990
+I	63902	59857	placeholder sprite 534991
+I	63903	59858	placeholder sprite 534992
+I	63904	59859	placeholder sprite 534993
+I	63905	59860	placeholder sprite 534994
+I	63906	59861	placeholder sprite 534995
+I	63907	59862	placeholder sprite 534996
+I	63908	59863	placeholder sprite 534997
+I	63909	59864	placeholder sprite 534998
+I	63910	59865	placeholder sprite 534999
+I	63911	59866	placeholder sprite 535000
+I	63912	59867	placeholder sprite 535001
+I	63913	59868	placeholder sprite 535002
+I	63914	59869	placeholder sprite 535003
+I	63915	59870	placeholder sprite 535004
+I	63916	59871	placeholder sprite 535005
+I	63917	59872	placeholder sprite 535006
+I	63918	59873	placeholder sprite 535007
+I	63919	59874	placeholder sprite 535008
+I	63920	59875	placeholder sprite 535009
+I	63921	59876	placeholder sprite 535010
+I	63922	59877	placeholder sprite 535011
+I	63923	59878	placeholder sprite 535012
+I	63924	59879	placeholder sprite 535013
+I	63925	59880	placeholder sprite 535014
+I	63926	59881	placeholder sprite 535015
+I	63927	59882	placeholder sprite 535016
+I	63928	59883	placeholder sprite 535017
+I	63929	59884	placeholder sprite 535018
+I	63930	59885	placeholder sprite 535019
+I	63931	59886	placeholder sprite 535020
+I	63932	59887	placeholder sprite 535021
+I	63933	59888	placeholder sprite 535022
+I	63934	59889	placeholder sprite 535023
+I	63935	59890	placeholder sprite 535024
+I	63936	59891	placeholder sprite 535025
+I	63937	59892	placeholder sprite 535026
+I	63938	59893	placeholder sprite 535027
+I	63939	59894	placeholder sprite 535028
+I	63940	59895	placeholder sprite 535029
+I	63941	59896	placeholder sprite 535030
+I	63942	59897	placeholder sprite 535031
+I	63943	59898	placeholder sprite 535032
+I	63944	59899	placeholder sprite 535033
+I	63945	59900	placeholder sprite 535034
+I	63946	59901	placeholder sprite 535035
+I	63947	59902	placeholder sprite 535036
+I	63948	59903	placeholder sprite 535037
+I	63949	59904	placeholder sprite 535038
+I	63950	59905	placeholder sprite 535039
+I	63951	59906	placeholder sprite 535040
+I	63952	59907	placeholder sprite 535041
+I	63953	59908	placeholder sprite 535042
+I	63954	59909	placeholder sprite 535043
+I	63955	59910	placeholder sprite 535044
+I	63956	59911	placeholder sprite 535045
+I	63957	59912	placeholder sprite 535046
+I	63958	59913	placeholder sprite 535047
+I	63959	59914	placeholder sprite 535048
+I	63960	59915	placeholder sprite 535049
+I	63961	59916	placeholder sprite 535050
+I	63962	59917	placeholder sprite 535051
+I	63963	59918	placeholder sprite 535052
+I	63964	59919	placeholder sprite 535053
+I	63965	59920	placeholder sprite 535054
+I	63966	59921	placeholder sprite 535055
+I	63967	59922	placeholder sprite 535056
+I	63968	59923	placeholder sprite 535057
+I	63969	59924	placeholder sprite 535058
+I	63970	59925	placeholder sprite 535059
+I	63971	59926	placeholder sprite 535060
+I	63972	59927	placeholder sprite 535061
+I	63973	59928	placeholder sprite 535062
+I	63974	59929	placeholder sprite 535063
+I	63975	59930	placeholder sprite 535064
+I	63976	59931	placeholder sprite 535065
+I	63977	59932	placeholder sprite 535066
+I	63978	59933	placeholder sprite 535067
+I	63979	59934	placeholder sprite 535068
+I	63980	59935	placeholder sprite 535069
+I	63981	59936	placeholder sprite 535070
+I	63982	59937	placeholder sprite 535071
+I	63983	59938	placeholder sprite 535072
+I	63984	59939	placeholder sprite 535073
+I	63985	59940	placeholder sprite 535074
+I	63986	59941	placeholder sprite 535075
+I	63987	59942	placeholder sprite 535076
+I	63988	59943	placeholder sprite 535077
+I	63989	59944	placeholder sprite 535078
+I	63990	59945	placeholder sprite 535079
+I	63991	59946	placeholder sprite 535080
+I	63992	59947	placeholder sprite 535081
+I	63993	59948	placeholder sprite 535082
+I	63994	59949	placeholder sprite 535083
+I	63995	59950	placeholder sprite 535084
+I	63996	59951	placeholder sprite 535085
+I	63997	59952	placeholder sprite 535086
+I	63998	59953	placeholder sprite 535087
+I	63999	59954	placeholder sprite 535088
+I	64000	59955	placeholder sprite 535089
+I	64001	59956	placeholder sprite 535090
+I	64002	59957	placeholder sprite 535091
+I	64003	59958	placeholder sprite 535092
+I	64004	59959	placeholder sprite 535093
+I	64005	59960	placeholder sprite 535094
+I	64006	59961	placeholder sprite 535095
+I	64007	59962	placeholder sprite 535096
+I	64008	59963	placeholder sprite 535097
+I	64009	59964	placeholder sprite 535098
+I	64010	59965	placeholder sprite 535099
+I	64011	59966	placeholder sprite 535100
+I	64012	59967	placeholder sprite 535101
+I	64013	59968	placeholder sprite 535102
+I	64014	59969	placeholder sprite 535103
+I	64015	59970	placeholder sprite 535104
+I	64016	59971	placeholder sprite 535105
+I	64017	59972	placeholder sprite 535106
+I	64018	59973	placeholder sprite 535107
+I	64019	59974	placeholder sprite 535108
+I	64020	59975	placeholder sprite 535109
+I	64021	59976	placeholder sprite 535110
+I	64022	59977	placeholder sprite 535111
+I	64023	59978	placeholder sprite 535112
+I	64024	59979	placeholder sprite 535113
+I	64025	59980	placeholder sprite 535114
+I	64026	59981	placeholder sprite 535115
+I	64027	59982	placeholder sprite 535116
+I	64028	59983	placeholder sprite 535117
+I	64029	59984	placeholder sprite 535118
+I	64030	59985	placeholder sprite 535119
+I	64031	59986	placeholder sprite 535120
+I	64032	59987	placeholder sprite 535121
+I	64033	59988	placeholder sprite 535122
+I	64034	59989	placeholder sprite 535123
+I	64035	59990	placeholder sprite 535124
+I	64036	59991	placeholder sprite 535125
+I	64037	59992	placeholder sprite 535126
+I	64038	59993	placeholder sprite 535127
+I	64039	59994	placeholder sprite 535128
+I	64040	59995	placeholder sprite 535129
+I	64041	59996	placeholder sprite 535130
+I	64042	59997	placeholder sprite 535131
+I	64043	59998	placeholder sprite 535132
+I	64044	59999	placeholder sprite 535133
+I	64045	60000	placeholder sprite 535134
+I	64046	60001	placeholder sprite 535135
+I	64047	60002	placeholder sprite 535136
+I	64048	60003	placeholder sprite 535137
+I	64049	60004	placeholder sprite 535138
+I	64050	60005	placeholder sprite 535139
+I	64051	60006	placeholder sprite 535140
+I	64052	60007	placeholder sprite 535141
+I	64053	60008	placeholder sprite 535142
+I	64054	60009	placeholder sprite 535143
+I	64055	60010	placeholder sprite 535144
+I	64056	60011	placeholder sprite 535145
+I	64057	60012	placeholder sprite 535146
+I	64058	60013	placeholder sprite 535147
+I	64059	60014	placeholder sprite 535148
+I	64060	60015	placeholder sprite 535149
+I	64061	60016	healing rune tier 1
+I	64062	60017	healing rune tier 2
+I	64063	60018	healing rune tier 3
+I	64064	60019	healing rune tier 4
+I	64065	60020	healing rune tier 5
+I	64066	60021	healing rune tier 6
+I	64067	60022	mana rune tier 1
+I	64068	60023	mana rune tier 2
+I	64069	60024	mana rune tier 3
+I	64070	60025	mana rune tier 4
+I	64071	60026	mana rune tier 5
+I	64072	60027	mana rune tier 6
+I	64073	60028	spirit rune tier 1
+I	64074	60029	spirit rune tier 2
+I	64075	60030	spirit rune tier 3
+I	64076	60031	spirit rune tier 4
+I	64077	60032	spirit rune tier 5
+I	64078	60033	spirit rune tier 6
 O	1	1	
 O	2	2	monster Cursed Orc, monster Orc Warlord
 O	3	3	
@@ -48290,7 +48899,7 @@ O	318	318
 O	319	319	
 O	320	320	monster HiDamage
 O	321	321	monster Insector
-O	322	322	monster Sacred Ratzor
+O	322	322	monster Sacred Ratzor, monster Grave Hound
 O	323	323	monster Elora
 O	324	324	outfit Yalaharian, monster Dark Kriminal
 O	325	325	outfit Yalaharian
@@ -48302,7 +48911,7 @@ O	330	330	monster Snake Scout
 O	331	331	
 O	332	332	npc Lord Chaos [NPC]
 O	333	333	monster Lord of Destruction, monster Metallic Guy
-O	334	334	monster Shalamandar Wielder
+O	334	334	monster Shalamandar wielder
 O	335	335	outfit Warmaster
 O	336	336	outfit Warmaster
 O	337	337	
@@ -48315,7 +48924,7 @@ O	343	343
 O	344	344	monster Terminator
 O	345	345	monster 345, monster Almighty Reaperz
 O	346	346	monster Epic Ant
-O	347	347	monster Death Ant
+O	347	347	monster Widow Matriarch, monster Death Ant
 O	348	348	monster Spinor
 O	349	349	monster Floating Ants
 O	350	350	monster Little Ant
@@ -48419,9 +49028,9 @@ O	452	452
 O	453	453	
 O	454	454	
 O	455	455	
-O	456	456	
+O	456	456	monster Colossal Crawler
 O	457	457	
-O	458	458	
+O	458	458	monster Scarab Tyrant
 O	459	459	
 O	460	460	
 O	461	461	
@@ -48432,14 +49041,14 @@ O	465	465
 O	466	466	
 O	467	467	
 O	470	470	
-O	471	471	
-O	472	472	
+O	471	471	outfit Entrepreneur
+O	472	472	outfit Entrepreneur
 O	473	473	
 O	486	486	
 O	487	487	
 O	488	488	
 O	489	489	
-O	490	490	
+O	490	490	monster Iron Juggernaut
 O	491	491	monster Lava Landlord
 O	492	492	
 O	493	493	
@@ -48459,7 +49068,7 @@ O	507	507
 O	508	508	
 O	509	509	
 O	510	510	
-O	511	511	
+O	511	511	monster Glacial Wyrm
 O	512	512	
 O	513	513	
 O	514	514	
@@ -48495,7 +49104,7 @@ O	551	551
 O	552	552	
 O	553	553	
 O	554	554	
-O	555	555	
+O	555	555	monster Night Baron
 O	556	556	
 O	557	557	
 O	558	558	
@@ -48537,7 +49146,7 @@ O	595	595
 O	596	596	
 O	598	598	
 O	599	599	
-O	600	600	
+O	600	600	monster Steel Golem
 O	601	601	
 O	602	602	
 O	603	603	
@@ -48566,22 +49175,22 @@ O	628	628	mount Jade Pincer
 O	629	629	mount Nethersteed
 O	630	630	mount Tempest
 O	631	631	mount Winter King
-O	632	632	
-O	633	633	
-O	634	634	
-O	635	635	
-O	636	636	
-O	637	637	
+O	632	632	outfit Champion
+O	633	633	outfit Champion
+O	634	634	outfit Conjurer
+O	635	635	outfit Conjurer
+O	636	636	outfit Beastmaster
+O	637	637	outfit Beastmaster
 O	644	644	mount Doombringer
 O	647	647	mount Woodland Prince
 O	648	648	mount Hailstorm Fury
 O	649	649	mount Siegebreaker
 O	650	650	mount Poisonbane
 O	651	651	mount Blackpelt
-O	664	664	
-O	665	665	
-O	666	666	
-O	667	667	
+O	664	664	outfit Chaos Acolyte
+O	665	665	outfit Chaos Acolyte
+O	666	666	outfit Death Herald
+O	667	667	outfit Death Herald
 O	668	668	
 O	669	669	mount Golden Dragonfly
 O	670	670	mount Steel Bee
@@ -48589,15 +49198,15 @@ O	671	671	mount Copper Fly
 O	672	672	mount Tundra Rambler
 O	673	673	mount Highland Yak
 O	674	674	mount Glacier Vagabond
-O	675	675	
+O	675	675	monster Serpent Overlord
 O	676	676	
 O	677	677	
 O	679	679	
 O	680	680	
 O	681	681	
 O	682	682	mount Glooth Glider
-O	683	683	
-O	684	684	
+O	683	683	outfit Ranger
+O	684	684	outfit Ranger
 O	685	685	mount Shadow Hart
 O	686	686	mount Black Stag
 O	687	687	mount Emperor Deer
@@ -48607,28 +49216,28 @@ O	690	690	mount Floating Kashmir
 O	691	691	mount Ringtail Waccoon
 O	692	692	mount Night Waccoon
 O	693	693	mount Emerald Waccoon
-O	694	694	
-O	695	695	
-O	696	696	
-O	697	697	
-O	698	698	
-O	699	699	
+O	694	694	outfit Ceremonial Garb
+O	695	695	outfit Ceremonial Garb
+O	696	696	outfit Puppeteer
+O	697	697	outfit Puppeteer
+O	698	698	outfit Spirit Caller
+O	699	699	outfit Spirit Caller
 O	712	712	
 O	714	714	
 O	716	716	
 O	717	717	
 O	720	720	monster Sir Naps A Lot
 O	721	721	
-O	724	724	
-O	725	725	
+O	724	724	outfit Evoker
+O	725	725	outfit Evoker
 O	726	726	mount Flitterkatzen
 O	727	727	mount Venompaw
 O	728	728	mount Batcat
 O	729	729	
 O	730	730	
 O	731	731	
-O	732	732	
-O	733	733	
+O	732	732	outfit Seaweaver
+O	733	733	outfit Seaweaver
 O	734	734	mount Sea Devil
 O	735	735	mount Coralripper
 O	736	736	mount Plumfish
@@ -48638,10 +49247,10 @@ O	740	740	mount Silverneck
 O	745	745	
 O	746	746	
 O	747	747	
-O	749	749	
-O	750	750	
-O	759	759	
-O	760	760	
+O	749	749	outfit Sea Dog
+O	750	750	outfit Sea Dog
+O	759	759	outfit Royal Pumpkin
+O	760	760	outfit Royal Pumpkin
 O	761	761	mount Slagsnare
 O	762	762	mount Nightstinger
 O	763	763	mount Razorcreep
@@ -48654,11 +49263,11 @@ O	848	848	mount Rift Runner
 O	849	849	mount Nightdweller
 O	850	850	mount Frostflare
 O	851	851	mount Cinderhoof
-O	852	852	
-O	853	853	
+O	852	852	outfit Winter Warden
+O	853	853	outfit Winter Warden
 O	854	854	
 O	855	855	
-O	856	856	
+O	856	856	monster Hellfire Executioner
 O	857	857	
 O	858	858	
 O	859	859	
@@ -48668,8 +49277,8 @@ O	863	863
 O	868	868	mount Mouldpincer
 O	869	869	mount Bloodcurl
 O	870	870	mount Leafscuttler
-O	873	873	
-O	874	874	
+O	873	873	outfit Philosopher
+O	874	874	outfit Philosopher
 O	875	875	
 O	876	876	
 O	877	877	
@@ -48678,15 +49287,15 @@ O	879	879
 O	881	881	
 O	882	882	
 O	883	883	mount Sparkion
-O	884	884	
-O	885	885	
+O	884	884	outfit Arena Champion
+O	885	885	outfit Arena Champion
 O	886	886	mount Swamp Snapper
 O	887	887	mount Mould Shell
 O	888	888	mount Reed Lurker
 O	889	889	mount Neon Sparkid
 O	890	890	mount Vortexion
-O	899	899	
-O	900	900	
+O	899	899	outfit Lupine Warden
+O	900	900	outfit Lupine Warden
 O	901	901	mount Ivory Fang
 O	902	902	mount Shadow Claw
 O	903	903	mount Snow Pelt
@@ -48694,8 +49303,8 @@ O	904	904
 O	905	905	mount Jackalope
 O	906	906	mount Dreadhare
 O	907	907	mount Wolpertinger
-O	908	908	
-O	909	909	
+O	908	908	outfit Grove Keeper
+O	909	909	outfit Grove Keeper
 O	910	910	
 O	913	913	
 O	914	914	
@@ -48732,27 +49341,27 @@ O	949	949
 O	950	950	mount Gold Sphinx
 O	951	951	mount Emerald Sphinx
 O	952	952	mount Shadow Sphinx
-O	955	955	
-O	956	956	
-O	957	957	
-O	958	958	
+O	955	955	outfit Pharaoh
+O	956	956	outfit Pharaoh
+O	957	957	outfit Trophy Hunter
+O	958	958	outfit Trophy Hunter
 O	959	959	mount Jungle Saurian
 O	960	960	mount Ember Saurian
 O	961	961	mount Lagoon Saurian
-O	962	962	
-O	963	963	
-O	964	964	
-O	965	965	
-O	966	966	
-O	967	967	
-O	968	968	
-O	969	969	
-O	970	970	
-O	971	971	
-O	972	972	
-O	973	973	
-O	974	974	
-O	975	975	
+O	962	962	outfit Retro Warrior
+O	963	963	outfit Retro Warrior
+O	964	964	outfit Retro Summoner
+O	965	965	outfit Retro Summoner
+O	966	966	outfit Retro Noble
+O	967	967	outfit Retro Noble
+O	968	968	outfit Retro Mage
+O	969	969	outfit Retro Mage
+O	970	970	outfit Retro Knight
+O	971	971	outfit Retro Knight
+O	972	972	outfit Retro Hunter
+O	973	973	outfit Retro Hunter
+O	974	974	outfit Retro Citizen
+O	975	975	outfit Retro Citizen
 O	976	976	
 O	977	977	
 O	978	978	
@@ -48777,10 +49386,10 @@ O	1016	1016
 O	1017	1017	mount Blazing Unicorn
 O	1018	1018	mount Arctic Unicorn
 O	1019	1019	mount Prismatic unicorn
-O	1020	1020	
-O	1021	1021	
-O	1023	1023	
-O	1024	1024	
+O	1020	1020	outfit Herbalist
+O	1021	1021	outfit Herbalist
+O	1023	1023	outfit Sun Priest
+O	1024	1024	outfit Sun Priest
 O	1025	1025	mount Cranium Spider
 O	1026	1026	mount Cave Tarantula
 O	1027	1027	mount Gloom Widow
@@ -48805,21 +49414,21 @@ O	1046	1046
 O	1047	1047	
 O	1048	1048	
 O	1049	1049	mount Mole
-O	1050	1050	
-O	1051	1051	
+O	1050	1050	outfit Siege Master
+O	1051	1051	outfit Siege Master
 O	1052	1052	mount Marsh Toad
 O	1053	1053	mount Sanguine Frog
 O	1054	1054	mount Toxic Toad
 O	1055	1055	
-O	1056	1056	
-O	1057	1057	
+O	1056	1056	outfit Mercenary
+O	1057	1057	outfit Mercenary
 O	1058	1058	
 O	1059	1059	
 O	1060	1060	
 O	1061	1061	
 O	1062	1062	
 O	1063	1063	
-O	1064	1064	
+O	1064	1064	monster Tar Defiler
 O	1065	1065	
 O	1066	1066	
 O	1067	1067	
@@ -48840,8 +49449,8 @@ O	1093	1093	mount Jungle Tiger
 O	1094	1094	
 O	1095	1095	
 O	1101	1101	mount Fleeting Knowledge
-O	1102	1102	
-O	1103	1103	
+O	1102	1102	outfit Sinister Archer
+O	1103	1103	outfit Sinister Archer
 O	1104	1104	mount Tawny Owl
 O	1105	1105	mount Snowy Owl
 O	1106	1106	mount Boreal Owl
@@ -48865,8 +49474,8 @@ O	1123	1123
 O	1124	1124	
 O	1125	1125	
 O	1126	1126	
-O	1127	1127	
-O	1128	1128	
+O	1127	1127	outfit Pumpkin Mummy
+O	1128	1128	outfit Pumpkin Mummy
 O	1129	1129	
 O	1130	1130	
 O	1131	1131	
@@ -48901,8 +49510,8 @@ O	1166	1166
 O	1167	1167	mount Festive Snowman
 O	1168	1168	mount Muffled Snowman
 O	1169	1169	mount Caped Snowman
-O	1173	1173	
-O	1174	1174	
+O	1173	1173	outfit Owl Keeper
+O	1174	1174	outfit Owl Keeper
 O	1175	1175	
 O	1179	1179	mount Rabbit Rickshaw
 O	1180	1180	mount Bunny Dray
@@ -48910,8 +49519,8 @@ O	1181	1181	mount Cony Cart
 O	1183	1183	mount River Crocovile
 O	1184	1184	mount Swamp Crocovile
 O	1185	1185	mount Nightmarish Crocovile
-O	1186	1186	
-O	1187	1187	
+O	1186	1186	outfit Guidon Bearer
+O	1187	1187	outfit Guidon Bearer
 O	1188	1188	
 O	1189	1189	
 O	1190	1190	
@@ -48922,10 +49531,10 @@ O	1197	1197
 O	1199	1199	
 O	1200	1200	
 O	1201	1201	
-O	1202	1202	
-O	1203	1203	
-O	1204	1204	
-O	1205	1205	
+O	1202	1202	outfit Void Master
+O	1203	1203	outfit Void Master
+O	1204	1204	outfit Veteran Paladin
+O	1205	1205	outfit Veteran Paladin
 O	1206	1206	
 O	1207	1207	
 O	1208	1208	mount Jousting Eagle
@@ -48951,8 +49560,8 @@ O	1233	1233	mount Bright Percht Sleigh Final
 O	1234	1234	mount Dark Percht Sleigh Final
 O	1243	1243	
 O	1244	1244	
-O	1245	1245	
-O	1246	1246	
+O	1245	1245	outfit Breezy Garb
+O	1246	1246	outfit Breezy Garb
 O	1247	1247	mount Battle Badger
 O	1248	1248	mount Ether Badger
 O	1249	1249	mount Zaoan Badger
@@ -48970,7 +49579,7 @@ O	1262	1262
 O	1264	1264	mount Floating Sage
 O	1265	1265	mount Floating Scholar
 O	1266	1266	mount Floating Augur
-O	1268	1268	
+O	1268	1268	monster Cursed Revenant
 O	1269	1269	mount Haze
 O	1270	1270	
 O	1271	1271	
@@ -48979,8 +49588,8 @@ O	1275	1275
 O	1276	1276	
 O	1277	1277	
 O	1278	1278	
-O	1279	1279	
-O	1280	1280	
+O	1279	1279	outfit Herder
+O	1280	1280	outfit Herder
 O	1281	1281	mount Antelope
 O	1282	1282	
 O	1283	1283	
@@ -48991,8 +49600,8 @@ O	1288	1288
 O	1289	1289	
 O	1290	1290	
 O	1291	1291	
-O	1292	1292	
-O	1293	1293	
+O	1292	1292	outfit Trailblazer
+O	1293	1293	outfit Trailblazer
 O	1294	1294	
 O	1295	1295	
 O	1296	1296	
@@ -49014,7 +49623,7 @@ O	1312	1312
 O	1313	1313	
 O	1314	1314	
 O	1315	1315	
-O	1316	1316	
+O	1316	1316	monster Fallen Monarch
 O	1317	1317	
 O	1321	1321	mount Phantasmal Jade
 O	1322	1322	
@@ -49022,15 +49631,15 @@ O	1323	1323
 O	1324	1324	mount Savanna Ostrich
 O	1325	1325	mount Coral Rhea
 O	1326	1326	mount Eventide Nandu
-O	1331	1331	
-O	1332	1332	
+O	1331	1331	outfit Jouster
+O	1332	1332	outfit Jouster
 O	1333	1333	mount Voracious Hyaena
 O	1334	1334	mount Cunning Hyaena
 O	1335	1335	mount Scruffy Hyaena
 O	1336	1336	mount White Lion
 O	1337	1337	
-O	1338	1338	
-O	1339	1339	
+O	1338	1338	outfit Moth Cape
+O	1339	1339	outfit Moth Cape
 O	1341	1341	
 O	1342	1342	
 O	1344	1344	
@@ -49048,10 +49657,10 @@ O	1378	1378
 O	1379	1379	mount Merry Mammoth
 O	1380	1380	mount Holiday Mammoth
 O	1381	1381	mount Festive Mammoth
-O	1382	1382	
-O	1383	1383	
-O	1384	1384	
-O	1385	1385	
+O	1382	1382	outfit Merry Garb
+O	1383	1383	outfit Merry Garb
+O	1384	1384	outfit Rune Master
+O	1385	1385	outfit Rune Master
 O	1386	1386	
 O	1387	1387	
 O	1389	1389	mount Void Watcher
@@ -49072,8 +49681,8 @@ O	1408	1408
 O	1412	1412	
 O	1413	1413	
 O	1414	1414	
-O	1415	1415	
-O	1416	1416	
+O	1415	1415	outfit Forest Warden
+O	1416	1416	outfit Forest Warden
 O	1417	1417	mount Phant
 O	1418	1418	
 O	1419	1419	
@@ -49089,13 +49698,13 @@ O	1437	1437
 O	1439	1439	mount Hyacinth
 O	1440	1440	mount Peony
 O	1441	1441	mount Dandelion
-O	1444	1444	
-O	1445	1445	
+O	1444	1444	outfit Dragon Knight
+O	1445	1445	outfit Dragon Knight
 O	1446	1446	mount Rustwurm
 O	1447	1447	mount Bogwurm
 O	1448	1448	mount Gloomwurm
-O	1449	1449	
-O	1450	1450	
+O	1449	1449	outfit Arbalester
+O	1450	1450	outfit Arbalester
 O	1453	1453	mount Emerald Raven
 O	1454	1454	mount Mystic Raven
 O	1455	1455	mount Radiant Raven
@@ -49111,13 +49720,13 @@ O	1466	1466
 O	1467	1467	
 O	1468	1468	
 O	1469	1469	
-O	1489	1489	
-O	1490	1490	
+O	1489	1489	outfit Ghost Blade
+O	1490	1490	outfit Ghost Blade
 O	1491	1491	mount Topaz Shrine
 O	1492	1492	mount Jade Shrine
 O	1493	1493	mount Obsidian Shrine
-O	1500	1500	
-O	1501	1501	
+O	1500	1500	outfit Nordic Chieftain
+O	1501	1501	outfit Nordic Chieftain
 O	1526	1526	mount Poppy ibex
 O	1527	1527	mount Mint ibex
 O	1528	1528	mount Cinnamon ibex
@@ -49148,21 +49757,21 @@ O	1558	1558
 O	1559	1559	
 O	1560	1560	
 O	1561	1561	
-O	1562	1562	
+O	1562	1562	monster Azure Marid
 O	1565	1565	
 O	1566	1566	
 O	1567	1567	
 O	1568	1568	
 O	1569	1569	
 O	1570	1570	
-O	1575	1575	
-O	1576	1576	
+O	1575	1575	outfit Fencer
+O	1576	1576	outfit Fencer
 O	1577	1577	mount Noxious Ripptor
 O	1578	1578	mount Parade Horse
 O	1579	1579	mount Jousting Horse
 O	1580	1580	mount Tourney Horse
-O	1581	1581	
-O	1582	1582	
+O	1581	1581	outfit Shadowlotus Disciple
+O	1582	1582	outfit Shadowlotus Disciple
 O	1584	1584	
 O	1585	1585	
 O	1586	1586	
@@ -49190,13 +49799,13 @@ O	1608	1608	mount Tangerine Flecked Koi
 O	1609	1609	mount Brass Speckled Koi
 O	1610	1610	mount Ink Spotted Koi
 O	1611	1611	
-O	1612	1612	
-O	1613	1613	
+O	1612	1612	outfit Frost Tracer
+O	1613	1613	outfit Frost Tracer
 O	1615	1615	mount Frostbringer
 O	1616	1616	mount Winterstride
 O	1617	1617	mount Icebreacher
-O	1618	1618	
-O	1619	1619	
+O	1618	1618	outfit Armoured Archer
+O	1619	1619	outfit Armoured Archer
 O	1620	1620	
 O	1621	1621	
 O	1622	1622	
@@ -49242,8 +49851,8 @@ O	1674	1674	mount Obstinate Ox
 O	1675	1675	
 O	1676	1676	
 O	1677	1677	mount Darkfire Devourer
-O	1680	1680	
-O	1681	1681	
+O	1680	1680	outfit Flamefury Mage
+O	1681	1681	outfit Flamefury Mage
 O	1682	1682	mount Spirit of Purity
 O	1683	1683	
 O	1684	1684	
@@ -49361,8 +49970,8 @@ O	1826	1826
 O	1827	1827	
 O	1828	1828	
 O	1830	1830	
-O	1831	1831	
-O	1832	1832	
+O	1831	1831	outfit Winged Druid
+O	1832	1832	outfit Winged Druid
 O	1833	1833	mount Night Locust
 O	1834	1834	mount Leaf Locust
 O	1835	1835	mount Pearl Locust
@@ -49662,6 +50271,9 @@ O	2129	2129	outfit citizen-king
 O	2130	2130	outfit citizen-king
 O	2131	2131	outfit citizen-crown
 O	2132	2132	outfit citizen-crown
+O	2143	2143	outfit Santa Claus
+O	2144	2144	outfit Mrs Claus
+O	2145	2145	mount Reindeer
 M	368	1	Widow Queen
 M	369	2	Racing Bird
 M	370	3	War Bear
@@ -49899,8 +50511,9 @@ M	1833	234	Night Locust
 M	1834	235	Leaf Locust
 M	1835	236	Pearl Locust
 M	2039	237	Gloom Maw
-P	Custom		1678 1679 1680 1681 1682 1684 1952 2123 2127 2153 2154 2155 2156 2183 2188 2195 2196 2217 2262 2263 2264 2265 2267 2268 2270 2272 2273 2274 2275 2276 2280 2281 2282 2283 2284 2294 2296 2297 2298 2299 2300 2306 2307 2312 2314 2315 2316 2345 2393 2433 2470 2474 2501 2505 2507 2641 2645 2649 2656 3975 3982 4865 5462 5468 5741 5785 5802 5808 5907 5909 5910 5911 5912 5913 5914 5943 5956 5958 6087 6103 6119 6132 6527 6546 6574 7242 7286 7289 7290 7342 7390 7413 7415 7416 7421 7427 7431 7435 7438 7439 7443 7461 7489 7590 7591 7618 7620 7632 7633 7697 7702 7730 7892 7967 8205 8298 8299 8300 8301 8302 8304 8305 8306 8310 8472 8474 8762 8889 8920 8927 8977 8981 8982 9003 9020 9079 9109 9117 9653 9662 9688 9692 9693 9735 9933 9970 9971 9992 10006 10016 10050 10061 10062 10063 10064 10105 10107 10136 10209 10383 10393 10502 10503 10511 10512 10513 10514 10515 10516 10518 10523 10719 10927 10941 11106 11116 11134 11230 11231 11259 11303 11304 11307 11308 11316 11323 11329 11336 11356 11361 11396 11397 11399 11401 11402 11424 11426 11427 12497 12543 12646 12648 13564 13565 13566 13567 13568 13569 13570 13571 13582 13946 13947 14344 14348 15404 15407 15409 15410 15434 15435 15436 15489 15490 15643 15647 15651 16003 16004 16005 16006 16015 16105 16106 16112 18390 18398 18399 18400 18401 18403 18404 18405 18406 18410 18430 18450 18495 18496 20090 20620 20625 21394 21476 21482 21489 21700 21725 22403 22409 22415 22418 22424 23546 23547 23589 23743 23773 24114 24774 24807 24808 24816 24826 25368 25369 25420 25421 25422 25423 25424 25425 25426 25430 25431 25522 25535 26209 26210 26211 26212 26339 27053 27581 27583 27899 28741 28742 29603 29604 30105 30108 30110 30111 30113 30178 30347 30348 30349 30350 30351 30352 30356 30358 30359 30496 31279 31280 31281 31282 31390 31393 31509 31515 31516 31517 31518 31520 31521 31543 32074 32087 32598 32599 32600 32601 32711 32743 32744 32839 32840 32973 33018 33019 33020 33021 33022 33023 33050 33938 34028 34099 34138 34238 34278 34279 34280 34370 34371 34372 34373 34388 34733 34753 34755 34756 35074 35234 35235 35236 35237 35254 35275 35351 35352 35382 36576 36577 36578 36579 36580 36581 36582 36584 36735 36748 36749 36750 36752 36753 36755 36756 36757 36758 36759 36865 36920 36921 36922 36923 37947 38180 38256 38257 38258 38259 38266 38268 38269 38550 39134 39135 39136 39137 39322 39447 39448 39449 39450 39451 39452 39469 39584 39585 39638 39639 39640 39641 39650 39652 39653 39654 39655 39658 39710 39711 39712 39713 39717 39718 39719 39720 40381 40382 40433 40434 40435 40469 40473 40485 40511 40513 40515 40583 40584 40661 40662 40760 40762 40923 40924 40926 40927 40928 40929 40930 40931 40932 40933 40946 40947 40948 40951 40958 40963 40964 42855 44034 44181 44182 44183 44191 44198 44703 45582 48875 54523 55137 55175 55178 55181 55245 55246 55251 55260 55268 55281 56285 56305 56534 56535 56666 56667 56668 56669 56670 56671 56672 56673 56674 56675 56676 56677 56678 56679 56680 56681 56682 56683 56684 56685 56686 56687 56688 56689 56690 56691 56692 56693 56694 56695 56696 56697 56698 56699 56700 56701 56702 56703 56704 56705 56706 56707 56708 56709 56710 56711 56712 56713 56714 56715 56716 56717 56718 56719 56720 56721 56722 56723 56724 56725 56726 56727 56728 56729 56730 56731 56732 56733 56734 56735 56736 56737 56738 56739 56740 56741 56742 56743 56744 56745 56746 56747 56748 56749 56750 56751 56752 56753 56754 56755 56756 56757 56758 56759 56760 56761 56762 56763 56764 56765 56766 59138 59139 59306 59307 59308 59309 59310 59311 59312 59313 59314 59315 59316 59317 59318 59319 59320 59321 59322 59323 59324 59325 59326 59327 59328 59329 59330 59331 59332 59333 59334 59335 59336 59337 59338 59339 59340 59341 59342 59343 59344 59345 59346 59347 59348 59349 59350 59351 59352 59353 59354 59355 59356 59357 59358 59359 59360 59361 59362 59363 59364 59365 59366 59367 59368 59369 59370 59371 59372 59373 59374 59375 59376 59377 59378 59379 59380 59381 59382 59383 59384 59385 59386 59387 59388 59389 59390 59391 59392 59393 59394 59395 59396 59397 59398 59399 59400 59401 59402 59403 59404 59405 59406 59407 59408 59409 59410 59411 59412 59413 59414 59415 59416 59417 59418 59419 59420 59421 59422 59423 59424 59425 59426 59427 59428 59429 59430 59431 59432 59433 59434 59435 59436 59437 59438 59439 59440 59441 59442 59443 59444 59445 59446 59447 59448 59449 59450 59451 59452 59453 59454 59455 59456 59457 59458 59459 59460 59461 59462 59463 59464 59465 59466 59467 59468 59469 59470 59471 59472 59473 59474 59475 59476 59477 59478 59479 59480 59481 59482 59483 59484 59485 59486 59487 59488 59489 59490 59491 59492 59493 59494 59495 59496 59497 59498 59499 59500 59501 59502 59503 59504 59505 59506 59507 59508 59509 59510 59511 59512 59513 59514 59515 59516 59517 59518 59519 59520 59521 59522 59523 59524 59525 59526 59527 59528 59529 59530 59531 59532 59533 59534 59535 59536 59537 59538 59539 59540 59541 59542 59543 59544 59545 59546 59547 59548 59549 59550 59551 59552 59553 59554 59555 59556 59557 59558 59559 59560 59561 59562 59563 59564 59565 59566 59567 59568 59569 59570 59571 59572 59573 59574 59575 59576 59577 59578 59579 59580 59581 59582 59583 59584 59585 59586 59587 59588 59589 59590 59591 59592 59593 59594 59595 59596 59597 59598 59599 59600 59601 59602 59603 59604 59605 59606 59607 59608 59609 59610 59611 59612 59613 59614 59615 59616 59617 59618 59619 59620 59621 59622 59623 59624 59625 59626 59627 59628 59629 59630 59631 59632 59633 59634 59635 59636 59637 59638 59639 59640 59641 59642 59643 59644 59645 59646 59647 59648 59649 59650 59651 59652 59653 59654 59655 59656 59657 59658 59659 59660 59661 59662 59663 59664 59665 59666 59667 59668 59669 59670 59671 59672 59673 59674 59675 59676 59677 59678 59679 59680 59681 59682 59683 59684 59685 59686 59687 59688 59689 59690 59691 59692 59693 59694 59695 59696 59697 59698 59699 59700 59701 59702 59703 59704 59705 59706 59707 59708 59709 59710 59711 59712 59713 59714 59715 59716 59717 59718 59719 59720 59721 59722 59723 59724 59725 59726 59727 59728 59729 59730 59731 59732 59733 59734 59735 59736 59737 59738 59739 59740 59741 59742 59743 59744 59745 59746 59747 59748 59749 59750 59751 59752 59753 59754 59755 59756 59757 59758 59759 59760 59761 59762 59763 59764 59765 59766 59767 59768 59769 59770 59771 59772 59773 59774 59775 59776 59777 59778 59779 59780 59781 59782 59783 59784 59785 59786 59787 59788 59789 59790 59791 59792 59793 59794 59795 59796 59797 59798 59799 59800 59801 59802 59803 59804 59805 59806 59807 59808 59809 59810 59811 59812 59813 59814 59815 59816 59817 59818 59819 59820 59821 59822 59823 59824 59825 59826 59827 59828 59829 59830 59831 59832 59833 59834 59835 59836 59837 59838 59839 59840 59841 59842 59843 59844 59845 59846 59847 59848 59849 59850 59851 59852 59853 59854 59855 59856 59857 59858 59859 59860 59861 59862 59863 59864 59865 59866 59867 59868 59869 59870 59871 59872 59873 59874 59875 59876 59877 59878 59879 59880 59881 59882 59883 59884 59885 59886 59887 59888 59889 59890 59891 59892 59893 59894 59895 59896 59897 59898 59899 59900 59901 59902 59903 59904 59905 59906 59907 59908 59909 59910 59911 59912 59913 59914 59915 59916 59917 59918 59919 59920 59921 59922 59923 59924 59925 59926 59927 59928 59929 59930 59931 59932 59933 59934 59935 59936 59937 59938 59939 59940 59941 59942 59943 59944 59945 59946 59947 59948 59949 59950 59951 59952 59953 59954 59955 59956 59957 59958 59959 59960 59961 59962 59963 59964 59965 59966 59967 59968 59969 59970 59971 59972 59973 59974 59975 59976 59977 59978 59979 59980 59981 59982 59983 59984 59985 59986 59987 59988 59989 59990 59991 59992 59993 59994 59995 59996 59997 59998 59999 60000 60001 60002 60003 60004 60005 60006 60007 60008 60009 60010 60011 60012 60013 60014 60015 60016 60017 60018 60019 60020 60021 60022 60023 60024 60025 60026 60027 60028 60029 60030 60031 60032 60033 60034 60035 60036 60037 60038 60039 60040 60041 60042 60043 60044 60045 60046 60047 60048 60049 60050 60051 60052 60053 60054 60055 60056 60057 60058 60059 60060 60061 60062 60063 60064 60065 60066 60067 60068 60069 60070 60071 60072 60073 60074 60075 60076 60077 60078 60079 60080 60081 60082 60083 60084 60085 60086 60087 60088 60089 60090 60091 60092 60093 60094 60095 60096 60097 60098 60099 60100 60101 60102 60103 60104 60105 60106 60107 60108 60109 60110 60111 60112 60113 60114 60115 60116 60117 60118 60119 60120 60121 60122 60123 60124 60125 60126 60127 60128 60129 60130 60131 60132 60133 60134 60135 60136 60137 60138 60139 60140 60141 60142 60143 60144 60145 60146 60147 60148 60149 60150 60151 60152 60153 60154 60155 60156 60157 60158 60159 60160 60161 60162 60163 60164 60165 60166 60167 60168 60169 60170 60171 60172 60173 60174 60175 60176 60177 60178 60179 60180 60181 60182 60183 60184 60185 60186 60187 60188 60189 60190 60191 60192 60193 60194 60195 60196 60197 60198 60199 60200 60201 60202 60203 60204 60205 60206 60207 60208 60209 60210 60211 60212 60213 60214 60215 60216 60217 60218 60219 60220 60221 60222 60223 60224 60225 60226 60227 60228 60229 60230 60231 60232 60233 60234 60235 60236 60237 60238 60239 60240 60241 60242 60243 60244 60245 60246 60247 60248 60249 60250 60251 60252 60253 60254 60255 60256 60257 60258 60259 60260 60261 60262 60263 60264 60265 60266 60267 60268 60269 60270 60271 60272 60273 60274 60275 60276 60277 60278 60279 60280 60281 60282 60283 60284 60285 60286 60287 60288 60289 60290 60291 60292 60293 60294 60295 60296 60297 60298 60299 60300 60301 60302 60303 60304 60305 60306 60307 60308 60309 60310 60311 60312 60313 60314 60315 60316 60317 60318 60319 60320 60321 60322 60323 60324 60325 60326 60327 60328 60329 60330 60331 60332 60333 60334 60335 60336 60337 60338 60339 60340 60341 60342 60343 60344 60345 60346 60347 60348 60349 60350 60351 60352 60353 60354 60355 60356 60357 60358 60359 60360 60361 60362 60363 60364 60365 60366 60367 60368 60369 60370 60371 60372 60373 60374 60375 60376 60377 60378 60379 60380 60381 60382 60383 60384 60385 60386 60387 60388 60389 60390 60391 60392 60393 60394 60395 60396 60397 60398 60399 60400 60401 60402 60403 60404 60405 60406 60407 60408 60409 60410 60411 60412 60413 60414 60415 60416 60417 60418 60419 60420 60421 60422 60423 60424 60425 60426 60427 60428 60429 60430 60431 60432 60433 60434 60435 60436 60437 60438 60439 60440 60441 60442 60443 60444 60445 60446 60447 60448 60449 60450 60451 60452 60453 60454 60455 60456 60457 60458 60459 60460 60461 60462 60463 60464 60465 60466 60467 60468 60469 60470 60471 60472 60473 60474 60475 60476 60477 60478 60479 60480 60481 60482 60483 60484 60485 60486 60487 60488 60489 60490 60491 60492 60493 60494 60495 60496 60497 60498 60499 60500 60501 60502 60503 60504 60505 60506 60507 60508 60509 60510 60511 60512 60513 60514 60515 60516 60517 60518 60519 60520 60521 60522 60523 60524 60525 60526 60527 60528 60529 60530 60531 60532 60533 60534 60535 60536 60537 60538 60539 60540 60541 60542 60543 60544 60545 60546 60547 60548 60549 60550 60551 60552 60553 60554 60555 60556 60557 60558 60559 60560 60561 60562 60563 60564 60565 60566 60567 60568 60569 60570 60571 60572 60573 60574 60575 60576 60577 60578 60579 60580 60581 60582 60583 60584 60585 60586 60587 60588 60589 60590 60591 60592 60593 60594 60595 60596 60597 60598 60599 60600 60601 60602 60603 60604 60605 60606 60607 60608 60609 60610 60611 60612 60613 60614 60615 60616 60617 60618 60619 60620 60621 60622 60623 60624 60625 60626 60627 60628 60629 60630 60631 60632 60633 60634 60635 60636 60637 60638 60639 60640 60641 60642 60643 60644 60645 60646 60647 60648 60649 60650 60651 60652 60653 60654 60655 60656 60657 60658 60659 60660 60661 60662 60663 60664 60665 60666 60667 60668 60669 60670 60671 60672 60673 60674 60675 60676 60677 60678 60679 60680 60681 60682 60683 60684 60685 60686 60687 60688 60689 60690 60691 60692 60693 60694 60695 60696 60697 60698 60699 60700 60701 60702 60703 60704 60705 60706 60707 60708 60709 60710 60711 60712 60713 60714 60715 60716 60717 60718 60719 60720 60721 60722 60723 60724 60725 60726 60727 60728 60729 60730 60731 60732 60733 60734 60735 60736 60737 60738 60739 60740 60741 60742 60743 60744 60745 60746 60747 60748 60749 60750 60751 60752 60753 60754 60755 60756 60757 60758 60759 60760 60761 60762 60763 60764 60765 60766 60767 60768 60769 60770 60771 60772 60773 60774 60775 60776 60777 60778 60779 60780 60781 60782 60783 60784 60785 60786 60787 60788 60789 60790 60791 60792 60793 60794 60795 60796 60797 60798 60799 60800 60801 60802 60803 60804 60805 60806 60807 60808 60809 60810 60811 60812 60813 60814 60815 60816 60817 60818 60819 60820 60821 60822 60823 60824 60825 60826 60827 60828 60829 60830 60831 60832 60833 60834 60835 60836 60837 60838 60839 60840 60841 60842 60843 60844 60845 60846 60847 60848 60849 60850 60851 60852 60853 60854 60855 60856 60857 60858 60859 60860 60861 60862 60863 60864 60865 60866 60867 60868 60869 60870 60871 60872 60873 60874 60875 60876 60877 60878 60879 60880 60881 60882 60883 60884 60885 60886 60887 60888 60889 60890 60891 60892 60893 60894 60895 60896 60897 60898 60899 60900 60901 60902 60903 60904 60905 60906 60907 60908 60909 60910 60911 60912 60913 60914 60915 60916 60917 60918 60919 60920 60921 60922 60923 60924 60925 60926 60927 60928 60929 60930 60931 60932 60933 60934 60935 60936 60937 60938 60939 60940 60941 60942 60943 60944 60945 60946 60947 60948 60949 60950 60951 60952 60953 60954 60955 60956 60957 60958 60959 60960 60961 60962 60963 60964 60965 60966 60967 60968 60969 60970 60971 60972 60973 60974 60975 60976 60977 60978 60979 60980 60981 60982 60983 60984 60985 60986 60987 60988 60989 60990 60991 60992 60993 60994 60995 60996 60997 60998 60999 61000 61001 61002 61003 61004 61005 61006 61007 61008 61009 61010 61011 61012 61013 61014 61015 61016 61017 61018 61019 61020 61021 61022 61023 61024 61025 61026 61027 61028 61029 61030 61031 61032 61033 61034 61035 61036 61037 61038 61039 61040 61041 61042 61043 61044 61045 61046 61047 61048 61049 61050 61051 61052 61053 61054 61055 61056 61057 61058 61059 61060 61061 61062 61063 61064 61065 61066 61067 61068 61069 61070 61071 61072 61073 61074 61075 61076 61077 61078 61079 61080 61081 61082 61083 61084 61085 61086 61087 61088 61089 61090 61091 61092 61093 61094 61095 61096 61097 61098 61099 61100 61101 61102 61103 61104 61105 61106 61107 61108 61109 61110 61111 61112 61113 61114 61115 61116 61117 61118 61119 61120 61121 61122 61123 61124 61125 61126 61127 61128 61129 61130 61131 61132 61133 61134 61135 61136 61137 61138 61139 61140 61141 61142 61143 61144 61145 61146 61147 61148 61149 61150 61151 61152 61153 61154 61155 61156 61157 61158 61159 61160 61161 61162 61163 61164 61165 61166 61167 61168 61169 61170 61171 61172 61173 61174 61175 61176 61177 61178 61179 61180 61181 61182 61183 61184 61185 61186 61187 61188 61189 61190 61191 61192 61193 61194 61195 61196 61197 61198 61199 61200 61201 61202 61203 61204 61205 61206 61207 61208 61209 61210 61211 61212 61213 61214 61215 61216 61217 61218 61219 61220 61221 61222 61223 61224 61225 61226 61227 61228 61229 61230 61231 61232 61233 61234 61235 61236 61237 61238 61239 61240 61241 61242 61243 61244 61245 61246 61247 61248 61249 61250 61251 61252 61253 61254 61255 61256 61257 61258 61259 61260 61261 61262 61263 61264 61265 61266 61267 61268 61269 61270 61271 61272 61273 61274 61275 61276 61277 61278 61279 61280 61281 61282 61283 61284 61285 61286 61287 61288 61289 61290 61291 61292 61293 61294 61295 61296 61297 61298 61299 61300 61301 61302 61303 61304 61305 61306 61307 61308 61309 61310 61311 61312 61313 61314 61315 61316 61317 61318 61319 61320 61321 61322 61323 61324 61325 61326 61327 61328 61329 61330 61331 61332 61333 61334 61335 61336 61337 61338 61339 61340 61341 61342 61343 61344 61345 61346 61347 61348 61349 61350 61351 61352 61353 61354 61355 61356 61357 61358 61359 61360 61361 61362 61363 61364 61365 61366 61367 61368 61369 61370 61371 61372 61373 61374 61375 61376 61377 61378 61379 61380 61381 61382 61383 61384 61385 61386 61387 61388 61389 61390 61391 61392 61393 61394 61395 61396 61397 61398 61399 61400 61401 61402 61403 61404 61405 61406 61407 61408 61409 61410 61411 61412 61413 61414 61415 61416 61417 61418 61419 61420 61421 61422 61423 61424 61425 61426 61427 61428 61429 61430 61431 61432 61433 61434 61435 61436 61437 61438 61439 61440 61441 61442 61443 61444 61445 61446 61447 61448 61449 61450 61451 61452 61453 61454 61455 61456 61457 61458 61459 61460 61461 61462 61463 61464 61465 61466 61467 61468 61469 61470 61471 61472 61473 61474 61475 61476 61477 61478 61479 61480 61481 61482 61483 61484 61485 61486 61487 61488 61489 61490 61491 61492 61493 61494 61495 61496 61497 61498 61499 61500 61501 61502 61503 61504 61505 61506 61507 61508 61509 61510 61511 61512 61513 61514 61515 61516 61517 61518 61519 61520 61521 61522 61523 61524 61525 61526 61527 61528 61529 61530 61531 61532 61533 61534 61535 61536 61537 61538 61539 61540 61541 61542 61543 61544 61545 61546 61547 61548 61549 61550 61551 61552 61553 61554 61555 61556 61557 61558 61559 61560 61561 61562 61563 61564 61565 61566 61567 61568 61569 61570 61571 61572 61573 61574 61575 61576 61577 61578 61579 61580 61581 61582 61583 61584 61585 61586 61587 61588 61589 61590 61591 61592 61593 61594 61595 61596 61597 61598 61599 61600 61601 61602 61603 61604 61605 61606 61607 61608 61609 61610 61611 61612 61613 61614 61615 61616 61617 61618 61619 61620 61621 61622 61623 61624 61625 61626 61627 61628 61629 61630 61631 61632 61633 61634 61635 61636 61637 61638 61639 61640 61641 61642 61643 61644 61645 61646 61647 61648 61649 61650 61651 61652 61653 61654 61655 61656 61657 61658 61659 61660 61661 61662 61663 61664 61665 61666 61667 61668 61669 61670 61671 61672 61673 61674 61675 61676 61677 61678 61679 61680 61681 61682 61683 61684 61685 61686 61687 61688 61689 61690 61691 61692 61693 61694 61695 61696 61697 61698 61699 61700 61701 61702 61703 61704 61705 61706 61707 61708 61709 61710 61711 61712 61713 61714 61715 61716 61717 61718 61719 61720 61721 61722 61723 61724 61725 61726 61727 61728 61729 61730 61731 61732 61733 61734 61735 61736 61737 61738 61739 61740 61741 61742 61743 61744 61745 61746 61747 61748 61749 61750 61751 61752 61753 61754 61755 61756 61757 61758 61759 61760 61761 61762 61763 61764 61765 61766 61767 61768 61769 61770 61771 61772 61773 61774 61775 61776 61777 61778 61779 61780 61781 61782 61783 61784 61785 61786 61787 61788 61789 61790 61791 61792 61793 61794 61795 61796 61797 61798 61799 61800 61801 61802 61803 61804 61805 61806 61807 61808 61809 61810 61811 61812 61813 61814 61815 61816 61817 61818 61819 61820 61821 61822 61823 61824 61825 61826 61827 61828 61829 61830 61831 61832 61833 61834 61835 61836 61837 61838 61839 61840 61841 61842 61843 61844 61845 61846 61847 61848 61849 61850 61851 61852 61853 61854 61855 61856 61857 61858 61859 61860 61861 61862 61863 61864 61865 61866 61867 61868 61869 61870 61871 61872 61873 61874 61875 61876 61877 61878 61879 61880 61881 61882 61883 61884 61885 61886 61887 61888 61889 61890 61891 61892 61893 61894 61895 61896 61897 61898 61899 61900 61901 61902 61903 61904 61905 61906 61907 61908 61909 61910 61911 61912 61913 61914 61915 61916 61917 61918 61919 61920 61921 61922 61923 61924 61925 61926 61927 61928 61929 61930 61931 61932 61933 61934 61935 61936 61937 61938 61939 61940 61941 61942 61943 61944 61945 61946 61947 61948 61949 61950 61951 61952 61953 61954 61955 61956 61957 61958 61959 61960 61961 61962 61963 61964 61965 61966 61967 61968 61969 61970 61971 61972 61973 61974 61975 61976 61977 61978 61979 61980 61981 61982 61983 61984 61985 61986 61987 61988 61989 61990 61991 61992 61993 61994 61995 61996 61997 61998 61999 62000 62001 62002 62003 62004 62005 62006 62007 62008 62009 62010 62011 62012 62013 62014 62015 62016 62017 62018 62019 62020 62021 62022 62023 62024 62025 62026 62027 62028 62029 62030 62031 62032 62033 62034 62035 62036 62037 62038 62039 62040 62041 62042 62043 62044 62045 62046 62047 62048 62049 62050 62051 62052 62053 62054 62055 62056 62057 62058 62059 62060 62061 62062 62063 62064 62065 62066 62067 62068 62069 62070 62071 62072 62073 62074 62075 62076 62077 62078 62079 62080 62081 62082 62083 62084 62085 62086 62087 62088 62089 62090 62091 62092 62093 62094 62095 62096 62097 62098 62099 62100 62101 62102 62103 62104 62105 62106 62107 62108 62109 62110 62111 62112 62113 62114 62115 62116 62117 62118 62119 62120 62121 62122 62123 62124 62125 62126 62127 62128 62129 62130 62131 62132 62133 62134 62135 62136 62137 62138 62139 62140 62141 62142 62143 62144 62145 62146 62147 62148 62149 62150 62151 62152 62153 62154 62155 62156 62157 62158 62159 62160 62161 62162 62163 62164 62165 62166 62167 62168 62169 62170 62171 62172 62173 62174 62175 62176 62177 62178 62179 62180 62181 62182 62183 62184 62185 62186 62187 62188 62189 62190 62191 62192 62193 62194 62195 62196 62197 62198 62199 62200 62201 62202 62203 62204 62205 62206 62207 62208 62209 62210 62211 62212 62213 62214 62215 62216 62217 62218 62219 62220 62221 62222 62223 62224 62225 62226 62227 62228 62229 62230 62231 62232 62233 62234 62235 62236 62237 62238 62239 62240 62241 62242 62243 62244 62245 62246 62247 62248 62249 62250 62251 62252 62253 62254 62255 62256 62257 62258 62259 62260 62261 62262 62263 62264 62265 62266 62267 62268 62269 62270 62271 62272 62273 62274 62275 62276 62277 62278 62279 62280 62281 62282 62283 62284 62285 62286 62287 62288 62289 62290 62291 62292 62293 62294 62295 62296 62297 62298 62299 62300 62301 62302 62303 62304 62305 62306 62307 62308 62309 62310 62311 62312 62313 62314 62315 62316 62317 62318 62319 62320 62321 62322 62323 62324 62325 62326 62327 62328 62329 62330 62331 62332 62333 62334 62335 62336 62337 62338 62339 62340 62341 62342 62343 62344 62345 62346 62347 62348 62349 62350 62351 62352 62353 62354 62355 62356 62357 62358 62359 62360 62361 62362 62363 62364 62365 62366 62367 62368 62369 62370 62371 62372 62373 62374 62375 62376 62377 62378 62379 62380 62381 62382 62383 62384 62385 62386 62387 62388 62389 62390 62391 62392 62393 62394 62395 62396 62397 62398 62399 62400 62401 62402 62403 62404 62405 62406 62407 62408 62409 62410 62411 62412 62413 62414 62415 62416 62417 62418 62419 62420 62421 62422 62423 62424 62425 62426 62427 62428 62429 62430 62431 62432 62433 62434 62435 62436 62437 62438 62439 62440 62441 62442 62443 62444 62445 62446 62447 62448 62449 62450 62451 62452 62453 62454 62455 62456 62457 62458 62459 62460 62461 62462 62463 62464 62465 62466 62467 62468 62469 62470 62471 62472 62473 62474 62475 62476 62477 62478 62479 62480 62481 62482 62483 62484 62485 62486 62487 62488 62489 62490 62491 62492 62493 62494 62495 62496 62497 62498 62499 62500 62501 62502 62503 62504 62505 62506 62507 62508 62509 62510 62511 62512 62513 62514 62515 62516 62517 62518 62519 62520 62521 62522 62523 62524 62525 62526 62527 62528 62529 62530 62531 62532 62533 62534 62535 62536 62537 62538 62539 62540 62541 62542 62543 62544 62545 62546 62547 62548 62549 62550 62551 62552 62553 62554 62555 62556 62557 62558 62559 62560 62561 62562 62563 62564 62565 62566 62567 62568 62569 62570 62571 62572 62573 62574 62575 62576 62577 62578 62579 62580 62581 62582 62583 62584 62585 62586 62587 62588 62589 62590 62591 62592 62593 62594 62595 62596 62597 62598 62599 62600 62601 62602 62603 62604 62605 62606 62607 62608 62609 62610 62611 62612 62613 62614 62615 62616 62617 62618 62619 62620 62621 62622 62623 62624 62625 62626 62627 62628 62629 62630 62631 62632 62633 62634 62635 62636 62637 62638 62639 62640 62641 62642 62643 62644 62645 62646 62647 62648 62649 62650 62651 62652 62653 62654 62655 62656 62657 62658 62659 62660 62661 62662 62663 62664 62665 62666 62667 62668 62669 62670 62671 62672 62673 62674 62675 62676 62677 62678 62679 62680 62681 62682 62683 62684 62685 62686 62687 62688 62689 62690 62691 62692 62693 62694 62695 62696 62697 62698 62699 62700 62701 62702 62703 62704 62705 62706 62707 62708 62709 62710 62711 62712 62713 62714 62715 62716 62717 62718 62719 62720 62721 62722 62723 62724 62725 62726 62727 62728 62729 62730 62731 62732 62733 62734 62735 62736 62737 62738 62739 62740 62741 62742 62743 62744 62745 62746 62747 62748 62749 62750 62751 62752 62753 62754 62755 62756 62757 62758 62759 62760 62761 62762 62763 62764 62765 62766 62767 62768 62769 62770 62771 62772 62773 62774 62775 62776 62777 62778 62779 62780 62781 62782 62783 62784 62785 62786 62787 62788 62789 62790 62791 62792 62793 62794 62795 62796 62797 62798 62799 62800 62801 62802 62803 62804 62805 62806 62807 62808 62809 62810 62811 62812 62813 62814 62815 62816 62817 62818 62819 62820 62821 62822 62823 62824 62825 62826 62827 62828 62829 62830 62831 62832 62833 62834 62835 62836 62837 62838 62839 62840 62841 62842 62843 62844 62845 62846 62847 62848 62849 62850 62851 62852 62853 62854 62855 62856 62857 62858 62859 62860 62861 62862 62863 62864 62865 62866 62867 62868 62869 62870 62871 62872 62873 62874 62875 62876 62877 62878 62879 62880 62881 62882 62883 62884 62885 62886 62887 62888 62889 62890 62891 62892 62893 62894 62895 62896 62897 62898 62899 62900 62901 62902 62903 62904 62905 62906 62907 62908 62909 62910 62911 62912 62913 62914 62915 62916 62917 62918 62919 62920 62921 62922 62923 62924 62925 62926 62927 62928 62929 62930 62931 62932 62933 62934 62935 62936 62937 62938 62939 62940 62941 62942 62943 62944 62945 62946 62947 62948 62949 62950 62951 62952 62953 62954 62955 62956 62957 62958 62959 62960 62961 62962 62963 62964 62965 62966 62967 62968 62969 62970 62971 62972 62973 62974 62975 62976 62977 62978 62979 62980 62981 62982 62983 62984 62985 62986 62987 62988 62989 62990 62991 62992 62993 62994 62995 62996 62997 62998 62999 63000 63001 63002 63003 63004 63005 63006 63007 63008 63009 63010 63011 63012 63013 63014 63015 63016 63017 63018 63019 63020 63021 63022 63023 63024 63025 63026 63027 63028 63029 63030 63031 63032 63033 63034 63035 63036 63037 63038 63039 63040 63041 63042 63043 63044 63045 63046 63047 63048 63049 63050 63051 63052 63053 63054 63055 63056 63057 63058 63059 63060 63061 63062 63063 63064 63065 63066 63067 63068 63069 63070 63071 63072 63073 63074 63075 63076 63077 63078 63079 63080 63081 63082 63083 63084 63085 63086 63087 63088 63089 63090 63091 63092 63093 63094 63095 63096 63097 63098 63099 63100 63101 63102 63103 63104 63105 63106 63107 63108 63109 63110 63111 63112 63113 63114 63115 63116 63117 63118 63119 63120 63121 63122 63123 63124 63125 63126 63127 63128 63129 63130 63131 63132 63133 63134 63135 63136 63137 63138 63139 63140 63141 63142 63143 63144 63145 63146 63147 63148 63149 63150 63151 63152 63153 63154 63155 63156 63157 63158 63159 63160 63161 63162 63163 63164 63165 63166 63167 63168 63169 63170 63171 63172 63173 63174 63175 63176 63177 63178 63179 63180 63181 63182 63183 63184 63185 63186 63187 63188 63189 63190 63191 63192 63193 63194 63195 63196 63197 63198 63199 63200 63201 63202 63203 63204 63205 63206 63207 63208 63209 63210 63211 63212 63213 63214 63215 63216 63217 63218 63219 63220 63221 63222 63223 63224 63225 63226 63227 63228 63229 63230 63231 63232 63233 63234 63235 63236 63237 63238 63239 63240 63241 63242 63243 63244 63245 63246 63247 63248 63249 63250 63251 63252 63253 63254 63255 63256 63257 63258 63259 63260 63261 63262 63263 63264 63265 63266 63267 63268 63269 63270 63271 63272 63273 63274 63275 63276 63277 63278 63279 63280 63281 63282 63283 63284 63285 63286 63287 63288 63289 63290 63291 63292 63293 63294 63295 63296 63297 63298 63299 63300 63301 63302 63303 63304 63305 63306 63307 63308 63309 63310 63311 63312 63313 63314 63315 63316 63317 63318 63319 63320 63321 63322 63323 63324 63325 63326 63327 63328 63329 63330 63331 63332 63333 63334 63335 63336 63337 63338 63339 63340 63341 63342 63343 63344 63345 63346 63347 63348 63349 63350 63351 63352 63353 63354 63355 63356 63357 63358 63359 63360 63361 63362 63363 63364 63365 63366 63367 63368 63369 63370 63371 63372 63373 63374 63375 63376 63377 63378 63379 63380 63381 63382 63383 63384 63385 63386 63387 63388 63389 63390
-P	Sets	T1 Knight: Beginner, in game	38269 34755 34753 5462 20090 7416 23547 7431
+M	2145	238	Reindeer
+P	Custom		1678 1679 1680 1681 1682 1684 1952 2123 2127 2153 2154 2155 2156 2196 2217 2262 2263 2264 2265 2267 2268 2270 2272 2273 2274 2275 2276 2280 2281 2282 2283 2284 2294 2296 2297 2298 2299 2300 2306 2307 2312 2314 2315 2316 2345 2433 5468 5785 5802 5808 5909 5910 5911 5912 5913 5914 5943 5956 5958 6087 6103 6119 6527 6546 6574 7242 7286 7289 7290 7342 7421 7439 7443 7489 7590 7591 7618 7620 7632 7633 7697 7702 7967 8205 8298 8299 8300 8301 8302 8304 8305 8306 8310 8472 8474 8762 8927 8977 8981 8982 9003 9020 9079 9109 9117 9653 9662 9688 9692 9693 9735 9970 9971 9992 10006 10050 10061 10062 10063 10064 10105 10107 10136 10209 10383 10393 10502 10503 10511 10512 10513 10514 10515 10516 10518 10523 10719 10927 10941 11106 11116 11134 11230 11231 11259 11307 11308 11316 11323 11329 11336 11356 11361 11396 11397 11399 11401 11402 11424 11426 11427 12497 12543 13564 13565 13566 13567 13568 13569 13570 13571 13582 13946 14344 14348 15434 15435 15436 16003 16004 16005 16006 16015 16105 16106 18430 18495 18496 20620 21394 21476 21482 21489 23589 23743 23773 24114 24774 24807 24808 24816 24826 25368 25369 25420 25421 25422 25423 25424 25425 25426 25431 25535 26209 26210 26211 26212 26339 27053 27581 27583 27899 28741 28742 29603 29604 30347 30348 30349 30350 30351 30352 30356 30358 30359 30496 31279 31280 31281 31282 31390 31393 31509 31515 31516 31517 31518 31520 31521 31543 32598 32599 32600 32601 32711 32743 32744 32839 32840 32973 33018 33019 33020 33021 33022 33023 33938 34099 34138 34278 34279 34280 34370 34371 34372 34373 34388 34733 35074 35234 35235 35236 35237 35254 35351 35352 35382 36576 36577 36578 36579 36580 36581 36582 36584 36735 36756 36757 36758 36759 36865 36920 36921 36922 36923 37947 38256 38257 38258 38259 38266 38268 38550 39134 39135 39136 39137 39447 39448 39449 39450 39451 39452 39469 39584 39585 39638 39639 39640 39641 39652 39653 39654 39655 39710 39711 39712 39713 39717 39718 39719 39720 40381 40382 40433 40434 40435 40469 40473 40485 40511 40513 40515 40583 40584 40661 40662 40760 40762 40923 40924 40926 40927 40928 40929 40930 40931 40932 40933 40946 40947 40948 40951 40958 40963 40964 42855 44034 44703 56534 56535 56666 56667 56668 56669 56670 56671 56672 56673 56674 56675 56676 56677 56678 56679 56680 56681 56682 56683 56684 56685 56686 56687 56688 56689 56690 56691 56692 56693 56694 56695 56696 56697 56698 56699 56700 56701 56702 56703 56704 56705 56706 56707 56708 56709 56710 56711 56712 56713 56714 56715 56716 56717 56718 56719 56720 56721 56722 56723 56724 56725 56726 56727 56728 56729 56730 56731 56732 56733 56734 56735 56736 56737 56738 56739 56740 56741 56742 56743 56744 56745 56746 56747 56748 56749 56750 56751 56752 56753 56754 56755 56756 56757 56758 56759 56760 56761 56762 56763 56764 56765 56766 59138 59139 59306 59307 59308 59309 59310 59311 59312 59313 59314 59315 59316 59317 59318 59319 59320 59321 59322 59323 59324 59325 59326 59327 59328 59329 59330 59331 59332 59333 59334 59335 59336 59337 59338 59339 59340 59341 59342 59343 59344 59345 59346 59347 59348 59349 59350 59351 59352 59353 59354 59355 59356 59357 59358 59359 59360 59361 59362 59363 59364 59365 59366 59367 59368 59369 59370 59371 59372 59373 59374 59375 59376 59377 59378 59379 59380 59381 59382 59383 59384 59385 59386 59387 59388 59389 59390 59391 59392 59393 59394 59395 59396 59397 59398 59399 59400 59401 59402 59403 59404 59405 59406 59407 59408 59409 59410 59411 59412 59413 59414 59415 59416 59417 59418 59419 59420 59421 59422 59423 59424 59425 59426 59427 59428 59429 59430 59431 59432 59433 59434 59435 59436 59437 59438 59439 59440 59441 59442 59443 59444 59445 59446 59447 59448 59449 59450 59451 59452 59453 59454 59455 59456 59457 59458 59459 59460 59461 59462 59463 59464 59465 59466 59467 59468 59469 59470 59471 59472 59473 59474 59475 59476 59477 59478 59479 59480 59481 59482 59483 59484 59485 59486 59487 59488 59489 59490 59491 59492 59493 59494 59495 59496 59497 59498 59499 59500 59501 59502 59503 59504 59505 59506 59507 59508 59509 59510 59511 59512 59513 59514 59515 59516 59517 59518 59519 59520 59521 59522 59523 59524 59525 59526 59527 59528 59529 59530 59531 59532 59533 59534 59535 59536 59537 59538 59539 59540 59541 59542 59543 59544 59545 59546 59547 59548 59549 59550 59551 59552 59553 59554 59555 59556 59557 59558 59559 59560 59561 59562 59563 59564 59565 59566 59567 59568 59569 59570 59571 59572 59573 59574 59575 59576 59577 59578 59579 59580 59581 59582 59583 59584 59585 59586 59587 59588 59589 59590 59591 59592 59593 59594 59595 59596 59597 59598 59599 59600 59601 59602 59603 59604 59605 59606 59607 59608 59609 59610 59611 59612 59613 59614 59615 59616 59617 59618 59619 59620 59621 59622 59623 59624 59625 59626 59627 59628 59629 59630 59631 59632 59633 59634 59635 59636 59637 59638 59639 59640 59641 59642 59643 59644 59645 59646 59647 59648 59649 59650 59651 59652 59653 59654 59655 59656 59657 59658 59659 59660 59661 59662 59663 59664 59665 59666 59667 59668 59669 59670 59671 59672 59673 59674 59675 59676 59677 59678 59679 59680 59681 59682 59683 59684 59685 59686 59687 59688 59689 59690 59691 59692 59693 59694 59695 59696 59697 59698 59699 59700 59701 59702 59703 59704 59705 59706 59707 59708 59709 59710 59711 59712 59713 59714 59715 59716 59717 59718 59719 59720 59721 59722 59723 59724 59725 59726 59727 59728 59729 59730 59731 59732 59733 59734 59735 59736 59737 59738 59739 59740 59741 59742 59743 59744 59745 59746 59747 59748 59749 59750 59751 59752 59753 59754 59755 59756 59757 59758 59759 59760 59761 59762 59763 59764 59765 59766 59767 59768 59769 59770 59771 59772 59773 59774 59775 59776 59777 59778 59779 59780 59781 59782 59783 59784 59785 59786 59787 59788 59789 59790 59791 59792 59793 59794 59795 59796 59797 59798 59799 59800 59801 59802 59803 59804 59805 59806 59807 59808 59809 59810 59811 59812 59813 59814 59815 59816 59817 59818 59819 59820 59821 59822 59823 59824 59825 59826 59827 59828 59829 59830 59831 59832 59833 59834 59835 59836 59837 59838 59839 59840 59841 59842 59843 59844 59845 59846 59847 59848 59849 59850 59851 59852 59853 59854 59855 59856 59857 59858 59859 59860 59861 59862 59863 59864 59865 59866 59867 59868 59869 59870 59871 59872 59873 59874 59875 59876 59877 59878 59879 59880 59881 59882 59883 59884 59885 59886 59887 59888 59889 59890 59891 59892 59893 59894 59895 59896 59897 59898 59899 59900 59901 59902 59903 59904 59905 59906 59907 59908 59909 59910 59911 59912 59913 59914 59915 59916 59917 59918 59919 59920 59921 59922 59923 59924 59925 59926 59927 59928 59929 59930 59931 59932 59933 59934 59935 59936 59937 59938 59939 59940 59941 59942 59943 59944 59945 59946 59947 59948 59949 59950 59951 59952 59953 59954 59955 59956 59957 59958 59959 59960 59961 59962 59963 59964 59965 59966 59967 59968 59969 59970 59971 59972 59973 59974 59975 59976 59977 59978 59979 59980 59981 59982 59983 59984 59985 59986 59987 59988 59989 59990 59991 59992 59993 59994 59995 59996 59997 59998 59999 60000 60001 60002 60003 60004 60005 60006 60007 60008 60009 60010 60011 60012 60013 60014 60015 60016 60017 60018 60019 60020 60021 60022 60023 60024 60025 60026 60027 60028 60029 60030 60031 60032 60033 60034 60035 60036 60037 60038 60039 60040 60041 60042 60043 60044 60045 60046 60047 60048 60049 60050 60051 60052 60053 60054 60055 60056 60057 60058 60059 60060 60061 60062 60063 60064 60065 60066 60067 60068 60069 60070 60071 60072 60073 60074 60075 60076 60077 60078 60079 60080 60081 60082 60083 60084 60085 60086 60087 60088 60089 60090 60091 60092 60093 60094 60095 60096 60097 60098 60099 60100 60101 60102 60103 60104 60105 60106 60107 60108 60109 60110 60111 60112 60113 60114 60115 60116 60117 60118 60119 60120 60121 60122 60123 60124 60125 60126 60127 60128 60129 60130 60131 60132 60133 60134 60135 60136 60137 60138 60139 60140 60141 60142 60143 60144 60145 60146 60147 60148 60149 60150 60151 60152 60153 60154 60155 60156 60157 60158 60159 60160 60161 60162 60163 60164 60165 60166 60167 60168 60169 60170 60171 60172 60173 60174 60175 60176 60177 60178 60179 60180 60181 60182 60183 60184 60185 60186 60187 60188 60189 60190 60191 60192 60193 60194 60195 60196 60197 60198 60199 60200 60201 60202 60203 60204 60205 60206 60207 60208 60209 60210 60211 60212 60213 60214 60215 60216 60217 60218 60219 60220 60221 60222 60223 60224 60225 60226 60227 60228 60229 60230 60231 60232 60233 60234 60235 60236 60237 60238 60239 60240 60241 60242 60243 60244 60245 60246 60247 60248 60249 60250 60251 60252 60253 60254 60255 60256 60257 60258 60259 60260 60261 60262 60263 60264 60265 60266 60267 60268 60269 60270 60271 60272 60273 60274 60275 60276 60277 60278 60279 60280 60281 60282 60283 60284 60285 60286 60287 60288 60289 60290 60291 60292 60293 60294 60295 60296 60297 60298 60299 60300 60301 60302 60303 60304 60305 60306 60307 60308 60309 60310 60311 60312 60313 60314 60315 60316 60317 60318 60319 60320 60321 60322 60323 60324 60325 60326 60327 60328 60329 60330 60331 60332 60333 60334 60335 60336 60337 60338 60339 60340 60341 60342 60343 60344 60345 60346 60347 60348 60349 60350 60351 60352 60353 60354 60355 60356 60357 60358 60359 60360 60361 60362 60363 60364 60365 60366 60367 60368 60369 60370 60371 60372 60373 60374 60375 60376 60377 60378 60379 60380 60381 60382 60383 60384 60385 60386 60387 60388 60389 60390 60391 60392 60393 60394 60395 60396 60397 60398 60399 60400 60401 60402 60403 60404 60405 60406 60407 60408 60409 60410 60411 60412 60413 60414 60415 60416 60417 60418 60419 60420 60421 60422 60423 60424 60425 60426 60427 60428 60429 60430 60431 60432 60433 60434 60435 60436 60437 60438 60439 60440 60441 60442 60443 60444 60445 60446 60447 60448 60449 60450 60451 60452 60453 60454 60455 60456 60457 60458 60459 60460 60461 60462 60463 60464 60465 60466 60467 60468 60469 60470 60471 60472 60473 60474 60475 60476 60477 60478 60479 60480 60481 60482 60483 60484 60485 60486 60487 60488 60489 60490 60491 60492 60493 60494 60495 60496 60497 60498 60499 60500 60501 60502 60503 60504 60505 60506 60507 60508 60509 60510 60511 60512 60513 60514 60515 60516 60517 60518 60519 60520 60521 60522 60523 60524 60525 60526 60527 60528 60529 60530 60531 60532 60533 60534 60535 60536 60537 60538 60539 60540 60541 60542 60543 60544 60545 60546 60547 60548 60549 60550 60551 60552 60553 60554 60555 60556 60557 60558 60559 60560 60561 60562 60563 60564 60565 60566 60567 60568 60569 60570 60571 60572 60573 60574 60575 60576 60577 60578 60579 60580 60581 60582 60583 60584 60585 60586 60587 60588 60589 60590 60591 60592 60593 60594 60595 60596 60597 60598 60599 60600 60601 60602 60603 60604 60605 60606 60607 60608 60609 60610 60611 60612 60613 60614 60615 60616 60617 60618 60619 60620 60621 60622 60623 60624 60625 60626 60627 60628 60629 60630 60631 60632 60633 60634 60635 60636 60637 60638 60639 60640 60641 60642 60643 60644 60645 60646 60647 60648 60649 60650 60651 60652 60653 60654 60655 60656 60657 60658 60659 60660 60661 60662 60663 60664 60665 60666 60667 60668 60669 60670 60671 60672 60673 60674 60675 60676 60677 60678 60679 60680 60681 60682 60683 60684 60685 60686 60687 60688 60689 60690 60691 60692 60693 60694 60695 60696 60697 60698 60699 60700 60701 60702 60703 60704 60705 60706 60707 60708 60709 60710 60711 60712 60713 60714 60715 60716 60717 60718 60719 60720 60721 60722 60723 60724 60725 60726 60727 60728 60729 60730 60731 60732 60733 60734 60735 60736 60737 60738 60739 60740 60741 60742 60743 60744 60745 60746 60747 60748 60749 60750 60751 60752 60753 60754 60755 60756 60757 60758 60759 60760 60761 60762 60763 60764 60765 60766 60767 60768 60769 60770 60771 60772 60773 60774 60775 60776 60777 60778 60779 60780 60781 60782 60783 60784 60785 60786 60787 60788 60789 60790 60791 60792 60793 60794 60795 60796 60797 60798 60799 60800 60801 60802 60803 60804 60805 60806 60807 60808 60809 60810 60811 60812 60813 60814 60815 60816 60817 60818 60819 60820 60821 60822 60823 60824 60825 60826 60827 60828 60829 60830 60831 60832 60833 60834 60835 60836 60837 60838 60839 60840 60841 60842 60843 60844 60845 60846 60847 60848 60849 60850 60851 60852 60853 60854 60855 60856 60857 60858 60859 60860 60861 60862 60863 60864 60865 60866 60867 60868 60869 60870 60871 60872 60873 60874 60875 60876 60877 60878 60879 60880 60881 60882 60883 60884 60885 60886 60887 60888 60889 60890 60891 60892 60893 60894 60895 60896 60897 60898 60899 60900 60901 60902 60903 60904 60905 60906 60907 60908 60909 60910 60911 60912 60913 60914 60915 60916 60917 60918 60919 60920 60921 60922 60923 60924 60925 60926 60927 60928 60929 60930 60931 60932 60933 60934 60935 60936 60937 60938 60939 60940 60941 60942 60943 60944 60945 60946 60947 60948 60949 60950 60951 60952 60953 60954 60955 60956 60957 60958 60959 60960 60961 60962 60963 60964 60965 60966 60967 60968 60969 60970 60971 60972 60973 60974 60975 60976 60977 60978 60979 60980 60981 60982 60983 60984 60985 60986 60987 60988 60989 60990 60991 60992 60993 60994 60995 60996 60997 60998 60999 61000 61001 61002 61003 61004 61005 61006 61007 61008 61009 61010 61011 61012 61013 61014 61015 61016 61017 61018 61019 61020 61021 61022 61023 61024 61025 61026 61027 61028 61029 61030 61031 61032 61033 61034 61035 61036 61037 61038 61039 61040 61041 61042 61043 61044 61045 61046 61047 61048 61049 61050 61051 61052 61053 61054 61055 61056 61057 61058 61059 61060 61061 61062 61063 61064 61065 61066 61067 61068 61069 61070 61071 61072 61073 61074 61075 61076 61077 61078 61079 61080 61081 61082 61083 61084 61085 61086 61087 61088 61089 61090 61091 61092 61093 61094 61095 61096 61097 61098 61099 61100 61101 61102 61103 61104 61105 61106 61107 61108 61109 61110 61111 61112 61113 61114 61115 61116 61117 61118 61119 61120 61121 61122 61123 61124 61125 61126 61127 61128 61129 61130 61131 61132 61133 61134 61135 61136 61137 61138 61139 61140 61141 61142 61143 61144 61145 61146 61147 61148 61149 61150 61151 61152 61153 61154 61155 61156 61157 61158 61159 61160 61161 61162 61163 61164 61165 61166 61167 61168 61169 61170 61171 61172 61173 61174 61175 61176 61177 61178 61179 61180 61181 61182 61183 61184 61185 61186 61187 61188 61189 61190 61191 61192 61193 61194 61195 61196 61197 61198 61199 61200 61201 61202 61203 61204 61205 61206 61207 61208 61209 61210 61211 61212 61213 61214 61215 61216 61217 61218 61219 61220 61221 61222 61223 61224 61225 61226 61227 61228 61229 61230 61231 61232 61233 61234 61235 61236 61237 61238 61239 61240 61241 61242 61243 61244 61245 61246 61247 61248 61249 61250 61251 61252 61253 61254 61255 61256 61257 61258 61259 61260 61261 61262 61263 61264 61265 61266 61267 61268 61269 61270 61271 61272 61273 61274 61275 61276 61277 61278 61279 61280 61281 61282 61283 61284 61285 61286 61287 61288 61289 61290 61291 61292 61293 61294 61295 61296 61297 61298 61299 61300 61301 61302 61303 61304 61305 61306 61307 61308 61309 61310 61311 61312 61313 61314 61315 61316 61317 61318 61319 61320 61321 61322 61323 61324 61325 61326 61327 61328 61329 61330 61331 61332 61333 61334 61335 61336 61337 61338 61339 61340 61341 61342 61343 61344 61345 61346 61347 61348 61349 61350 61351 61352 61353 61354 61355 61356 61357 61358 61359 61360 61361 61362 61363 61364 61365 61366 61367 61368 61369 61370 61371 61372 61373 61374 61375 61376 61377 61378 61379 61380 61381 61382 61383 61384 61385 61386 61387 61388 61389 61390 61391 61392 61393 61394 61395 61396 61397 61398 61399 61400 61401 61402 61403 61404 61405 61406 61407 61408 61409 61410 61411 61412 61413 61414 61415 61416 61417 61418 61419 61420 61421 61422 61423 61424 61425 61426 61427 61428 61429 61430 61431 61432 61433 61434 61435 61436 61437 61438 61439 61440 61441 61442 61443 61444 61445 61446 61447 61448 61449 61450 61451 61452 61453 61454 61455 61456 61457 61458 61459 61460 61461 61462 61463 61464 61465 61466 61467 61468 61469 61470 61471 61472 61473 61474 61475 61476 61477 61478 61479 61480 61481 61482 61483 61484 61485 61486 61487 61488 61489 61490 61491 61492 61493 61494 61495 61496 61497 61498 61499 61500 61501 61502 61503 61504 61505 61506 61507 61508 61509 61510 61511 61512 61513 61514 61515 61516 61517 61518 61519 61520 61521 61522 61523 61524 61525 61526 61527 61528 61529 61530 61531 61532 61533 61534 61535 61536 61537 61538 61539 61540 61541 61542 61543 61544 61545 61546 61547 61548 61549 61550 61551 61552 61553 61554 61555 61556 61557 61558 61559 61560 61561 61562 61563 61564 61565 61566 61567 61568 61569 61570 61571 61572 61573 61574 61575 61576 61577 61578 61579 61580 61581 61582 61583 61584 61585 61586 61587 61588 61589 61590 61591 61592 61593 61594 61595 61596 61597 61598 61599 61600 61601 61602 61603 61604 61605 61606 61607 61608 61609 61610 61611 61612 61613 61614 61615 61616 61617 61618 61619 61620 61621 61622 61623 61624 61625 61626 61627 61628 61629 61630 61631 61632 61633 61634 61635 61636 61637 61638 61639 61640 61641 61642 61643 61644 61645 61646 61647 61648 61649 61650 61651 61652 61653 61654 61655 61656 61657 61658 61659 61660 61661 61662 61663 61664 61665 61666 61667 61668 61669 61670 61671 61672 61673 61674 61675 61676 61677 61678 61679 61680 61681 61682 61683 61684 61685 61686 61687 61688 61689 61690 61691 61692 61693 61694 61695 61696 61697 61698 61699 61700 61701 61702 61703 61704 61705 61706 61707 61708 61709 61710 61711 61712 61713 61714 61715 61716 61717 61718 61719 61720 61721 61722 61723 61724 61725 61726 61727 61728 61729 61730 61731 61732 61733 61734 61735 61736 61737 61738 61739 61740 61741 61742 61743 61744 61745 61746 61747 61748 61749 61750 61751 61752 61753 61754 61755 61756 61757 61758 61759 61760 61761 61762 61763 61764 61765 61766 61767 61768 61769 61770 61771 61772 61773 61774 61775 61776 61777 61778 61779 61780 61781 61782 61783 61784 61785 61786 61787 61788 61789 61790 61791 61792 61793 61794 61795 61796 61797 61798 61799 61800 61801 61802 61803 61804 61805 61806 61807 61808 61809 61810 61811 61812 61813 61814 61815 61816 61817 61818 61819 61820 61821 61822 61823 61824 61825 61826 61827 61828 61829 61830 61831 61832 61833 61834 61835 61836 61837 61838 61839 61840 61841 61842 61843 61844 61845 61846 61847 61848 61849 61850 61851 61852 61853 61854 61855 61856 61857 61858 61859 61860 61861 61862 61863 61864 61865 61866 61867 61868 61869 61870 61871 61872 61873 61874 61875 61876 61877 61878 61879 61880 61881 61882 61883 61884 61885 61886 61887 61888 61889 61890 61891 61892 61893 61894 61895 61896 61897 61898 61899 61900 61901 61902 61903 61904 61905 61906 61907 61908 61909 61910 61911 61912 61913 61914 61915 61916 61917 61918 61919 61920 61921 61922 61923 61924 61925 61926 61927 61928 61929 61930 61931 61932 61933 61934 61935 61936 61937 61938 61939 61940 61941 61942 61943 61944 61945 61946 61947 61948 61949 61950 61951 61952 61953 61954 61955 61956 61957 61958 61959 61960 61961 61962 61963 61964 61965 61966 61967 61968 61969 61970 61971 61972 61973 61974 61975 61976 61977 61978 61979 61980 61981 61982 61983 61984 61985 61986 61987 61988 61989 61990 61991 61992 61993 61994 61995 61996 61997 61998 61999 62000 62001 62002 62003 62004 62005 62006 62007 62008 62009 62010 62011 62012 62013 62014 62015 62016 62017 62018 62019 62020 62021 62022 62023 62024 62025 62026 62027 62028 62029 62030 62031 62032 62033 62034 62035 62036 62037 62038 62039 62040 62041 62042 62043 62044 62045 62046 62047 62048 62049 62050 62051 62052 62053 62054 62055 62056 62057 62058 62059 62060 62061 62062 62063 62064 62065 62066 62067 62068 62069 62070 62071 62072 62073 62074 62075 62076 62077 62078 62079 62080 62081 62082 62083 62084 62085 62086 62087 62088 62089 62090 62091 62092 62093 62094 62095 62096 62097 62098 62099 62100 62101 62102 62103 62104 62105 62106 62107 62108 62109 62110 62111 62112 62113 62114 62115 62116 62117 62118 62119 62120 62121 62122 62123 62124 62125 62126 62127 62128 62129 62130 62131 62132 62133 62134 62135 62136 62137 62138 62139 62140 62141 62142 62143 62144 62145 62146 62147 62148 62149 62150 62151 62152 62153 62154 62155 62156 62157 62158 62159 62160 62161 62162 62163 62164 62165 62166 62167 62168 62169 62170 62171 62172 62173 62174 62175 62176 62177 62178 62179 62180 62181 62182 62183 62184 62185 62186 62187 62188 62189 62190 62191 62192 62193 62194 62195 62196 62197 62198 62199 62200 62201 62202 62203 62204 62205 62206 62207 62208 62209 62210 62211 62212 62213 62214 62215 62216 62217 62218 62219 62220 62221 62222 62223 62224 62225 62226 62227 62228 62229 62230 62231 62232 62233 62234 62235 62236 62237 62238 62239 62240 62241 62242 62243 62244 62245 62246 62247 62248 62249 62250 62251 62252 62253 62254 62255 62256 62257 62258 62259 62260 62261 62262 62263 62264 62265 62266 62267 62268 62269 62270 62271 62272 62273 62274 62275 62276 62277 62278 62279 62280 62281 62282 62283 62284 62285 62286 62287 62288 62289 62290 62291 62292 62293 62294 62295 62296 62297 62298 62299 62300 62301 62302 62303 62304 62305 62306 62307 62308 62309 62310 62311 62312 62313 62314 62315 62316 62317 62318 62319 62320 62321 62322 62323 62324 62325 62326 62327 62328 62329 62330 62331 62332 62333 62334 62335 62336 62337 62338 62339 62340 62341 62342 62343 62344 62345 62346 62347 62348 62349 62350 62351 62352 62353 62354 62355 62356 62357 62358 62359 62360 62361 62362 62363 62364 62365 62366 62367 62368 62369 62370 62371 62372 62373 62374 62375 62376 62377 62378 62379 62380 62381 62382 62383 62384 62385 62386 62387 62388 62389 62390 62391 62392 62393 62394 62395 62396 62397 62398 62399 62400 62401 62402 62403 62404 62405 62406 62407 62408 62409 62410 62411 62412 62413 62414 62415 62416 62417 62418 62419 62420 62421 62422 62423 62424 62425 62426 62427 62428 62429 62430 62431 62432 62433 62434 62435 62436 62437 62438 62439 62440 62441 62442 62443 62444 62445 62446 62447 62448 62449 62450 62451 62452 62453 62454 62455 62456 62457 62458 62459 62460 62461 62462 62463 62464 62465 62466 62467 62468 62469 62470 62471 62472 62473 62474 62475 62476 62477 62478 62479 62480 62481 62482 62483 62484 62485 62486 62487 62488 62489 62490 62491 62492 62493 62494 62495 62496 62497 62498 62499 62500 62501 62502 62503 62504 62505 62506 62507 62508 62509 62510 62511 62512 62513 62514 62515 62516 62517 62518 62519 62520 62521 62522 62523 62524 62525 62526 62527 62528 62529 62530 62531 62532 62533 62534 62535 62536 62537 62538 62539 62540 62541 62542 62543 62544 62545 62546 62547 62548 62549 62550 62551 62552 62553 62554 62555 62556 62557 62558 62559 62560 62561 62562 62563 62564 62565 62566 62567 62568 62569 62570 62571 62572 62573 62574 62575 62576 62577 62578 62579 62580 62581 62582 62583 62584 62585 62586 62587 62588 62589 62590 62591 62592 62593 62594 62595 62596 62597 62598 62599 62600 62601 62602 62603 62604 62605 62606 62607 62608 62609 62610 62611 62612 62613 62614 62615 62616 62617 62618 62619 62620 62621 62622 62623 62624 62625 62626 62627 62628 62629 62630 62631 62632 62633 62634 62635 62636 62637 62638 62639 62640 62641 62642 62643 62644 62645 62646 62647 62648 62649 62650 62651 62652 62653 62654 62655 62656 62657 62658 62659 62660 62661 62662 62663 62664 62665 62666 62667 62668 62669 62670 62671 62672 62673 62674 62675 62676 62677 62678 62679 62680 62681 62682 62683 62684 62685 62686 62687 62688 62689 62690 62691 62692 62693 62694 62695 62696 62697 62698 62699 62700 62701 62702 62703 62704 62705 62706 62707 62708 62709 62710 62711 62712 62713 62714 62715 62716 62717 62718 62719 62720 62721 62722 62723 62724 62725 62726 62727 62728 62729 62730 62731 62732 62733 62734 62735 62736 62737 62738 62739 62740 62741 62742 62743 62744 62745 62746 62747 62748 62749 62750 62751 62752 62753 62754 62755 62756 62757 62758 62759 62760 62761 62762 62763 62764 62765 62766 62767 62768 62769 62770 62771 62772 62773 62774 62775 62776 62777 62778 62779 62780 62781 62782 62783 62784 62785 62786 62787 62788 62789 62790 62791 62792 62793 62794 62795 62796 62797 62798 62799 62800 62801 62802 62803 62804 62805 62806 62807 62808 62809 62810 62811 62812 62813 62814 62815 62816 62817 62818 62819 62820 62821 62822 62823 62824 62825 62826 62827 62828 62829 62830 62831 62832 62833 62834 62835 62836 62837 62838 62839 62840 62841 62842 62843 62844 62845 62846 62847 62848 62849 62850 62851 62852 62853 62854 62855 62856 62857 62858 62859 62860 62861 62862 62863 62864 62865 62866 62867 62868 62869 62870 62871 62872 62873 62874 62875 62876 62877 62878 62879 62880 62881 62882 62883 62884 62885 62886 62887 62888 62889 62890 62891 62892 62893 62894 62895 62896 62897 62898 62899 62900 62901 62902 62903 62904 62905 62906 62907 62908 62909 62910 62911 62912 62913 62914 62915 62916 62917 62918 62919 62920 62921 62922 62923 62924 62925 62926 62927 62928 62929 62930 62931 62932 62933 62934 62935 62936 62937 62938 62939 62940 62941 62942 62943 62944 62945 62946 62947 62948 62949 62950 62951 62952 62953 62954 62955 62956 62957 62958 62959 62960 62961 62962 62963 62964 62965 62966 62967 62968 62969 62970 62971 62972 62973 62974 62975 62976 62977 62978 62979 62980 62981 62982 62983 62984 62985 62986 62987 62988 62989 62990 62991 62992 62993 62994 62995 62996 62997 62998 62999 63000 63001 63002 63003 63004 63005 63006 63007 63008 63009 63010 63011 63012 63013 63014 63015 63016 63017 63018 63019 63020 63021 63022 63023 63024 63025 63026 63027 63028 63029 63030 63031 63032 63033 63034 63035 63036 63037 63038 63039 63040 63041 63042 63043 63044 63045 63046 63047 63048 63049 63050 63051 63052 63053 63054 63055 63056 63057 63058 63059 63060 63061 63062 63063 63064 63065 63066 63067 63068 63069 63070 63071 63072 63073 63074 63075 63076 63077 63078 63079 63080 63081 63082 63083 63084 63085 63086 63087 63088 63089 63090 63091 63092 63093 63094 63095 63096 63097 63098 63099 63100 63101 63102 63103 63104 63105 63106 63107 63108 63109 63110 63111 63112 63113 63114 63115 63116 63117 63118 63119 63120 63121 63122 63123 63124 63125 63126 63127 63128 63129 63130 63131 63132 63133 63134 63135 63136 63137 63138 63139 63140 63141 63142 63143 63144 63145 63146 63147 63148 63149 63150 63151 63152 63153 63154 63155 63156 63157 63158 63159 63160 63161 63162 63163 63164 63165 63166 63167 63168 63169 63170 63171 63172 63173 63174 63175 63176 63177 63178 63179 63180 63181 63182 63183 63184 63185 63186 63187 63188 63189 63190 63191 63192 63193 63194 63195 63196 63197 63198 63199 63200 63201 63202 63203 63204 63205 63206 63207 63208 63209 63210 63211 63212 63213 63214 63215 63216 63217 63218 63219 63220 63221 63222 63223 63224 63225 63226 63227 63228 63229 63230 63231 63232 63233 63234 63235 63236 63237 63238 63239 63240 63241 63242 63243 63244 63245 63246 63247 63248 63249 63250 63251 63252 63253 63254 63255 63256 63257 63258 63259 63260 63261 63262 63263 63264 63265 63266 63267 63268 63269 63270 63271 63272 63273 63274 63275 63276 63277 63278 63279 63280 63281 63282 63283 63284 63285 63286 63287 63288 63289 63290 63291 63292 63293 63294 63295 63296 63297 63298 63299 63300 63301 63302 63303 63304 63305 63306 63307 63308 63309 63310 63311 63312 63313 63314 63315 63316 63317 63318 63319 63320 63321 63322 63323 63324 63325 63326 63327 63328 63329 63330 63331 63332 63333 63334 63335 63336 63337 63338 63339 63340 63341 63342 63343 63344 63345 63346 63347 63348 63349 63350 63351 63352 63353 63354 63355 63356 63357 63358 63359 63360 63361 63362 63363 63364 63365 63366 63367 63368 63369 63370 63371 63372 63373 63374 63375 63376 63377 63378 63379 63380 63381 63382 63383 63384 63385 63386 63387 63388 63389 63390 63391 63392 63393 63394 63395 63396 63397 63398 63399 63400 63401 63402 63403 63404 63405 63407 63408 63409 63410 63411 63412 63413 63414 63415 63416 63417 63418 63419 63420 63421 63422 63423 63424 63425 63426 63427 63428 63429 63430 63431
+P	Sets	T1 Knight: Beginner, in game	59730 59731 59732 59733 59734 59735 59736 59737
 P	Sets	T1 Knight: Beginner, new art version 1	59666 59667 59668 59669 59670 59671 59672 59673
 P	Sets	T1 Knight: Beginner, new art version 2	59674 59675 59676 59677 59678 59679 59680 59681
 P	Sets	T1 Knight: Beginner, new art version 3	59682 59683 59684 59685 59686 59687 59688 59689
@@ -49911,7 +50524,7 @@ P	Sets	T1 Knight: Beginner, new art version 7	59714 59715 59716 59717 59718 5971
 P	Sets	T1 Knight: Beginner, new art version 8	59722 59723 59724 59725 59726 59727 59728 59729
 P	Sets	T1 Knight: Beginner, new art version 9	59730 59731 59732 59733 59734 59735 59736 59737
 P	Sets	T1 Knight: Beginner, new art version 10	59738 59739 59740 59741 59742 59743 59744 59745
-P	Sets	T1 Archer: Beginner, in game	34756 55268 2649 3982 4865 5907
+P	Sets	T1 Archer: Beginner, in game	60170 60171 60172 60173 60174 60175
 P	Sets	T1 Archer: Beginner, new art version 1	60146 60147 60148 60149 60150 60151
 P	Sets	T1 Archer: Beginner, new art version 2	60152 60153 60154 60155 60156 60157
 P	Sets	T1 Archer: Beginner, new art version 3	60158 60159 60160 60161 60162 60163
@@ -49922,7 +50535,7 @@ P	Sets	T1 Archer: Beginner, new art version 7	60182 60183 60184 60185 60186 6018
 P	Sets	T1 Archer: Beginner, new art version 8	60188 60189 60190 60191 60192 60193
 P	Sets	T1 Archer: Beginner, new art version 9	60194 60195 60196 60197 60198 60199
 P	Sets	T1 Archer: Beginner, new art version 10	60200 60201 60202 60203 60204 60205
-P	Sets	T1 Mage: Beginner Mage, in game	34028 2656 7730 2641 20625 2188
+P	Sets	T1 Mage: Beginner Mage, in game	60554 60555 60556 60557 60558 60559
 P	Sets	T1 Mage: Beginner Mage, new art version 1	60506 60507 60508 60509 60510 60511
 P	Sets	T1 Mage: Beginner Mage, new art version 2	60512 60513 60514 60515 60516 60517
 P	Sets	T1 Mage: Beginner Mage, new art version 3	60518 60519 60520 60521 60522 60523
@@ -49933,7 +50546,7 @@ P	Sets	T1 Mage: Beginner Mage, new art version 7	60542 60543 60544 60545 60546 6
 P	Sets	T1 Mage: Beginner Mage, new art version 8	60548 60549 60550 60551 60552 60553
 P	Sets	T1 Mage: Beginner Mage, new art version 9	60554 60555 60556 60557 60558 60559
 P	Sets	T1 Mage: Beginner Mage, new art version 10	60560 60561 60562 60563 60564 60565
-P	Sets	T2 Knight: Cursed, in game	5741 8889 2470 2645 23546 2393 7413 7415
+P	Sets	T2 Knight: Cursed, in game	59786 59787 59788 59789 59790 59791 59792 59793
 P	Sets	T2 Knight: Cursed, new art version 1	59746 59747 59748 59749 59750 59751 59752 59753
 P	Sets	T2 Knight: Cursed, new art version 2	59754 59755 59756 59757 59758 59759 59760 59761
 P	Sets	T2 Knight: Cursed, new art version 3	59762 59763 59764 59765 59766 59767 59768 59769
@@ -49944,7 +50557,7 @@ P	Sets	T2 Knight: Cursed, new art version 7	59794 59795 59796 59797 59798 59799 
 P	Sets	T2 Knight: Cursed, new art version 8	59802 59803 59804 59805 59806 59807 59808 59809
 P	Sets	T2 Knight: Cursed, new art version 9	59810 59811 59812 59813 59814 59815 59816 59817
 P	Sets	T2 Knight: Cursed, new art version 10	59818 59819 59820 59821 59822 59823 59824 59825
-P	Sets	T2 Archer: Ruff, in game	55181 32074 11304 11303 44181 7438
+P	Sets	T2 Archer: Ruff, in game	60206 60207 60208 60209 60210 60259
 P	Sets	T2 Archer: Ruff, new art version 1	60206 60207 60208 60209 60210 60211
 P	Sets	T2 Archer: Ruff, new art version 2	60212 60213 60214 60215 60216 60217
 P	Sets	T2 Archer: Ruff, new art version 3	60218 60219 60220 60221 60222 60223
@@ -49955,7 +50568,7 @@ P	Sets	T2 Archer: Ruff, new art version 7	60242 60243 60244 60245 60246 60247
 P	Sets	T2 Archer: Ruff, new art version 8	60248 60249 60250 60251 60252 60253
 P	Sets	T2 Archer: Ruff, new art version 9	60254 60255 60256 60257 60258 60259
 P	Sets	T2 Archer: Ruff, new art version 10	60260 60261 60262 60263 60264 60265
-P	Sets	T2 Mage: Dread Mage, in game	30178 56285 21700 35275 32087 2183
+P	Sets	T2 Mage: Dread Mage, in game	60578 60579 60580 60581 60582 60583
 P	Sets	T2 Mage: Dread Mage, new art version 1	60566 60567 60568 60569 60570 60571
 P	Sets	T2 Mage: Dread Mage, new art version 2	60572 60573 60574 60575 60576 60577
 P	Sets	T2 Mage: Dread Mage, new art version 3	60578 60579 60580 60581 60582 60583
@@ -49966,7 +50579,7 @@ P	Sets	T2 Mage: Dread Mage, new art version 7	60602 60603 60604 60605 60606 6060
 P	Sets	T2 Mage: Dread Mage, new art version 8	60608 60609 60610 60611 60612 60613
 P	Sets	T2 Mage: Dread Mage, new art version 9	60614 60615 60616 60617 60618 60619
 P	Sets	T2 Mage: Dread Mage, new art version 10	60620 60621 60622 60623 60624 60625
-P	Sets	T3 Knight: Hellborn, in game	7461 2505 2507 12646 3975 7390 7435 7427
+P	Sets	T3 Knight: Hellborn, in game	59842 59843 59844 59845 59846 59847 59848 59849
 P	Sets	T3 Knight: Hellborn, new art version 1	59826 59827 59828 59829 59830 59831 59832 59833
 P	Sets	T3 Knight: Hellborn, new art version 2	59834 59835 59836 59837 59838 59839 59840 59841
 P	Sets	T3 Knight: Hellborn, new art version 3	59842 59843 59844 59845 59846 59847 59848 59849
@@ -49977,7 +50590,7 @@ P	Sets	T3 Knight: Hellborn, new art version 7	59874 59875 59876 59877 59878 5987
 P	Sets	T3 Knight: Hellborn, new art version 8	59882 59883 59884 59885 59886 59887 59888 59889
 P	Sets	T3 Knight: Hellborn, new art version 9	59890 59891 59892 59893 59894 59895 59896 59897
 P	Sets	T3 Knight: Hellborn, new art version 10	59898 59899 59900 59901 59902 59903 59904 59905
-P	Sets	T3 Archer: Elvenforged, in game	18398 18399 18400 2195 44191 15643
+P	Sets	T3 Archer: Elvenforged, in game	60344 60345 60346 60347 60348 60349
 P	Sets	T3 Archer: Elvenforged, new art version 1	60266 60267 60268 60269 60270 60271
 P	Sets	T3 Archer: Elvenforged, new art version 2	60272 60273 60274 60275 60276 60277
 P	Sets	T3 Archer: Elvenforged, new art version 3	60278 60279 60280 60281 60282 60283
@@ -49988,7 +50601,7 @@ P	Sets	T3 Archer: Elvenforged, new art version 7	60302 60303 60304 60305 60306 6
 P	Sets	T3 Archer: Elvenforged, new art version 8	60308 60309 60310 60311 60312 60313
 P	Sets	T3 Archer: Elvenforged, new art version 9	60314 60315 60316 60317 60318 60319
 P	Sets	T3 Archer: Elvenforged, new art version 10	60320 60321 60322 60323 60324 60325
-P	Sets	T3 Mage: Shadowforged, in game	10016 21725 55178 7892 18401 8920
+P	Sets	T3 Mage: Shadowforged, in game	60626 60627 60628 60629 60630 60631
 P	Sets	T3 Mage: Shadowforged, new art version 1	60626 60627 60628 60629 60630 60631
 P	Sets	T3 Mage: Shadowforged, new art version 2	60632 60633 60634 60635 60636 60637
 P	Sets	T3 Mage: Shadowforged, new art version 3	60638 60639 60640 60641 60642 60643
@@ -49999,7 +50612,7 @@ P	Sets	T3 Mage: Shadowforged, new art version 7	60662 60663 60664 60665 60666 60
 P	Sets	T3 Mage: Shadowforged, new art version 8	60668 60669 60670 60671 60672 60673
 P	Sets	T3 Mage: Shadowforged, new art version 9	60674 60675 60676 60677 60678 60679
 P	Sets	T3 Mage: Shadowforged, new art version 10	60680 60681 60682 60683 60684 60685
-P	Sets	T4 Knight: Warbringer, in game	18403 18404 18405 18406 18410 18450 15404 15647
+P	Sets	T4 Knight: Warbringer, in game	59970 59971 59972 59973 59974 59975 59976 59977
 P	Sets	T4 Knight: Warbringer, new art version 1	59906 59907 59908 59909 59910 59911 59912 59913
 P	Sets	T4 Knight: Warbringer, new art version 2	59914 59915 59916 59917 59918 59919 59920 59921
 P	Sets	T4 Knight: Warbringer, new art version 3	59922 59923 59924 59925 59926 59927 59928 59929
@@ -50010,7 +50623,7 @@ P	Sets	T4 Knight: Warbringer, new art version 7	59954 59955 59956 59957 59958 59
 P	Sets	T4 Knight: Warbringer, new art version 8	59962 59963 59964 59965 59966 59967 59968 59969
 P	Sets	T4 Knight: Warbringer, new art version 9	59970 59971 59972 59973 59974 59975 59976 59977
 P	Sets	T4 Knight: Warbringer, new art version 10	59978 59979 59980 59981 59982 59983 59984 59985
-P	Sets	T4 Archer: Marksman, in game	54523 45582 15490 33050 39658 25522
+P	Sets	T4 Archer: Marksman, in game	60338 60339 60340 60341 60342 60343
 P	Sets	T4 Archer: Marksman, new art version 1	60326 60327 60328 60329 60330 60331
 P	Sets	T4 Archer: Marksman, new art version 2	60332 60333 60334 60335 60336 60337
 P	Sets	T4 Archer: Marksman, new art version 3	60338 60339 60340 60341 60342 60343
@@ -50021,7 +50634,7 @@ P	Sets	T4 Archer: Marksman, new art version 7	60362 60363 60364 60365 60366 6036
 P	Sets	T4 Archer: Marksman, new art version 8	60368 60369 60370 60371 60372 60373
 P	Sets	T4 Archer: Marksman, new art version 9	60374 60375 60376 60377 60378 60379
 P	Sets	T4 Archer: Marksman, new art version 10	60380 60381 60382 60383 60384 60385
-P	Sets	T4 Mage: Arcane, in game	2501 15489 55260 6132 44183 12648
+P	Sets	T4 Mage: Arcane, in game	60716 60717 60718 60719 60720 60721
 P	Sets	T4 Mage: Arcane, new art version 1	60686 60687 60688 60689 60690 60691
 P	Sets	T4 Mage: Arcane, new art version 2	60692 60693 60694 60695 60696 60697
 P	Sets	T4 Mage: Arcane, new art version 3	60698 60699 60700 60701 60702 60703
@@ -50032,7 +50645,7 @@ P	Sets	T4 Mage: Arcane, new art version 7	60722 60723 60724 60725 60726 60727
 P	Sets	T4 Mage: Arcane, new art version 8	60728 60729 60730 60731 60732 60733
 P	Sets	T4 Mage: Arcane, new art version 9	60734 60735 60736 60737 60738 60739
 P	Sets	T4 Mage: Arcane, new art version 10	60740 60741 60742 60743 60744 60745
-P	Sets	T5 Knight: Prestige, in game	15651 15407 15409 15410 39650 22403 22409 22415
+P	Sets	T5 Knight: Prestige, in game	63391 63392 63393 63394 63395 63422 63423 63424
 P	Sets	T5 Knight: Prestige, new art version 1	59986 59987 59988 59989 59990 59991 59992 59993
 P	Sets	T5 Knight: Prestige, new art version 2	59994 59995 59996 59997 59998 59999 60000 60001
 P	Sets	T5 Knight: Prestige, new art version 3	60002 60003 60004 60005 60006 60007 60008 60009
@@ -50043,7 +50656,7 @@ P	Sets	T5 Knight: Prestige, new art version 7	60034 60035 60036 60037 60038 6003
 P	Sets	T5 Knight: Prestige, new art version 8	60042 60043 60044 60045 60046 60047 60048 60049
 P	Sets	T5 Knight: Prestige, new art version 9	60050 60051 60052 60053 60054 60055 60056 60057
 P	Sets	T5 Knight: Prestige, new art version 10	60058 60059 60060 60061 60062 60063 60064 60065
-P	Sets	T5 Archer: Prestige Archer, in game	2474 55251 55175 55281 38180 22418
+P	Sets	T5 Archer: Prestige Archer, in game	63401 63402 63403 63404 63405 63425
 P	Sets	T5 Archer: Prestige Archer, new art version 1	60386 60387 60388 60389 60390 60391
 P	Sets	T5 Archer: Prestige Archer, new art version 2	60392 60393 60394 60395 60396 60397
 P	Sets	T5 Archer: Prestige Archer, new art version 3	60398 60399 60400 60401 60402 60403
@@ -50054,7 +50667,7 @@ P	Sets	T5 Archer: Prestige Archer, new art version 7	60422 60423 60424 60425 604
 P	Sets	T5 Archer: Prestige Archer, new art version 8	60428 60429 60430 60431 60432 60433
 P	Sets	T5 Archer: Prestige Archer, new art version 9	60434 60435 60436 60437 60438 60439
 P	Sets	T5 Archer: Prestige Archer, new art version 10	60440 60441 60442 60443 60444 60445
-P	Sets	T5 Mage: Prestige Mage, in game	13947 55246 44198 25430 22424 18390
+P	Sets	T5 Mage: Prestige Mage, in game	63412 63413 63414 63415 63416 63426
 P	Sets	T5 Mage: Prestige Mage, new art version 1	60746 60747 60748 60749 60750 60751
 P	Sets	T5 Mage: Prestige Mage, new art version 2	60752 60753 60754 60755 60756 60757
 P	Sets	T5 Mage: Prestige Mage, new art version 3	60758 60759 60760 60761 60762 60763
@@ -50065,7 +50678,7 @@ P	Sets	T5 Mage: Prestige Mage, new art version 7	60782 60783 60784 60785 60786 6
 P	Sets	T5 Mage: Prestige Mage, new art version 8	60788 60789 60790 60791 60792 60793
 P	Sets	T5 Mage: Prestige Mage, new art version 9	60794 60795 60796 60797 60798 60799
 P	Sets	T5 Mage: Prestige Mage, new art version 10	60800 60801 60802 60803 60804 60805
-P	Sets	T6 Knight: Corrupted Prestige, in game	34238 36750 36748 36753 36755 30105 30108 30110
+P	Sets	T6 Knight: Corrupted Prestige, in game	63396 63397 63398 63399 63400 63427 63428 63429
 P	Sets	T6 Knight: Corrupted Prestige, new art version 1	60066 60067 60068 60069 60070 60071 60072 60073
 P	Sets	T6 Knight: Corrupted Prestige, new art version 2	60074 60075 60076 60077 60078 60079 60080 60081
 P	Sets	T6 Knight: Corrupted Prestige, new art version 3	60082 60083 60084 60085 60086 60087 60088 60089
@@ -50076,7 +50689,7 @@ P	Sets	T6 Knight: Corrupted Prestige, new art version 7	60114 60115 60116 60117 
 P	Sets	T6 Knight: Corrupted Prestige, new art version 8	60122 60123 60124 60125 60126 60127 60128 60129
 P	Sets	T6 Knight: Corrupted Prestige, new art version 9	60130 60131 60132 60133 60134 60135 60136 60137
 P	Sets	T6 Knight: Corrupted Prestige, new art version 10	60138 60139 60140 60141 60142 60143 60144 60145
-P	Sets	T6 Archer: Corrupted Prestige Archer, in game	44182 55245 55137 48875 39322 30111
+P	Sets	T6 Archer: Corrupted Prestige Archer, in game	63407 63408 63409 63410 63411 63430
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 1	60446 60447 60448 60449 60450 60451
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 2	60452 60453 60454 60455 60456 60457
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 3	60458 60459 60460 60461 60462 60463
@@ -50087,7 +50700,7 @@ P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 7	60482 60483 60484
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 8	60488 60489 60490 60491 60492 60493
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 9	60494 60495 60496 60497 60498 60499
 P	Sets	T6 Archer: Corrupted Prestige Archer, new art version 10	60500 60501 60502 60503 60504 60505
-P	Sets	T6 Mage: Corrupt Prestige Mage, in game	56305 36752 36749 9933 16112 30113
+P	Sets	T6 Mage: Corrupt Prestige Mage, in game	63417 63418 63419 63420 63421 63431
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 1	60806 60807 60808 60809 60810 60811
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 2	60812 60813 60814 60815 60816 60817
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 3	60818 60819 60820 60821 60822 60823
@@ -50098,37 +50711,37 @@ P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 7	60842 60843 60844 60845
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 8	60848 60849 60850 60851 60852 60853
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 9	60854 60855 60856 60857 60858 60859
 P	Sets	T6 Mage: Corrupt Prestige Mage, new art version 10	60860 60861 60862 60863 60864 60865
-P	Weapons	T1: weapons of the sets in game	7416 23547 7431 5907 2188
+P	Weapons	T1: weapons of the sets in game	59735 59736 59737 60175 60559
 P	Weapons	T1: weapons of the new set art, versions 1 to 10	59671 59672 59673 60151 60511 59679 59680 59681 60157 60517 59687 59688 59689 60163 60523 59695 59696 59697 60169 60529 59703 59704 59705 60175 60535 59711 59712 59713 60181 60541 59719 59720 59721 60187 60547 59727 59728 59729 60193 60553 59735 59736 59737 60199 60559 59743 59744 59745 60205 60565
 P	Weapons	T1: items-trabalhados	61619 61625 61631 61637 61643 61649
 P	Weapons	T1: items-novos	63239 63245 63251 63257 63263
 P	Weapons	T1: items	63291 63297 63303 63309 63315
 P	Weapons	T1: weapons	63385 63361 63373 63367 63379
-P	Weapons	T2: weapons of the sets in game	2393 7413 7415 7438 2183
+P	Weapons	T2: weapons of the sets in game	59791 59792 59793 60259 60583
 P	Weapons	T2: weapons of the new set art, versions 1 to 10	59751 59752 59753 60211 60571 59759 59760 59761 60217 60577 59767 59768 59769 60223 60583 59775 59776 59777 60229 60589 59783 59784 59785 60235 60595 59791 59792 59793 60241 60601 59799 59800 59801 60247 60607 59807 59808 59809 60253 60613 59815 59816 59817 60259 60619 59823 59824 59825 60265 60625
 P	Weapons	T2: items-trabalhados	61620 61626 61632 61638 61644 61650
 P	Weapons	T2: items-novos	63240 63246 63252 63258 63264
 P	Weapons	T2: items	63292 63298 63304 63310 63316
 P	Weapons	T2: weapons	63386 63362 63374 63368 63380
-P	Weapons	T3: weapons of the sets in game	7390 7435 7427 15643 8920
+P	Weapons	T3: weapons of the sets in game	59847 59848 59849 60349 60631
 P	Weapons	T3: weapons of the new set art, versions 1 to 10	59831 59832 59833 60271 60631 59839 59840 59841 60277 60637 59847 59848 59849 60283 60643 59855 59856 59857 60289 60649 59863 59864 59865 60295 60655 59871 59872 59873 60301 60661 59879 59880 59881 60307 60667 59887 59888 59889 60313 60673 59895 59896 59897 60319 60679 59903 59904 59905 60325 60685
 P	Weapons	T3: items-trabalhados	61621 61627 61633 61639 61645 61651
 P	Weapons	T3: items-novos	63241 63247 63253 63259 63265
 P	Weapons	T3: items	63293 63299 63305 63311 63317
 P	Weapons	T3: weapons	63387 63363 63375 63369 63381
-P	Weapons	T4: weapons of the sets in game	18450 15404 15647 25522 12648
+P	Weapons	T4: weapons of the sets in game	59975 59976 59977 60343 60721
 P	Weapons	T4: weapons of the new set art, versions 1 to 10	59911 59912 59913 60331 60691 59919 59920 59921 60337 60697 59927 59928 59929 60343 60703 59935 59936 59937 60349 60709 59943 59944 59945 60355 60715 59951 59952 59953 60361 60721 59959 59960 59961 60367 60727 59967 59968 59969 60373 60733 59975 59976 59977 60379 60739 59983 59984 59985 60385 60745
 P	Weapons	T4: items-trabalhados	61622 61628 61634 61640 61646 61652
 P	Weapons	T4: items-novos	63242 63248 63254 63260 63266
 P	Weapons	T4: items	63294 63300 63306 63312 63318
 P	Weapons	T4: weapons	63388 63364 63376 63370 63382
-P	Weapons	T5: weapons of the sets in game	22403 22409 22415 22418 18390
+P	Weapons	T5: weapons of the sets in game	63422 63423 63424 63425 63426
 P	Weapons	T5: weapons of the new set art, versions 1 to 10	59991 59992 59993 60391 60751 59999 60000 60001 60397 60757 60007 60008 60009 60403 60763 60015 60016 60017 60409 60769 60023 60024 60025 60415 60775 60031 60032 60033 60421 60781 60039 60040 60041 60427 60787 60047 60048 60049 60433 60793 60055 60056 60057 60439 60799 60063 60064 60065 60445 60805
 P	Weapons	T5: items-trabalhados	61623 61629 61635 61641 61647 61653
 P	Weapons	T5: items-novos	63243 63249 63255 63261 63267
 P	Weapons	T5: items	63295 63301 63307 63313 63319
 P	Weapons	T5: weapons	63389 63365 63377 63371 63383
-P	Weapons	T6: weapons of the sets in game	30105 30108 30110 30111 30113
+P	Weapons	T6: weapons of the sets in game	63427 63428 63429 63430 63431
 P	Weapons	T6: weapons of the new set art, versions 1 to 10	60071 60072 60073 60451 60811 60079 60080 60081 60457 60817 60087 60088 60089 60463 60823 60095 60096 60097 60469 60829 60103 60104 60105 60475 60835 60111 60112 60113 60481 60841 60119 60120 60121 60487 60847 60127 60128 60129 60493 60853 60135 60136 60137 60499 60859 60143 60144 60145 60505 60865
 P	Weapons	T6: items-trabalhados	61624 61630 61636 61642 61648 61654
 P	Weapons	T6: items-novos	63244 63250 63256 63262 63268
@@ -50149,13 +50762,13 @@ P	Runes	Flying Broom runes: Amber	56746 56747 56748 56749 56750 56751 56752 5675
 P	Runes	Flying Broom runes: Dark	56756 56757 56758 56759 56760 56761 56762 56763 56764 56765
 P	Runes	Tier runes: Crude Healing Rune to Legendary Healing Rune	59306 59307 59308 59309 59310 59311 59312 59313 59314 59315
 P	Runes	Tier runes: Crude Mana Rune to Legendary Mana Rune	59316 59317 59318 59319 59320 59321 59322 59323 59324 59325
-P	Runes	Tier runes: Crude Spirit Rune to Legendary Spirit Rune	59326 59327 59328 59329 59330 59331 59332 59333 59334 59335
+P	Runes	Tier runes: Crude Spirit Rune to Max Spirit Booster	59326 59327 59328 59329 59330 59331 59332 59333 59334 59335
 P	Runes	Tier runes: Crude Fire Rune to Legendary Fire Rune	59336 59337 59338 59339 59340 59341 59342 59343 59344 59345
 P	Runes	Tier runes: Crude Ice Rune to Legendary Ice Rune	59346 59347 59348 59349 59350 59351 59352 59353 59354 59355
 P	Runes	Tier runes: Crude Energy Rune to Legendary Energy Rune	59356 59357 59358 59359 59360 59361 59362 59363 59364 59365
 P	Runes	Tier runes: Crude Earth Rune to Legendary Earth Rune	59366 59367 59368 59369 59370 59371 59372 59373 59374 59375
 P	Runes	Tier runes: Crude Death Rune to Legendary Death Rune	59376 59377 59378 59379 59380 59381 59382 59383 59384 59385
-P	Runes	Tier runes: Crude Holy Rune to Legendary Holy Rune	59386 59387 59388 59389 59390 59391 59392 59393 59394 59395
+P	Runes	Tier runes: Crude Holy Rune to Max Health Booster	59386 59387 59388 59389 59390 59391 59392 59393 59394 59395
 P	Runes	Tier runes: Crude Physical Rune to Legendary Physical Rune	59396 59397 59398 59399 59400 59401 59402 59403 59404 59405
 P	Runes	Tier runes: Crude Water Rune to Legendary Water Rune	59406 59407 59408 59409 59410 59411 59412 59413 59414 59415
 P	Runes	Tier runes: Worn Fire Field Rune to Legendary Ice Field Rune	59416 59417 59418 59419 59420 59421 59422 59423 59424 59425
@@ -50180,7 +50793,7 @@ P	Runes	Tier runes: Aegis Rune to Sanctuary Rune	59596 59597 59598 59599 59600 5
 P	Runes	Tier runes: Warding Rune to Frost Bomb Rune	59606 59607 59608 59609 59610 59611 59612 59613 59614 59615
 P	Runes	Tier runes: Cursed Field Rune to Great Static Wall Rune	59616 59617 59618 59619 59620 59621 59622 59623 59624 59625
 P	Runes	Tier runes: Toxic Wall Rune to Great Spike Wall Rune	59626 59627 59628 59629 59630 59631 59632 59633 59634 59635
-P	Runes	Tier runes: Crude Rose Quartz Rune to Legendary Rose Quartz Rune	59636 59637 59638 59639 59640 59641 59642 59643 59644 59645
+P	Runes	Tier runes: Crude Rose Quartz Rune to Max Mana Booster	59636 59637 59638 59639 59640 59641 59642 59643 59644 59645
 P	Runes	Tier runes: Crude Basalt Rune to Legendary Basalt Rune	59646 59647 59648 59649 59650 59651 59652 59653 59654 59655
 P	Runes	Tier runes: Crude Obsidian Rune to Legendary Obsidian Rune	59656 59657 59658 59659 59660 59661 59662 59663 59664 59665
 P	Runes	Rune art reservas v1: field	60866 60867
@@ -50548,20 +51161,20 @@ H	116	22000	King Kong	20	30	40	50	0
 H	258	25000	Bull Wolf	20	30	40	50	0
 H	130	30000	Dark Sorcerer	132	132	132	132	3
 H	102	40000	Unknown Freak	0	0	0	0	0
-H	312	46000	Crimson Countess	132	132	132	132	3
-H	334	52000	Shalamandar Wielder	20	30	40	50	0
-H	333	58000	Metallic Guy	0	0	0	0	0
-H	341	65000	Undead Doggy	20	30	40	50	0
-H	261	70000	Huge Polar Freak	0	0	0	0	0
-H	317	76000	Blueish	20	30	40	50	0
-H	340	80000	Snakebite Master Boss	95	116	119	115	0
-H	321	86000	Insector	20	30	40	50	0
-H	315	92000	Black Slime	20	30	40	50	0
-H	348	100000	Spinor	20	30	40	50	0
-H	268	108000	Cursed Warrior	58	59	45	114	3
-H	264	115000	Warrior King	78	116	95	121	0
-H	346	122000	Epic Ant	0	0	0	0	0
-H	320	130000	HiDamage	0	0	0	0	0
+H	555	46000	Night Baron	0	0	0	0	0
+H	490	52000	Iron Juggernaut	0	0	0	0	0
+H	600	58000	Steel Golem	0	0	0	0	0
+H	322	65000	Grave Hound	0	0	0	0	0
+H	511	70000	Glacial Wyrm	0	0	0	0	0
+H	1562	76000	Azure Marid	0	0	0	0	0
+H	675	80000	Serpent Overlord	0	0	0	0	0
+H	458	86000	Scarab Tyrant	0	0	0	0	0
+H	1064	92000	Tar Defiler	0	0	0	0	0
+H	347	100000	Widow Matriarch	0	0	0	0	0
+H	1268	108000	Cursed Revenant	0	19	0	38	0
+H	1316	115000	Fallen Monarch	76	57	76	95	1
+H	456	122000	Colossal Crawler	0	0	0	0	0
+H	856	130000	Hellfire Executioner	0	0	0	0	0
 H	200	135000	Crab Daddy	0	0	0	0	0
 H	584	140000	Uncle Balloon	0	0	0	0	0
 H	720	145000	Sir Naps A Lot	0	0	0	0	0

@@ -122,7 +122,7 @@ local function storeAnswer(url, body, cb)
   end
   cb({ok = true, points = 1011, admin = false, characters = {'Dev', 'Second Character'},
     categories = {{id = 1, name = 'Equipment'}, {id = 2, name = 'Weapons'}, {id = 3, name = 'Consumables'}, {id = 4, name = 'Runes'},
-      {id = 5, name = 'Upgrades & Gems'}, {id = 6, name = 'Mounts'}, {id = 7, name = 'Boosts'}, {id = 8, name = 'Premium'}, {id = 9, name = 'Decoration'}, {id = 10, name = 'Misc'}},
+      {id = 5, name = 'Upgrades & Gems'}, {id = 6, name = 'Mounts'}, {id = 7, name = 'Boosts'}, {id = 8, name = 'Premium'}, {id = 9, name = 'Decoration'}, {id = 10, name = 'Misc'}, {id = 11, name = 'Outfits'}},
     offers = {
       offer(1, 1, 'Prestige Helmet', 5, 3351, 1, 'Arm: 1000, It gives 8% protection against everything.'),
       offer(2, 1, 'Prestige Armor', 5, 3357, 1, 'Arm: 1000, It gives 8% protection against everything.'),
@@ -132,7 +132,18 @@ local function storeAnswer(url, body, cb)
       offer(6, 1, "Wayme's Backpack", 10, 2854, 1, 'Holds more than any other.'),
       offer(7, 1, 'Weekly Tasks Expansion', 900, 3041, 1, 'Opens the last 3 kill tasks and the last 3 delivery tasks of the Weekly Tasks.'),
       offer(8, 1, 'Ultimate Health Potions', 20, 3031, 100, '100 ultimate health potions.'),
-    }})
+      {id = 9, category = 11, name = 'Full Arbalester Outfit', price = 600, item = 45, count = 3, amount = 1, type = 2, looks = {1450, 1449},
+       description = 'Armed with a powerful crossbow. Includes the outfit and both addons.'},
+      {id = 10, category = 11, name = 'Full Sun Priest Outfit', price = 750, item = 80, count = 3, amount = 1, type = 2, looks = {1024, 1023},
+       description = 'Includes the outfit and both addons.'},
+      {id = 11, category = 6, name = 'Armoured War Horse', price = 870, item = 24, count = 1, amount = 1, type = 3, looks = {426},
+       description = 'The Armoured War Horse is a dangerous black beauty!'},
+      {id = 12, category = 7, name = 'XP Boost', price = 30, item = 0, count = 1, amount = 1, type = 4,
+       description = 'Increases the experience your character gains by 50% for 1 hour.'},
+      offer(13, 8, 'VIP Medal', 125, 5785, 1, '+15 VIP days.'),
+    },
+    sexes = {Dev = 1, ['Second Character'] = 0},
+    xpBoost = {Dev = {bought = 1, price = 45, active = false}, ['Second Character'] = {bought = 0, price = 30, active = false}}})
 end
 
 local function fakeContainer(id, name, itemIds, capacity)
@@ -543,6 +554,14 @@ local function define()
     modules.game_guides.hide()
     modules.game_store.show()
   end, 900)
+  step('store_outfit', function() modules.game_store.hide() modules.game_store.show('Full Arbalester Outfit') end, 900)
+  step('store_outfit_female', function()
+    local w = byId('storeWindow')
+    if w then w:recursiveGetChildById('charBox'):setCurrentOption('Second Character') end
+  end, 600)
+  step('store_mount', function() modules.game_store.hide() modules.game_store.show('Armoured War Horse') end, 900)
+  step('store_boost', function() modules.game_store.hide() modules.game_store.show('XP Boost') end, 900)
+  step('store_premium', function() modules.game_store.hide() modules.game_store.show('VIP Medal') end, 900)
   step('taskboard_bounty', function()
     modules.game_store.hide()
     modules.game_taskboard.onTaskMessage(nil, 11, TASKS)
