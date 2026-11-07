@@ -42,6 +42,8 @@ local GUIDES = {
        text = 'Ctrl+O lists the channels you can open; Ctrl+E closes the tab you are in; Ctrl+H opens the Help channel.'},
       {art = 'ArtKeys', title = 'Screen', keys = {{'Ctrl+N', 'Names and bars'}, {'Ctrl+W', 'Clear texts'}, {'Ctrl+Shift+F', 'Full screen'}},
        text = 'Ctrl+N hides the names, then the health bars, then brings them back. Ctrl+W clears the texts on the screen. Ctrl+Shift+F switches full screen.'},
+      {art = 'ArtKeys', title = 'Rules', keys = {{'!rules', 'Rules and terms'}},
+       text = 'Say !rules in any chat to open the rules of the game, your responsibility for your items, and the donation terms.'},
       {art = 'ArtKeys', title = 'Logout', keys = {{'Ctrl+Q', 'Logout'}, {'Ctrl+L', 'Logout'}},
        text = 'Either key logs your character out (not during a fight).'},
     }

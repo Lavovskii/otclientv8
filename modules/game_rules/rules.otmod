@@ -1,0 +1,8 @@
+Module
+  name: game_rules
+  description: The !rules window (rules and terms of ForgottenL) and the Yes/No questions the server asks
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ rules ]
+  @onLoad: init()
+  @onUnload: terminate()
