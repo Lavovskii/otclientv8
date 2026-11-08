@@ -1,0 +1,9 @@
+Module
+  name: game_bossbar
+  description: The boss bar at the top of the game while a boss is attacked
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ bossbar ]
+  dependencies: [ game_topbar ]
+  @onLoad: init()
+  @onUnload: terminate()

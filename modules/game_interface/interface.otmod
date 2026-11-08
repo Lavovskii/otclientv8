@@ -38,6 +38,7 @@ Module
     - game_store
     - game_taskboard
     - game_dailyrewards
+    - game_bossbar
     - game_checkall
     - game_itemselector
     - client_textedit

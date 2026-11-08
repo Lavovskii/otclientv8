@@ -2145,6 +2145,93 @@ ArtBossReward < Panel
     anchors.top: chest.bottom
     text: 7 days
 
+// the boss bar at the top: the boss in its slot, its kind on the Store's plaque, its name in gold, and the bar with the lighter part
+// of the damage just taken (modules/game_bossbar)
+ArtBossBar < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: portrait
+    size: 44 44
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 6
+    image-source: /images/game/bossbar/portrait
+    phantom: true
+
+    UICreature
+      anchors.fill: parent
+      margin: 4
+      phantom: true
+      @onSetup: self:setOutfit({type = 201})
+
+  UIWidget
+    id: tag
+    anchors.left: portrait.right
+    anchors.top: portrait.top
+    margin-left: 6
+    image-source: /images/game/bossbar/tag_world
+    image-auto-resize: true
+    phantom: true
+
+  Label
+    anchors.left: tag.right
+    anchors.top: portrait.top
+    margin-left: 6
+    margin-top: -7
+    font: bossbar-name
+    text: Orshabaal
+    text-auto-resize: true
+    phantom: true
+
+  UIWidget
+    id: track
+    anchors.left: portrait.right
+    anchors.right: parent.right
+    anchors.top: portrait.top
+    margin-left: 6
+    margin-right: 6
+    margin-top: 22
+    height: 20
+    image-source: /images/game/bossbar/track
+    image-border: 3
+    phantom: true
+
+    UIWidget
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      margin: 2
+      width: 150
+      image-source: /images/game/bossbar/trail
+      image-border: 2
+      phantom: true
+
+    UIWidget
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      margin: 2
+      width: 120
+      image-source: /images/game/bossbar/fill
+      image-border: 2
+      phantom: true
+
+    Label
+      anchors.fill: parent
+      font: verdana-11px-rounded
+      color: #ffffff
+      text-align: center
+      text: 13,888 / 22,400 (62%)
+      phantom: true
+
+  GuideNote
+    anchors.left: portrait.left
+    anchors.top: portrait.bottom
+    margin-top: 6
+    text: fades in when you attack a boss
+
 // the magic chest: the six keys from the hunts, each with how many items of its tier it gives, and the legendary chest
 // floating open over its hoard
 ArtMagicChest < Panel

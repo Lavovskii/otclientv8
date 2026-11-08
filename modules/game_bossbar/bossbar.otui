@@ -1,0 +1,125 @@
+// The boss bar (the owner's pick 9B, 2026-11-08; art by tools/make_bossbar_art.py). It stands in the topbar where the health and
+// mana bars were, keeps its height when no boss is attacked (the map never moves in a fight) and shows its content with a fade.
+BossBarPanel < Panel
+  id: bossbar
+  height: 49
+  focusable: false
+  phantom: true
+
+  Panel
+    id: content
+    anchors.fill: parent
+    phantom: true
+    opacity: 0
+
+    UIWidget
+      id: portrait
+      size: 44 44
+      anchors.left: parent.left
+      anchors.top: parent.top
+      margin-top: 3
+      image-source: /images/game/bossbar/portrait
+      phantom: true
+
+      UICreature
+        id: creature
+        anchors.fill: parent
+        margin: 4
+        phantom: true
+
+    UIWidget
+      id: tag
+      anchors.left: portrait.right
+      anchors.top: parent.top
+      margin-left: 6
+      margin-top: 4
+      image-source: /images/game/bossbar/tag_world
+      image-auto-resize: true
+      phantom: true
+
+    UILabel
+      id: name
+      anchors.left: tag.right
+      anchors.top: parent.top
+      margin-left: 8
+      margin-top: -3
+      font: bossbar-name
+      text-auto-resize: true
+      phantom: true
+
+    UILabel
+      id: level
+      anchors.right: parent.right
+      anchors.top: parent.top
+      margin-right: 38
+      margin-top: 5
+      height: 16
+      image-source: /images/game/bossbar/level
+      image-border: 4
+      font: verdana-11px-rounded
+      color: #ffe08c
+      text-align: center
+      text-offset: 0 1
+      phantom: true
+
+    UIWidget
+      id: track
+      anchors.left: portrait.right
+      anchors.right: parent.right
+      anchors.top: parent.top
+      margin-left: 32
+      margin-right: 32
+      margin-top: 27
+      height: 20
+      image-source: /images/game/bossbar/track
+      image-border: 3
+      phantom: true
+
+      UIWidget
+        id: trail
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        margin: 2
+        width: 0
+        image-source: /images/game/bossbar/trail
+        image-border: 2
+        phantom: true
+
+      UIWidget
+        id: fill
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        margin: 2
+        width: 0
+        image-source: /images/game/bossbar/fill
+        image-border: 2
+        phantom: true
+
+      UILabel
+        id: health
+        anchors.fill: parent
+        font: verdana-11px-rounded
+        color: #ffffff
+        text-align: center
+        text-offset: 0 1
+        phantom: true
+
+    UIWidget
+      id: dragonLeft
+      size: 31 32
+      anchors.left: track.left
+      anchors.verticalCenter: track.verticalCenter
+      margin-left: -28
+      image-source: /images/game/bossbar/dragon_left
+      phantom: true
+
+    UIWidget
+      id: dragonRight
+      size: 31 32
+      anchors.right: track.right
+      anchors.verticalCenter: track.verticalCenter
+      margin-right: -28
+      image-source: /images/game/bossbar/dragon_right
+      phantom: true

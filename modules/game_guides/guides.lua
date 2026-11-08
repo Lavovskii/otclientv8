@@ -97,6 +97,8 @@ local GUIDES = {
        text = 'A monster you kill may leave an echo on the ground for 2 minutes. Step on it: usually 6 stronger monsters of that kind wake up, rarely one boss with a red glow, 10x the experience and much better loot.'},
       {art = 'ArtBossReward', title = 'Boss loot',
        text = 'Everyone who fights a boss gets their own loot. Open the bag in its corpse and take items one by one, or right click the bag and choose Loot all. What you leave waits 7 days in the reward chest, in the depot room under the temple, with one bag for each boss. The bags themselves stay where they are.'},
+      {art = 'ArtBossBar', title = 'Boss bar',
+       text = 'Attack a boss and a big bar fades in at the top of the game, where your health and mana bars were: its picture, its kind (World, Event, Quest, Echo...), its name, its level and its health, exact. The lighter part is the damage just done. Stop attacking, or kill it, and the bar fades away. Your own health and mana stay beside your inventory and in the circles.'},
       {art = 'ArtMagicChest', title = 'Magic chest',
        text = 'One floor above the temple stands the magic chest. Use a key from the hunts on it, or standing beside it: its lid floats open and gives you set pieces and weapons of the tier of the key, in a backpack. Bronze 10 of tier 1, Iron 8 of tier 2, Silver 6 of tier 3, Gold 4 of tier 4, Prestige 2 of tier 5, Corrupt Prestige 1 of tier 6. The key is used up.'},
       {art = 'ArtDailyRewards', title = 'Daily Rewards',

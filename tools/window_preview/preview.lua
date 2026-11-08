@@ -331,6 +331,14 @@ local function define()
       modules.game_console.addTabText('19:13 Loot of a hell boy: 10 crystal coins.', {color = '#33FF33'}, tab)
     end
   end, 1200)
+  -- the boss bar in the topbar: a world boss, then an event boss after a hit (the lighter part is the damage just taken)
+  step('bossbar', function()
+    modules.game_bossbar.preview('S|1|Orshabaal|world|2450|13888|22400', {type = 201})
+  end, 900)
+  step('bossbar_event', function()
+    modules.game_bossbar.preview('S|2|Penguin Summoner|event|0|300000000|300000000', {type = 255})
+    modules.game_bossbar.preview('H|2|171000000|300000000')
+  end, 300)
   -- what adds up to each stat, with an answer shaped like the server's
   step('skills_tips', function()
     closeWindows()
@@ -566,6 +574,19 @@ local function define()
     local cards = panel:recursiveGetChildById('cards')
     local children = cards:getChildren()
     cards:ensureChildVisible(children[#children])
+  end, 700)
+  -- the Boss bar card of the Interface tab
+  step('guides_bossbar', function()
+    local bar = byId('guidesTabBar')
+    bar:selectTab(bar:getTabs()[5])
+    local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+    local children = cards:getChildren()
+    for i, card in ipairs(children) do
+      local title = card:recursiveGetChildById('title')
+      if title and title:getText() == 'Boss bar' then
+        cards:ensureChildVisible(children[math.min(#children, i + 1)])
+      end
+    end
   end, 700)
   step('guides_hands', function()
     local bar = byId('guidesTabBar')
