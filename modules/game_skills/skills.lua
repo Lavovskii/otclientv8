@@ -84,8 +84,15 @@ local SOURCE_NAMES = {
   righthand = 'Right hand', lefthand = 'Left hand', legs = 'Legs', boots = 'Boots', ring = 'Ring', ammo = 'Ammo', trinket = 'Trinket',
   item = 'Equipment', level = 'Level', base = 'Trained', own = 'Yours', vocation = 'Vocation', booster = 'Boosters', mount = 'Mount',
   others = 'Spells and effects', set = 'Set bonus', total = 'Total', carried = 'Carrying', small = 'Small boosters', scroll = 'Booster scroll',
-  ozzo = 'Ozzo scroll',
+  ozzo = 'Ozzo Booster', oldhp = 'Old Health Booster', oldmp = 'Old Mana Booster', promotion = 'Promotion', knight = 'Knight bonus (20%)',
+  unknown = 'Other', booster = 'Boosters',
+  -- the parts of the experience rate (they add up, like Tibia's)
+  raw = 'Raw Exp Rate', stamina = 'Stamina Bonus', daily = 'Daily Streak Bonus', xpboost = 'Exp Boost (shop)', paper = 'Experience Paper',
+  charger = 'Experience Boost (charged)', otherboost = 'Other boost', lowstamina = 'Low Stamina',
 }
+
+-- lines whose number is green while something raises it (the server says so in its answer)
+local boosted = {}
 
 function init()
   connect(LocalPlayer, {
@@ -177,7 +184,7 @@ function expToAdvance(currentLevel, currentExp)
 end
 
 function resetSkillColor(id)
-  rows[id]:getChildById('value'):setColor(NORMAL)
+  rows[id]:getChildById('value'):setColor(boosted[id] and GREEN or NORMAL)
 end
 
 function setSkillBase(id, value, baseValue)
@@ -446,10 +453,10 @@ function showStats()
   -- experience rate and the experience modifiers
   local rate = stats and stats.rate
   setSkillValue('xpRate', rate and (rate .. '%') or '-')
-  setSkillColor('xpRate', (rate and rate > 100) and GREEN or NORMAL)
+  setSkillColor('xpRate', (rate and rate > 100) and GREEN or ((rate and rate < 100) and RED or NORMAL))
   local sources = {}
-  if left('potion') > 0 then table.insert(sources, tr('Experience potion: x1.5 for %s', clock(left('potion')))) end
-  if left('paper') > 0 then table.insert(sources, tr('Experience paper: x1.25 for %s', clock(left('paper')))) end
+  if left('potion') > 0 then table.insert(sources, tr('Exp Boost: %s left', clock(left('potion')))) end
+  if left('paper') > 0 then table.insert(sources, tr('Experience paper: %s left', clock(left('paper')))) end
   local boost = stats and stats.boost or 0
   rows.xpBoost:setVisible(boost > 0)
   if boost > 0 then
@@ -458,9 +465,16 @@ function showStats()
     setSkillColor('xpBoost', active and GREEN or GREY)
     rows.xpBoost:setTooltip(tr(EXPLAIN.xpBoost) .. '\n' .. (active and tr('On now: +%d%%, %s left.', stats.boostpercent, clock(boost))
       or tr('Off now: +%d%%, %s charged.', stats.boostpercent, clock(boost))))
-    if active then table.insert(sources, tr('Experience Boost: +%d%%', stats.boostpercent)) end
   end
-  rows.xpRate:setTooltip(tr(EXPLAIN.xpRate) .. '\n' .. (#sources > 0 and table.concat(sources, '\n') or tr('Nothing raises it now.')))
+  -- like Tibia's: every part of the rate, then the total, then the timers
+  local parts = {}
+  for _, source in ipairs(stats and stats.sources and stats.sources.xp or {}) do
+    local name = tr(SOURCE_NAMES[source.name] or source.name)
+    table.insert(parts, name .. ': ' .. (source.name == 'raw' and (source.value .. '%') or ((source.value > 0 and '+' or '') .. source.value .. '%')))
+  end
+  local tip = #parts > 0 and (table.concat(parts, '\n') .. '\n' .. tr('Total: %s', (rate or 100) .. '%')) or tr('Nothing raises it now.')
+  if #sources > 0 then tip = tip .. '\n\n' .. table.concat(sources, '\n') end
+  rows.xpRate:setTooltip(tip .. '\n\n' .. tr(EXPLAIN.xpRate))
 
   local food = left('food')
   setSkillValue('food', stats and clock(food) or '-')
@@ -539,17 +553,10 @@ function showStats()
   -- the character's bonuses
   local vip = left('vip')
   line(bonus, 'vip', tr('VIP'), vip > 0 and days(vip) or tr('No'), vip > 0 and GREEN or GREY,
-    vip > 0 and tr('VIP for %s more: VIP areas and doors, !vipstatus. A VIP Medal adds 15 days.', days(vip))
-      or tr('Not VIP. A VIP Medal gives 15 days of VIP: VIP areas and doors.'), 5785)
-  line(bonus, 'svip', tr('Super VIP'), stats.supervip == 1 and tr('Forever') or tr('No'), stats.supervip == 1 and GOLD or GREY,
-    stats.supervip == 1 and tr('Super VIP for ever.') or tr('Not Super VIP. The Super VIP Medal gives it for ever (you must be VIP to use it).'), 9218)
+    vip > 0 and tr('VIP for %s more: VIP town, hunts and NPCs, and +50%% experience with 39 to 42 hours of stamina. !vipstatus. A VIP Medal adds 30 days.', days(vip))
+      or tr('Not VIP. A VIP Medal gives 30 days of VIP: VIP town, hunts and NPCs, and +50%% experience with 39 to 42 hours of stamina.'), 5785)
   if stats.viptp == 1 then
     line(bonus, 'viptp', tr('VIP Teleport'), tr('Yes'), GREEN, tr('You can use !viptp.'), 5957)
-  end
-  if (stats.premium or 0) > 0 then
-    local unlimited = stats.premium >= 65535 -- the server's way of saying premium for ever (free premium)
-    line(bonus, 'prem', tr('Premium'), unlimited and tr('Unlimited') or days(stats.premium * 86400), GREEN,
-      unlimited and tr('Your account is premium for ever.') or tr('Premium days left on your account.'), 3011)
   end
   line(bonus, 'burst', tr('Exp Burst'), stats.expburst == 1 and tr('Unlocked') or tr('Locked'), stats.expburst == 1 and GREEN or GREY,
     stats.expburst == 1 and tr('Type !expburst to turn your Experience Boost on and off.') or tr('Finish the !expburst quest to be able to turn on your Experience Boost.'), 138)
@@ -569,6 +576,17 @@ function showStats()
 
   for id, source in pairs(FIXED_SOURCES) do
     rows[id]:setTooltip(tipFor(source.stat, tr(EXPLAIN[id]), source.unit))
+  end
+  boosted.health, boosted.mana = false, false
+  for _, key in ipairs({'health', 'mana'}) do
+    for _, source in ipairs(stats.sources[key] or {}) do
+      if source.name ~= 'level' and source.value > 0 then boosted[key] = true end
+    end
+  end
+  local player = g_game.getLocalPlayer()
+  if player then
+    onHealthChange(player, player:getHealth(), player:getMaxHealth())
+    onManaChange(player, player:getMana(), player:getMaxMana())
   end
 
   fillPanel('combatPanel', combat)

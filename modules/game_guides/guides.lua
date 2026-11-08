@@ -78,7 +78,7 @@ local GUIDES = {
       {art = 'ArtWindows', title = 'Your screen stays as you left it',
        text = 'Move, resize and minimize your windows and open your backpacks: at the next login, even days later, everything is back in its place. Each character keeps its own.'},
       {art = 'ArtSkills', title = 'Skills window',
-       text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP, Super VIP and boosters. Hold the mouse over a line to see everything that adds up to its number, and what it means.'},
+       text = 'Everything about your character, in sections: skills, combat (attack, defence, armor, protections), VIP and boosters. A green number is raised by something: hold the mouse over it to see where each part comes from. The experience rate adds up like in Tibia: Raw Exp Rate 100%%, Stamina Bonus +50%% (VIP, 39 hours or more), Daily Streak Bonus and Exp Boost.'},
       {art = 'ArtStats', title = 'Real health, mana and stats',
        text = 'Your true numbers, also above 65,535. The circles around you show health and mana in percent (Ctrl+Shift+B hides or shows them); capacity shows 14k for 14,000.'},
       {art = 'ArtSetBonus', title = 'Set bonus',
