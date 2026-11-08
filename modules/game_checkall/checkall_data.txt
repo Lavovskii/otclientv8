@@ -1621,7 +1621,7 @@ I	2341	3228	helmet adornment
 I	2342	3229	helmet of the ancients
 I	2343	3230	helmet of the ancients
 I	2344	3231	oil lamp
-I	2345	3232	MagicLevel Scroll
+I	2345	3232	
 I	2346	3233	tear of daraman
 I	2347	3234	cookbook
 I	2348	3235	ancient rune
@@ -4873,7 +4873,7 @@ I	5798	8156	abacus
 I	5799	5799	golden figurine
 I	5800	5800	fishermans rope
 I	5801	5801	key ring
-I	5802	5802	Axe Scroll
+I	5802	5802	
 I	5803	5803	arbalest
 I	5804	5804	nose ring
 I	5805	5805	golden goblet
@@ -5024,7 +5024,7 @@ I	5951	5951	fish tail
 I	5952	5952	poem scroll
 I	5953	5953	marijuana
 I	5954	5954	demon horn
-I	5956	4831	Exp Scroll
+I	5956	4831	
 I	5957	5957	lottery ticket
 I	5958	5958	Name Change Scroll
 I	5960	5960	dead troll
@@ -5154,7 +5154,7 @@ I	6083	6083	dead human
 I	6084	6084	dead human
 I	6085	6085	large trunk
 I	6086	6086	label
-I	6087	6087	Distance Scroll
+I	6087	6087	
 I	6088	6088	music sheet
 I	6089	6089	music sheet
 I	6090	6090	music sheet
@@ -5170,7 +5170,7 @@ I	6099	6099	brutus bloodbeard's hat
 I	6100	6100	lethal lissy's shirt
 I	6101	6101	ron the ripper's sabre
 I	6102	6102	deadeye devious' eye patch
-I	6103	6103	Club Scroll
+I	6103	6103	
 I	6104	6104	jewel case
 I	6105	2393	raymond striker's lucky pillow
 I	6106	6106	green flask
@@ -7943,11 +7943,11 @@ I	8973	8145	buttress
 I	8974	8146	oracle figurine
 I	8975	8147	oracle figurine
 I	8976	8148	golden falcon
-I	8977	8149	Shielding Scroll
+I	8977	8149	
 I	8978	8150	key of numerous locks
 I	8979	8151	tibiahispano emblem
 I	8980	8152	mexcalibur
-I	8981	8153	Sword Scroll
+I	8981	8153	
 I	8982	8154	Outfit Doctor
 I	8983	8155	heavily bound book
 I	8984	8156	abacus
@@ -9096,7 +9096,7 @@ I	10132	9214	bronze trophy of excellence
 I	10133	9215	gold medal
 I	10134	9216	silver medal
 I	10135	9217	bronze medal
-I	10136	9218	Super VIP
+I	10136	9218	gilded medal
 I	10137	9219	arcane insignia
 I	10138	9220	hero's medal
 I	10139	9221	laurel wreath
@@ -35810,11 +35810,11 @@ I	48933	43942	sandstone border
 I	48934	43943	sandstone border
 I	48935	43944	palm tree
 I	48936	43945	blue palm tree
-I	48937	43946	abridged promotion scroll
-I	48938	43947	basic promotion scroll
-I	48939	43948	revised promotion scroll
-I	48940	43949	extended promotion scroll
-I	48941	43950	advanced promotion scroll
+I	48937	43946	Melee Scroll
+I	48938	43947	Distance Scroll
+I	48939	43948	Magic Level Scroll
+I	48940	43949	Shielding Scroll
+I	48941	43950	Fishing Scroll
 I	48943	43952	closed door
 I	48944	43953	closed door
 I	48945	43954	open door
@@ -45681,9 +45681,9 @@ I	61146	57101	placeholder sprite 487424
 I	61147	57102	placeholder sprite 487425
 I	61148	57103	placeholder sprite 487426
 I	61149	57104	placeholder sprite 487427
-I	61150	57105	placeholder sprite 487428
-I	61151	57106	placeholder sprite 487429
-I	61152	57107	placeholder sprite 487430
+I	61150	57105	Super SD
+I	61151	57106	Mega SD
+I	61152	57107	Mega Super SD
 I	61153	57108	placeholder sprite 487431
 I	61154	57109	placeholder sprite 487432
 I	61155	57110	placeholder sprite 487433
@@ -48592,24 +48592,26 @@ I	64057	60012	placeholder sprite 535146
 I	64058	60013	placeholder sprite 535147
 I	64059	60014	placeholder sprite 535148
 I	64060	60015	placeholder sprite 535149
-I	64061	60016	healing rune tier 1
-I	64062	60017	healing rune tier 2
-I	64063	60018	healing rune tier 3
-I	64064	60019	healing rune tier 4
-I	64065	60020	healing rune tier 5
-I	64066	60021	healing rune tier 6
-I	64067	60022	mana rune tier 1
-I	64068	60023	mana rune tier 2
-I	64069	60024	mana rune tier 3
-I	64070	60025	mana rune tier 4
-I	64071	60026	mana rune tier 5
-I	64072	60027	mana rune tier 6
-I	64073	60028	spirit rune tier 1
-I	64074	60029	spirit rune tier 2
-I	64075	60030	spirit rune tier 3
-I	64076	60031	spirit rune tier 4
-I	64077	60032	spirit rune tier 5
-I	64078	60033	spirit rune tier 6
+I	64061	60016	small healing rune
+I	64062	60017	strong healing rune
+I	64063	60018	great healing rune
+I	64064	60019	super healing rune
+I	64065	60020	prestige healing rune
+I	64066	60021	super prestige healing rune
+I	64067	60022	small manarune
+I	64068	60023	strong manarune
+I	64069	60024	great manarune
+I	64070	60025	super manarune
+I	64071	60026	prestige manarune
+I	64072	60027	super prestige manarune
+I	64073	60028	small spirit rune
+I	64074	60029	strong spirit rune
+I	64075	60030	great spirit rune
+I	64076	60031	super spirit rune
+I	64077	60032	prestige spirit rune
+I	64078	60033	super prestige spirit rune
+I	64300	9057	Buffary Coin
+I	64301	11587	ForgottenL Coin
 O	1	1	
 O	2	2	monster Cursed Orc, monster Orc Warlord
 O	3	3	
