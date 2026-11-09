@@ -1,4 +1,37 @@
 local gameStart = 0
+
+-- Backspace goes back to the container the last opened one is in, for 3 seconds after opening it (the owner,
+-- 2026-11-09): open a bag, Backspace, and the window shows its parent again. Each step back starts the 3 seconds again.
+-- Bound on the game and on the chat box: when it does nothing, the key goes on deleting text as before.
+local BACK_MS = 3000
+local lastOpened = nil -- {container, time}
+
+local function backToParent()
+  if not lastOpened or g_clock.millis() - lastOpened.time > BACK_MS then return false end
+  local container = lastOpened.container
+  if not container or not container.window or not container:hasParent() then return false end
+  lastOpened = nil
+  g_game.openParent(container)
+  return true
+end
+
+local backBound = {}
+local function bindBack()
+  for _, widget in ipairs({modules.game_interface.getRootPanel(), modules.game_console and modules.game_console.consoleTextEdit}) do
+    if widget and not backBound[widget] then
+      g_keyboard.bindKeyPress('Backspace', backToParent, widget)
+      backBound[widget] = true
+    end
+  end
+end
+
+local function unbindBack()
+  for widget in pairs(backBound) do
+    g_keyboard.unbindKeyPress('Backspace', backToParent, widget)
+  end
+  backBound = {}
+end
+
 function init()
   ProtocolGame.registerExtendedOpcode(BROWSE_INFO_OPCODE, onBrowseInfo)
   ProtocolGame.registerExtendedOpcode(REWARD_PAGES_OPCODE, onRewardPages)
@@ -12,6 +45,7 @@ function init()
   })
 
   reloadContainers()
+  bindBack()
 end
 
 function terminate()
@@ -25,6 +59,7 @@ function terminate()
     onGameStart = markStart,
     onGameEnd = clean
   })
+  unbindBack()
 end
 
 function reloadContainers()
@@ -221,6 +256,8 @@ function onBrowseInfo(protocol, opcode, buffer)
 end
 
 function onContainerOpen(container, previousContainer)
+  lastOpened = {container = container, time = g_clock.millis()}
+  bindBack()
   local containerWindow
   if previousContainer and previousContainer.window then
     containerWindow = previousContainer.window

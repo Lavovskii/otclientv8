@@ -30,6 +30,7 @@ MiniWindow < UIMiniWindow
 
   UIButton
     id: closeButton
+    !tooltip: tr('Close')
     anchors.top: parent.top
     anchors.right: parent.right
     margin-top: 2
@@ -46,6 +47,7 @@ MiniWindow < UIMiniWindow
 
   UIButton
     id: minimizeButton
+    !tooltip: tr('Minimize / restore')
     anchors.top: closeButton.top
     anchors.right: closeButton.left
     margin-right: 3
@@ -70,6 +72,7 @@ MiniWindow < UIMiniWindow
 
   UIButton
     id: lockButton
+    !tooltip: tr('Lock / unlock (a locked window cannot be moved)')
     anchors.top: minimizeButton.top
     anchors.right: minimizeButton.left
     margin-right: 2
@@ -146,6 +149,7 @@ HeadlessMiniWindow < UIMiniWindow
 
   UIButton
     id: minimizeButton
+    !tooltip: tr('Minimize / restore')
     anchors.top: parent.top
     anchors.right: parent.right
     margin-right: 10
@@ -185,6 +189,7 @@ HeadlessMiniWindow < UIMiniWindow
 
   UIButton
     id: closeButton
+    !tooltip: tr('Close')
     anchors.top: parent.top
     anchors.right: parent.right
     hidden: true

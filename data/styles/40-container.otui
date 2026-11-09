@@ -19,6 +19,7 @@ ContainerWindow < MiniWindow
 
   UIButton
     id: upButton
+    !tooltip: tr('Back to the container this one is in (Backspace)')
     anchors.top: lockButton.top
     anchors.right: lockButton.left
     margin-right: 3
