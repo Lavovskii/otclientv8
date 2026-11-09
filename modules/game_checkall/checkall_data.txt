@@ -46018,18 +46018,18 @@ I	61483	57438	Spell
 I	61484	57439	Spell
 I	61485	57440	placeholder sprite 488583
 I	61486	57441	placeholder sprite 488619
-I	61487	57442	placeholder sprite 488655
-I	61488	57443	placeholder sprite 488676
-I	61489	57444	placeholder sprite 488693
-I	61490	57445	placeholder sprite 488710
-I	61491	57446	placeholder sprite 488726
-I	61492	57447	placeholder sprite 488743
-I	61493	57448	placeholder sprite 488760
-I	61494	57449	placeholder sprite 488782
-I	61495	57450	placeholder sprite 488801
-I	61496	57451	placeholder sprite 488822
-I	61497	57452	placeholder sprite 488844
-I	61498	57453	placeholder sprite 488864
+I	61487	57442	Gucci Backpack
+I	61488	57443	Louis Vuitton Backpack
+I	61489	57444	Chanel Backpack
+I	61490	57445	Dior Backpack
+I	61491	57446	Prada Backpack
+I	61492	57447	Versace Backpack
+I	61493	57448	Burberry Backpack
+I	61494	57449	Fendi Backpack
+I	61495	57450	Hermes Backpack
+I	61496	57451	Bottega Veneta Backpack
+I	61497	57452	Goyard Backpack
+I	61498	57453	Valentino Backpack
 I	61499	57454	placeholder sprite 488883
 I	61500	57455	placeholder sprite 488892
 I	61501	57456	placeholder sprite 488901
@@ -46093,7 +46093,7 @@ I	61558	57513	placeholder sprite 489672
 I	61559	57514	placeholder sprite 489680
 I	61560	57515	placeholder sprite 489697
 I	61561	57516	placeholder sprite 489714
-I	61562	57517	placeholder sprite 489731
+I	61562	57517	Prestige Backpack
 I	61563	57518	placeholder sprite 489748
 I	61564	57519	placeholder sprite 489765
 I	61565	57520	placeholder sprite 489782
