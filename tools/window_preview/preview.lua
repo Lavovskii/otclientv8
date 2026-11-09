@@ -664,6 +664,19 @@ local function define()
   step('gstore_sell', function() modules.game_generalstore.setTab('sell') end, 700)
   step('gstore_sell_runes', function() modules.game_generalstore.showCategory('runes') modules.game_generalstore.selectItem(64067) end, 700)
   step('gstore_end', function() modules.game_generalstore.hide() end, 100)
+  -- an NPC message with blue words in the NPCs tab; the log says which text each clickable word covers
+  step('npc_keywords', function()
+    local c = modules.game_console
+    local tab = c.getTab('NPCs') or c.addTab('NPCs', true)
+    tab.npcChat = true
+    c.addTabText('ForgottenL General Store: Welcome, Dev! I sell and buy everything: say {trade}. Or {travel}, {passage}.',
+      c.SpeakTypesSettings.privateNpcToPlayer, tab, 'ForgottenL General Store')
+    local buffer = c.consoleTabBar and c.consoleTabBar:getTabPanel(tab):getChildById('consoleBuffer')
+    local label = buffer and buffer:getLastChild()
+    for _, span in ipairs(label and label.npcKeywords or {}) do
+      g_logger.info('[preview] keyword ' .. span.word .. ' shows as "' .. label:getText():sub(span.first + 1, span.last + 1) .. '"')
+    end
+  end, 300)
   step('inspect_player', function()
     modules.game_inspect.onMessage(nil, 33, [[P|268435500|Lord Paladin|31250|Royal Paladin|412000|455000|98000|120000|42|1480|100
 K|0|10

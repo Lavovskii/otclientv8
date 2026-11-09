@@ -684,6 +684,40 @@ function getNewHighlightedText(text, color, highlightColor)
   return tmpData
 end
 
+-- Where each {word} of an NPC's message lands in the text the label shows (the braces are not shown):
+-- { {first = 0-based index, last = 0-based index, word = 'trade'}, ... }, or nil when there is none.
+function npcKeywordSpans(text)
+  local spans, shown, at = {}, 0, 1
+  while true do
+    local open, close, word = text:find('{([^}]+)}', at)
+    if not open then break end
+    shown = shown + (open - at) -- the characters before the brace
+    if #word > 0 then
+      spans[#spans + 1] = {first = shown, last = shown + #word - 1, word = word}
+    end
+    shown = shown + #word
+    at = close + 1
+  end
+  return #spans > 0 and spans or nil
+end
+
+-- A left click on a blue word: says it in that NPC's tab, as if it had been typed. False when the click missed every word
+-- or was the end of a selection.
+function clickNpcKeyword(label, mousePos, tab)
+  local selection = label.getSelection and label:getSelection() or ''
+  if selection and #selection > 0 then return false end
+  local pos = label:getTextPos(mousePos)
+  if not pos or pos < 0 then return false end
+  for _, span in ipairs(label.npcKeywords or {}) do
+    if pos >= span.first and pos <= span.last then
+      if not g_game.isOnline() then return false end
+      sendMessage(span.word, tab)
+      return true
+    end
+  end
+  return false
+end
+
 function addTabText(text, speaktype, tab, creatureName)
   if not tab or tab.locked or not text or #text == 0 then return end
 
@@ -722,11 +756,20 @@ function addTabText(text, speaktype, tab, creatureName)
     end
   end
 
+  -- the blue words of an NPC ({trade}, {travel}...) say themselves to the NPC when clicked (the owner, 2026-11-09)
+  label.npcKeywords = nil
+  if speaktype.npcChat and speaktype == SpeakTypesSettings.privateNpcToPlayer then
+    label.npcKeywords = npcKeywordSpans(text)
+  end
+
   label.name = creatureName
   consoleBuffer.onMouseRelease = function(self, mousePos, mouseButton)
     processMessageMenu(mousePos, mouseButton, nil, nil, nil, tab)
   end
   label.onMouseRelease = function(self, mousePos, mouseButton)
+    if mouseButton == MouseLeftButton and self.npcKeywords and clickNpcKeyword(self, mousePos, tab) then
+      return true
+    end
     processMessageMenu(mousePos, mouseButton, creatureName, text, self, tab)
   end
   label.onMousePress = function(self, mousePos, button)

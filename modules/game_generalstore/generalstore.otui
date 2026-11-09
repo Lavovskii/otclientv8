@@ -156,19 +156,10 @@ GsOffer < UIWidget
     margin-left: 6
     margin-right: 6
 
-    UIItem
-      id: coin
-      size: 26 26
-      anchors.right: parent.right
-      anchors.verticalCenter: parent.verticalCenter
-      margin-right: 2
-      virtual: true
-      phantom: true
-
     Label
       id: price
       anchors.left: parent.left
-      anchors.right: coin.left
+      anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 2
       text-align: center
@@ -244,7 +235,7 @@ MainWindow
         anchors.verticalCenter: parent.verticalCenter
         margin-left: 4
         virtual: true
-        phantom: true
+        phantom: false
 
       Label
         id: gold
@@ -261,7 +252,7 @@ MainWindow
         anchors.left: gold.right
         anchors.verticalCenter: parent.verticalCenter
         virtual: true
-        phantom: true
+        phantom: false
 
       Label
         id: buffary

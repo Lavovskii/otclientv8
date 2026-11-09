@@ -45,9 +45,13 @@ local function priceText(n, currency)
   return money(n) .. ' gold'
 end
 
-local function iconOf(currency)
-  return currency == 'buffary' and store.buffaryIcon or store.goldIcon
+-- the currency's word on the price of an item: a coin there looked like a price in crystal coins (the owner, 2026-11-09)
+local function currencyWord(currency)
+  return currency == 'buffary' and 'buffary' or 'gold'
 end
+
+local GOLD_COIN_CLIENT = 3031 -- the gold coin (server id 2148): the balance shows a heap of gold coins, not crystal coins
+local HEAP = 100 -- the coins of the balance are drawn as a heap
 
 -- the price shown in this tab: what the store asks (BUY) or pays (SELL)
 local function priceOf(item)
@@ -75,12 +79,21 @@ local function canAfford(item, n)
 end
 
 local function drawFunds()
-  window.header.funds.goldIcon:setItemId(store.goldIcon)
-  window.header.funds.buffaryIcon:setItemId(store.buffaryIcon)
-  window.header.funds.gold:setText(money(funds.gold))
-  window.header.funds.buffary:setText(money(funds.buffary))
-  window.header.funds:setTooltip(tr('Gold: what you carry and your bank account (the store takes from both).') .. '\n' ..
-    tr('Buffary Coins: what you carry.'))
+  local f = window.header.funds
+  for _, icon in ipairs({{f.goldIcon, GOLD_COIN_CLIENT}, {f.buffaryIcon, store.buffaryIcon}}) do
+    icon[1]:setItemId(icon[2])
+    icon[1]:setItemCount(HEAP)
+    icon[1]:setShowCount(false)
+  end
+  f.gold:setText(money(funds.gold) .. ' gold')
+  f.buffary:setText(money(funds.buffary) .. ' buffary')
+  local goldTip = tr('Gold: what you carry and your bank account (the store takes from both).')
+  local buffaryTip = tr('Buffary Coin: what you carry.')
+  f.goldIcon:setTooltip(goldTip)
+  f.gold:setTooltip(goldTip)
+  f.buffaryIcon:setTooltip(buffaryTip)
+  f.buffary:setTooltip(buffaryTip)
+  f:setTooltip(goldTip .. '\n' .. buffaryTip)
   if store.vip then
     window.header.vipNote:setText(tr('VIP: the store buys from you at the full price!'))
     window.header.vipNote:setColor(GOLD)
@@ -141,8 +154,8 @@ local function drawItems()
     local cell = g_ui.createWidget('GsOffer', panel)
     cell.name:setText(item.name)
     cell.itemBox.item:setItemId(item.clientId)
-    cell.priceBox.price:setText(money(priceOf(item)))
-    cell.priceBox.coin:setItemId(iconOf(item.currency))
+    cell.priceBox.price:setText(money(priceOf(item)) .. ' ' .. currencyWord(item.currency))
+    cell.priceBox.price:setColor(item.currency == 'buffary' and '#f0a050' or '#f4d68c')
     local have = holding[item.id] or 0
     if tab == 'sell' then
       cell.note:setText(have > 0 and tr('You have %d', have) or tr('You have none'))

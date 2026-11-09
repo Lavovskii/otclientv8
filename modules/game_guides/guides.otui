@@ -2526,7 +2526,15 @@ ArtNpcTalk < Panel
     anchors.left: click.left
     anchors.top: click.bottom
     margin-top: 6
+    id: hi
     text: "hi"
+    color: #1f9ffe
+
+  GuideNote
+    anchors.left: hi.left
+    anchors.top: hi.bottom
+    margin-top: 6
+    text: click: trade
     color: #1f9ffe
 
 ArtBigNames < Panel
