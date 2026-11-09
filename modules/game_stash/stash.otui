@@ -1,0 +1,196 @@
+// The supply stash (data/lib/129-stash.lua on the server, extended opcode 34), laid out like Tibia's Stash window.
+
+StashSlot < UIWidget
+  size: 40 40
+  image-source: /images/ui/item
+  image-border: 2
+  border-width: 1
+  border-color: #3a3a3a
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.centerIn: parent
+    virtual: true
+    phantom: true
+
+  Label
+    id: count
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin-right: 2
+    margin-bottom: 1
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true
+
+MainWindow
+  id: stashWindow
+  !text: tr('Stash')
+  size: 680 440
+  visible: false
+  @onEscape: modules.game_stash.hide()
+
+  TextEdit
+    id: search
+    anchors.top: parent.top
+    anchors.left: parent.left
+    width: 150
+    placeholder: Type to search
+
+  Button
+    id: clearSearch
+    !text: 'X'
+    width: 20
+    anchors.top: search.top
+    anchors.left: search.right
+    margin-left: 2
+    @onClick: self:getParent().search:setText('')
+
+  ComboBox
+    id: filter
+    width: 150
+    anchors.top: parent.top
+    anchors.left: clearSearch.right
+    margin-left: 6
+
+  ComboBox
+    id: trader
+    width: 160
+    anchors.top: parent.top
+    anchors.left: filter.right
+    margin-left: 6
+
+  ComboBox
+    id: sort
+    anchors.top: parent.top
+    anchors.left: trader.right
+    anchors.right: parent.right
+    margin-left: 6
+
+  ScrollablePanel
+    id: items
+    anchors.top: search.bottom
+    anchors.left: parent.left
+    anchors.right: itemsScroll.left
+    anchors.bottom: closeButton.top
+    margin-top: 8
+    margin-bottom: 8
+    margin-right: 4
+    vertical-scrollbar: itemsScroll
+    layout:
+      type: grid
+      cell-size: 40 40
+      cell-spacing: 3
+      flow: true
+
+  VerticalScrollBar
+    id: itemsScroll
+    anchors.top: search.bottom
+    anchors.bottom: closeButton.top
+    anchors.right: parent.right
+    margin-top: 8
+    margin-bottom: 8
+    step: 43
+    pixels-scroll: true
+
+  Label
+    id: empty
+    anchors.centerIn: items
+    text-auto-resize: true
+    color: #c8c8c8
+    !text: tr('Your stash is empty. Right click an item in your backpack and choose Stow.')
+    visible: false
+
+  Label
+    id: status
+    anchors.left: parent.left
+    anchors.right: closeButton.left
+    anchors.verticalCenter: closeButton.verticalCenter
+    margin-right: 8
+    text-auto-resize: false
+    color: #c8c8c8
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_stash.hide()
+
+StashAmountWindow < MainWindow
+  id: stashAmount
+  !text: tr('Retrieve')
+  size: 280 150
+  @onEscape: modules.game_stash.closeAmount()
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.top: parent.top
+    anchors.left: parent.left
+    virtual: true
+    phantom: true
+
+  Label
+    id: name
+    height: 30
+    anchors.left: item.right
+    anchors.right: parent.right
+    anchors.verticalCenter: item.verticalCenter
+    margin-left: 8
+    color: #f4d68c
+    text-wrap: true
+
+  Button
+    id: minus
+    !text: '-'
+    width: 22
+    anchors.top: item.bottom
+    anchors.left: parent.left
+    margin-top: 10
+    @onClick: modules.game_stash.step(-1)
+
+  TextEdit
+    id: amount
+    width: 80
+    anchors.top: minus.top
+    anchors.left: minus.right
+    margin-left: 4
+
+  Button
+    id: plus
+    !text: '+'
+    width: 22
+    anchors.top: minus.top
+    anchors.left: amount.right
+    margin-left: 4
+    @onClick: modules.game_stash.step(1)
+
+  Button
+    id: max
+    !text: tr('Max')
+    width: 44
+    anchors.top: minus.top
+    anchors.left: plus.right
+    margin-left: 6
+    @onClick: modules.game_stash.maxAmount()
+
+  Button
+    id: ok
+    !text: tr('Retrieve')
+    width: 80
+    anchors.right: cancel.left
+    anchors.bottom: parent.bottom
+    margin-right: 6
+    @onClick: modules.game_stash.take()
+
+  Button
+    id: cancel
+    !text: tr('Cancel')
+    width: 70
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_stash.closeAmount()

@@ -1,0 +1,8 @@
+Module
+  name: game_stash
+  description: The supply stash of the depot locker, as in Tibia: stow items, find and take them out
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ stash ]
+  @onLoad: init()
+  @onUnload: terminate()

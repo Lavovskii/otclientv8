@@ -2389,6 +2389,38 @@ ArtDailyRewards < Panel
     text: 9 day streak
     color: #e0b44c
 
+ArtStash < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: box
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 6 0 0 6
+    &itemId: 22797
+
+  GuideItem
+    id: stash
+    anchors.left: box.left
+    anchors.top: box.bottom
+    margin-top: 4
+    &itemId: 28750
+
+  GuideNote
+    id: stow
+    anchors.left: box.right
+    anchors.verticalCenter: box.verticalCenter
+    margin-left: 6
+    text: Stow
+    color: #f4d68c
+
+  GuideNote
+    anchors.left: stash.right
+    anchors.verticalCenter: stash.verticalCenter
+    margin-left: 6
+    text: 1,660 in the stash
+    color: #5fd35f
+
 ArtGeneralStore < Panel
   anchors.fill: parent
 

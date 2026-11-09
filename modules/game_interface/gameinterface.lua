@@ -503,6 +503,17 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
     menu:addOption(tr('Trade with ...'), function() startTradeWith(lookThing) end)
   end
 
+  -- the supply stash (modules/game_stash): items the player carries, next to a depot locker (the server checks)
+  if lookThing and lookThing:isItem() and lookThing:isPickupable() and lookThing:getPosition().x == 0xffff and modules.game_stash then
+    menu:addSeparator()
+    if lookThing:isContainer() then
+      menu:addOption(tr("Stow container's content"), function() modules.game_stash.stow(lookThing, 'content') end)
+    else
+      menu:addOption(tr('Stow'), function() modules.game_stash.stow(lookThing, 'one') end)
+    end
+    menu:addOption(tr('Stow all items of this type'), function() modules.game_stash.stow(lookThing, 'all') end)
+  end
+
   if lookThing then
     local parentContainer = lookThing:getParentContainer()
     if parentContainer and parentContainer:hasParent() then

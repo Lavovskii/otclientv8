@@ -664,6 +664,21 @@ local function define()
   step('gstore_sell', function() modules.game_generalstore.setTab('sell') end, 700)
   step('gstore_sell_runes', function() modules.game_generalstore.showCategory('runes') modules.game_generalstore.selectItem(64067) end, 700)
   step('gstore_end', function() modules.game_generalstore.hide() end, 100)
+  -- the supply stash with a few items, then the amount question for one of them
+  step('stash_open', function()
+    modules.game_stash.onMessage(nil, 34, table.concat({'O',
+      'I|2789|3725|brown mushroom|1660|others|5', 'I|2376|3264|sword|4|swords|100', 'I|2389|3277|spear|1|distance|3',
+      'I|64067|60022|small manarune|11000|runes|5000', 'I|64069|60024|great manarune|27|runes|125000',
+      'I|2493|3387|demon helmet|2|helmets|20000', 'I|2472|3366|magic plate armor|1|armors|1500000',
+      'I|2195|3079|boots of haste|3|boots|15000', 'I|2123|3006|ring of the sky|9|rings|0',
+      'I|2173|3057|amulet of loss|5|amulets|5000', 'I|2301|3188|fire field rune|239|runes|14', 'E'}, '\n'))
+  end, 700)
+  step('stash_amount', function()
+    local w = rootWidget:recursiveGetChildById('stashWindow')
+    local first = w and w:recursiveGetChildById('items'):getChildren()[1]
+    if first and first.onClick then first.onClick() end
+  end, 500)
+  step('stash_end', function() modules.game_stash.hide() end, 100)
   -- an NPC message with blue words in the NPCs tab; the log says which text each clickable word covers
   step('npc_keywords', function()
     local c = modules.game_console
