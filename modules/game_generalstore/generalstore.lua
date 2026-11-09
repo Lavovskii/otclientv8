@@ -9,7 +9,7 @@
 --   R|ok or error|text
 -- The window asks with: open | buy|itemid|amount | sell|itemid|amount | close
 local OPCODE = 32
-local MAX_AMOUNT = 100
+local MAX_AMOUNT = 10000 -- the server's GENERAL_STORE_MAX_AMOUNT: as many as gold and capacity allow
 local GREEN, RED, GREY, GOLD = '#7fd36a', '#e05a4a', '#a8a8a8', '#f4d68c'
 
 local window
@@ -233,6 +233,18 @@ function maxAmount()
   if tab == 'buy' then
     local have = selected.currency == 'buffary' and funds.buffary or funds.gold
     n = selected.price > 0 and math.floor(have / selected.price) or MAX_AMOUNT
+    -- and no more than the free capacity carries (weights in hundredths of an oz)
+    local player = g_game.getLocalPlayer()
+    local cap = player and tonumber(player:getFreeCapacity())
+    if cap and (selected.weight or 0) > 0 then
+      n = math.min(n, math.floor(cap * 100 / selected.weight))
+    end
+    -- and no more than the free slots of the backpack hold: one item a slot, or 100 a slot when it stacks
+    if funds.slots then
+      local thing = g_things.getThingType(selected.clientId, ThingCategoryItem)
+      local stacks = thing and thing:isStackable()
+      n = math.min(n, funds.slots * (stacks and 100 or 1))
+    end
   else
     n = holding[selected.id] or 0
   end
@@ -280,9 +292,10 @@ function onMessage(protocol, opcode, buffer)
       table.insert(pending.categories, {key = f[2], name = f[3], icon = tonumber(f[4]) or 0})
     elseif kind == 'I' and pending then
       table.insert(pending.items, {category = f[2], id = tonumber(f[3]), clientId = tonumber(f[4]) or 0, name = f[5],
-        price = tonumber(f[6]) or 0, currency = f[7], sells = f[8] == '1', buys = f[9] == '1', pays = tonumber(f[10]) or 0})
+        price = tonumber(f[6]) or 0, currency = f[7], sells = f[8] == '1', buys = f[9] == '1', pays = tonumber(f[10]) or 0,
+        weight = tonumber(f[11]) or 0})
     elseif kind == 'F' then
-      funds.gold, funds.buffary = tonumber(f[2]) or 0, tonumber(f[3]) or 0
+      funds.gold, funds.buffary, funds.slots = tonumber(f[2]) or 0, tonumber(f[3]) or 0, tonumber(f[4])
     elseif kind == 'R' then
       holding = {}
       window.statusLabel:setText(f[3] or '')
