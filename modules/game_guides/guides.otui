@@ -2389,6 +2389,51 @@ ArtDailyRewards < Panel
     text: 9 day streak
     color: #e0b44c
 
+ArtTiers < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: t1
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 6 0 0 4
+    &itemId: 55685
+
+  GuideItem
+    id: t2
+    anchors.left: t1.right
+    anchors.top: t1.top
+    margin-left: 6
+    &itemId: 55741
+
+  GuideItem
+    id: t3
+    anchors.left: t2.right
+    anchors.top: t2.top
+    margin-left: 6
+    &itemId: 55797
+
+  GuideItem
+    id: t4
+    anchors.left: t1.left
+    anchors.top: t1.bottom
+    margin-top: 6
+    &itemId: 56297
+
+  GuideItem
+    id: t5
+    anchors.left: t4.right
+    anchors.top: t4.top
+    margin-left: 6
+    &itemId: 59346
+
+  GuideItem
+    id: t6
+    anchors.left: t5.right
+    anchors.top: t5.top
+    margin-left: 6
+    &itemId: 59351
+
 ArtStash < Panel
   anchors.fill: parent
 

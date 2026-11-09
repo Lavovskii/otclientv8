@@ -43,12 +43,136 @@ InspectLoot < UIWidget
     virtual: true
     phantom: true
 
+// the new player page (the owner, 2026-11-09: prettier, organised, icons and tiles, no scroll)
+InspectTile < UIWidget
+  size: 112 38
+  background-color: #0e0c0a99
+  border-width: 1
+  border-color: #3a3024
+  phantom: false
+
+  UIItem
+    id: icon
+    size: 26 26
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 5
+    virtual: true
+    phantom: true
+
+  UIWidget
+    id: image
+    size: 22 22
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 7
+    phantom: true
+    visible: false
+
+  Label
+    id: value
+    anchors.left: icon.right
+    anchors.right: parent.right
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 4
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: value.left
+    anchors.right: parent.right
+    anchors.top: value.bottom
+    margin-top: 1
+    font: verdana-9px
+    color: #9a9080
+    phantom: true
+
+InspectChip < UIWidget
+  size: 90 22
+  background-color: #0e0c0a99
+  border-width: 1
+  border-color: #3a3024
+
+  UIItem
+    id: icon
+    size: 16 16
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 3
+    virtual: true
+    phantom: true
+
+  Label
+    id: value
+    anchors.left: icon.right
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    font: verdana-11px-rounded
+    phantom: true
+
+InspectSection < Label
+  height: 16
+  font: verdana-11px-rounded
+  color: #f4d68c
+  text-offset: 0 1
+
+InspectGrid < UIWidget
+  layout:
+    type: grid
+    cell-size: 112 38
+    cell-spacing: 4
+    flow: true
+    fit-children: true
+
+InspectChips < UIWidget
+  layout:
+    type: grid
+    cell-size: 90 22
+    cell-spacing: 4
+    flow: true
+    fit-children: true
+
+InspectBar < UIWidget
+  height: 16
+  background-color: #1a1612
+  border-width: 1
+  border-color: #3a3024
+
+  UIWidget
+    id: fill
+    anchors.left: parent.left
+    anchors.top: parent.top
+    anchors.bottom: parent.bottom
+    margin: 1
+    phantom: true
+
+  Label
+    id: text
+    anchors.fill: parent
+    text-align: center
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true
+
 MainWindow
   id: inspectWindow
   !text: tr('Inspect')
-  size: 470 440
+  size: 680 480
   visible: false
   @onEscape: modules.game_inspect.hide()
+
+  UICreature
+    id: outfit
+    size: 48 48
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin-left: 46
+    margin-top: -6
+    phantom: true
 
   Label
     id: title
@@ -60,21 +184,31 @@ MainWindow
     font: verdana-11px-rounded
     color: #f4d68c
 
-  Panel
-    id: playerPanel
+  Label
+    id: subtitle
     anchors.top: title.bottom
     anchors.left: parent.left
     anchors.right: parent.right
+    height: 14
+    text-align: center
+    font: verdana-11px-rounded
+    color: #c8c0b0
+
+  Panel
+    id: playerPanel
+    anchors.top: subtitle.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
     anchors.bottom: closeButton.top
-    margin-top: 6
+    margin-top: 10
     margin-bottom: 8
 
     Panel
       id: equipment
       width: 140
+      height: 182
       anchors.top: parent.top
       anchors.left: parent.left
-      anchors.bottom: parent.bottom
 
       InspectSlot
         id: slot1
@@ -132,30 +266,34 @@ MainWindow
         anchors.horizontalCenter: parent.horizontalCenter
         margin-top: 4
 
-    ScrollablePanel
+    InspectBar
+      id: healthBar
+      anchors.top: equipment.bottom
+      anchors.left: equipment.left
+      anchors.right: equipment.right
+      margin-top: 10
+
+    InspectBar
+      id: manaBar
+      anchors.top: healthBar.bottom
+      anchors.left: equipment.left
+      anchors.right: equipment.right
+      margin-top: 4
+
+    Panel
       id: stats
       anchors.top: parent.top
       anchors.left: equipment.right
-      anchors.right: statsScroll.left
+      anchors.right: parent.right
       anchors.bottom: parent.bottom
-      margin-left: 10
-      margin-right: 4
-      vertical-scrollbar: statsScroll
+      margin-left: 16
       layout:
         type: verticalBox
-        spacing: 1
-
-    VerticalScrollBar
-      id: statsScroll
-      anchors.top: parent.top
-      anchors.bottom: parent.bottom
-      anchors.right: parent.right
-      step: 16
-      pixels-scroll: true
+        spacing: 3
 
   Panel
     id: monsterPanel
-    anchors.top: title.bottom
+    anchors.top: subtitle.bottom
     anchors.left: parent.left
     anchors.right: parent.right
     anchors.bottom: closeButton.top

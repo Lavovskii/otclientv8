@@ -1,0 +1,8 @@
+Module
+  name: game_tiers
+  description: Tier frames: every item with a tier gets a glowing frame in its tier's colour and a faint tinted background
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ tiers_data, tiers ]
+  @onLoad: init()
+  @onUnload: terminate()

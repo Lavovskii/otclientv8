@@ -59,6 +59,18 @@ end
 local OFFER_ITEM, OFFER_OUTFIT, OFFER_MOUNT, OFFER_XPBOOST = 1, 2, 3, 4
 local XP_BOOST_PICTURE = 7440 -- the experience potion
 
+-- the outfit and mount offers the logged-in character already has (the server answers extended opcode 35 with their ids):
+-- they are not offered to that character (the owner, 2026-11-09)
+local OWNED_OPCODE = 35
+local owned = {}
+
+local function requestOwned()
+  local protocol = g_game.getProtocolGame()
+  if protocol and g_game.getFeature(GameExtendedOpcode) then
+    protocol:sendExtendedOpcode(OWNED_OPCODE, 'owned')
+  end
+end
+
 local function chosenCharacter()
   local opt = win and win.details.charBox:getCurrentOption()
   return opt and opt.text or nil
@@ -148,8 +160,9 @@ local function fillOffers()
     end
   end
   local first
+  local forMe = chosenCharacter() == g_game.getCharacterName()
   for _, offer in ipairs(state.offers) do
-    if tonumber(offer.category) == state.category then
+    if tonumber(offer.category) == state.category and not (forMe and owned[tonumber(offer.id)]) then
       local row = g_ui.createWidget('StoreOffer', win.offersBox.offers)
       row.offer = offer
       paintOffer(row.itemBox.item, row.itemBox.creature, offer)
@@ -221,7 +234,16 @@ local function pickOffer(name)
   end
 end
 
+local function onOwned(protocol, opcode, buffer)
+  owned = {}
+  for id in tostring(buffer or ''):gsub('^owned|', ''):gmatch('%d+') do
+    owned[tonumber(id)] = true
+  end
+  if win and win:isVisible() and state.offers then fillOffers() end
+end
+
 function refresh()
+  requestOwned()
   setStatus(tr('Loading...'))
   call({ action = 'info' }, function(data)
     applyInfo(data)
@@ -464,7 +486,9 @@ function init()
       end
     end
     if state.selected then showOffer(state.selected) end
+    fillOffers() -- owned outfits and mounts are hidden only for the logged-in character
   end })
+  ProtocolGame.registerExtendedOpcode(OWNED_OPCODE, onOwned)
   connect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })
   if g_game.isOnline() then
     adminEvent = scheduleEvent(checkAdmin, 500)
@@ -473,6 +497,7 @@ function init()
 end
 
 function terminate()
+  ProtocolGame.unregisterExtendedOpcode(OWNED_OPCODE)
   disconnect(g_game, { onGameEnd = onGameEnd, onGameStart = onGameStart })
   removeEvent(adminEvent)
   adminEvent = nil

@@ -14,6 +14,7 @@ Module
     - game_bossicons
     - game_nameoffset
     - game_stash
+    - game_tiers
     - game_setbonus
     - game_rules
     - game_textmessage
