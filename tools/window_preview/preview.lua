@@ -156,7 +156,7 @@ local function fakeContainer(id, name, itemIds, capacity)
   function self:getName() return name end
   function self:getCapacity() return capacity end
   function self:getItems() return items end
-  function self:getItem(_) return items[1] end
+  function self:getItem(slot) return items[(tonumber(slot) or 0) + 1] or items[1] end
   function self:getContainerItem() return Item.create(2854) end
   function self:getSlotPosition(slot) return {x = 65535, y = 64 + id, z = slot} end
   function self:hasParent() return false end
@@ -550,6 +550,12 @@ local function define()
     local b = fakeContainer(1, 'bag', {3027, 5944, 3587}, 8)
     modules.game_containers.onContainerOpen(a)
     modules.game_containers.onContainerOpen(b)
+  end, 800)
+  step('tiers', function()
+    -- tier slots (modules/game_tiers): two of each tier, tiers 1 to 6, then plain items
+    local c = fakeContainer(2, 'giant bag', {55685, 56125, 55741, 56161, 55797, 56299, 55925, 56293, 59346, 59356,
+      59351, 59362, 3160, 3027, 3582}, 20)
+    modules.game_containers.onContainerOpen(c)
   end, 800)
   step('inventory', function()
     if modules.game_inventory.inventoryWindow then modules.game_inventory.inventoryWindow:open() end

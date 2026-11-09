@@ -129,7 +129,7 @@ function UIItem:onClick(mousePos)
 end
 
 function UIItem:onItemChange()
-  -- the tier frame and tint of an item with a tier (modules/game_tiers)
+  -- the tier slot of an item with a tier (modules/game_tiers)
   if modules.game_tiers and modules.game_tiers.apply then modules.game_tiers.apply(self) end
   local tooltip = nil
   if self:getItem() and self:getItem():getTooltip():len() > 0 then

@@ -104,7 +104,7 @@ local GUIDES = {
       {art = 'ArtDailyRewards', title = 'Daily Rewards',
        text = 'Use a reward shrine to open Daily Rewards and claim one reward a day, between two server saves (08:00 UTC). Days in a row build your streak, and its bonuses (more health and mana, +10%% experience) last while it does. Miss a day and you start again at day 1. Bound rewards stay with you.'},
       {art = 'ArtTiers', title = 'Item tiers',
-       text = 'Every item with a tier shows it everywhere (backpacks, inventory, Inspect, stash, loot): a frame with a soft running light and a faint background in the tier\'s colour. Tier 1 white, tier 2 green, tier 3 blue, tier 4 purple, tier 5 gold, tier 6 red.'},
+       text = 'Every item with a tier shows it everywhere (backpacks, inventory, Inspect, stash, loot): its slot takes the tier\'s colour, with a bright edge and corners. Tier 1 white, tier 2 green, tier 3 blue, tier 4 purple, tier 5 gold, tier 6 red.'},
       {art = 'ArtStash', title = 'Depot, stash and inbox',
        text = 'Every depot locker is the same depot, in any town. It holds the depot chest with 20 depot boxes, your inbox and your supply stash. Mail and parcels arrive in the inbox (only the name on the letter is needed); take things out of it, nothing can be put in. Next to a locker, right click an item you carry and choose Stow (or Stow all items of this type, or Stow container\'s content): the supply stash keeps any number of items in unused condition and does not count for the depot limit. Use the supply stash to search, filter, sort and take items out.'},
       {art = 'ArtGeneralStore', title = 'ForgottenL General Store',
