@@ -557,6 +557,11 @@ local function define()
       59351, 59362, 3160, 3027, 3582}, 20)
     modules.game_containers.onContainerOpen(c)
   end, 800)
+  step('boosters', function()
+    -- the animated boosters (2026-11-09): Booster and Max Booster of health, mana and ozzo
+    local c = fakeContainer(3, 'boosters', {55599, 55600, 55349, 55350, 55289, 55290}, 8)
+    modules.game_containers.onContainerOpen(c)
+  end, 800)
   step('inventory', function()
     if modules.game_inventory.inventoryWindow then modules.game_inventory.inventoryWindow:open() end
     if modules.game_inventory.refresh then modules.game_inventory.refresh() end
