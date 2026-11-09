@@ -50,6 +50,16 @@ local function currencyWord(currency)
   return currency == 'buffary' and 'buffary' or 'gold'
 end
 
+-- the word in the colour of its coin: gold like the gold coins, buffary like the Buffary Coins (the owner, 2026-11-09)
+local NUMBER_COLOR = '#f4d68c'
+local COIN_COLORS = {gold = '#ffc611', buffary = '#e8384a'}
+
+local function setAmount(label, n, currency)
+  local word = currencyWord(currency)
+  label:setText(money(n) .. ' ' .. word)
+  label:setColoredText({money(n) .. ' ', NUMBER_COLOR, word, COIN_COLORS[word]})
+end
+
 local GOLD_COIN_CLIENT = 3031 -- the gold coin (server id 2148): the balance shows a heap of gold coins, not crystal coins
 local HEAP = 100 -- the coins of the balance are drawn as a heap
 
@@ -85,8 +95,8 @@ local function drawFunds()
     icon[1]:setItemCount(HEAP)
     icon[1]:setShowCount(false)
   end
-  f.gold:setText(money(funds.gold) .. ' gold')
-  f.buffary:setText(money(funds.buffary) .. ' buffary')
+  setAmount(f.gold, funds.gold, 'gold')
+  setAmount(f.buffary, funds.buffary, 'buffary')
   local goldTip = tr('Gold: what you carry and your bank account (the store takes from both).')
   local buffaryTip = tr('Buffary Coin: what you carry.')
   f.goldIcon:setTooltip(goldTip)
@@ -154,8 +164,7 @@ local function drawItems()
     local cell = g_ui.createWidget('GsOffer', panel)
     cell.name:setText(item.name)
     cell.itemBox.item:setItemId(item.clientId)
-    cell.priceBox.price:setText(money(priceOf(item)) .. ' ' .. currencyWord(item.currency))
-    cell.priceBox.price:setColor(item.currency == 'buffary' and '#f0a050' or '#f4d68c')
+    setAmount(cell.priceBox.price, priceOf(item), item.currency)
     local have = holding[item.id] or 0
     if tab == 'sell' then
       cell.note:setText(have > 0 and tr('You have %d', have) or tr('You have none'))
