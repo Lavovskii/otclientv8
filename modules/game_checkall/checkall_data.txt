@@ -6539,7 +6539,7 @@ I	7485	121	pillow x
 I	7486	122	animal bed
 I	7487	123	stuffed rat
 I	7488	125	magic vial
-I	7489	9149	Ozzo Booster
+I	7489	9149	Old Ozzo Booster
 I	7490	127	inkwell
 I	7491	128	paper
 I	7492	129	paper
@@ -43865,8 +43865,8 @@ I	59330	55285	Polished Spirit Rune
 I	59331	55286	Bronze Spirit Rune
 I	59332	55287	Silver Spirit Rune
 I	59333	55288	Golden Spirit Rune
-I	59334	55289	Spirit Booster
-I	59335	55290	Max Spirit Booster
+I	59334	55289	Ozzo Booster
+I	59335	55290	Max Ozzo Booster
 I	59336	55291	Crude Fire Rune
 I	59337	55292	Worn Fire Rune
 I	59338	55293	Common Fire Rune
@@ -43926,7 +43926,7 @@ I	59391	55346	Bronze Holy Rune
 I	59392	55347	Silver Holy Rune
 I	59393	55348	Golden Holy Rune
 I	59394	55349	Mana Booster
-I	59395	55350	Max Health Booster
+I	59395	55350	Max Mana Booster
 I	59396	55351	Crude Physical Rune
 I	59397	55352	Worn Physical Rune
 I	59398	55353	Common Physical Rune
@@ -44176,7 +44176,7 @@ I	59641	55596	Bronze Rose Quartz Rune
 I	59642	55597	Silver Rose Quartz Rune
 I	59643	55598	Golden Rose Quartz Rune
 I	59644	55599	Health Booster
-I	59645	55600	Max Mana Booster
+I	59645	55600	Max Health Booster
 I	59646	55601	Crude Basalt Rune
 I	59647	55602	Worn Basalt Rune
 I	59648	55603	Common Basalt Rune
@@ -46188,8 +46188,8 @@ I	61653	57608	placeholder sprite 491730
 I	61654	57609	placeholder sprite 491754
 I	61655	57610	placeholder sprite 491778
 I	61656	57611	placeholder sprite 491814
-I	61657	57612	Amulet of Destruction
-I	61658	57613	Prestige Amulet of Destruction
+I	61657	57612	AoL of Destruction
+I	61658	57613	Prestige AoL of Destruction
 I	61659	57614	placeholder sprite 491910
 I	61660	57615	placeholder sprite 491933
 I	61661	57616	placeholder sprite 491969
@@ -46412,12 +46412,12 @@ I	61877	57832	placeholder sprite 496587
 I	61878	57833	placeholder sprite 496611
 I	61879	57834	placeholder sprite 496635
 I	61880	57835	placeholder sprite 496671
-I	61881	57836	Amulet of Protection
+I	61881	57836	AoL of Protection
 I	61882	57837	placeholder sprite 496726
 I	61883	57838	placeholder sprite 496744
 I	61884	57839	placeholder sprite 496764
 I	61885	57840	placeholder sprite 496785
-I	61886	57841	Prestige Amulet of Protection
+I	61886	57841	Prestige AoL of Protection
 I	61887	57842	placeholder sprite 496857
 I	61888	57843	placeholder sprite 496881
 I	61889	57844	placeholder sprite 496905
@@ -47769,7 +47769,7 @@ I	63234	59189	placeholder sprite 528060
 I	63235	59190	placeholder sprite 528084
 I	63236	59191	placeholder sprite 528120
 I	63237	59192	placeholder sprite 528156
-I	63238	59193	placeholder sprite 528192
+I	63238	59193	God Test Rod
 I	63239	59194	placeholder sprite 528228
 I	63240	59195	placeholder sprite 528239
 I	63241	59196	placeholder sprite 528263
@@ -47800,8 +47800,8 @@ I	63265	59220	placeholder sprite 528791
 I	63266	59221	placeholder sprite 528815
 I	63267	59222	placeholder sprite 528839
 I	63268	59223	placeholder sprite 528860
-I	63269	59224	Blessed Amulet of Loss
-I	63270	59225	Prestige Amulet of Loss
+I	63269	59224	AoL of Blessings
+I	63270	59225	Prestige AoL of Blessings
 I	63271	59226	placeholder sprite 528932
 I	63272	59227	placeholder sprite 528956
 I	63273	59228	placeholder sprite 528980
@@ -47862,7 +47862,7 @@ I	63327	59282	placeholder sprite 530147
 I	63328	59283	placeholder sprite 530171
 I	63329	59284	Prestige Seer's Ring
 I	63330	59285	Seer's Ring
-I	63331	59286	Beginner Amulet of Loss
+I	63331	59286	Amulet of Loss
 I	63332	59287	placeholder sprite 530251
 I	63333	59288	placeholder sprite 530275
 I	63334	59289	placeholder sprite 530299

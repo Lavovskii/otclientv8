@@ -579,6 +579,42 @@ function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName)
   addTabText(text, speaktype, privateTab, creatureName)
 end
 
+-- The server marks each item of a loot message with its rarity: [c=r]a demon horn[/c] (MonsterType::markedLoot).
+-- Returns the text without the marks and the colours for setColoredText, or nil when the text has none.
+RARITY_COLORS = {c = '#4ee34e', u = '#3d9cff', r = '#b65cff', v = '#ffd23b', q = '#ff7fd5'}
+function parseRarityText(text, color)
+  if not text or not text:find('[c=', 1, true) then
+    return nil
+  end
+  local data, plain, pos = {}, {}, 1
+  while true do
+    local s, e, rarity = text:find('%[c=(%a)%]', pos)
+    if not s then
+      break
+    end
+    local close = text:find('[/c]', e + 1, true)
+    if not close then
+      break
+    end
+    if s > pos then
+      table.insert(data, text:sub(pos, s - 1))
+      table.insert(data, color)
+      table.insert(plain, text:sub(pos, s - 1))
+    end
+    local name = text:sub(e + 1, close - 1)
+    table.insert(data, name)
+    table.insert(data, RARITY_COLORS[rarity] or color)
+    table.insert(plain, name)
+    pos = close + 4
+  end
+  if pos <= #text then
+    table.insert(data, text:sub(pos))
+    table.insert(data, color)
+    table.insert(plain, text:sub(pos))
+  end
+  return table.concat(plain), data
+end
+
 -- one line of the Loot channel (the items taken by the loot hotkey)
 function addLootMessage(text)
   if lootTab then
@@ -668,8 +704,15 @@ function addTabText(text, speaktype, tab, creatureName)
     label = g_ui.createWidget('ConsoleLabel', consoleBuffer)
   end
   label:setId('consoleLabel' .. consoleBuffer:getChildCount())
+  local plain, colored = parseRarityText(text, speaktype.color)
+  if plain then
+    text = plain
+  end
   label:setText(text)
   label:setColor(speaktype.color)
+  if colored then
+    label:setColoredText(colored)
+  end
   consoleTabBar:blinkTab(tab)
 
   if speaktype.npcChat and (g_game.getCharacterName() ~= creatureName or g_game.getCharacterName() == 'Account Manager') then

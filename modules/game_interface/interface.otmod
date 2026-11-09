@@ -38,6 +38,8 @@ Module
     - game_store
     - game_taskboard
     - game_dailyrewards
+    - game_generalstore
+    - game_inspect
     - game_bossbar
     - game_checkall
     - game_itemselector

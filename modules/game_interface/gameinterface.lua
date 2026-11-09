@@ -514,6 +514,11 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
     local localPlayer = g_game.getLocalPlayer()
     menu:addSeparator()
 
+    -- Inspect (modules/game_inspect): a player's equipment and stats, a monster's loot
+    if modules.game_inspect and (creatureThing:isPlayer() or creatureThing:isMonster()) then
+      menu:addOption(tr('Inspect'), function() modules.game_inspect.inspect(creatureThing) end)
+    end
+
     if creatureThing:isLocalPlayer() then
       menu:addOption(tr('Set Outfit'), function() g_game.requestOutfit() end)
 

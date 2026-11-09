@@ -2389,6 +2389,128 @@ ArtDailyRewards < Panel
     text: 9 day streak
     color: #e0b44c
 
+ArtGeneralStore < Panel
+  anchors.fill: parent
+
+  Button
+    id: buy
+    !text: tr('BUY')
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 6
+    width: 46
+    height: 20
+    color: #ffffff
+    phantom: true
+
+  Button
+    id: sell
+    !text: tr('SELL')
+    anchors.left: buy.right
+    anchors.top: buy.top
+    margin-left: 4
+    width: 46
+    height: 20
+    color: #8a7a58
+    phantom: true
+
+  GuideItem
+    id: rune
+    anchors.left: buy.left
+    anchors.top: buy.bottom
+    margin-top: 8
+    &itemId: 60022
+
+  GuideItem
+    id: coin
+    anchors.left: rune.right
+    anchors.top: rune.top
+    margin-left: 10
+    &itemId: 59453
+
+  GuideNote
+    anchors.left: rune.left
+    anchors.top: rune.bottom
+    margin-top: 6
+    text: VIP: full price
+    color: #e0b44c
+
+ArtInspect < Panel
+  anchors.fill: parent
+
+  GuideItem
+    id: helmet
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 6
+    &itemId: 55685
+
+  GuideItem
+    id: armor
+    anchors.left: helmet.left
+    anchors.top: helmet.bottom
+    margin-top: 4
+    &itemId: 55686
+
+  GuideNote
+    anchors.left: helmet.right
+    anchors.top: helmet.top
+    margin-left: 8
+    text: Inspect
+    color: #f4d68c
+
+  GuideNote
+    anchors.left: armor.right
+    anchors.top: armor.top
+    margin-left: 8
+    text: Level 31,250
+    color: #c8c8c8
+
+ArtLootColors < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: c
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 6 0 0 4
+    text: common
+    color: #4ee34e
+
+  GuideNote
+    id: u
+    anchors.left: c.left
+    anchors.top: c.bottom
+    margin-top: 2
+    text: uncommon
+    color: #3d9cff
+
+  GuideNote
+    id: r
+    anchors.left: c.left
+    anchors.top: u.bottom
+    margin-top: 2
+    text: rare
+    color: #b65cff
+
+  GuideNote
+    id: v
+    anchors.left: c.left
+    anchors.top: r.bottom
+    margin-top: 2
+    text: very rare
+    color: #ffd23b
+
+  GuideNote
+    id: q
+    anchors.left: c.left
+    anchors.top: v.bottom
+    margin-top: 2
+    text: unique / bound
+    color: #ff7fd5
+
 ArtTaskBoard < Panel
   anchors.fill: parent
 

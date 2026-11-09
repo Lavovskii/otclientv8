@@ -1,0 +1,203 @@
+// Inspect: a player's equipment and stats, or a monster's loot (without chances). The server answers extended opcode 33.
+
+InspectSlot < UIWidget
+  size: 40 40
+  image-source: /images/taskboard/inset
+  image-border: 2
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.centerIn: parent
+    virtual: true
+    phantom: true
+
+InspectStat < UIWidget
+  height: 16
+
+  Label
+    id: name
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    text-auto-resize: true
+    color: #c8c8c8
+    phantom: true
+
+  Label
+    id: value
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    text-auto-resize: true
+    color: #ffffff
+    phantom: true
+
+InspectLoot < UIWidget
+  size: 44 44
+  image-source: /images/taskboard/inset
+  image-border: 2
+
+  UIItem
+    id: item
+    size: 32 32
+    anchors.centerIn: parent
+    virtual: true
+    phantom: true
+
+MainWindow
+  id: inspectWindow
+  !text: tr('Inspect')
+  size: 470 440
+  visible: false
+  @onEscape: modules.game_inspect.hide()
+
+  Label
+    id: title
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 20
+    text-align: center
+    font: verdana-11px-rounded
+    color: #f4d68c
+
+  Panel
+    id: playerPanel
+    anchors.top: title.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 6
+    margin-bottom: 8
+
+    Panel
+      id: equipment
+      width: 140
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.bottom: parent.bottom
+
+      InspectSlot
+        id: slot1
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+      InspectSlot
+        id: slot2
+        anchors.top: slot1.top
+        anchors.right: slot1.left
+        margin-right: 4
+        margin-top: 10
+      InspectSlot
+        id: slot3
+        anchors.top: slot1.top
+        anchors.left: slot1.right
+        margin-left: 4
+        margin-top: 10
+      InspectSlot
+        id: slot4
+        anchors.top: slot1.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+      InspectSlot
+        id: slot6
+        anchors.top: slot4.top
+        anchors.right: slot4.left
+        margin-right: 4
+        margin-top: 10
+      InspectSlot
+        id: slot5
+        anchors.top: slot4.top
+        anchors.left: slot4.right
+        margin-left: 4
+        margin-top: 10
+      InspectSlot
+        id: slot7
+        anchors.top: slot4.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+      InspectSlot
+        id: slot9
+        anchors.top: slot7.top
+        anchors.right: slot7.left
+        margin-right: 4
+        margin-top: 10
+      InspectSlot
+        id: slot10
+        anchors.top: slot7.top
+        anchors.left: slot7.right
+        margin-left: 4
+        margin-top: 10
+      InspectSlot
+        id: slot8
+        anchors.top: slot7.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        margin-top: 4
+
+    ScrollablePanel
+      id: stats
+      anchors.top: parent.top
+      anchors.left: equipment.right
+      anchors.right: statsScroll.left
+      anchors.bottom: parent.bottom
+      margin-left: 10
+      margin-right: 4
+      vertical-scrollbar: statsScroll
+      layout:
+        type: verticalBox
+        spacing: 1
+
+    VerticalScrollBar
+      id: statsScroll
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 16
+      pixels-scroll: true
+
+  Panel
+    id: monsterPanel
+    anchors.top: title.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 6
+    margin-bottom: 8
+    visible: false
+
+    Label
+      id: lootCaption
+      !text: tr('It may drop:')
+      anchors.top: parent.top
+      anchors.left: parent.left
+      text-auto-resize: true
+      color: #c8c8c8
+
+    ScrollablePanel
+      id: loot
+      anchors.top: lootCaption.bottom
+      anchors.left: parent.left
+      anchors.right: lootScroll.left
+      anchors.bottom: parent.bottom
+      margin-top: 6
+      margin-right: 4
+      vertical-scrollbar: lootScroll
+      layout:
+        type: grid
+        cell-size: 44 44
+        cell-spacing: 4
+        flow: true
+
+    VerticalScrollBar
+      id: lootScroll
+      anchors.top: lootCaption.bottom
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      step: 48
+      pixels-scroll: true
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 80
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_inspect.hide()

@@ -1,0 +1,8 @@
+Module
+  name: game_inspect
+  description: Inspect a player (equipment and stats) or a monster (its loot)
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ inspect ]
+  @onLoad: init()
+  @onUnload: terminate()

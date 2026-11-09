@@ -1,6 +1,8 @@
 -- Preview only: no login, no network to the game. Opens every window of the client with made-up data, takes screenshots, closes.
 -- only.txt (names separated by spaces) limits the run to those steps; size.txt gives the window size.
 local steps = {}
+-- the ForgottenL General Store's test catalogue (made from data/lib/127-general-store.lua)
+GSTORE = "O|0|3043|59453|ForgottenL General Store\nC|equipment|Equipment|55686\nC|weapons|Weapons|55690\nC|runes|Runes|3155\nC|tools|Tools|3003\nC|supplies|Supplies|60022\nC|others|Others|2854\nI|equipment|59730|55685|Beginner Helmet|20000|gold|1|1|10000\nI|equipment|59731|55686|Beginner Armor|30000|gold|1|1|15000\nI|equipment|59732|55687|Beginner Legs|25000|gold|1|1|12500\nI|equipment|59733|55688|Beginner Boots|15000|gold|1|1|7500\nI|equipment|59734|55689|Beginner Shield|20000|gold|1|1|10000\nI|equipment|60554|56509|Beginner Mage Helmet|20000|gold|1|1|10000\nI|equipment|60555|56510|Beginner Mage Armor|30000|gold|1|1|15000\nI|equipment|60556|56511|Beginner Mage Legs|25000|gold|1|1|12500\nI|equipment|60557|56512|Beginner Mage Boots|15000|gold|1|1|7500\nI|equipment|60558|56513|Beginner Mage Spellbook|20000|gold|1|1|10000\nI|equipment|60170|56125|Beginner Helmet|20000|gold|1|1|10000\nI|equipment|60171|56126|Beginner Armor|30000|gold|1|1|15000\nI|equipment|60172|56127|Beginner Legs|25000|gold|1|1|12500\nI|equipment|60173|56128|Beginner Boots|15000|gold|1|1|7500\nI|equipment|60174|56129|Beginner Quiver|20000|gold|1|1|10000\nI|weapons|59735|55690|Beginner Sword|40000|gold|1|1|20000\nI|weapons|59736|55691|Beginner Axe|40000|gold|1|1|20000\nI|weapons|59737|55692|Beginner Club|40000|gold|1|1|20000\nI|weapons|60175|56130|Beginner Slingshot|40000|gold|1|1|20000\nI|weapons|60559|56514|Beginner Mage Wand|40000|gold|1|1|20000\nI|equipment|59786|55741|Cursed Helmet|5|buffary|1|1|2\nI|equipment|59787|55742|Cursed Armor|8|buffary|1|1|4\nI|runes|64061|60016|small healing rune|10000|gold|1|1|5000\nI|runes|64062|60017|strong healing rune|50000|gold|1|1|25000\nI|runes|64063|60018|great healing rune|150000|gold|1|1|75000\nI|runes|64067|60022|small manarune|10000|gold|1|1|5000\nI|runes|64068|60023|strong manarune|50000|gold|1|1|25000\nI|runes|64069|60024|great manarune|150000|gold|1|1|75000\nI|runes|2268|3155|sudden death rune|135|gold|1|1|67\nI|runes|2301|3188|fire field rune|28|gold|1|1|14\nI|runes|2277|3164|energy field rune|38|gold|1|1|19\nI|runes|2285|3172|poison field rune|21|gold|1|1|10\nI|runes|2305|3192|firebomb rune|147|gold|1|1|73\nI|runes|2262|3149|energy bomb rune|203|gold|1|1|101\nI|runes|2286|3173|poison bomb rune|85|gold|1|1|42\nI|runes|2303|3190|fire wall rune|61|gold|1|1|30\nI|runes|2279|3166|energy wall rune|85|gold|1|1|42\nI|runes|2289|3176|poison wall rune|52|gold|1|1|26\nI|runes|2293|3180|magic wall rune|116|gold|1|1|58\nI|runes|2269|3156|wild growth rune|160|gold|1|1|80\nI|runes|2261|3148|destroy field rune|15|gold|1|1|7\nI|runes|2308|3195|soulfire rune|46|gold|1|1|23\nI|tools|2120|3003|rope|50|gold|1|1|25\nI|tools|2554|3457|shovel|50|gold|1|1|25\nI|tools|2553|3456|pick|50|gold|1|1|25\nI|tools|2420|3308|machete|40|gold|1|1|20\nI|tools|2580|3483|fishing rod|150|gold|1|1|75\nI|supplies|2789|3725|brown mushroom|10|gold|1|1|5\nI|supplies|2666|3577|meat|5|gold|1|1|2\nI|others|1988|2854|backpack|20|gold|1|1|10\nI|others|7702|399|Exp Paper|2|buffary|1|1|1\nF|1250000|17\nH|64067|3\nH|59730|1\nE"
 local function step(name, f, wait)
   table.insert(steps, {name = name, f = f, wait = wait or 450})
 end
@@ -628,6 +630,11 @@ local function define()
     modules.game_guides.hide()
     modules.game_store.show()
   end, 900)
+  step('bossicons_api', function()
+    -- game_bossicons draws with Creature.setIconTexture: say whether this client has it, and whether the pictures load
+    log('bossicons: Creature.setIconTexture ' .. tostring(Creature.setIconTexture ~= nil) .. ', module ' ..
+      tostring(modules.game_bossicons ~= nil) .. ', echo icon ' .. tostring(g_resources.fileExists('/images/game/bosses/echo.png')))
+  end)
   step('store_outfit', function() modules.game_store.hide() modules.game_store.show('Full Arbalester Outfit') end, 900)
   step('store_outfit_female', function()
     local w = byId('storeWindow')
@@ -636,6 +643,52 @@ local function define()
   step('store_mount', function() modules.game_store.hide() modules.game_store.show('Armoured War Horse') end, 900)
   step('store_boost', function() modules.game_store.hide() modules.game_store.show('XP Boost') end, 900)
   step('store_premium', function() modules.game_store.hide() modules.game_store.show('VIP Medal') end, 900)
+  step('gstore_buy', function()
+    modules.game_store.hide()
+    modules.game_generalstore.onMessage(nil, 32, GSTORE)
+  end, 900)
+  step('gstore_runes', function() modules.game_generalstore.showCategory('runes') modules.game_generalstore.selectItem(64067) end, 700)
+  step('gstore_sell', function() modules.game_generalstore.setTab('sell') end, 700)
+  step('gstore_sell_runes', function() modules.game_generalstore.showCategory('runes') modules.game_generalstore.selectItem(64067) end, 700)
+  step('gstore_end', function() modules.game_generalstore.hide() end, 100)
+  step('inspect_player', function()
+    modules.game_inspect.onMessage(nil, 33, [[P|268435500|Lord Paladin|31250|Royal Paladin|412000|455000|98000|120000|42|1480|100
+K|0|10
+K|1|12
+K|2|14
+K|3|10
+K|4|128
+K|5|95
+K|6|10
+Q|1|55685|Beginner Helmet|1
+Q|4|55686|Beginner Armor|1
+Q|7|55687|Beginner Legs|1
+Q|8|55688|Beginner Boots|1
+Q|3|2854|backpack|1
+Q|6|55690|Beginner Sword|1
+Q|2|3043|crystal coin|7
+attack=1500
+defense=320
+armor=48
+increment=0,0,0,0,7
+absorb=1,12
+absorb=2048,5
+setname=Beginner
+setprotection=5]])
+  end, 700)
+  step('inspect_monster', function()
+    modules.game_inspect.onMessage(nil, 33, [[M|1073741900|Dragon Lord [L. 120]|120
+L|3031|gold coin
+L|3043|crystal coin
+L|60022|small manarune
+L|55685|Beginner Helmet
+L|55686|Beginner Armor
+L|3155|sudden death rune]])
+  end, 700)
+  step('loot_colors', function()
+    modules.game_inspect.hide()
+    modules.game_textmessage.displayMessage(MessageModes.Loot, 'Loot of a dragon lord: [c=c]93 gold coins[/c], [c=u]a dragon scale mail[/c], [c=r]a royal helmet[/c], [c=v]a dragon lord trophy[/c], [c=q]a Bronze Key[/c].')
+  end, 900)
   step('taskboard_bounty', function()
     modules.game_store.hide()
     modules.game_taskboard.onTaskMessage(nil, 11, TASKS)

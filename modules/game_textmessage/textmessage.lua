@@ -79,8 +79,16 @@ end
 local function showOnScreen(msgtype, text)
   if msgtype.screenTarget then
     local label = messagesPanel:recursiveGetChildById(msgtype.screenTarget)
-    label:setText(text)
+    local plain, colored
+    if modules.game_console and modules.game_console.parseRarityText then
+      plain, colored = modules.game_console.parseRarityText(text, '#ffffff') -- the items in their colours, the rest white
+    end
+    label:setText(plain or text)
     label:setColor(msgtype.color)
+    if colored then
+      label:setColoredText(colored)
+    end
+    text = plain or text
     label:setVisible(true)
     removeEvent(label.hideEvent)
     label.hideEvent = scheduleEvent(function() label:setVisible(false) end, calculateVisibleTime(text))

@@ -1,0 +1,8 @@
+Module
+  name: game_generalstore
+  description: The ForgottenL General Store: buy and sell everything at the store NPC
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ generalstore ]
+  @onLoad: init()
+  @onUnload: terminate()
