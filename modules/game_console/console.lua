@@ -718,6 +718,112 @@ function clickNpcKeyword(label, mousePos, tab)
   return false
 end
 
+-- The blue words of an NPC's speech on the screen are clickable too (the owner, 2026-11-09). The engine draws that speech
+-- (StaticText::drawText, mapview.cpp) centred above the NPC's tile: anchor = the tile's top-left + 8 px right, text box =
+-- anchor - (width / 2, height) + (20, 5) in screen pixels, in verdana-11px-rounded, wrapped at 275 px. A hidden text edit
+-- with the same font, text and alignment sits on that box, so its getTextPos says which letter is under the mouse.
+local screenTexts = {} -- 'name|x|y|z' -> {obj = StaticText, pos = position, expires = millis, words = {word = true}}
+local screenMeasure = nil
+
+function trackNpcScreenText(staticText, name, pos, message)
+  if not staticText or not pos or not name then return end
+  local now = g_clock.millis()
+  local plain = message:gsub('[{}]', '')
+  local delay = math.max(60 * #plain, 3000) -- STATIC_DURATION_PER_CHARACTER, MIN_STATIC_TEXT_DURATION
+  local key = name .. '|' .. pos.x .. '|' .. pos.y .. '|' .. pos.z
+  local record = screenTexts[key]
+  if not record or record.expires < now then
+    -- a new speech bubble; one still on screen takes this message in (Map::addThing combines them)
+    record = {obj = staticText, pos = {x = pos.x, y = pos.y, z = pos.z}, expires = 0, words = {}}
+    screenTexts[key] = record
+  end
+  record.expires = math.max(record.expires, now + delay)
+  for word in message:gmatch('{([^}]+)}') do
+    record.words[word] = true
+  end
+end
+
+-- the world pixel under a screen point: tile * 32 + offset inside the tile, or nil outside the map
+local function worldPixel(map, point)
+  local tile = map:getPosition(point)
+  if not tile or not tile.x then return nil end
+  local offset = map:getPositionOffset(point)
+  return tile.x * 32 + offset.x, tile.y * 32 + offset.y, tile
+end
+
+-- the word of a record under the mouse, or nil
+local function screenWordAt(map, record, mousePos)
+  local text = record.obj:getText()
+  if not text or #text == 0 then return nil end
+  local mx, my, cameraTile = worldPixel(map, mousePos)
+  if not mx then return nil end
+  -- world pixels per screen pixel, probed beside the mouse
+  local sx, sy = 1, 1
+  local qx = worldPixel(map, {x = mousePos.x + 40, y = mousePos.y})
+  if qx then sx = (qx - mx) / 40 else local lx = worldPixel(map, {x = mousePos.x - 40, y = mousePos.y}) if lx then sx = (mx - lx) / 40 end end
+  local _, qy = worldPixel(map, {x = mousePos.x, y = mousePos.y + 40})
+  if qy then sy = (qy - my) / 40 else local _, ly = worldPixel(map, {x = mousePos.x, y = mousePos.y - 40}) if ly then sy = (my - ly) / 40 end end
+  if sx <= 0 or sy <= 0 then return nil end
+  -- the speech's anchor: its tile's top-left (moved by the floors between, like transformPositionTo2D) + 8 px right
+  local dz = cameraTile.z - record.pos.z
+  local ax = (record.pos.x - dz) * 32 + 8
+  local ay = (record.pos.y - dz) * 32
+  local anchor = {x = mousePos.x + (ax - mx) / sx, y = mousePos.y + (ay - my) / sy}
+
+  if not screenMeasure then
+    screenMeasure = g_ui.createWidget('UITextEdit', rootWidget)
+    screenMeasure:setFont('verdana-11px-rounded')
+    screenMeasure:setTextAlign(AlignCenter)
+    screenMeasure:setEditable(false)
+    screenMeasure:setPhantom(true)
+    screenMeasure:setVisible(false)
+  end
+  screenMeasure:setText(text)
+  local size = screenMeasure:getTextSize()
+  local rect = {x = math.floor(anchor.x - size.width / 2 + 20), y = math.floor(anchor.y - size.height + 5), width = size.width, height = size.height}
+  if mousePos.x < rect.x or mousePos.x > rect.x + rect.width or mousePos.y < rect.y or mousePos.y > rect.y + rect.height then
+    return nil
+  end
+  screenMeasure:setRect(rect)
+  screenMeasure:setText('')
+  screenMeasure:setText(text) -- lays the glyphs out on the new rect
+  local at = screenMeasure:getTextPos(mousePos)
+  if not at or at < 0 then return nil end
+  for word in pairs(record.words) do
+    local from = 1
+    while true do
+      local first, last = text:find(word, from, true)
+      if not first then break end
+      if at >= first - 1 and at <= last - 1 then return word end
+      from = last + 1
+    end
+  end
+  return nil
+end
+
+-- A left click on the map over a blue word of an NPC's speech says that word to it. True when it did.
+function clickScreenKeyword(map, mousePos)
+  if not g_game.isOnline() or not map then return false end
+  local now = g_clock.millis()
+  for key, record in pairs(screenTexts) do
+    if record.expires < now then
+      screenTexts[key] = nil
+    else
+      local ok, word = pcall(screenWordAt, map, record, mousePos)
+      if ok and word then
+        local tab = getTab('NPCs')
+        if tab and tab.npcChat then
+          sendMessage(word, tab)
+        else
+          g_game.talk(word)
+        end
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function addTabText(text, speaktype, tab, creatureName)
   if not tab or tab.locked or not text or #text == 0 then return end
 
@@ -1209,6 +1315,7 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
     if isNpcMode then
       local highlightData = getNewHighlightedText(staticMessage, speaktype.color, "#1f9ffe")
       if #highlightData > 2 then
+        trackNpcScreenText(staticText, name, creaturePos, staticMessage)
         staticText:addColoredMessage(name, mode, highlightData)
       else
         staticText:addMessage(name, mode, staticMessage)

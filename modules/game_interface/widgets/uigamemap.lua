@@ -112,6 +112,13 @@ function UIGameMap:onMouseRelease(mousePosition, mouseButton)
   if not self.allowNextRelease and not self.markingMouseRelease then
     return true
   end
+  -- a blue word of an NPC's speech on the screen: say it to the NPC (game_console.clickScreenKeyword)
+  if mouseButton == MouseLeftButton and g_keyboard.getModifiers() == KeyboardNoModifier and not self.markingMouseRelease
+      and modules.game_console and modules.game_console.clickScreenKeyword
+      and modules.game_console.clickScreenKeyword(self, mousePosition) then
+    self.allowNextRelease = false
+    return true
+  end
   local autoWalkPos = self:getPosition(mousePosition)
   local positionOffset = self:getPositionOffset(mousePosition)
 

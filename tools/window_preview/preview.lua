@@ -677,6 +677,26 @@ local function define()
       g_logger.info('[preview] keyword ' .. span.word .. ' shows as "' .. label:getText():sub(span.first + 1, span.last + 1) .. '"')
     end
   end, 300)
+  -- the hidden text edit used to find a word of an NPC's speech on the screen: glyphs laid out while invisible?
+  step('npc_screen_measure', function()
+    local st = StaticText.create()
+    st:addColoredMessage('ForgottenL General Store', MessageModes.NpcFrom, {'Welcome to the ForgottenL General Store, Dev! I sell and buy everything: say ', '#5FF7F7', 'trade', '#1f9ffe', '.', '#5FF7F7'})
+    local text = st:getText()
+    local m = g_ui.createWidget('UITextEdit', rootWidget)
+    m:setFont('verdana-11px-rounded') m:setTextAlign(AlignCenter) m:setEditable(false) m:setPhantom(true) m:setVisible(false)
+    m:setText(text)
+    local size = m:getTextSize()
+    m:setRect({x = 100, y = 100, width = size.width, height = size.height})
+    m:setText('') m:setText(text)
+    local first = text:find('trade', 1, true)
+    g_logger.info('[preview] screen text ' .. size.width .. 'x' .. size.height .. ' lines ' .. select(2, text:gsub('\n', '')) + 1 .. ': ' .. text:gsub('\n', ' / '))
+    for x = 100, 100 + size.width, 8 do
+      local at = m:getTextPos({x = x, y = 100 + size.height - 6})
+      g_logger.info('[preview] x ' .. x .. ' -> ' .. tostring(at) .. ' ' .. (at and at >= 0 and text:sub(at + 1, at + 1) or ''))
+    end
+    g_logger.info('[preview] trade starts at index ' .. tostring(first - 1))
+    m:destroy()
+  end, 100)
   step('inspect_player', function()
     modules.game_inspect.onMessage(nil, 33, [[P|268435500|Lord Paladin|31250|Royal Paladin|412000|455000|98000|120000|42|1480|100
 K|0|10
