@@ -678,6 +678,15 @@ local function define()
     local first = w and w:recursiveGetChildById('items'):getChildren()[1]
     if first and first.onClick then first.onClick() end
   end, 500)
+  step('stash_tip_rune', function()
+    modules.game_stash.closeAmount()
+    modules.game_stash.showTip({clientId = 3188, name = 'fire field rune', category = 'runes', count = 239, pays = 14,
+      look = 'a fire field rune("adevo grav flam").\nIt can only be used with level 15 and magic level 1 or higher.\nIt weighs 1.20 oz.'})
+  end, 400)
+  step('stash_tip_sword', function()
+    modules.game_stash.showTip({clientId = 55746, name = 'Cursed Sword', category = 'swords', count = 3, pays = 0,
+      look = 'a Cursed Sword (Atk:1125, Def:40, protection physical +5%).\nIt can only be wielded properly by knights of level 100 or higher.\nIt weighs 180.00 oz.\nTier 2.\nA tier 2 weapon of the Cursed line. Weapons of this line hit harder the deeper you hunt.'})
+  end, 400)
   step('stash_end', function() modules.game_stash.hide() end, 100)
   -- an NPC message with blue words in the NPCs tab; the log says which text each clickable word covers
   step('npc_keywords', function()

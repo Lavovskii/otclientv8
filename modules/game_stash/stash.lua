@@ -134,7 +134,130 @@ local function visible()
   return list, selling
 end
 
+-- The hover card (the owner, 2026-11-09: organised, with spacing and Look's green). The server's look text is cut in
+-- parts: the first line's brackets hold the stats (or a rune's words), "It can only be..." the requirements, "Tier N."
+-- the tier, "It weighs..." the weight; anything else is the item's own description.
+local LOOK_GREEN = '#00eb00'
+local REQUIREMENT = '#e8a33c'
+local TIER_COLORS = {'#4ee34e', '#3d9cff', '#b65cff', '#ffd23b', '#ff7fd5', '#ff5a5a'}
+local KINDS = {amulets = 'Amulet', armors = 'Armor', boots = 'Boots', containers = 'Container', helmets = 'Helmet',
+  legs = 'Legs', others = 'Item', potions = 'Potion', rings = 'Ring', runes = 'Rune', shields = 'Shield', tools = 'Tool',
+  valuables = 'Valuable', ammo = 'Ammunition', axes = 'Axe', clubs = 'Club', distance = 'Distance weapon',
+  swords = 'Sword', wands = 'Wand or rod'}
+local STAT_NAMES = {Atk = 'Attack', Def = 'Defense', Arm = 'Armor', Range = 'Range', Hit = 'Hit chance'}
+local tip = nil
+
+function hideTip()
+  if tip then
+    tip:destroy()
+    tip = nil
+  end
+end
+
+local function capitalise(text)
+  return (text:gsub('^%l', string.upper))
+end
+
+local function line(text, color, font)
+  local l = g_ui.createWidget('StashTipLine', tip)
+  l:setText(text)
+  if color then l:setColor(color) end
+  if font then l:setFont(font) end
+  return l
+end
+
+local function row(key, value, color)
+  local r = g_ui.createWidget('StashTipRow', tip)
+  r.key:setText(key)
+  r.value:setText(value)
+  if color then r.value:setColor(color) end
+end
+
+local function separator()
+  g_ui.createWidget('StashTipSeparator', tip)
+end
+
+function showTip(it)
+  hideTip()
+  tip = g_ui.createWidget('StashTip', rootWidget)
+  local header = g_ui.createWidget('StashTipHeader', tip)
+  header.item:setItemId(it.clientId)
+  header.name:setText(capitalise(it.name))
+  header.kind:setText(tr(KINDS[it.category] or 'Item'))
+
+  local lines = (it.look or ''):split('\n')
+  local first = table.remove(lines, 1) or ''
+  local inside = first:match('%((.*)%)%.?%s*$')
+  local stats, words = {}, nil
+  if inside then
+    words = inside:match('^"(.*)"$')
+    if not words then
+      for part in (inside .. ','):gmatch('%s*([^,]+),') do
+        local name, value = part:match('^(%a+)%%?:%s*(.+)$')
+        if name then
+          table.insert(stats, (STAT_NAMES[name] or name) .. ': ' .. value)
+        else
+          table.insert(stats, capitalise(part))
+        end
+      end
+    end
+  end
+
+  local requirements, tier, weight, description = {}, nil, nil, {}
+  for _, l in ipairs(lines) do
+    l = l:gsub('^%s+', '')
+    if l:find('^It can only be') then
+      table.insert(requirements, l)
+    elseif l:match('^Tier (%d+)%.?$') then
+      tier = tonumber(l:match('^Tier (%d+)'))
+    elseif l:find('^It weighs') then
+      weight = l:match('^It weighs (.-)%.?$')
+    elseif l ~= '' then
+      table.insert(description, l)
+    end
+  end
+
+  if words or #stats > 0 or tier then
+    separator()
+    if words then line(tr('Words') .. ': ' .. words, LOOK_GREEN) end
+    for _, s in ipairs(stats) do line(s, LOOK_GREEN) end
+    if tier then line(tr('Tier %d', tier), TIER_COLORS[math.min(tier, #TIER_COLORS)] or '#ffffff') end
+  end
+  if #requirements > 0 then
+    separator()
+    for _, r in ipairs(requirements) do line(r, REQUIREMENT) end
+  end
+  if #description > 0 then
+    separator()
+    for _, d in ipairs(description) do line(d, '#b8b0a0', 'verdana-9px-italic') end
+  end
+
+  separator()
+  row(tr('Quantity'), comma_value(it.count))
+  if weight then row(tr('Weight'), weight .. (it.count > 1 and ' ' .. tr('each') or '')) end
+  if it.pays > 0 then
+    row(tr('Store pays'), comma_value(it.pays) .. ' ' .. tr('gold each'), '#f4d68c')
+    if it.count > 1 then row(tr('For all'), comma_value(it.pays * it.count) .. ' gold', '#f4d68c') end
+  else
+    row(tr('Store pays'), tr('not bought'), '#7a7468')
+  end
+
+  -- beside the mouse, kept inside the screen
+  local pos = g_window.getMousePosition()
+  tip:raise()
+  scheduleEvent(function()
+    if not tip then return end
+    local root = rootWidget:getSize()
+    local x, y = pos.x + 18, pos.y + 18
+    if x + tip:getWidth() > root.width then x = pos.x - tip:getWidth() - 8 end
+    if y + tip:getHeight() > root.height then y = math.max(0, root.height - tip:getHeight() - 4) end
+    tip:setPosition({x = x, y = y})
+  end, 1)
+  tip:setPosition({x = pos.x + 18, y = pos.y + 18})
+end
+
 local function drawItems()
+  hideTip()
   local panel = window.items
   panel:destroyChildren()
   local list, selling = visible()
@@ -148,13 +271,10 @@ local function drawItems()
     if selling and it.pays <= 0 then
       slot:setOpacity(0.35)
     end
-    -- what Look says (stats, tier, vocations and level), then how many and what the store pays
-    local tip = (it.look ~= '' and it.look or it.name) .. '\n' .. tr('Quantity') .. ': ' .. comma_value(it.count)
-    if it.pays > 0 then
-      tip = tip .. '\n' .. tr('The General Store pays %s gold each (%s for all)', comma_value(it.pays), comma_value(it.pays * it.count))
+    slot.onHoverChange = function(widget, hovered)
+      if hovered then showTip(it) else hideTip() end
     end
-    slot:setTooltip(tip)
-    slot.onClick = function() askAmount(it) end
+    slot.onClick = function() hideTip() askAmount(it) end
   end
 end
 
@@ -188,6 +308,7 @@ function stow(item, mode)
 end
 
 function hide()
+  hideTip()
   closeAmount()
   if window then window:hide() end
 end
