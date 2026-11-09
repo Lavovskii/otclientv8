@@ -48739,20 +48739,20 @@ O	124	124	monster 124
 O	125	125	
 O	126	126	monster Staff Member
 O	127	127	
-O	128	128	outfit Citizen, npc Miam Yamm
+O	128	128	outfit Citizen
 O	129	129	outfit Hunter, monster Bandit, monster Hunter
-O	130	130	outfit Mage, monster Dark Sorcerer, monster Crazy Sorcerer, monster The Impossible, monster White Sorcerer, monster Warlock, npc Malak, npc VIP Malak
+O	130	130	outfit Mage, monster Dark Sorcerer, monster Crazy Sorcerer, monster The Impossible, monster White Sorcerer, monster Warlock
 O	131	131	outfit Knight, monster Black Knight, monster Wild Warrior
-O	132	132	outfit Nobleman, npc Aol Seller, npc Banker Benjamin, npc Captain Frodo, npc Postman Jeru, npc Ring Seller, npc VIP Frodo
+O	132	132	outfit Nobleman, npc Banker Benjamin
 O	133	133	outfit Summoner, monster Dark Magician
 O	134	134	outfit Warrior, monster Bica, monster Training Boy, npc Varkhal
 O	136	136	outfit Citizen
 O	137	137	outfit Hunter, monster Amazon
 O	138	138	outfit Mage
-O	139	139	outfit Knight, monster Valkyrie, npc Custom Loot, npc Custom Outfit, npc Soya, npc VIP Addoner, npc VIP GM Seller
+O	139	139	outfit Knight, monster Valkyrie, npc Custom Outfit, npc VIP Addoner
 O	140	140	outfit Noblewoman
 O	141	141	outfit Summoner
-O	142	142	outfit Warrior, npc Furniture Lady [NPC], npc Ranger, npc VIP Ranger
+O	142	142	outfit Warrior
 O	143	143	outfit Barbarian, monster Pale Serpent Rider
 O	144	144	outfit Druid
 O	145	145	outfit Wizard
