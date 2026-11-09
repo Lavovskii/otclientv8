@@ -2511,6 +2511,24 @@ ArtLootColors < Panel
     text: unique / bound
     color: #ff7fd5
 
+ArtNpcTalk < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: click
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 10 0 0 4
+    text: Right click
+    color: #f4d68c
+
+  GuideNote
+    anchors.left: click.left
+    anchors.top: click.bottom
+    margin-top: 6
+    text: "hi"
+    color: #1f9ffe
+
 ArtTaskBoard < Panel
   anchors.fill: parent
 

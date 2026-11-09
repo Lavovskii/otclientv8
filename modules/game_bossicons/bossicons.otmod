@@ -1,0 +1,8 @@
+Module
+  name: game_bossicons
+  description: An icon beside a boss's name, one for each kind of boss
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ bossicons ]
+  @onLoad: init()
+  @onUnload: terminate()

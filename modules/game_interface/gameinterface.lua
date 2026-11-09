@@ -514,6 +514,10 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
     local localPlayer = g_game.getLocalPlayer()
     menu:addSeparator()
 
+    if creatureThing:isNpc() then
+      menu:addOption(tr('Talk'), function() talkToNpc(creatureThing) end)
+    end
+
     -- Inspect (modules/game_inspect): a player's equipment and stats, a monster's loot
     if modules.game_inspect and (creatureThing:isPlayer() or creatureThing:isMonster()) then
       menu:addOption(tr('Inspect'), function() modules.game_inspect.inspect(creatureThing) end)
@@ -640,6 +644,20 @@ function createThingMenu(menuPosition, lookThing, useThing, creatureThing)
   menu:display(menuPosition)
 end
 
+-- ForgottenL: a right click on an NPC greets it, as saying "hi" (NPCs answer within 3 sqm on the same floor)
+local NPC_TALK_RANGE = 3
+function talkToNpc(npc)
+  local player = g_game.getLocalPlayer()
+  if not npc or not player then return false end
+  local a, b = player:getPosition(), npc:getPosition()
+  if not a or not b or a.z ~= b.z or math.max(math.abs(a.x - b.x), math.abs(a.y - b.y)) > NPC_TALK_RANGE then
+    modules.game_textmessage.displayFailureMessage(tr('Get closer to %s to talk.', npc:getName()))
+    return true
+  end
+  g_game.talk('hi')
+  return true
+end
+
 function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, useThing, creatureThing, attackCreature, marking)
   local keyboardModifiers = g_keyboard.getModifiers()
 
@@ -735,7 +753,11 @@ function processMouseAction(menuPosition, mouseButton, autoWalkPos, lookThing, u
       return true
     end
   else -- classic control
-    if useThing and keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton and not g_mouse.isPressed(MouseLeftButton) then
+    local npc = (creatureThing and creatureThing:isNpc() and creatureThing) or (attackCreature and attackCreature:isNpc() and attackCreature)
+    if npc and keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton and not g_mouse.isPressed(MouseLeftButton) then
+      -- an NPC is greeted, not attacked
+      return talkToNpc(npc)
+    elseif useThing and keyboardModifiers == KeyboardNoModifier and mouseButton == MouseRightButton and not g_mouse.isPressed(MouseLeftButton) then
       local player = g_game.getLocalPlayer()
       if attackCreature and attackCreature ~= player then
         g_game.attack(attackCreature)

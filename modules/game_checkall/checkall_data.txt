@@ -1538,13 +1538,13 @@ I	2258	3143	golden trash
 I	2259	3144	stone rubbish
 I	2260	3147	blank rune
 I	2261	3148	destroy field rune
-I	2262	3149	Basic SD
-I	2263	3150	Super SD
-I	2264	3151	Mega SD
+I	2262	3149	energy bomb rune
+I	2263	3150	spell rune
+I	2264	3151	spell rune
 I	2265	3152	Large UH
 I	2266	3153	antidote rune
 I	2267	3154	Medium UH
-I	2268	3155	Upgraded Mega SD
+I	2268	3155	sudden death rune
 I	2269	3156	wild growth rune
 I	2270	3157	Small Manarune
 I	2271	3158	icicle rune
@@ -1559,7 +1559,7 @@ I	2279	3166	energy wall rune
 I	2280	3167	Prestige Spirit Rune
 I	2281	3168	Medium Manarune
 I	2282	3169	Large Mixed Rune
-I	2283	3170	Old Mega Super SD
+I	2283	3170	spell rune
 I	2284	3171	Upgraded Prestige Spirit Rune
 I	2285	3172	poison field rune
 I	2286	3173	poison bomb rune
@@ -1590,7 +1590,7 @@ I	2310	3197	desintegrate rune
 I	2311	3198	heavy magic missile rune
 I	2312	3199	Paralyze Rune
 I	2313	3200	explosion rune
-I	2314	3201	Old Mega Super SD
+I	2314	3201	spell rune
 I	2315	3202	Old Elvenforged ManaRune
 I	2316	3203	Old Upgraded Prestige UH
 I	2317	3204	dead human
@@ -8936,7 +8936,7 @@ I	9966	9053	glob of mercury
 I	9967	9054	glob of acid slime
 I	9968	9055	glob of tar
 I	9969	9056	black skull
-I	9970	9057	Buffary Coin
+I	9970	9057	small topaz
 I	9971	9058	Gold Ingot
 I	9972	9059	small lamp
 I	9973	9060	lit small lamp
@@ -45683,7 +45683,7 @@ I	61148	57103	placeholder sprite 487426
 I	61149	57104	placeholder sprite 487427
 I	61150	57105	Super SD
 I	61151	57106	Mega SD
-I	61152	57107	Mega Super SD
+I	61152	57107	Upgraded Mega SD
 I	61153	57108	placeholder sprite 487431
 I	61154	57109	placeholder sprite 487432
 I	61155	57110	placeholder sprite 487433
@@ -48029,7 +48029,7 @@ I	63494	59449	black legendary chest
 I	63495	59450	black legendary chest
 I	63496	59451	black legendary chest
 I	63497	59452	black legendary chest
-I	63498	59453	red crystal coin
+I	63498	59453	Buffary Coin
 I	63499	59454	orange crystal coin
 I	63500	59455	yellow crystal coin
 I	63501	59456	green crystal coin
@@ -49433,7 +49433,7 @@ O	1063	1063
 O	1064	1064	monster Tar Defiler
 O	1065	1065	
 O	1066	1066	
-O	1067	1067	
+O	1067	1067	npc ForgottenL General Store
 O	1068	1068	
 O	1069	1069	
 O	1070	1070	
