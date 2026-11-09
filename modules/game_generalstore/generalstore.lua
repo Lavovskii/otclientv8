@@ -3,7 +3,8 @@
 -- extended opcode 32 (the store may come in parts: it starts at O and is shown at E):
 --   O|vip|gold coin clientId|buffary coin clientId|npc name
 --   C|key|name|icon clientId
---   I|category|itemid|clientId|name|price|currency|npc sells|npc buys|price the npc pays now
+--   I|category|itemid|clientId|name|price|currency|npc sells|npc buys|price the npc pays now|weight|Buffary Coins asked on
+--     top of a gold price (the brand backpacks)
 --   F|gold (carried + bank)|buffary coins
 --   H|itemid|count in the backpack        H|end closes a reply's list
 --   R|ok or error|text
@@ -75,11 +76,18 @@ end
 
 local function canAfford(item, n)
   local have = item.currency == 'buffary' and funds.buffary or funds.gold
-  return have >= item.price * n
+  return have >= item.price * n and funds.buffary >= (item.extra or 0) * n
+end
+
+-- the funds' widgets, on their two plates
+local function fundsWidgets()
+  local box = window.header.funds
+  return {goldIcon = box.goldPlate.goldIcon, gold = box.goldPlate.gold,
+          buffaryIcon = box.buffaryPlate.buffaryIcon, buffary = box.buffaryPlate.buffary}
 end
 
 local function drawFunds()
-  local f = window.header.funds
+  local f = fundsWidgets()
   for _, icon in ipairs({{f.goldIcon, GOLD_COIN_CLIENT}, {f.buffaryIcon, store.buffaryIcon}}) do
     icon[1]:setItemId(icon[2])
     icon[1]:setItemCount(HEAP)
@@ -93,12 +101,13 @@ local function drawFunds()
   f.gold:setTooltip(goldTip)
   f.buffaryIcon:setTooltip(buffaryTip)
   f.buffary:setTooltip(buffaryTip)
-  f:setTooltip(goldTip .. '\n' .. buffaryTip)
+  window.header.funds.goldPlate:setTooltip(goldTip)
+  window.header.funds.buffaryPlate:setTooltip(buffaryTip)
   if store.vip then
-    window.header.vipNote:setText(tr('VIP: the store buys from you at the full price!'))
+    window.header.vipNote:setText(tr('VIP: the store pays you more for what it buys!'))
     window.header.vipNote:setColor(GOLD)
   else
-    window.header.vipNote:setText(tr('The store buys at half the price. VIP players sell at the full price.'))
+    window.header.vipNote:setText(tr('VIP players sell to the store for more.'))
     window.header.vipNote:setColor(GREY)
   end
 end
@@ -119,15 +128,17 @@ local function drawDetails()
   d.itemName:setText(selected.name)
   local have = holding[selected.id] or 0
   if tab == 'buy' then
-    d.eachLabel:setText(tr('Price: %s each', priceText(selected.price, selected.currency)))
+    d.eachLabel:setText(tr('Price: %s each', priceText(selected.price, selected.currency) ..
+      ((selected.extra or 0) > 0 and (' + ' .. priceText(selected.extra, 'buffary')) or '')))
     d.haveLabel:setText(have > 0 and tr('You have %d in your backpack', have) or '')
     local total = selected.price * n
-    d.totalLabel:setText(tr('Total: %s', priceText(total, selected.currency)))
+    d.totalLabel:setText(tr('Total: %s', priceText(total, selected.currency) ..
+      ((selected.extra or 0) > 0 and (' + ' .. priceText(selected.extra * n, 'buffary')) or '')))
     d.totalLabel:setColor(canAfford(selected, n) and GREEN or RED)
     d.actionButton:setText(tr('Buy'))
     d.actionButton:setEnabled(canAfford(selected, n))
   else
-    local note = store.vip and tr(' (VIP: full price)') or tr(' (half the price)')
+    local note = store.vip and tr(' (VIP price)') or ''
     d.eachLabel:setText(tr('The store pays %s each', priceText(selected.pays, selected.currency)) .. note)
     d.haveLabel:setText(tr('You have %d in your backpack', have))
     d.totalLabel:setText(tr('You get: %s', priceText(selected.pays * n, selected.currency)) ..
@@ -154,7 +165,17 @@ local function drawItems()
     local cell = g_ui.createWidget('GsOffer', panel)
     cell.name:setText(item.name)
     cell.itemBox.item:setItemId(item.clientId)
-    cell.priceBox.price:setText(money(priceOf(item)) .. ' ' .. currencyWord(item.currency))
+    if tab == 'buy' and (item.extra or 0) > 0 then
+      -- two currencies don't fit the cell in full: Tibia's short form, 100kk + 100 bf (the panel on the right says it whole)
+      local function short(v)
+        if v >= 1000000 and v % 1000000 == 0 then return money(v / 1000000) .. 'kk' end
+        if v >= 1000 and v % 1000 == 0 then return money(v / 1000) .. 'k' end
+        return money(v)
+      end
+      cell.priceBox.price:setText(short(priceOf(item)) .. ' + ' .. money(item.extra) .. ' bf')
+    else
+      cell.priceBox.price:setText(money(priceOf(item)) .. ' ' .. currencyWord(item.currency))
+    end
     cell.priceBox.price:setColor(item.currency == 'buffary' and '#f0a050' or '#f4d68c')
     local have = holding[item.id] or 0
     if tab == 'sell' then
@@ -163,7 +184,8 @@ local function drawItems()
     else
       cell.note:setText('')
     end
-    cell:setTooltip(item.name .. '\n' .. (tab == 'buy' and tr('Price: %s', priceText(item.price, item.currency))
+    cell:setTooltip(item.name .. '\n' .. (tab == 'buy' and tr('Price: %s', priceText(item.price, item.currency) ..
+      ((item.extra or 0) > 0 and (' + ' .. priceText(item.extra, 'buffary')) or ''))
       or tr('The store pays %s', priceText(item.pays, item.currency))))
     cell.onClick = function() select(item) end
     cell.onFocusChange = function(widget, focused) if focused then select(item) end end
@@ -233,6 +255,7 @@ function maxAmount()
   if tab == 'buy' then
     local have = selected.currency == 'buffary' and funds.buffary or funds.gold
     n = selected.price > 0 and math.floor(have / selected.price) or MAX_AMOUNT
+    if (selected.extra or 0) > 0 then n = math.min(n, math.floor(funds.buffary / selected.extra)) end
     -- and no more than the free capacity carries (weights in hundredths of an oz)
     local player = g_game.getLocalPlayer()
     local cap = player and tonumber(player:getFreeCapacity())
@@ -293,7 +316,7 @@ function onMessage(protocol, opcode, buffer)
     elseif kind == 'I' and pending then
       table.insert(pending.items, {category = f[2], id = tonumber(f[3]), clientId = tonumber(f[4]) or 0, name = f[5],
         price = tonumber(f[6]) or 0, currency = f[7], sells = f[8] == '1', buys = f[9] == '1', pays = tonumber(f[10]) or 0,
-        weight = tonumber(f[11]) or 0})
+        weight = tonumber(f[11]) or 0, extra = tonumber(f[12]) or 0})
     elseif kind == 'F' then
       funds.gold, funds.buffary, funds.slots = tonumber(f[2]) or 0, tonumber(f[3]) or 0, tonumber(f[4])
     elseif kind == 'R' then
@@ -324,7 +347,7 @@ end
 function init()
   window = g_ui.displayUI('generalstore')
   window:hide()
-  window.header.funds.goldIcon:setItemId(0)
+  fundsWidgets().goldIcon:setItemId(0)
   window.details.amount.onTextChange = function() drawDetails() end
   ProtocolGame.registerExtendedOpcode(OPCODE, onMessage)
   connect(g_game, {onGameEnd = onGameEnd})

@@ -221,47 +221,70 @@ MainWindow
       font: verdana-11px-rounded
       color: #a8a8a8
 
-    GsPlate
+    // the gold and the Buffary Coins each on a plate of their own, the number right-aligned beside its coin, room between
+    // them: a long amount of gold never runs into the Buffary Coins (the owner, 2026-11-09)
+    UIWidget
       id: funds
-      size: 250 40
+      size: 382 40
       anchors.right: parent.right
       anchors.verticalCenter: parent.verticalCenter
       margin-right: 8
+      phantom: true
 
-      UIItem
-        id: goldIcon
-        size: 32 32
+      GsPlate
+        id: goldPlate
+        width: 232
         anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 4
-        virtual: true
-        phantom: false
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
 
-      Label
-        id: gold
-        anchors.left: goldIcon.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 2
-        width: 100
-        font: verdana-11px-rounded
-        color: #f4d68c
+        UIItem
+          id: goldIcon
+          size: 32 32
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          virtual: true
+          phantom: false
 
-      UIItem
-        id: buffaryIcon
-        size: 32 32
-        anchors.left: gold.right
-        anchors.verticalCenter: parent.verticalCenter
-        virtual: true
-        phantom: false
+        Label
+          id: gold
+          anchors.left: goldIcon.right
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          margin-right: 10
+          text-align: right
+          font: verdana-11px-rounded
+          color: #f4d68c
 
-      Label
-        id: buffary
-        anchors.left: buffaryIcon.right
+      GsPlate
+        id: buffaryPlate
+        anchors.left: goldPlate.right
         anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        margin-left: 2
-        font: verdana-11px-rounded
-        color: #f0a050
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        margin-left: 10
+
+        UIItem
+          id: buffaryIcon
+          size: 32 32
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 4
+          virtual: true
+          phantom: false
+
+        Label
+          id: buffary
+          anchors.left: buffaryIcon.right
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          margin-right: 10
+          text-align: right
+          font: verdana-11px-rounded
+          color: #f0a050
 
   GsCaptionFrame
     id: categoriesBox
