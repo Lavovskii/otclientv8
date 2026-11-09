@@ -1,0 +1,8 @@
+Module
+  name: game_nameoffset
+  description: Names and health bars above the top of big outfits instead of inside them
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ heights, nameoffset ]
+  @onLoad: init()
+  @onUnload: terminate()

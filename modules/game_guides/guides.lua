@@ -111,6 +111,8 @@ local GUIDES = {
        text = 'In every loot message each item has the colour of its rarity: green common, blue uncommon, purple rare, gold very rare, pink unique or bound to you. Every monster can drop magic chest keys: Bronze from any monster, Iron above level 100, Silver above 1,000, Gold above 10,000, Prestige above 50,000 and Corrupt Prestige only from world bosses.'},
       {art = 'ArtNpcTalk', title = 'Talk to NPCs',
        text = 'Right click an NPC to greet it, as if you said hi: the conversation starts in the NPC channel. Stand within 3 sqm of it. With classic controls off, right click an NPC and choose Talk.'},
+      {art = 'ArtBigNames', title = 'Names on big outfits',
+       text = 'Big creatures, NPCs, mounts and outfits have their name and health bar on top of their head, not in the middle of their body, as on a normal character.'},
       {art = 'ArtTaskBoard', title = 'Task Board',
        text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20%% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop.'},
       {art = 'ArtVipDays', title = 'VIP days',

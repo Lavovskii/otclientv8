@@ -590,6 +590,19 @@ local function define()
       end
     end
   end, 700)
+  -- the card of a title, in whichever tab has it
+  step('guides_bignames', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      local children = cards and cards:getChildren() or {}
+      for i, card in ipairs(children) do
+        local title = card:recursiveGetChildById('title')
+        if title and title:getText() == 'Names on big outfits' then for k = i, math.min(#children, i + 5) do cards:ensureChildVisible(children[k]) end return end
+      end
+    end
+  end, 700)
   step('guides_hands', function()
     local bar = byId('guidesTabBar')
     for _, tab in ipairs(bar:getTabs()) do

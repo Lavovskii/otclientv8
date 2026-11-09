@@ -2529,6 +2529,24 @@ ArtNpcTalk < Panel
     text: "hi"
     color: #1f9ffe
 
+ArtBigNames < Panel
+  anchors.fill: parent
+
+  UICreature
+    id: big
+    size: 64 64
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.bottom: parent.bottom
+    phantom: true
+    @onSetup: self:setOutfit({type = 1067, head = 79, body = 59, legs = 79, feet = 59, addons = 3})
+
+  GuideNote
+    anchors.horizontalCenter: big.horizontalCenter
+    anchors.bottom: big.top
+    margin-bottom: -4
+    text: Big outfit
+    color: #00c000
+
 ArtTaskBoard < Panel
   anchors.fill: parent
 
