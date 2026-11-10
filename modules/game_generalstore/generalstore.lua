@@ -281,11 +281,31 @@ function doAction()
   window.details.actionButton:setEnabled(false)
 end
 
+-- closing the store is saying goodbye to the merchant (the owner, 2026-11-10): "bye" goes to the NPCs tab, as if typed
+local function sayBye()
+  local console = modules.game_console
+  local tab = console and console.getTab and console.getTab('NPCs')
+  if tab and tab.npcChat then
+    pcall(console.sendMessage, 'bye', tab)
+  end
+end
+
 function hide()
   if window and window:isVisible() then
     window:hide()
     send('close')
+    sayBye()
   end
+end
+
+-- two columns that fill the list's width, so long prices fit (the cells were 150 wide whatever the window)
+local function fitCells()
+  local panel = window and window.itemsBox and window.itemsBox.items
+  local layout = panel and panel:getLayout()
+  if not layout or not layout.setCellSize then return end
+  local inner = panel:getWidth() - panel:getPaddingLeft() - panel:getPaddingRight()
+  local width = math.max(150, math.floor((inner - 4) / 2))
+  layout:setCellSize({width = width, height = 80})
 end
 
 local function show()
@@ -299,6 +319,7 @@ local function show()
   window:show()
   window:raise()
   window:focus()
+  pcall(fitCells)
 end
 
 function onMessage(protocol, opcode, buffer)
@@ -351,6 +372,7 @@ function init()
   window.details.amount.onTextChange = function() drawDetails() end
   ProtocolGame.registerExtendedOpcode(OPCODE, onMessage)
   connect(g_game, {onGameEnd = onGameEnd})
+  connect(window.itemsBox.items, {onGeometryChange = function() pcall(fitCells) end})
 end
 
 function terminate()
