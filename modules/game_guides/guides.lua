@@ -118,7 +118,7 @@ local GUIDES = {
       {art = 'ArtBigNames', title = 'Names on big outfits',
        text = 'Big creatures, NPCs, mounts and outfits have their name and health bar on top of their head, not in the middle of their body, as on a normal character.'},
       {art = 'ArtTaskBoard', title = 'Task Board',
-       text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20%% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop.'},
+       text = 'Open it in the top menu. Bounty: one random creature, claim the reward when it is done, and claim one free reroll a day. Weekly: 6 creatures and 6 items to deliver, 9 of each with the Weekly Tasks Expansion in the Store. You deal 20%% more damage to the creatures of your open tasks. Tasks pay experience and Task Points for the Task Shop: 2 for every kill task, the bounty too, and 1 for every delivery. The Task Shop sells the Mini Health and Mini Mana Booster for 10 Task Points and the Mini Ozzo Booster for 15.'},
       {art = 'ArtVipDays', title = 'VIP days',
        text = 'Before you log in, the character list shows how many VIP days the selected character has left. In red when 7 or fewer remain.'},
       {art = 'ArtStaffName', title = 'The staff',

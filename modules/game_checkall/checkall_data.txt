@@ -43866,7 +43866,7 @@ I	59331	55286	Bronze Spirit Rune
 I	59332	55287	Silver Spirit Rune
 I	59333	55288	Golden Spirit Rune
 I	59334	55289	Ozzo Booster
-I	59335	55290	Max Ozzo Booster
+I	59335	55290	Mini Ozzo Booster
 I	59336	55291	Crude Fire Rune
 I	59337	55292	Worn Fire Rune
 I	59338	55293	Common Fire Rune
@@ -43926,7 +43926,7 @@ I	59391	55346	Bronze Holy Rune
 I	59392	55347	Silver Holy Rune
 I	59393	55348	Golden Holy Rune
 I	59394	55349	Mana Booster
-I	59395	55350	Max Mana Booster
+I	59395	55350	Mini Mana Booster
 I	59396	55351	Crude Physical Rune
 I	59397	55352	Worn Physical Rune
 I	59398	55353	Common Physical Rune
@@ -44176,7 +44176,7 @@ I	59641	55596	Bronze Rose Quartz Rune
 I	59642	55597	Silver Rose Quartz Rune
 I	59643	55598	Golden Rose Quartz Rune
 I	59644	55599	Health Booster
-I	59645	55600	Max Health Booster
+I	59645	55600	Mini Health Booster
 I	59646	55601	Crude Basalt Rune
 I	59647	55602	Worn Basalt Rune
 I	59648	55603	Common Basalt Rune

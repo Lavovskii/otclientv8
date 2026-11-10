@@ -4,7 +4,8 @@ local OPCODE = 11
 local SLOTS = 9
 local REFRESH = 4000 -- how often the open board asks again, as the items a player carries change
 local WEEKLY_TOTAL = 18
-local WEEKLY_STEPS = {{0, 'x1', 1}, {4, 'x2', 2}, {8, 'x3', 3}, {12, 'x5', 5}, {16, 'x8', 8}}
+-- no reward multiplier since 2026-11-10 (the server pays 2 Task Points a kill task and 1 a delivery): the bar only counts
+local WEEKLY_STEPS = {{0, 'x1', 1}}
 local TRACKER_ROW, TRACKER_CAPTION = 36, 18
 local GRADES = {
   Gold = {image = '/images/taskboard/ribbon_gold', color = '#2a1804'},
