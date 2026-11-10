@@ -393,6 +393,18 @@ local function signed(value)
   return (value < 0 and '-' or '+') .. comma_value(math.abs(value))
 end
 
+-- a long set name shortened for its row (the owner, 2026-11-10: "C. Prestige Set"): every word but the last becomes its
+-- first letter and a dot; a short name stays whole. The tooltip keeps the full name
+local function shortSetName(name)
+  name = tostring(name)
+  if #name <= 12 then return name end
+  local words = {}
+  for word in name:gmatch('%S+') do table.insert(words, word) end
+  if #words < 2 then return name end
+  for i = 1, #words - 1 do words[i] = words[i]:sub(1, 1) .. '.' end
+  return table.concat(words, ' ')
+end
+
 -- what the mouse shows over a line: everything that adds up to its number, and then what the number means
 local function tipFor(stat, explain, unit, show)
   local list = stats and stats.sources and stats.sources[stat]
@@ -569,8 +581,8 @@ function showStats()
   if stats.blockorb == 1 then line(bonus, 'block', tr('Block Orb'), tr('On'), GREEN, tr('Your Block Orb is protecting you.'), 3084) end
   if stats.reflectorb == 1 then line(bonus, 'reflect', tr('Reflect Orb'), tr('On'), GREEN, tr('Your Reflect Orb sends damage back.'), 3014) end
   if stats.setname then
-    line(bonus, 'setbonus', tr('%s Set', tostring(stats.setname)), tr('All') .. ' +' .. tostring(stats.setprotection or 0) .. '%', GOLD,
-      tr('You wear the whole set: helmet, armor, legs, boots and shield. It protects you from every kind of damage.'), 3366)
+    line(bonus, 'setbonus', tr('%s Set', shortSetName(stats.setname)), tr('All') .. ' +' .. tostring(stats.setprotection or 0) .. '%', GOLD,
+      tr('You wear the whole %s Set: helmet, armor, legs, boots and shield. It protects you from every kind of damage.', tostring(stats.setname)), 3366)
   end
   line(bonus, 'bank', tr('Bank'), comma_value(stats.bank or 0) .. ' gp', nil, tr('Gold in your bank account. Bankers keep it for you.'), 3043)
 
