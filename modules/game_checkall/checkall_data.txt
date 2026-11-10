@@ -46018,18 +46018,18 @@ I	61483	57438	Spell
 I	61484	57439	Spell
 I	61485	57440	placeholder sprite 488583
 I	61486	57441	placeholder sprite 488619
-I	61487	57442	Gucci Backpack
-I	61488	57443	Louis Vuitton Backpack
-I	61489	57444	Chanel Backpack
-I	61490	57445	Dior Backpack
-I	61491	57446	Prada Backpack
-I	61492	57447	Versace Backpack
-I	61493	57448	Burberry Backpack
-I	61494	57449	Fendi Backpack
-I	61495	57450	Hermes Backpack
-I	61496	57451	Bottega Veneta Backpack
-I	61497	57452	Goyard Backpack
-I	61498	57453	Valentino Backpack
+I	61487	57442	Gutchi Backpack
+I	61488	57443	Louie Vuitom Backpack
+I	61489	57444	Shanel Backpack
+I	61490	57445	Diorre Backpack
+I	61491	57446	Prahda Backpack
+I	61492	57447	Versatchi Backpack
+I	61493	57448	Berberry Backpack
+I	61494	57449	Fendee Backpack
+I	61495	57450	Ermez Backpack
+I	61496	57451	Botega Venetta Backpack
+I	61497	57452	Goyarde Backpack
+I	61498	57453	Valentyno Backpack
 I	61499	57454	placeholder sprite 488883
 I	61500	57455	placeholder sprite 488892
 I	61501	57456	placeholder sprite 488901
