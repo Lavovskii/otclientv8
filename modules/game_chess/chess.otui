@@ -1,0 +1,539 @@
+// The chess minigame's window (tools/make_chess_art.py for the board and pieces; the frames are the Task Board's and Store's).
+// Two pages in one window: the lobby (the top 5 of every mode, the buttons to play) and the game (board, clocks, moves).
+
+ChessFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
+
+ChessInset < UIWidget
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+ChessGoldButton < UIButton
+  font: verdana-11px-rounded
+  color: #ffeab0
+  image-source: /images/store/gold_button
+  image-clip: 0 0 40 30
+  image-border: 4
+  text-offset: 0 0
+  change-cursor-image: true
+  cursor: pointer
+  $hover !disabled:
+    image-clip: 0 30 40 30
+    color: #ffffff
+  $pressed:
+    image-clip: 0 60 40 30
+    text-offset: 1 1
+  $disabled:
+    image-color: #ffffff70
+    color: #ffeab060
+    change-cursor-image: false
+
+ChessRankRow < UIWidget
+  height: 16
+  phantom: true
+
+  Label
+    id: rank
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    width: 16
+    font: verdana-11px-rounded
+    color: #c9a86a
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: rank.right
+    anchors.right: score.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 4
+    font: verdana-11px-rounded
+    color: #e0e0e0
+    text-auto-resize: false
+    phantom: true
+
+  Label
+    id: score
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    width: 70
+    text-align: right
+    font: verdana-11px-rounded
+    color: #f4d68c
+    phantom: true
+
+// a mode: its name and clock on a ribbon, its top 5, the player's own numbers and the two buttons
+ChessModeCard < ChessFrame
+  size: 240 176
+  phantom: false
+
+  UIWidget
+    id: ribbon
+    size: 232 36
+    anchors.top: parent.top
+    anchors.horizontalCenter: parent.horizontalCenter
+    margin-top: 2
+    image-source: /images/taskboard/ribbon_gold
+    phantom: true
+
+    Label
+      id: title
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin: 10 22 0 44
+      height: 14
+      text-align: center
+      font: verdana-11px-rounded
+      color: #ffffff
+      phantom: true
+
+  ChessInset
+    id: table
+    anchors.top: ribbon.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: -2 8 0 8
+    height: 86
+
+    Panel
+      id: rows
+      anchors.fill: parent
+      margin: 3 6 3 6
+      phantom: true
+      layout:
+        type: verticalBox
+        spacing: 0
+
+    Label
+      id: empty
+      anchors.centerIn: parent
+      font: verdana-11px-rounded
+      color: #8a8a8a
+      !text: tr('No games yet')
+      phantom: true
+
+  Label
+    id: mine
+    anchors.top: table.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 3 8 0 8
+    height: 14
+    text-align: center
+    font: verdana-11px-rounded
+    color: #a8a8a8
+    phantom: true
+
+  ChessGoldButton
+    id: playButton
+    anchors.left: parent.left
+    anchors.bottom: parent.bottom
+    margin: 0 0 6 8
+    size: 108 26
+    !text: tr('Find Match')
+
+  Button
+    id: botButton
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    margin: 0 8 6 0
+    size: 108 26
+    !text: tr('Player vs Co.Op')
+
+ChessSquare < UIWidget
+  size: 52 52
+  phantom: false
+
+  UIWidget
+    id: mark
+    anchors.fill: parent
+    phantom: true
+
+  UIWidget
+    id: piece
+    size: 48 48
+    anchors.centerIn: parent
+    phantom: true
+
+  UIWidget
+    id: hint
+    anchors.fill: parent
+    phantom: true
+
+ChessPlayerBox < ChessFrame
+  height: 58
+
+  Label
+    id: name
+    anchors.top: parent.top
+    anchors.left: parent.left
+    margin: 8 10 0 0
+    width: 160
+    font: verdana-11px-rounded
+    color: #f0f0f0
+    phantom: true
+
+  Label
+    id: info
+    anchors.top: name.bottom
+    anchors.left: name.left
+    margin-top: 3
+    width: 160
+    font: verdana-11px-rounded
+    color: #9a9a9a
+    phantom: true
+
+  ChessInset
+    id: clockBox
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+    size: 84 34
+
+    Label
+      id: clock
+      anchors.fill: parent
+      text-align: center
+      font: sans-bold-16px
+      color: #d8d8d8
+      phantom: true
+
+MainWindow
+  id: chessWindow
+  !text: tr('Chess Arena')
+  size: 760 556
+  visible: false
+  @onEscape: modules.game_chess.hide()
+
+  // ----------------------------------------------------------------------------------------------------------------- lobby
+  Panel
+    id: lobby
+    anchors.fill: parent
+
+    ChessFrame
+      id: header
+      anchors.top: parent.top
+      anchors.left: parent.left
+      anchors.right: parent.right
+      height: 52
+
+      Label
+        id: caption
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 2 2 0 2
+        height: 18
+        image-source: /images/taskboard/caption
+        image-border: 2
+        text-align: center
+        color: #d8c08a
+        font: verdana-11px-rounded
+        !text: tr('Choose a game')
+
+      Label
+        id: intro
+        anchors.top: caption.bottom
+        anchors.left: parent.left
+        anchors.right: points.left
+        margin: 8 10 0 10
+        font: verdana-11px-rounded
+        color: #c4c4c4
+        !text: tr('Win against a player: 5 minigame points. Against Co.Op: 3. Opponents are found at random.')
+
+      ChessInset
+        id: points
+        anchors.top: caption.bottom
+        anchors.right: parent.right
+        margin: 4 6 0 0
+        size: 170 24
+
+        UIWidget
+          id: icon
+          size: 16 16
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          image-source: /images/game/chess/pieces/wK
+          image-smooth: true
+          phantom: true
+
+        Label
+          id: value
+          anchors.left: icon.right
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          margin-left: 6
+          font: verdana-11px-rounded
+          color: #f4d68c
+          phantom: true
+
+    Panel
+      id: cards
+      anchors.top: header.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      height: 360
+      layout:
+        type: grid
+        cell-size: 240 176
+        cell-spacing: 8
+        num-columns: 3
+
+    ChessFrame
+      id: queueBar
+      anchors.top: cards.bottom
+      anchors.left: parent.left
+      anchors.right: parent.right
+      margin-top: 6
+      height: 34
+      visible: false
+
+      Label
+        id: text
+        anchors.left: parent.left
+        anchors.right: cancelButton.left
+        anchors.verticalCenter: parent.verticalCenter
+        margin: 0 10 0 12
+        font: verdana-11px-rounded
+        color: #f4d68c
+        phantom: true
+
+      Button
+        id: cancelButton
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        margin-right: 6
+        size: 90 24
+        !text: tr('Cancel')
+        @onClick: modules.game_chess.leaveQueue()
+
+    Button
+      id: closeButton
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      width: 70
+      !text: tr('Close')
+      @onClick: modules.game_chess.hide()
+
+  // ----------------------------------------------------------------------------------------------------------------- game
+  Panel
+    id: game
+    anchors.fill: parent
+    visible: false
+
+    ChessFrame
+      id: boardFrame
+      anchors.top: parent.top
+      anchors.left: parent.left
+      size: 452 452
+
+      Panel
+        id: board
+        anchors.top: parent.top
+        anchors.left: parent.left
+        margin: 4 0 0 22
+        size: 416 416
+
+      Panel
+        id: ranks
+        anchors.top: board.top
+        anchors.bottom: board.bottom
+        anchors.right: board.left
+        width: 16
+        phantom: true
+
+      Panel
+        id: files
+        anchors.top: board.bottom
+        anchors.left: board.left
+        anchors.right: board.right
+        height: 20
+        phantom: true
+
+      // the end of the game, over the board
+      UIWidget
+        id: resultLayer
+        anchors.fill: board
+        background-color: #000000a8
+        visible: false
+        phantom: false
+
+        Label
+          id: title
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.top: parent.top
+          margin-top: 110
+          text-auto-resize: true
+          font: sans-bold-16px
+          color: #f4d68c
+
+        Label
+          id: reason
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.top: title.bottom
+          margin-top: 8
+          text-auto-resize: true
+          font: verdana-11px-rounded
+          color: #d0d0d0
+
+        Label
+          id: reward
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.top: reason.bottom
+          margin-top: 12
+          text-auto-resize: true
+          font: verdana-11px-rounded
+          color: #8fd48f
+
+        ChessGoldButton
+          id: lobbyButton
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.top: reward.bottom
+          margin-top: 18
+          size: 170 30
+          !text: tr('Back to the lobby')
+          @onClick: modules.game_chess.backToLobby()
+
+      // a pawn reaches the last rank: the four pieces it may become
+      ChessFrame
+        id: promotion
+        anchors.centerIn: board
+        size: 232 72
+        phantom: false
+        visible: false
+
+        Label
+          anchors.top: parent.top
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-top: 4
+          text-auto-resize: true
+          font: verdana-11px-rounded
+          color: #d8c08a
+          !text: tr('Promote to')
+
+        Panel
+          id: choices
+          anchors.bottom: parent.bottom
+          anchors.horizontalCenter: parent.horizontalCenter
+          margin-bottom: 4
+          size: 216 50
+          layout:
+            type: horizontalBox
+            spacing: 6
+
+    ChessPlayerBox
+      id: topPlayer
+      anchors.top: parent.top
+      anchors.left: boardFrame.right
+      anchors.right: parent.right
+      margin-left: 8
+
+    ChessInset
+      id: movesBox
+      anchors.top: topPlayer.bottom
+      anchors.left: topPlayer.left
+      anchors.right: parent.right
+      anchors.bottom: bottomPlayer.top
+      margin: 6 0 6 0
+
+      TextList
+        id: moves
+        anchors.fill: parent
+        margin: 4 4 4 4
+        vertical-scrollbar: movesScroll
+        focusable: false
+
+      VerticalScrollBar
+        id: movesScroll
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        step: 16
+        pixels-scroll: true
+
+    ChessPlayerBox
+      id: bottomPlayer
+      anchors.left: topPlayer.left
+      anchors.right: parent.right
+      anchors.bottom: status.top
+      margin-bottom: 6
+
+    Label
+      id: status
+      anchors.left: topPlayer.left
+      anchors.right: parent.right
+      anchors.bottom: drawBox.top
+      margin-bottom: 4
+      height: 16
+      text-align: center
+      font: verdana-11px-rounded
+      color: #f4d68c
+
+    // a draw offer from the other player
+    Panel
+      id: drawBox
+      anchors.left: topPlayer.left
+      anchors.right: parent.right
+      anchors.bottom: buttons.top
+      margin-bottom: 4
+      height: 26
+      visible: false
+
+      Button
+        id: acceptDraw
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: 120
+        height: 24
+        !text: tr('Accept draw')
+        @onClick: modules.game_chess.answerDraw(true)
+
+      Button
+        id: declineDraw
+        anchors.right: parent.right
+        anchors.top: parent.top
+        width: 120
+        height: 24
+        !text: tr('Decline')
+        @onClick: modules.game_chess.answerDraw(false)
+
+    Panel
+      id: buttons
+      anchors.left: topPlayer.left
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      height: 28
+
+      Button
+        id: drawButton
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: 90
+        height: 26
+        !text: tr('Offer draw')
+        @onClick: modules.game_chess.offerDraw()
+
+      Button
+        id: resignButton
+        anchors.left: drawButton.right
+        anchors.top: parent.top
+        margin-left: 6
+        width: 90
+        height: 26
+        !text: tr('Resign')
+        @onClick: modules.game_chess.resign()
+
+      Button
+        id: hideButton
+        anchors.right: parent.right
+        anchors.top: parent.top
+        width: 70
+        height: 26
+        !text: tr('Close')
+        @onClick: modules.game_chess.hide()

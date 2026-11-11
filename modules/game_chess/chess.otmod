@@ -1,0 +1,8 @@
+Module
+  name: game_chess
+  description: The chess minigame: lobby with the top 5 of every mode, queues, Co.Op and the game
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ engine, chess ]
+  @onLoad: init()
+  @onUnload: terminate()

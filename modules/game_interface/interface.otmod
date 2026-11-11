@@ -47,6 +47,7 @@ Module
     - game_inspect
     - game_bossbar
     - game_blessings
+    - game_chess
     - game_checkall
     - game_itemselector
     - client_textedit

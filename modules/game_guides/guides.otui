@@ -2145,6 +2145,82 @@ ArtBossReward < Panel
     anchors.top: chest.bottom
     text: 7 days
 
+// the chess minigame: a corner of the board with a few pieces, and what a win gives
+ArtChess < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: s1
+    size: 34 34
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 6
+    margin-top: 6
+    image-source: /images/game/chess/light
+    phantom: true
+
+    UIWidget
+      anchors.fill: parent
+      image-source: /images/game/chess/pieces/wK
+      image-smooth: true
+      phantom: true
+
+  UIWidget
+    id: s2
+    size: 34 34
+    anchors.left: s1.right
+    anchors.top: s1.top
+    image-source: /images/game/chess/dark
+    phantom: true
+
+    UIWidget
+      anchors.fill: parent
+      image-source: /images/game/chess/pieces/wQ
+      image-smooth: true
+      phantom: true
+
+  UIWidget
+    id: s3
+    size: 34 34
+    anchors.left: s2.right
+    anchors.top: s1.top
+    image-source: /images/game/chess/light
+    phantom: true
+
+    UIWidget
+      anchors.fill: parent
+      image-source: /images/game/chess/pieces/bN
+      image-smooth: true
+      phantom: true
+
+  UIWidget
+    id: s4
+    size: 34 34
+    anchors.left: s3.right
+    anchors.top: s1.top
+    image-source: /images/game/chess/dark
+    phantom: true
+
+    UIWidget
+      anchors.fill: parent
+      image-source: /images/game/chess/pieces/bK
+      image-smooth: true
+      phantom: true
+
+  GuideNote
+    anchors.left: s4.right
+    anchors.top: s1.top
+    margin-left: 10
+    margin-top: 2
+    text: win vs a player: 5 points
+
+  GuideNote
+    anchors.left: s4.right
+    anchors.top: s1.top
+    margin-left: 10
+    margin-top: 18
+    text: win vs Co.Op: 3 points
+
 // the blessings button: the three colours beside the inventory's minimize button, and a row of its window
 ArtBlessings < Panel
   anchors.fill: parent

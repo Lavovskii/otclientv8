@@ -646,6 +646,19 @@ local function define()
       end
     end
   end, 700)
+  -- the Chess Arena card of the Interface tab
+  step('guides_chess', function()
+    local bar = byId('guidesTabBar')
+    bar:selectTab(bar:getTabs()[5])
+    local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+    local children = cards:getChildren()
+    for i, card in ipairs(children) do
+      local title = card:recursiveGetChildById('title')
+      if title and title:getText() == 'Chess Arena' then
+        cards:ensureChildVisible(children[math.min(#children, i + 1)])
+      end
+    end
+  end, 700)
   step('guides_hands', function()
     local bar = byId('guidesTabBar')
     for _, tab in ipairs(bar:getTabs()) do
@@ -847,6 +860,34 @@ L|3155|sudden death rune]])
     modules.game_blessings.preview('11111')
   end, 500)
   step('blessings_end', function() modules.game_blessings.hide() end)
+  -- the chess minigame: the lobby with made-up top 5s, a game in the middle, a won game
+  step('chess_lobby', function()
+    local lines = {'H|125|blitz|42|0|Dev'}
+    local modes = {{'bullet', 'Bullet', '1+0'}, {'blitz', 'Blitz', '3+2'}, {'rapid', 'Rapid', '10+0'}, {'classic', 'Classic', '30+0'},
+      {'chess960', 'Chess960', '5+3'}, {'coop', 'Co.Op', 'vs Co.Op'}}
+    local names = {'Lord Valerius', 'Morgana', 'Kael the Red', 'Sir Aldric', 'Nyx'}
+    for i, m in ipairs(modes) do
+      table.insert(lines, table.concat({'R', m[1], m[2], m[3], i % 3, 1200 + i * 17, 4 + i, 2, 1}, '|'))
+      for r = 1, (m[1] == 'classic' and 0 or 5) do
+        table.insert(lines, table.concat({'P', m[1], r, names[r], m[1] == 'coop' and (30 - r * 4) or (1650 - r * 60 - i * 7), 20 - r, r, 1}, '|'))
+      end
+    end
+    modules.game_chess.preview('O')
+    modules.game_chess.preview(table.concat(lines, '\n'))
+  end, 700)
+  step('chess_game', function()
+    modules.game_chess.preview('G|1|blitz|w|Dev|Morgana|r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4|' ..
+      '161000|172000|0|rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1|e2e4 e7e5 g1f3 b8c6 f1c4 f8c5 e1g1 g8f6|' ..
+      'e4 e5 Nf3 Nc6 Bc4 Bc5 O-O Nf6|1312|1288')
+  end, 700)
+  step('chess_move', function()
+    modules.game_chess.preview('M|d7d6|d6|r1bqk2r/ppp2ppp/2np1n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 0 5|158000|170500|0')
+    modules.game_chess.clickSquare(22)
+  end, 600)
+  step('chess_end', function()
+    modules.game_chess.preview('E|1-0|checkmate|5|12|130')
+  end, 600)
+  step('chess_close', function() modules.game_chess.hide() end)
   step('outfit', function()
     closeWindows()
     local current = {type = 128, head = 78, body = 69, legs = 58, feet = 76, addons = 3, mount = 0, wings = 0, aura = 0, shader = '', healthBar = 0, manaBar = 0}
