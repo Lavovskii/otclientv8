@@ -98,7 +98,7 @@ local GUIDES = {
       {art = 'ArtBossReward', title = 'Boss loot',
        text = 'Everyone who fights a boss gets their own loot. Open the bag in its corpse and take items one by one, or right click the bag and choose Loot all. What you leave waits 7 days in the reward chest, in the depot room under the temple, with one bag for each boss. The bags themselves stay where they are.'},
       {art = 'ArtChess', title = 'Chess Arena',
-       text = 'Use a chessboard to open the Chess Arena: the top 5 of every mode, Find Match for a random player (Bullet, Blitz, Rapid, Classic, Chess960) or Player vs Co.Op against the house. A win gives minigame points: 5 against a player, 3 against Co.Op, if the game was a real one. You never meet the same player twice in a row.'},
+       text = 'Use a chessboard to open the Chess Arena: the top 5 of every mode, Find Match for a random player (Bullet, Blitz, Rapid, Classic, Chess960) or Player vs Co.Op against the house. A win gives minigame points: 5 against a player, 3 against Co.Op, if the game was a real one. You never meet the same player twice in a row. Settings: your pieces, your board and how the game helps you.'},
       {art = 'ArtBlessings', title = 'Blessings',
        text = 'The small ankh beside the minimize button of your inventory shows your blessings: red with none, yellow with some, green with all five. Click it to see each one. With all five you keep every item when you die; they are lost with the death. Buy them with !bless or in the Store.'},
       {art = 'ArtBossBar', title = 'Boss bar',

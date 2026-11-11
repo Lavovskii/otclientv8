@@ -1,11 +1,12 @@
 """The artwork of the chess minigame (modules/game_chess), 2026-11-11.
 
-  data/images/game/chess/pieces/<w|b><K|Q|R|B|N|P>.png   the pieces of the chosen set, 48 x 48, from the ChatGPT sheets cut by
+  data/images/game/chess/pieces/<set>/<w|b><K|Q|R|B|N|P>.png   the four sets the players choose from (A, the default, the
+                                                          owner's pick of 2026-11-11; B, C, D), 48 x 48, from the ChatGPT sheets cut by
                                                           C:/OTS/Tools/propostas/chess/cut_pieces.py (pecas/<set>)
-  data/images/game/chess/light.png, dark.png              the squares, 52 x 52: stone of the Reborn colours with a soft grain
+  data/images/game/chess/themes/<theme>/light.png, dark.png   the squares of each board theme, 52 x 52, with a soft grain
   data/images/game/chess/selected.png, last.png, check.png, move.png, capture.png, hover.png   what lies on a square
 
-  python tools/make_chess_art.py [set]      set = A, B, C or D (default B, until the owner picks); the same files every time
+  python tools/make_chess_art.py      the same files every time
 """
 import os
 import random
@@ -24,8 +25,18 @@ def fit(piece, size):
     return piece.resize((max(1, round(piece.width * k)), max(1, round(piece.height * k))), Image.LANCZOS)
 
 
+THEMES = {  # light square, dark square (the settings of modules/game_chess list them in this order)
+    'classic': ((206, 190, 156), (124, 96, 70)),
+    'stone': ((172, 168, 160), (92, 88, 82)),
+    'emerald': ((222, 226, 194), (98, 130, 86)),
+    'ocean': ((212, 224, 234), (86, 114, 148)),
+    'royal': ((228, 212, 182), (112, 74, 112)),
+    'night': ((112, 112, 122), (50, 50, 60)),
+}
+
+
 def pieces(chosen):
-    out = os.path.join(OUT, 'pieces')
+    out = os.path.join(OUT, 'pieces', chosen)
     os.makedirs(out, exist_ok=True)
     for color in 'wb':
         for kind in 'KQRBNP':
@@ -40,7 +51,7 @@ def pieces(chosen):
             img.save(os.path.join(out, color + kind + '.png'))
 
 
-def square(name, base, seed):
+def square(path, base, seed):
     rnd = random.Random(seed)
     img = Image.new('RGBA', (SQUARE, SQUARE), base + (255,))
     px = img.load()
@@ -53,7 +64,7 @@ def square(name, base, seed):
     d = ImageDraw.Draw(img)
     d.line((0, 0, SQUARE - 1, 0), fill=tuple(min(255, c + 14) for c in base) + (255,))
     d.line((0, SQUARE - 1, SQUARE - 1, SQUARE - 1), fill=tuple(max(0, c - 14) for c in base) + (255,))
-    img.save(os.path.join(OUT, name + '.png'))
+    img.save(path)
 
 
 def overlays():
@@ -82,15 +93,22 @@ def overlays():
 
 
 def main():
-    chosen = sys.argv[1] if len(sys.argv) > 1 else 'B'
     os.makedirs(OUT, exist_ok=True)
-    pieces(chosen)
-    square('light', (206, 190, 156), 1)
-    square('dark', (124, 96, 70), 2)
+    for old in ('light.png', 'dark.png'):
+        if os.path.exists(os.path.join(OUT, old)):
+            os.remove(os.path.join(OUT, old))
+    for old in os.listdir(os.path.join(OUT, 'pieces')) if os.path.isdir(os.path.join(OUT, 'pieces')) else []:
+        if os.path.isfile(os.path.join(OUT, 'pieces', old)):
+            os.remove(os.path.join(OUT, 'pieces', old))
+    for chosen in 'ABCD':
+        pieces(chosen)
+    for i, (theme, (light, dark)) in enumerate(THEMES.items()):
+        folder = os.path.join(OUT, 'themes', theme)
+        os.makedirs(folder, exist_ok=True)
+        square(os.path.join(folder, 'light.png'), light, 1 + i * 2)
+        square(os.path.join(folder, 'dark.png'), dark, 2 + i * 2)
     overlays()
-    with open(os.path.join(OUT, 'pieces', 'SET.txt'), 'w') as f:
-        f.write(chosen + '\n')
-    print('ok', chosen, sorted(os.listdir(OUT)))
+    print('ok', sorted(os.listdir(OUT)))
 
 
 if __name__ == '__main__':

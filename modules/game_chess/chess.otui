@@ -202,6 +202,56 @@ ChessPlayerBox < ChessFrame
       color: #d8d8d8
       phantom: true
 
+// a choice of the settings: a piece set or a board theme, its picture and its name
+ChessChoice < UIButton
+  size: 92 70
+  image-source: /images/taskboard/inset
+  image-border: 2
+  change-cursor-image: true
+  cursor: pointer
+
+  UIWidget
+    id: pic1
+    size: 36 36
+    anchors.top: parent.top
+    anchors.right: parent.horizontalCenter
+    margin-top: 6
+    image-smooth: true
+    phantom: true
+
+  UIWidget
+    id: pic2
+    size: 36 36
+    anchors.top: parent.top
+    anchors.left: parent.horizontalCenter
+    margin-top: 6
+    image-smooth: true
+    phantom: true
+
+  Label
+    id: label
+    anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-bottom: 6
+    text-align: center
+    font: verdana-11px-rounded
+    color: #c4c4c4
+    phantom: true
+
+  UIWidget
+    id: ring
+    anchors.fill: parent
+    image-source: /images/game/chess/selected
+    image-border: 3
+    phantom: true
+    visible: false
+
+ChessOption < CheckBox
+  height: 18
+  font: verdana-11px-rounded
+  color: #d8d8d8
+
 MainWindow
   id: chessWindow
   !text: tr('Chess Arena')
@@ -239,11 +289,20 @@ MainWindow
         id: intro
         anchors.top: caption.bottom
         anchors.left: parent.left
-        anchors.right: points.left
+        anchors.right: settingsButton.left
         margin: 8 10 0 10
         font: verdana-11px-rounded
         color: #c4c4c4
-        !text: tr('Win against a player: 5 minigame points. Against Co.Op: 3. Opponents are found at random.')
+        !text: tr('A win: 5 minigame points against a player, 3 against Co.Op.')
+
+      Button
+        id: settingsButton
+        anchors.top: caption.bottom
+        anchors.right: points.left
+        margin: 4 6 0 0
+        size: 74 24
+        !text: tr('Settings')
+        @onClick: modules.game_chess.showSettings()
 
       ChessInset
         id: points
@@ -258,7 +317,7 @@ MainWindow
           anchors.left: parent.left
           anchors.verticalCenter: parent.verticalCenter
           margin-left: 6
-          image-source: /images/game/chess/pieces/wK
+          image-source: /images/game/chess/pieces/A/wK
           image-smooth: true
           phantom: true
 
@@ -514,7 +573,7 @@ MainWindow
         id: drawButton
         anchors.left: parent.left
         anchors.top: parent.top
-        width: 90
+        width: 74
         height: 26
         !text: tr('Offer draw')
         @onClick: modules.game_chess.offerDraw()
@@ -524,16 +583,126 @@ MainWindow
         anchors.left: drawButton.right
         anchors.top: parent.top
         margin-left: 6
-        width: 90
+        width: 60
         height: 26
         !text: tr('Resign')
         @onClick: modules.game_chess.resign()
 
       Button
+        id: gameSettingsButton
+        anchors.left: resignButton.right
+        anchors.top: parent.top
+        margin-left: 6
+        width: 62
+        height: 26
+        !text: tr('Settings')
+        @onClick: modules.game_chess.showSettings()
+
+      Button
         id: hideButton
         anchors.right: parent.right
         anchors.top: parent.top
-        width: 70
+        width: 56
         height: 26
         !text: tr('Close')
         @onClick: modules.game_chess.hide()
+
+  // ----------------------------------------------------------------------------------------------------------------- settings
+  UIWidget
+    id: settings
+    anchors.fill: parent
+    background-color: #000000a0
+    visible: false
+    phantom: false
+
+    ChessFrame
+      id: box
+      size: 620 440
+      anchors.centerIn: parent
+      phantom: false
+
+      Label
+        id: caption
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 2 2 0 2
+        height: 18
+        image-source: /images/taskboard/caption
+        image-border: 2
+        text-align: center
+        color: #d8c08a
+        font: verdana-11px-rounded
+        !text: tr('Settings')
+
+      Label
+        id: piecesTitle
+        anchors.top: caption.bottom
+        anchors.left: parent.left
+        margin: 10 14 0 0
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #f4d68c
+        !text: tr('Pieces')
+
+      Panel
+        id: pieces
+        anchors.top: piecesTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 6 14 0 14
+        height: 70
+        layout:
+          type: horizontalBox
+          spacing: 8
+
+      Label
+        id: boardTitle
+        anchors.top: pieces.bottom
+        anchors.left: piecesTitle.left
+        margin-top: 12
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #f4d68c
+        !text: tr('Board')
+
+      Panel
+        id: boards
+        anchors.top: boardTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 6 14 0 14
+        height: 70
+        layout:
+          type: horizontalBox
+          spacing: 8
+
+      Label
+        id: optionsTitle
+        anchors.top: boards.bottom
+        anchors.left: piecesTitle.left
+        margin-top: 12
+        text-auto-resize: true
+        font: verdana-11px-rounded
+        color: #f4d68c
+        !text: tr('Game')
+
+      Panel
+        id: options
+        anchors.top: optionsTitle.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        margin: 6 14 0 14
+        height: 100
+        layout:
+          type: verticalBox
+          spacing: 2
+
+      ChessGoldButton
+        id: doneButton
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        margin: 0 12 10 0
+        size: 110 28
+        !text: tr('Done')
+        @onClick: modules.game_chess.hideSettings()

@@ -16,6 +16,42 @@ local squares = {} -- square number -> widget
 local selected
 local clockEvent, queueEvent
 
+-- what each player sets for himself (Settings), kept in this client's settings under "chess"
+local PIECE_SETS = {{id = 'A', name = 'Kingdom'}, {id = 'B', name = 'Marble'}, {id = 'C', name = 'Dwarves'}, {id = 'D', name = 'Ice & Fire'}}
+local THEMES = {{id = 'classic', name = 'Classic'}, {id = 'stone', name = 'Stone'}, {id = 'emerald', name = 'Emerald'},
+  {id = 'ocean', name = 'Ocean'}, {id = 'royal', name = 'Royal'}, {id = 'night', name = 'Night'}}
+local OPTIONS = {{id = 'legal', text = 'Show the legal moves of a piece'}, {id = 'last', text = 'Highlight the last move'},
+  {id = 'coords', text = 'Show the coordinates (a-h, 1-8)'}, {id = 'queen', text = 'Always promote to a queen'},
+  {id = 'confirm', text = 'Ask before resigning'}}
+local DEFAULTS = {pieces = 'A', board = 'classic', legal = true, last = true, coords = true, queen = false, confirm = true}
+local settings = {}
+
+local function loadSettings()
+  local saved = g_settings.getNode('chess') or {}
+  settings = {}
+  for k, v in pairs(DEFAULTS) do
+    if saved[k] ~= nil then settings[k] = saved[k] else settings[k] = v end
+  end
+  local valid = false
+  for _, p in ipairs(PIECE_SETS) do if p.id == settings.pieces then valid = true end end
+  if not valid then settings.pieces = DEFAULTS.pieces end
+  valid = false
+  for _, t in ipairs(THEMES) do if t.id == settings.board then valid = true end end
+  if not valid then settings.board = DEFAULTS.board end
+end
+
+local function saveSettings()
+  g_settings.setNode('chess', settings)
+end
+
+local function pieceImage(color, kind, set)
+  return '/images/game/chess/pieces/' .. (set or settings.pieces) .. '/' .. color .. kind:upper()
+end
+
+local function squareImage(light, theme)
+  return '/images/game/chess/themes/' .. (theme or settings.board) .. '/' .. (light and 'light' or 'dark')
+end
+
 local function send(text)
   local protocol = g_game.getProtocolGame()
   if protocol then protocol:sendExtendedOpcode(OPCODE, text) end
@@ -156,7 +192,8 @@ local function buildBoard()
       w:setMarginLeft((col - 1) * SQUARE)
       w:setMarginTop((row - 1) * SQUARE)
       local light = (CHESS.fileOf(s) + CHESS.rankOf(s)) % 2 == 1
-      w:setImageSource('/images/game/chess/' .. (light and 'light' or 'dark'))
+      w:setImageSource(squareImage(light))
+      w.light = light
       w.onClick = function() modules.game_chess.clickSquare(s) end
       w.onHoverChange = function(widget, hovered)
         if hovered and game and game.mine then widget.hint:setImageSource('/images/game/chess/hover')
@@ -166,6 +203,8 @@ local function buildBoard()
     end
   end
   local ranks, files = window.game.boardFrame.ranks, window.game.boardFrame.files
+  ranks:setVisible(settings.coords)
+  files:setVisible(settings.coords)
   ranks:destroyChildren()
   files:destroyChildren()
   for i = 1, 8 do
@@ -203,16 +242,17 @@ local function drawPieces()
   local lastFrom, lastTo = last and CHESS.parseSquare(last:sub(1, 2)), last and CHESS.parseSquare(last:sub(3, 4))
   local checkSq = CHESS.inCheck(pos) and CHESS.kingSquare(pos, pos.turn) or nil
   local targets = {}
-  if selected then
+  if selected and settings.legal then
     for _, m in ipairs(legalFrom(selected)) do targets[m.castle and m.to or m.to] = pos.board[m.to] and 'capture' or 'move' end
   end
   for s, w in pairs(squares) do
     local p = pos.board[s]
-    w.piece:setImageSource(p and ('/images/game/chess/pieces/' .. (p == p:upper() and 'w' or 'b') .. p:upper()) or '')
+    w.piece:setImageSource(p and pieceImage(p == p:upper() and 'w' or 'b', p) or '')
+    w:setImageSource(squareImage(w.light))
     local mark = ''
     if s == selected then mark = 'selected'
     elseif s == checkSq then mark = 'check'
-    elseif s == lastFrom or s == lastTo then mark = 'last' end
+    elseif settings.last and (s == lastFrom or s == lastTo) then mark = 'last' end
     w.mark:setImageSource(mark ~= '' and ('/images/game/chess/' .. mark) or '')
     w.hint:setImageSource(targets[s] and ('/images/game/chess/' .. targets[s]) or '')
   end
@@ -363,7 +403,7 @@ local function choosePromotion(from, to)
   for _, kind in ipairs({'q', 'r', 'b', 'n'}) do
     local b = g_ui.createWidget('UIButton', box.choices)
     b:setSize({width = 48, height = 48})
-    b:setImageSource('/images/game/chess/pieces/' .. game.color .. kind:upper())
+    b:setImageSource(pieceImage(game.color, kind))
     b.onClick = function()
       box:hide()
       send('move|' .. CHESS.squareName(from) .. CHESS.squareName(to) .. kind)
@@ -383,6 +423,7 @@ function clickSquare(s)
         selected = nil
         if m.promo then
           drawPieces()
+          if settings.queen then return send('move|' .. CHESS.squareName(from) .. CHESS.squareName(s) .. 'q') end
           return choosePromotion(from, s)
         end
         send('move|' .. CHESS.squareName(from) .. CHESS.squareName(m.castle and m.to or s))
@@ -402,6 +443,7 @@ end
 function resign()
   if not game or game.over then return end
   local button = window.game.buttons.resignButton
+  if not settings.confirm then return send('resign') end
   if button.confirm then
     button.confirm = nil
     button:setText(tr('Resign'))
@@ -422,6 +464,69 @@ end
 function answerDraw(yes)
   window.game.drawBox:hide()
   send(yes and 'draw|yes' or 'draw|no')
+end
+
+-- ------------------------------------------------------------------------------------------------------------------- settings
+local function drawSettings()
+  local box = window.settings.box
+  for _, w in ipairs(box.pieces:getChildren()) do w.ring:setVisible(w.choice == settings.pieces) end
+  for _, w in ipairs(box.boards:getChildren()) do w.ring:setVisible(w.choice == settings.board) end
+  for _, w in ipairs(box.options:getChildren()) do w:setChecked(settings[w.option] and true or false) end
+end
+
+local function applySettings()
+  saveSettings()
+  drawSettings()
+  if game and window.game:isVisible() then
+    buildBoard()
+    drawPieces()
+  end
+end
+
+local function buildSettings()
+  local box = window.settings.box
+  box.pieces:destroyChildren()
+  for _, set in ipairs(PIECE_SETS) do
+    local w = g_ui.createWidget('ChessChoice', box.pieces)
+    w:setWidth(140)
+    w.choice = set.id
+    w.pic1:setImageSource(pieceImage('w', 'K', set.id))
+    w.pic2:setImageSource(pieceImage('b', 'N', set.id))
+    w.label:setText(set.id .. ' - ' .. tr(set.name))
+    w.onClick = function() settings.pieces = set.id; applySettings() end
+  end
+  box.boards:destroyChildren()
+  for _, theme in ipairs(THEMES) do
+    local w = g_ui.createWidget('ChessChoice', box.boards)
+    w.choice = theme.id
+    w.pic1:setImageSource(squareImage(true, theme.id))
+    w.pic2:setImageSource(squareImage(false, theme.id))
+    w.label:setText(tr(theme.name))
+    w.onClick = function() settings.board = theme.id; applySettings() end
+  end
+  box.options:destroyChildren()
+  for _, option in ipairs(OPTIONS) do
+    local w = g_ui.createWidget('ChessOption', box.options)
+    w.option = option.id
+    w:setText(tr(option.text))
+    w.onCheckChange = function(widget, checked)
+      if settings[option.id] ~= checked then
+        settings[option.id] = checked
+        applySettings()
+      end
+    end
+  end
+end
+
+function showSettings()
+  if not window then return end
+  drawSettings()
+  window.settings:show()
+  window.settings:raise()
+end
+
+function hideSettings()
+  if window then window.settings:hide() end
 end
 
 -- ------------------------------------------------------------------------------------------------------------------- messages
@@ -473,7 +578,10 @@ function show()
 end
 
 function hide()
-  if window then window:hide() end
+  if window then
+    window.settings:hide()
+    window:hide()
+  end
   removeEvent(queueEvent)
   queueEvent = nil
 end
@@ -497,6 +605,8 @@ end
 function init()
   window = g_ui.displayUI('chess')
   window:hide()
+  loadSettings()
+  buildSettings()
   ProtocolGame.registerExtendedOpcode(OPCODE, onMessage)
   connect(g_game, {onGameEnd = onGameEnd})
   connect(LocalPlayer, {onPositionChange = onWalk})

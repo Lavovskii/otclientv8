@@ -2156,12 +2156,12 @@ ArtChess < Panel
     anchors.top: parent.top
     margin-left: 6
     margin-top: 6
-    image-source: /images/game/chess/light
+    image-source: /images/game/chess/themes/classic/light
     phantom: true
 
     UIWidget
       anchors.fill: parent
-      image-source: /images/game/chess/pieces/wK
+      image-source: /images/game/chess/pieces/A/wK
       image-smooth: true
       phantom: true
 
@@ -2170,12 +2170,12 @@ ArtChess < Panel
     size: 34 34
     anchors.left: s1.right
     anchors.top: s1.top
-    image-source: /images/game/chess/dark
+    image-source: /images/game/chess/themes/classic/dark
     phantom: true
 
     UIWidget
       anchors.fill: parent
-      image-source: /images/game/chess/pieces/wQ
+      image-source: /images/game/chess/pieces/A/wQ
       image-smooth: true
       phantom: true
 
@@ -2184,12 +2184,12 @@ ArtChess < Panel
     size: 34 34
     anchors.left: s2.right
     anchors.top: s1.top
-    image-source: /images/game/chess/light
+    image-source: /images/game/chess/themes/classic/light
     phantom: true
 
     UIWidget
       anchors.fill: parent
-      image-source: /images/game/chess/pieces/bN
+      image-source: /images/game/chess/pieces/A/bN
       image-smooth: true
       phantom: true
 
@@ -2198,12 +2198,12 @@ ArtChess < Panel
     size: 34 34
     anchors.left: s3.right
     anchors.top: s1.top
-    image-source: /images/game/chess/dark
+    image-source: /images/game/chess/themes/classic/dark
     phantom: true
 
     UIWidget
       anchors.fill: parent
-      image-source: /images/game/chess/pieces/bK
+      image-source: /images/game/chess/pieces/A/bK
       image-smooth: true
       phantom: true
 
