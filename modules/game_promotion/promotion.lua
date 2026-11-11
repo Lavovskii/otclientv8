@@ -232,12 +232,25 @@ function onPromotionMessage(protocol, opcode, buffer)
   end
 end
 
+local lastEscape = 0
+
 function onEscape()
+  lastEscape = g_clock.millis()
   if window and window.confirm:isVisible() then
     hideConfirm()
   else
     hide()
   end
+end
+
+-- Escape closes it even when the game, not the window, has the keyboard; walking away closes it too
+local function onKeyEscape()
+  -- the window's own Escape already ran when it has the keyboard: one Escape, one step back
+  if window and window:isVisible() and g_clock.millis() - lastEscape > 100 then onEscape() end
+end
+
+local function onWalk(creature, newPos, oldPos)
+  if window and window:isVisible() and oldPos and newPos then hide() end
 end
 
 function show()
@@ -265,11 +278,15 @@ function init()
   -- no button: the window opens only when the player uses a sacred fountain in the game (the server sends it)
   ProtocolGame.registerExtendedOpcode(OPCODE, onPromotionMessage)
   connect(g_game, {onGameEnd = onGameEnd})
+  connect(LocalPlayer, {onPositionChange = onWalk})
+  g_keyboard.bindKeyDown('Escape', onKeyEscape)
 end
 
 function terminate()
   ProtocolGame.unregisterExtendedOpcode(OPCODE)
   disconnect(g_game, {onGameEnd = onGameEnd})
+  disconnect(LocalPlayer, {onPositionChange = onWalk})
+  g_keyboard.unbindKeyDown('Escape', onKeyEscape)
   if window then window:destroy() end
   window = nil
   paths, state, pending = {}, {}, nil

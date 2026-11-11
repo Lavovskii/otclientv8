@@ -169,7 +169,7 @@ PromotionCard < PromotionFrame
 MainWindow
   id: promotionWindow
   !text: tr('The Sacred Fountain')
-  size: 660 500
+  size: 660 530
   visible: false
   @onEscape: modules.game_promotion.onEscape()
 
@@ -219,14 +219,24 @@ MainWindow
     color: #8fd48f
     phantom: true
 
+  // closes the window (Escape and walking away close it too)
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 70
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_promotion.hide()
+
   // ------------------------------------------------------------------------------------------- the two paths on stone
   UIWidget
     id: stage
     anchors.top: header.bottom
     anchors.left: parent.left
     anchors.right: parent.right
-    anchors.bottom: parent.bottom
+    anchors.bottom: closeButton.top
     margin-top: 6
+    margin-bottom: 6
     image-source: /images/taskboard/stage
     phantom: true
 
