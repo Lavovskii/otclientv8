@@ -1,0 +1,9 @@
+Module
+  name: game_blessings
+  description: The blessings button of the inventory and its window
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ blessings ]
+  dependencies: [ game_inventory ]
+  @onLoad: init()
+  @onUnload: terminate()

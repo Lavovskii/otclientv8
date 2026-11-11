@@ -2145,6 +2145,76 @@ ArtBossReward < Panel
     anchors.top: chest.bottom
     text: 7 days
 
+// the blessings button: the three colours beside the inventory's minimize button, and a row of its window
+ArtBlessings < Panel
+  anchors.fill: parent
+
+  UIWidget
+    id: red
+    size: 14 14
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 10
+    margin-top: 12
+    image-source: /images/game/blessings/button_red
+    image-clip: 0 0 14 14
+    phantom: true
+
+  GuideNote
+    anchors.horizontalCenter: red.horizontalCenter
+    anchors.top: red.bottom
+    margin-top: 3
+    text: none
+
+  UIWidget
+    id: yellow
+    size: 14 14
+    anchors.left: red.right
+    anchors.top: red.top
+    margin-left: 30
+    image-source: /images/game/blessings/button_yellow
+    image-clip: 0 0 14 14
+    phantom: true
+
+  GuideNote
+    anchors.horizontalCenter: yellow.horizontalCenter
+    anchors.top: yellow.bottom
+    margin-top: 3
+    text: some
+
+  UIWidget
+    id: green
+    size: 14 14
+    anchors.left: yellow.right
+    anchors.top: red.top
+    margin-left: 30
+    image-source: /images/game/blessings/button_green
+    image-clip: 0 0 14 14
+    phantom: true
+
+  GuideNote
+    anchors.horizontalCenter: green.horizontalCenter
+    anchors.top: green.bottom
+    margin-top: 3
+    text: all five
+
+  UIWidget
+    id: ankh
+    size: 16 16
+    anchors.left: green.right
+    anchors.top: red.top
+    margin-left: 34
+    margin-top: -1
+    image-source: /images/game/blessings/ankh_on
+    phantom: true
+
+  GuideNote
+    anchors.left: ankh.right
+    anchors.verticalCenter: ankh.verticalCenter
+    margin-left: 4
+    text: The Fire of the Suns
+    color: #e8e8e8
+
 // the boss bar at the top: the boss in its slot, its kind on the Store's plaque, its name in gold, and the bar with the lighter part
 // of the damage just taken (modules/game_bossbar)
 ArtBossBar < Panel

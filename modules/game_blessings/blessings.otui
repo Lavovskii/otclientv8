@@ -1,0 +1,89 @@
+// The blessings button (tools/make_blessings_art.py): beside the inventory's minimize button, red with no blessing, yellow with
+// some, green with all five. It opens this window.
+BlessingsButton < UIButton
+  id: blessingsButton
+  size: 14 14
+  image-source: /images/game/blessings/button_red
+  image-clip: 0 0 14 14
+  $hover:
+    image-clip: 0 14 14 14
+  $pressed:
+    image-clip: 0 28 14 14
+
+BlessingRow < Panel
+  height: 20
+
+  UIWidget
+    id: icon
+    size: 16 16
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    image-source: /images/game/blessings/ankh_off
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: icon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 6
+    font: verdana-11px-rounded
+    color: #c4c4c4
+    text-auto-resize: true
+    phantom: true
+
+  Label
+    id: status
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    font: verdana-11px-rounded
+    text-auto-resize: true
+    phantom: true
+
+MainWindow
+  id: blessingsWindow
+  !text: tr('Blessings')
+  size: 320 290
+  visible: false
+  @onEscape: modules.game_blessings.hide()
+
+  Label
+    id: summary
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: 16
+    text-align: center
+    font: verdana-11px-rounded
+    color: #f4d68c
+
+  Panel
+    id: rows
+    anchors.top: summary.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 8
+    height: 104
+    layout:
+      type: verticalBox
+      spacing: 1
+
+  Label
+    id: note
+    anchors.top: rows.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: closeButton.top
+    margin-top: 6
+    margin-bottom: 4
+    text-wrap: true
+    font: verdana-11px-antialised
+    color: #a8a8a8
+    !text: tr('With all five you keep every item when you die; a death takes them. Buy all five with !bless (1,000,000 gold) or in the Store. An AoL of Blessings, Protection or Destruction gives them back at login.')
+
+  Button
+    id: closeButton
+    !text: tr('Close')
+    width: 70
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    @onClick: modules.game_blessings.hide()
