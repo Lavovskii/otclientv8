@@ -42,6 +42,7 @@ Module
     - game_store
     - game_taskboard
     - game_dailyrewards
+    - game_promotion
     - game_generalstore
     - game_inspect
     - game_bossbar

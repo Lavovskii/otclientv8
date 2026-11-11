@@ -1,0 +1,9 @@
+Module
+  name: game_promotion
+  description: The sacred fountain: choose the offensive or defensive promotion of your vocation, once and for good
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ promotion ]
+  dependencies: [ client_topmenu ]
+  @onLoad: init()
+  @onUnload: terminate()

@@ -156,8 +156,13 @@ local function blockedReason(spell)
     return tr('Needs magic level %d', spell.maglevel)
   end
   local info = state.info
-  if info and info.promotion < 1 and not table.find(spell.vocations, info.vocation) then
-    return tr('Needs a promotion')
+  -- the server keeps base vocation + promotion level: 1 the offensive promotion (base + 4), 2 the defensive one (base + 8)
+  local current = info and (info.vocation + 4 * math.min(math.max(info.promotion, 0), 2))
+  if info and not table.find(spell.vocations, info.vocation) and not table.find(spell.vocations, current) then
+    if info.promotion < 1 then
+      return tr('Needs a promotion')
+    end
+    return tr('Not for a %s', VocationNames[current] or tr('your vocation'))
   end
   if spell.needlearn and info and not info.learned[normalize(spell.name)] then
     return tr('Must be learned first')
@@ -227,7 +232,7 @@ local function updateVocationLabel()
   local info = state.info
   if info and info.vocation >= 1 then
     local name = VOCATIONS[info.vocation]
-    local promoted = info.promotion > 0 and VocationNames[info.vocation + 4] or name
+    local promoted = info.promotion > 0 and VocationNames[info.vocation + 4 * math.min(info.promotion, 2)] or name
     label:setText(tr('Spells of a %s', promoted))
   elseif state.asked then
     label:setText(tr('Every vocation (yours could not be checked)'))

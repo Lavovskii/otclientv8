@@ -2389,6 +2389,55 @@ ArtDailyRewards < Panel
     text: 9 day streak
     color: #e0b44c
 
+// the promotion: the offensive and the defensive path of a sorcerer, and the final choice
+ArtPromotion < Panel
+  anchors.fill: parent
+
+  UICreature
+    id: offensive
+    size: 56 56
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 0 0 0 8
+    phantom: true
+    &outfitType: 1680
+
+  GuideNote
+    anchors.horizontalCenter: offensive.horizontalCenter
+    anchors.top: offensive.bottom
+    margin-top: 2
+    text: Offensive
+    color: #e8964a
+
+  UICreature
+    id: defensive
+    size: 56 56
+    anchors.left: offensive.right
+    anchors.top: offensive.top
+    margin-left: 22
+    phantom: true
+    &outfitType: 1384
+
+  GuideNote
+    anchors.horizontalCenter: defensive.horizontalCenter
+    anchors.top: defensive.bottom
+    margin-top: 2
+    text: Defensive
+    color: #a9c4e0
+
+  UIButton
+    size: 120 26
+    anchors.left: defensive.right
+    anchors.verticalCenter: defensive.verticalCenter
+    margin-left: 22
+    font: verdana-11px-rounded
+    color: #ffeab0
+    image-source: /images/store/gold_button
+    image-clip: 0 0 40 30
+    image-border: 4
+    text: ACCEPT MY FATE
+    phantom: true
+
 ArtTiers < Panel
   anchors.fill: parent
 

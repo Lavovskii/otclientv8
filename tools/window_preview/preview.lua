@@ -190,6 +190,11 @@ local DAILY = table.concat({
   'B|4|7643|1|+4,000 health and mana every 2 seconds while your streak is 4 or more',
   'B|6|7440|1|+10% experience while your streak is 6 or more',
 }, '\n')
+local PROMOTION_PATHS = 'P|5|Archmage|offensive|1680|12|0|2|dmg:+12% damage of every kind~skill:Skills and magic level 2x faster~base:All Sorcerer spells, runes and gear~extra:Spells of its own, coming soon' ..
+  '\nP|9|SpellWarden|defensive|1384|6|6|2|dmg:+6% damage of every kind~def:6% less damage taken~skill:Skills and magic level 2x faster~base:All Sorcerer spells, runes and gear~extra:Spells of its own, coming soon'
+local PROMOTION = 'S|Dev|31250|30000|Sorcerer|1|0\n' .. PROMOTION_PATHS
+local PROMOTION_LOW = 'S|Dev|6445|30000|Sorcerer|1|0\n' .. PROMOTION_PATHS
+
 local DAILY_NEW = table.concat({
   'S|0|0|38135|1|1|0|0|1',
   'R|1|item|3043|10|today|0|10 crystal coins',
@@ -588,6 +593,21 @@ local function define()
     local children = cards:getChildren()
     cards:ensureChildVisible(children[#children])
   end, 700)
+  -- the Promotion card, wherever it is
+  step('guides_promotion', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      for _, card in ipairs(cards and cards:getChildren() or {}) do
+        if card.title and card.title:getText() == 'Promotion' then
+          scheduleEvent(function() cards:ensureChildVisible(card) end, 300)
+          scheduleEvent(function() local scroll = bar:getCurrentTabPanel():recursiveGetChildById('scroll'); if scroll then scroll:setValue(scroll:getValue() + 40) end end, 450)
+          return
+        end
+      end
+    end
+  end, 900)
   -- the Boss bar card of the Interface tab
   step('guides_bossbar', function()
     local bar = byId('guidesTabBar')
@@ -798,6 +818,22 @@ L|3155|sudden death rune]])
   end)
   step('taskboard_weekly', function() modules.game_taskboard.showTab('weekly') end)
   step('taskboard_shop', function() modules.game_taskboard.showTab('shop') end)
+  step('promotion_open', function()
+    closeWindows()
+    modules.game_promotion.onPromotionMessage(nil, 36, PROMOTION)
+  end, 900)
+  step('promotion_confirm', function()
+    local w = rootWidget:recursiveGetChildById('promotionWindow')
+    if w then w.card1.chooseButton:onClick() end
+  end, 700)
+  step('promotion_done', function()
+    modules.game_promotion.onPromotionMessage(nil, 36, 'D|5|Archmage')
+  end, 700)
+  step('promotion_low', function()
+    closeWindows()
+    modules.game_promotion.onPromotionMessage(nil, 36, PROMOTION_LOW)
+  end, 900)
+  step('promotion_end', function() modules.game_promotion.hide() end)
   step('outfit', function()
     closeWindows()
     local current = {type = 128, head = 78, body = 69, legs = 58, feet = 76, addons = 3, mount = 0, wings = 0, aura = 0, shader = '', healthBar = 0, manaBar = 0}
