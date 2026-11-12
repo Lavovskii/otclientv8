@@ -132,9 +132,12 @@ local function drawLobby()
       end
       w.table.empty:setVisible(#card.top == 0)
       if id == 'coop' then
-        w.mine:setText(tr('You: %d wins, %d losses (3 points a win)', card.wins, card.losses))
+        w.mine:setText(tr('You: %dW %dL', card.wins, card.losses))
+        w.waiting:setText(tr('3 points a win'))
       else
-        w.mine:setText(tr('You: %d  -  %dW %dL %dD  -  %d waiting', card.rating, card.wins, card.losses, card.draws, card.waiting))
+        w.mine:setText(tr('You: %d  (%dW %dL %dD)', card.rating, card.wins, card.losses, card.draws))
+        w.waiting:setText(card.waiting > 0 and tr('%d waiting', card.waiting) or tr('nobody waiting'))
+        w.waiting:setColor(card.waiting > 0 and '#8fd48f' or '#8a8a8a')
       end
     end
   end
@@ -262,11 +265,10 @@ local function drawMoves()
   local list = window.game.movesBox.moves
   list:destroyChildren()
   for i = 1, #game.san, 2 do
-    local item = g_ui.createWidget('Label', list)
-    item:setFont('verdana-11px-rounded')
-    item:setColor('#d8d8d8')
-    item:setText(string.format('%d.  %-9s %s', math.floor(i / 2) + 1, game.san[i], game.san[i + 1] or ''))
-    item:setHeight(16)
+    local item = g_ui.createWidget('ChessMoveRow', list)
+    item.num:setText((math.floor(i / 2) + 1) .. '.')
+    item.white:setText(game.san[i])
+    item.black:setText(game.san[i + 1] or '')
   end
   local children = list:getChildren()
   if #children > 0 then list:ensureChildVisible(children[#children]) end
@@ -375,15 +377,16 @@ local function onEnd(f)
   lobby.points = tonumber(f[6]) or lobby.points
   local won = (result == '1-0' and game.color == 'w') or (result == '0-1' and game.color == 'b')
   local layer = window.game.boardFrame.resultLayer
-  layer.title:setText(result == '1/2' and tr('Draw') or (won and tr('Victory!') or tr('Defeat')))
-  layer.title:setColor(result == '1/2' and '#d8d8d8' or (won and '#f4d68c' or '#e06a5a'))
-  layer.reason:setText(tr(REASONS[reason] or reason))
+  local box = layer.panel
+  box.title:setText(result == '1/2' and tr('Draw') or (won and tr('Victory!') or tr('Defeat')))
+  box.title:setColor(result == '1/2' and '#d8d8d8' or (won and '#f4d68c' or '#e06a5a'))
+  box.reason:setText(tr(REASONS[reason] or reason))
   local reward = {}
   if points > 0 then table.insert(reward, tr('+%d minigame points', points)) end
   if not game.bot and delta ~= 0 then table.insert(reward, tr('rating %s%d', delta > 0 and '+' or '', delta)) end
   if won and points == 0 then table.insert(reward, tr('no points: the game was too short')) end
-  layer.reward:setText(table.concat(reward, '   '))
-  layer.reward:setColor(points > 0 and '#8fd48f' or '#a8a8a8')
+  box.reward:setText(table.concat(reward, '  -  '))
+  box.reward:setColor(points > 0 and '#8fd48f' or '#a8a8a8')
   layer:show()
   layer:raise()
   window.game.drawBox:hide()
