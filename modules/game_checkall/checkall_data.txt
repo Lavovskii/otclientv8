@@ -35890,7 +35890,7 @@ I	49014	44023	remains of vemiath
 I	49015	44024	remains of chagorz
 I	49016	44025	remains of chagorz
 I	49017	44026	remains of chagorz
-I	49018	44027	red tentacle
+I	49018	44027	red tentacle portal
 I	49019	44028	werewolf painting
 I	49020	44029	werewolf painting
 I	49021	44030	mask of the defiler
