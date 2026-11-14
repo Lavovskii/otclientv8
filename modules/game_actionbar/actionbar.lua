@@ -5,6 +5,10 @@ local cachedSettings = nil
 local window = nil
 local mouseGrabberWidget = nil
 local applyingBars = false
+-- the server's hotkeys (applyServerHotkeys): opcode, and what came before this character's bars were read
+local HOTKEYS_OPCODE = 39
+local pendingHotkeys = nil
+local settingsReady = false
 
 local TYPE = {
   BLANK = 0,
@@ -118,6 +122,7 @@ end
 
 function init()
   initGameActions()
+  ProtocolGame.registerExtendedOpcode(HOTKEYS_OPCODE, onHotkeysOpcode)
   connect(g_game, {
     onGameStart = online,
     onGameEnd = offline,
@@ -145,6 +150,7 @@ function terminate()
     mouseGrabberWidget = nil
   end
   terminateGameActions()
+  ProtocolGame.unregisterExtendedOpcode(HOTKEYS_OPCODE)
   disconnect(g_game, {
     onGameStart = online,
     onGameEnd = offline,
@@ -188,6 +194,8 @@ function createActionBars()
 end
 
 function offline()
+  settingsReady = false
+  pendingHotkeys = nil
   -- save settings to json
   removeEvent(saveEvent)
   saveEvent = nil
@@ -276,6 +284,146 @@ local function applyDefaults()
   end
 end
 
+-- The server's hotkeys (data/lib/136-hotkeys.lua, extended opcode 39): what each vocation starts with on F1-F12 and every
+-- vocation spell the character can cast, put on the first free slot. Each one is given once (settings.serverHotkeys
+-- remembers it), so a slot the player cleared or changed is never filled again, and nothing goes on a slot in use.
+
+-- the slot of a text: a known spell gets its icon and cooldown, anything else is said as it is
+local function textConfig(text, hotkey)
+  local config = {hotkey = hotkey}
+  local spell = isSpell(text)
+  local ok = spell and pcall(function()
+    local spellData = spell.data
+    config.type = TYPE.SPELL
+    config.spellData = {
+      words = spellData.words,
+      cd = spellData.exhaustion / 1000,
+      mana = spellData.mana,
+      source = SpelllistSettings['Default'].iconFile,
+      clip = Spells.getImageClip(SpellIcons[spellData.icon][1], 'Default'),
+      name = spellData.spellName,
+      param = spell.param ~= '' and spell.param or nil,
+      group = spellGroups(spellData),
+      id = spellData.id
+    }
+  end)
+  if not ok then
+    config = {hotkey = hotkey, type = TYPE.TEXT, sayText = text, autoSay = true}
+  end
+  return config
+end
+
+-- what a slot holds, to tell whether a hotkey is on the bars already
+local function configKey(config)
+  if config.type == TYPE.ITEM then
+    return 'item:' .. tostring(config.itemId)
+  elseif config.type == TYPE.SPELL and config.spellData then
+    local param = config.spellData.param
+    return (tostring(config.spellData.words) .. (param and param ~= '' and (' ' .. param) or '')):lower()
+  elseif config.type == TYPE.TEXT and config.sayText then
+    return config.sayText:lower():trim()
+  end
+  return nil
+end
+
+local function slotWithKey(key)
+  for n = 1, 9 do
+    for i = 1, 50 do
+      local id = n .. '.' .. i
+      if settings[id] and settings[id].hotkey == key then
+        return id
+      end
+    end
+  end
+  return nil
+end
+
+-- the bottom bars first (the slots of F6-F10 are free at the start), then the right bars; the left bar keeps the game actions
+local function freeSlot()
+  for _, n in ipairs({1, 2, 3, 7, 8, 9}) do
+    for i = 1, 50 do
+      local id = n .. '.' .. i
+      if not (settings[id] and settings[id].type) then
+        return id
+      end
+    end
+  end
+  return nil
+end
+
+local function applyServerHotkeys(buffer)
+  settings.serverHotkeys = settings.serverHotkeys or {}
+  local given = settings.serverHotkeys
+  local present = {}
+  for _, config in pairs(settings) do
+    if type(config) == 'table' and config.type then
+      local key = configKey(config)
+      if key then
+        present[key] = true
+      end
+    end
+  end
+
+  local changed = {}
+  local function place(id, config)
+    settings[id] = config
+    present[configKey(config) or ''] = true
+    changed[id] = true
+  end
+
+  for line in tostring(buffer):gmatch('[^\n]+') do
+    local parts = line:split('|')
+    if parts[1] == 'D' and #parts >= 4 then
+      local key, kind, value = parts[2], parts[3], parts[4]
+      if not given['D:' .. key] then
+        given['D:' .. key] = true
+        local config
+        if kind == 'i' then
+          config = {type = TYPE.ITEM, itemId = tonumber(value) or 0, action = ACTION.USE_SELF}
+        else
+          config = textConfig(value, nil)
+        end
+        local id = slotWithKey(key)
+        if config.itemId ~= 0 and id and not settings[id].type and not present[configKey(config) or ''] then
+          config.hotkey = key
+          place(id, config)
+        end
+        if kind == 't' and present[value:lower()] then
+          given['S:' .. value:lower()] = true -- a default spell does not go on a second slot
+        end
+      end
+    elseif parts[1] == 'S' and parts[2] and parts[2] ~= '' then
+      local words = parts[2]:lower()
+      if not given['S:' .. words] then
+        given['S:' .. words] = true
+        local id = not present[words] and freeSlot()
+        if id then
+          place(id, textConfig(parts[2], settings[id] and settings[id].hotkey))
+        end
+      end
+    end
+  end
+
+  -- the slots shown now are set up again; the others get theirs when their bar opens
+  for id in pairs(changed) do
+    local n = tonumber(id:match('^(%d+)%.'))
+    local actionbar = n and actionBars[n]
+    local widget = actionbar and actionbar.tabBar and actionbar.tabBar:getChildById(id)
+    if widget then
+      setupButton(widget)
+    end
+  end
+  scheduleSave()
+end
+
+function onHotkeysOpcode(protocol, opcode, buffer)
+  if settingsReady then
+    applyServerHotkeys(buffer)
+  else
+    pendingHotkeys = buffer -- it came before the bars of this character were read
+  end
+end
+
 function online()
   settingsFile = modules.client_profiles.getSettingsFilePath("actionbar_v2.json")
   -- load settings
@@ -298,6 +446,13 @@ function online()
   show()
 
   destroyAssignWindows()
+
+  settingsReady = true
+  if pendingHotkeys then
+    local buffer = pendingHotkeys
+    pendingHotkeys = nil
+    applyServerHotkeys(buffer)
+  end
 end
 
 function show()

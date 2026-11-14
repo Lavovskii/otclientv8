@@ -10,6 +10,12 @@ local GUIDES = {
     cards = {
       {art = 'ArtBars', title = 'Your action bars',
        text = 'Put spells, runes, items and actions in the slots. Press the key of a slot (or click it) to use it.'},
+      {art = 'ArtKeys', title = 'Ready from the start', keys = {{'F1', 'Magic Shield / Blood Rage'}, {'F2', 'Manarune'}, {'F3', 'Attack spell'}},
+       text = 'Every character starts with these keys filled: F1 utamo vita for mages, utito tempo for paladins and knights; F2 your manarune; F3 the area spell of your vocation.'},
+      {art = 'ArtKeys', title = 'More keys ready', keys = {{'F4', 'Healing rune'}, {'F5', 'Haste'}, {'F11', 'Levitate up (F12: down)'}},
+       text = 'F4 your healing rune; F5 utani gran hur for mages, utamo tempo san for paladins, utani tempo hur for knights; F11 and F12 exani hur up and down. A slot you already used is never changed.'},
+      {art = 'ArtSpell', title = 'New spells',
+       text = 'Each time a level gives you a new attack spell, it goes on the first free slot of your bars (F6 to F10 first). Clear or move it as you like: it is not put back.'},
       {art = 'ArtRightClick', title = 'Fill a slot',
        text = 'Right click any slot and choose what it does.'},
       {art = 'ArtSpell', title = 'Spell',
