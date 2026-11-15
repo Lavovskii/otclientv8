@@ -2,7 +2,7 @@
 -- player's vocation. The rules are all in the server (data/lib/131-promotion.lua): it sends what to show in lines of fields
 -- split by | (extended opcode 36) when the fountain is used, and this window draws them; it asks with "open" and
 -- "choose|<vocation id>".
---   S|player name|level|level needed|base vocation name|current vocation id|promoted 0/1
+--   S|player name|level|level needed|base vocation name|current vocation id|promoted 0/1|Buffary Coins it costs|Buffary Coins held
 --   P|vocation id|name|offensive or defensive|looktype|damage %|defense %|skill rate|kind:benefit~kind:benefit~...
 --   D|vocation id|name        (the choice was made)
 --   N|a notice
@@ -70,8 +70,25 @@ local function hideConfirm()
   end
 end
 
+local function hasLevel()
+  return (state.level or 0) >= (state.needed or 0)
+end
+
+local function hasCoins()
+  return (state.coins or 0) >= (state.cost or 0)
+end
+
 local function canChoose()
-  return not state.promoted and (state.level or 0) >= (state.needed or 0)
+  return not state.promoted and hasLevel() and hasCoins()
+end
+
+-- "Level 30,000 and 100 Buffary Coins needed: you are level X and have Y."
+local function requirementText()
+  if (state.cost or 0) <= 0 then
+    return tr('Level %s needed: you are level %s.', thousands(state.needed), thousands(state.level))
+  end
+  return tr('Level %s and %s Buffary Coins needed: you are level %s and have %s.', thousands(state.needed),
+    thousands(state.cost), thousands(state.level), thousands(state.coins))
 end
 
 local function drawHeader()
@@ -90,10 +107,15 @@ local function drawHeader()
     window.header.caption:setText(tr('Choose your path'))
     window.intro:setText(tr('Choose the path of your %s. You choose once, and forever.', base))
     if canChoose() then
-      window.requirement:setText(tr('Level %s needed: you are level %s. The fountain is ready for you.', thousands(state.needed), thousands(state.level)))
+      if (state.cost or 0) > 0 then
+        window.requirement:setText(tr('You have level %s and %s Buffary Coins. The fountain is ready for you.',
+          thousands(state.needed), thousands(state.cost)))
+      else
+        window.requirement:setText(requirementText() .. ' ' .. tr('The fountain is ready for you.'))
+      end
       window.requirement:setColor('#8fd48f')
     else
-      window.requirement:setText(tr('Level %s needed: you are level %s.', thousands(state.needed), thousands(state.level)))
+      window.requirement:setText(requirementText())
       window.requirement:setColor('#e07070')
     end
   end
@@ -155,7 +177,11 @@ local function drawCard(card, path)
   if canChoose() then
     card.chooseButton:setTooltip('')
   else
-    card.chooseButton:setTooltip(tr('Reach level %s to choose your path.', thousands(state.needed)))
+    if not hasLevel() then
+      card.chooseButton:setTooltip(tr('Reach level %s to choose your path.', thousands(state.needed)))
+    else
+      card.chooseButton:setTooltip(tr('Bring %s Buffary Coins to choose your path.', thousands(state.cost)))
+    end
   end
   card.chooseButton.onClick = function()
     if canChoose() then
@@ -178,8 +204,12 @@ function showConfirm(path)
   box.caption:setText(tr('Your final choice'))
   box.ribbon.name:setText(path.name:upper())
   box.question:setText(tr('IS THIS YOUR FINAL CHOICE, %s?', (state.name or ''):upper()))
-  box.warning:setText(tr('ONCE YOU BECOME %s %s, THERE IS NO TURNING BACK. THIS PATH CAN NEVER BE UNDONE.',
-    article(path.name):upper(), path.name:upper()))
+  local warning = tr('ONCE YOU BECOME %s %s, THERE IS NO TURNING BACK. THIS PATH CAN NEVER BE UNDONE.',
+    article(path.name):upper(), path.name:upper())
+  if (state.cost or 0) > 0 then
+    warning = warning .. ' ' .. tr('THE FOUNTAIN TAKES %s BUFFARY COINS.', thousands(state.cost))
+  end
+  box.warning:setText(warning)
   window.confirm:show()
   window.confirm:raise()
   window.confirm:focus()
@@ -202,7 +232,8 @@ function onPromotionMessage(protocol, opcode, buffer)
     local parts = split(line, '|')
     if parts[1] == 'S' then
       state = {name = parts[2] or '', level = tonumber(parts[3]) or 0, needed = tonumber(parts[4]) or 0, base = parts[5] or '',
-        current = tonumber(parts[6]) or 0, promoted = parts[7] == '1'}
+        current = tonumber(parts[6]) or 0, promoted = parts[7] == '1', cost = tonumber(parts[8]) or 0,
+        coins = tonumber(parts[9]) or 0}
       open = true
     elseif parts[1] == 'P' then
       newPaths[#newPaths + 1] = {id = tonumber(parts[2]) or 0, name = parts[3] or '', kind = parts[4] or 'offensive',

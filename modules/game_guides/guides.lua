@@ -114,7 +114,7 @@ local GUIDES = {
       {art = 'ArtDailyRewards', title = 'Daily Rewards',
        text = 'Use a reward shrine to open Daily Rewards and claim one reward a day, between two server saves (08:00 UTC). Days in a row build your streak, and its bonuses (more health and mana, +10%% experience) last while it does. Miss a day and you start again at day 1. Bound rewards stay with you.'},
       {art = 'ArtPromotion', title = 'Promotion',
-       text = 'From level 30,000, use the sacred fountain to choose your promotion: the offensive path (+12%% damage) or the defensive path (+6%% damage and 6%% less damage taken). Both raise skills and magic level twice as fast and keep every spell, rune and item of your vocation. You choose once, and forever.'},
+       text = 'From level 30,000, bring 100 Buffary Coins and use the sacred fountain to choose your promotion: the offensive path (+12%% damage) or the defensive path (+6%% damage and 6%% less damage taken). Both raise skills and magic level twice as fast and keep every spell, rune and item of your vocation. You choose once, and forever.'},
       {art = 'ArtTiers', title = 'Item tiers',
        text = 'Every item with a tier shows it everywhere (backpacks, inventory, Inspect, stash, loot): its slot takes the tier\'s colour, with a bright edge and corners. Tier 1 white, tier 2 green, tier 3 blue, tier 4 purple, tier 5 gold, tier 6 red.'},
       {art = 'ArtStash', title = 'Depot, stash and inbox',

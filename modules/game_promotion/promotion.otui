@@ -262,7 +262,7 @@ MainWindow
 
     PromotionFrame
       id: box
-      size: 460 214
+      size: 460 228
       anchors.centerIn: parent
 
       Label
@@ -318,7 +318,7 @@ MainWindow
         anchors.left: parent.left
         anchors.right: parent.right
         margin: 8 24 0 24
-        height: 32
+        height: 46
         text-align: center
         text-wrap: true
         font: verdana-11px-rounded

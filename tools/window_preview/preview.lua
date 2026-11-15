@@ -192,8 +192,8 @@ local DAILY = table.concat({
 }, '\n')
 local PROMOTION_PATHS = 'P|5|Archmage|offensive|1680|12|0|2|dmg:+12% damage of every kind~skill:Skills and magic level 2x faster~base:All Sorcerer spells, runes and gear~extra:Spells of its own, coming soon' ..
   '\nP|9|SpellWarden|defensive|1384|6|6|2|dmg:+6% damage of every kind~def:6% less damage taken~skill:Skills and magic level 2x faster~base:All Sorcerer spells, runes and gear~extra:Spells of its own, coming soon'
-local PROMOTION = 'S|Dev|31250|30000|Sorcerer|1|0\n' .. PROMOTION_PATHS
-local PROMOTION_LOW = 'S|Dev|6445|30000|Sorcerer|1|0\n' .. PROMOTION_PATHS
+local PROMOTION = 'S|Dev|31250|30000|Sorcerer|1|0|100|240\n' .. PROMOTION_PATHS
+local PROMOTION_LOW = 'S|Dev|6445|30000|Sorcerer|1|0|100|12\n' .. PROMOTION_PATHS
 
 local DAILY_NEW = table.concat({
   'S|0|0|38135|1|1|0|0|1',
