@@ -579,9 +579,11 @@ function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName)
   addTabText(text, speaktype, privateTab, creatureName)
 end
 
--- The server marks each item of a loot message with its rarity: [c=r]a demon horn[/c] (MonsterType::markedLoot).
+-- The server marks each item of a loot message that has a tier with the tier's colour: [c=r]a demon helmet[/c]
+-- (MonsterType::markedLoot): w tier 1 white, c tier 2 green, u tier 3 blue, r tier 4 purple, v tier 5 gold, x tier 6 red.
+-- Items with no tier have no mark and keep the message's colour.
 -- Returns the text without the marks and the colours for setColoredText, or nil when the text has none.
-RARITY_COLORS = {c = '#4ee34e', u = '#3d9cff', r = '#b65cff', v = '#ffd23b', q = '#ff7fd5'}
+RARITY_COLORS = {w = '#f0f0f0', c = '#4ee34e', u = '#3d9cff', r = '#b65cff', v = '#ffd23b', x = '#ff4b4b', q = '#ff7fd5'}
 function parseRarityText(text, color)
   if not text or not text:find('[c=', 1, true) then
     return nil

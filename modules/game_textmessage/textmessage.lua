@@ -105,6 +105,13 @@ function displayMessage(mode, text)
 
   if msgtype == MessageSettings.none then return end
 
+  -- the loot of a kill (MonsterType::dropLoot) goes to the Loot channel, not to Server Log (the owner, 2026-11-15)
+  if text:find('^Loot of ') and modules.game_console and modules.game_console.addLootMessage then
+    modules.game_console.addLootMessage(text)
+    showOnScreen(msgtype, text)
+    return
+  end
+
   if msgtype.consoleTab ~= nil and (msgtype.consoleOption == nil or modules.client_options.getOption(msgtype.consoleOption)) then
     modules.game_console.addText(text, msgtype, tr(msgtype.consoleTab))
     --TODO move to game_console

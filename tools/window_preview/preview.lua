@@ -646,6 +646,18 @@ local function define()
       end
     end
   end, 700)
+  step('guides_lootcolors', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      local children = cards and cards:getChildren() or {}
+      for i, card in ipairs(children) do
+        local title = card:recursiveGetChildById('title')
+        if title and title:getText() == 'Loot colours' then for k = i, math.min(#children, i + 3) do cards:ensureChildVisible(children[k]) end scheduleEvent(function() cards:ensureChildVisible(children[math.min(#children, i + 2)]) end, 300) return end
+      end
+    end
+  end, 700)
   -- the Chess Arena card of the Interface tab
   step('guides_chess', function()
     local bar = byId('guidesTabBar')

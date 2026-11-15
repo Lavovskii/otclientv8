@@ -2744,44 +2744,52 @@ ArtLootColors < Panel
   anchors.fill: parent
 
   GuideNote
-    id: c
+    id: t1
     anchors.left: parent.left
     anchors.top: parent.top
-    margin: 6 0 0 4
-    text: common
+    margin: 4 0 0 4
+    text: tier 1
+    color: #f0f0f0
+
+  GuideNote
+    id: t2
+    anchors.left: t1.left
+    anchors.top: t1.bottom
+    margin-top: 1
+    text: tier 2
     color: #4ee34e
 
   GuideNote
-    id: u
-    anchors.left: c.left
-    anchors.top: c.bottom
-    margin-top: 2
-    text: uncommon
+    id: t3
+    anchors.left: t1.left
+    anchors.top: t2.bottom
+    margin-top: 1
+    text: tier 3
     color: #3d9cff
 
   GuideNote
-    id: r
-    anchors.left: c.left
-    anchors.top: u.bottom
-    margin-top: 2
-    text: rare
+    id: t4
+    anchors.left: t1.left
+    anchors.top: t3.bottom
+    margin-top: 1
+    text: tier 4
     color: #b65cff
 
   GuideNote
-    id: v
-    anchors.left: c.left
-    anchors.top: r.bottom
-    margin-top: 2
-    text: very rare
+    id: t5
+    anchors.left: t1.left
+    anchors.top: t4.bottom
+    margin-top: 1
+    text: tier 5
     color: #ffd23b
 
   GuideNote
-    id: q
-    anchors.left: c.left
-    anchors.top: v.bottom
-    margin-top: 2
-    text: unique / bound
-    color: #ff7fd5
+    id: t6
+    anchors.left: t1.left
+    anchors.top: t5.bottom
+    margin-top: 1
+    text: tier 6
+    color: #ff4b4b
 
 ArtNpcTalk < Panel
   anchors.fill: parent

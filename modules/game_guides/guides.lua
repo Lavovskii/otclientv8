@@ -124,7 +124,7 @@ local GUIDES = {
       {art = 'ArtInspect', title = 'Inspect',
        text = 'Right click a player or a monster on your screen (or in the battle list) and choose Inspect. A player: everything it wears and its stats (level, health, mana, skills, attack, defence, protections, set bonus). A monster: every item it can drop, the loot keys too, without the chances.'},
       {art = 'ArtLootColors', title = 'Loot colours',
-       text = 'In every loot message each item has the colour of its rarity: green common, blue uncommon, purple rare, gold very rare, pink unique or bound to you. Every monster can drop magic chest keys: Bronze from any monster, Iron above level 100, Silver above 1,000, Gold above 10,000, Prestige above 50,000 and Corrupt Prestige only from world bosses.'},
+       text = 'Loot messages are written in the Loot channel. An item with a tier has the colour of its tier: white tier 1, green tier 2, blue tier 3, purple tier 4, gold tier 5, red tier 6. Items with no tier keep the colour of the message. Every monster can drop magic chest keys: Bronze from any monster, Iron above level 100, Silver above 1,000, Gold above 10,000, Prestige above 50,000 and Corrupt Prestige only from world bosses.'},
       {art = 'ArtNpcTalk', title = 'Talk to NPCs',
        text = 'Right click an NPC to greet it, as if you said hi: the conversation starts in the NPC channel. Stand within 3 sqm of it. With classic controls off, right click an NPC and choose Talk. Then click the blue words of its answer (trade, travel, passage...) to say them, no keyboard needed.'},
       {art = 'ArtBigNames', title = 'Names on big outfits',
