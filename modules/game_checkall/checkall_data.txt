@@ -45462,7 +45462,7 @@ I	60927	56882	placeholder sprite 487205
 I	60928	56883	placeholder sprite 487206
 I	60929	56884	placeholder sprite 487207
 I	60930	56885	placeholder sprite 487208
-I	60931	56886	placeholder sprite 487209
+I	60931	56886	soul recharger
 I	60932	56887	placeholder sprite 487210
 I	60933	56888	placeholder sprite 487211
 I	60934	56889	placeholder sprite 487212
@@ -48804,7 +48804,7 @@ O	221	221	monster Spit Nettle
 O	222	222	monster 222
 O	223	223	
 O	224	224	monster Green Frog
-O	225	225	monster Dark Monk
+O	225	225	monster Trainer, monster Dark Monk
 O	226	226	outfit Frog, monster Evul Frog, monster 226
 O	227	227	
 O	228	228	
