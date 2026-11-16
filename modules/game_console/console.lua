@@ -557,7 +557,7 @@ function addPrivateChannel(receiver)
   return addTab(receiver, true)
 end
 
-function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName)
+function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName, translateMessage)
   local focus = false
   if speaktype.npcChat then
     name = 'NPCs'
@@ -576,7 +576,7 @@ function addPrivateText(text, speaktype, name, isPrivateCommand, creatureName)
   elseif focus then
     consoleTabBar:selectTab(privateTab)
   end
-  addTabText(text, speaktype, privateTab, creatureName)
+  addTabText(text, speaktype, privateTab, creatureName, translateMessage)
 end
 
 -- The server marks each item of a loot message that has a tier with the tier's colour: [c=r]a demon helmet[/c]
@@ -624,10 +624,10 @@ function addLootMessage(text)
   end
 end
 
-function addText(text, speaktype, tabName, creatureName)
+function addText(text, speaktype, tabName, creatureName, translateMessage)
   local tab = getTab(tabName)
   if tab ~= nil then
-    addTabText(text, speaktype, tab, creatureName)
+    addTabText(text, speaktype, tab, creatureName, translateMessage)
   end
 end
 
@@ -826,7 +826,8 @@ function clickScreenKeyword(map, mousePos)
   return false
 end
 
-function addTabText(text, speaktype, tab, creatureName)
+-- translateMessage: a player's words, for the [Translate] button at the end of the line (translate.lua)
+function addTabText(text, speaktype, tab, creatureName, translateMessage)
   if not tab or tab.locked or not text or #text == 0 then return end
 
   if modules.client_options.getOption('showTimestampsInConsole') then
@@ -870,12 +871,18 @@ function addTabText(text, speaktype, tab, creatureName)
     label.npcKeywords = npcKeywordSpans(text)
   end
 
+  -- the [Translate] button of a player's line (and none on a reused label)
+  translateDecorate(label, text, speaktype.color, colored, translateMessage)
+
   label.name = creatureName
   consoleBuffer.onMouseRelease = function(self, mousePos, mouseButton)
     processMessageMenu(mousePos, mouseButton, nil, nil, nil, tab)
   end
   label.onMouseRelease = function(self, mousePos, mouseButton)
     if mouseButton == MouseLeftButton and self.npcKeywords and clickNpcKeyword(self, mousePos, tab) then
+      return true
+    end
+    if mouseButton == MouseLeftButton and self.translate and translateClick(self, mousePos) then
       return true
     end
     processMessageMenu(mousePos, mouseButton, creatureName, text, self, tab)
@@ -1336,6 +1343,7 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
   if speaktype.hideInConsole then return end
 
   local composedMessage = applyMessagePrefixies(name, level, message)
+  local translateMessage = translateWanted(mode, name, message) and message or nil
 
   if mode == MessageModes.RVRAnswer then
     violationReportTab.locked = false
@@ -1343,7 +1351,7 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
   elseif mode == MessageModes.RVRContinue then
     addText(composedMessage, speaktype, name .. '\'...', name)
   elseif speaktype.private then
-    addPrivateText(composedMessage, speaktype, name, false, name)
+    addPrivateText(composedMessage, speaktype, name, false, name, translateMessage)
     if modules.client_options.getOption('showPrivateMessagesOnScreen') and speaktype ~= SpeakTypesSettings.privateNpcToPlayer then
       modules.game_textmessage.displayPrivateMessage(name .. ':\n' .. message)
     end
@@ -1354,7 +1362,7 @@ function onTalk(name, level, mode, message, channelId, creaturePos)
     end
 
     if channel then
-      addText(composedMessage, speaktype, channel, name)
+      addText(composedMessage, speaktype, channel, name, translateMessage)
     else
       -- server sent a message on a channel that is not open
       pwarning('message in channel id ' .. channelId .. ' which is unknown, this is a server bug, relogin if you want to see messages in this channel')

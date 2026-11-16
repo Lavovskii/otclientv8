@@ -127,6 +127,8 @@ local GUIDES = {
        text = 'Loot messages are written in the Loot channel. An item with a tier has the colour of its tier: white tier 1, green tier 2, blue tier 3, purple tier 4, gold tier 5, red tier 6. Items with no tier keep the colour of the message. Every monster can drop magic chest keys: Bronze from any monster, Iron above level 100, Silver above 1,000, Gold above 10,000, Prestige above 50,000 and Corrupt Prestige only from world bosses.'},
       {art = 'ArtNpcTalk', title = 'Talk to NPCs',
        text = 'Right click an NPC to greet it, as if you said hi: the conversation starts in the NPC channel. Stand within 3 sqm of it. With classic controls off, right click an NPC and choose Talk. Then click the blue words of its answer (trade, travel, passage...) to say them, no keyboard needed.'},
+      {art = 'ArtTranslate', title = 'Translate chat',
+       text = 'Every line another player says in the chat (Default, private messages and channels) ends with a blue [Translate]. Click it: the language is found by itself and the English is written under the line, with the language it came from, like [ES]. A line already in English shows [English]. Nothing goes through the game server; the translations come from MyMemory, a free translator, which gives each player about 5,000 letters a day.'},
       {art = 'ArtBigNames', title = 'Names on big outfits',
        text = 'Big creatures, NPCs, mounts and outfits have their name and health bar on top of their head, not in the middle of their body, as on a normal character.'},
       {art = 'ArtTaskBoard', title = 'Task Board',

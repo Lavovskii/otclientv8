@@ -2817,6 +2817,32 @@ ArtNpcTalk < Panel
     text: click: trade
     color: #1f9ffe
 
+ArtTranslate < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: said
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 10 0 0 4
+    text: hola amigos!
+    color: #f0f000
+
+  GuideNote
+    id: button
+    anchors.left: said.left
+    anchors.top: said.bottom
+    margin-top: 4
+    !text: '[Translate]'
+    color: #5fb4ff
+
+  GuideNote
+    anchors.left: button.left
+    anchors.top: button.bottom
+    margin-top: 4
+    text: Hi, friends!
+    color: #a8e0ff
+
 ArtBigNames < Panel
   anchors.fill: parent
 

@@ -646,6 +646,18 @@ local function define()
       end
     end
   end, 700)
+  step('guides_translate', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      local children = cards and cards:getChildren() or {}
+      for i, card in ipairs(children) do
+        local title = card:recursiveGetChildById('title')
+        if title and title:getText() == 'Translate chat' then for k = i, math.min(#children, i + 3) do cards:ensureChildVisible(children[k]) end scheduleEvent(function() cards:ensureChildVisible(children[math.min(#children, i + 2)]) end, 300) return end
+      end
+    end
+  end, 700)
   step('guides_lootcolors', function()
     local bar = byId('guidesTabBar')
     for _, tab in ipairs(bar:getTabs()) do
@@ -770,6 +782,36 @@ local function define()
       g_logger.info('[preview] keyword ' .. span.word .. ' shows as "' .. label:getText():sub(span.first + 1, span.last + 1) .. '"')
     end
   end, 300)
+  -- the [Translate] button of players' lines (translate.lua): four lines, three of them clicked (a real ask)
+  step('chat_translate', function()
+    local c = modules.game_console
+    local tab = c.getTab(tr('Default')) or c.getCurrentTab()
+    c.consoleTabBar:selectTab(tab)
+    local lines = {
+      {'Rafael [31250]: ol\225 malta, algu\233m quer ir ca\231ar dragons comigo?', 'ol\225 malta, algu\233m quer ir ca\231ar dragons comigo?'},
+      {'Lucia [8820]: hola amigos, \191alguien vende una prestige helmet?', 'hola amigos, \191alguien vende una prestige helmet?'},
+      {'Mike [12040]: anyone for the boss at 20:00?', 'anyone for the boss at 20:00?'},
+      {'Hans [5100]: Wer kommt mit zur Drachenh\246hle? Ich brauche einen Heiler.', 'Wer kommt mit zur Drachenh\246hle? Ich brauche einen Heiler.'},
+    }
+    local buffer = c.consoleTabBar:getTabPanel(tab):getChildById('consoleBuffer')
+    local labels = {}
+    for _, line in ipairs(lines) do
+      c.addTabText(line[1], c.SpeakTypesSettings.say, tab, line[1]:match('^(%a+)'), line[2])
+      labels[#labels + 1] = buffer:getLastChild()
+    end
+    for i, label in ipairs(labels) do
+      local t = label.translate
+      g_logger.info('[preview] translate line ' .. i .. ' button "' .. (t and label:getText():sub(t.first + 1, t.last + 1) or 'none') .. '"')
+    end
+    c.translateLabel(labels[1])
+    c.translateLabel(labels[2])
+    c.translateLabel(labels[3])
+    scheduleEvent(function()
+      for i, label in ipairs(labels) do
+        g_logger.info('[preview] translate result ' .. i .. ': ' .. label:getText():gsub(string.char(10), ' / '))
+      end
+    end, 5000)
+  end, 6000)
   -- the hidden text edit used to find a word of an NPC's speech on the screen: glyphs laid out while invisible?
   step('npc_screen_measure', function()
     local st = StaticText.create()
