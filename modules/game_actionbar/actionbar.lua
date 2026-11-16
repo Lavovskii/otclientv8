@@ -354,6 +354,26 @@ end
 local function applyServerHotkeys(buffer)
   settings.serverHotkeys = settings.serverHotkeys or {}
   local given = settings.serverHotkeys
+  local changed = {}
+
+  -- R|<time>: the character was reset (!reset) since these bars were filled: their spells, texts and items are emptied
+  -- once (each slot keeps its key, the game actions stay) and everything the server gives comes again, as for a new
+  -- character
+  local reset = tostring(buffer):match('^R|(%d+)')
+  if reset and settings.serverReset ~= reset then
+    settings.serverReset = reset
+    for id, config in pairs(settings) do
+      if type(id) == 'string' and id:match('^%d+%.%d+$') and type(config) == 'table' and config.type
+          and config.type ~= TYPE.ACTION then
+        local hotkey = config.hotkey
+        settings[id] = (type(hotkey) == 'string' and hotkey ~= '') and {hotkey = hotkey} or nil
+        changed[id] = true
+      end
+    end
+    settings.serverHotkeys = {}
+    given = settings.serverHotkeys
+  end
+
   local present = {}
   for _, config in pairs(settings) do
     if type(config) == 'table' and config.type then
@@ -364,7 +384,6 @@ local function applyServerHotkeys(buffer)
     end
   end
 
-  local changed = {}
   local function place(id, config)
     settings[id] = config
     present[configKey(config) or ''] = true
@@ -378,8 +397,8 @@ local function applyServerHotkeys(buffer)
       if not given['D:' .. key] then
         given['D:' .. key] = true
         local config
-        if kind == 'i' then
-          config = {type = TYPE.ITEM, itemId = tonumber(value) or 0, action = ACTION.USE_SELF}
+        if kind == 'i' or kind == 'a' then
+          config = {type = TYPE.ITEM, itemId = tonumber(value) or 0, action = kind == 'a' and ACTION.USE_TARGET or ACTION.USE_SELF}
         else
           config = textConfig(value, nil)
         end
