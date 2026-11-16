@@ -1,0 +1,8 @@
+Module
+  name: game_conditions
+  description: The player's control, debuff and buff conditions as a row of icons on the map (extended opcode 42), and the blind vignette
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ conditions ]
+  @onLoad: init()
+  @onUnload: terminate()

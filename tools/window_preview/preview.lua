@@ -346,6 +346,69 @@ local function define()
     modules.game_bossbar.preview('S|2|Penguin Summoner|event|0|300000000|300000000', {type = 255})
     modules.game_bossbar.preview('H|2|171000000|300000000')
   end, 300)
+  -- the player's conditions (modules/game_conditions, extended opcode 42): the row at the top of the map, two tooltips (English, then
+  -- Portuguese), the blind darkness, the countdown, every condition at once, bad messages, none
+  local CONDITIONS = 'stun:2000:0:0;root:3000:0:0;vulnerable:6000:20:0;manaburn:6000:3:0;shield:10000:3200:5000;fortified:8000:25:0;unstoppable:-1:0:0'
+  local function conditionTip(key)
+    local row = modules.game_conditions.row
+    local cell = row and row:getChildById('condition_' .. key)
+    local tip = cell and cell.frame:getTooltip()
+    log('condition tip ' .. key .. ' = ' .. tostring(tip):gsub('\n', ' | '))
+    g_tooltip.hide()
+    if tip then g_tooltip.display(tip) end
+  end
+  local function conditionCount(what)
+    local row = modules.game_conditions.row
+    local vignette = modules.game_conditions.vignette
+    log(what .. ': ' .. row:getChildCount() .. ' icons, row ' .. tostring(row:isVisible()) .. ' ' .. row:getWidth() .. 'x' .. row:getHeight() ..
+      ' at ' .. row:getX() .. ',' .. row:getY() .. ', blind ' .. tostring(vignette:isVisible()) .. ' ' .. string.format('%.2f', vignette:getOpacity()))
+  end
+  step('conditions', function()
+    closeWindows()
+    modules.game_conditions.previewParent(modules.game_interface.getRootPanel())
+    modules.game_conditions.preview('S|' .. CONDITIONS)
+    conditionCount('conditions')
+  end, 700)
+  step('conditions_tip', function() conditionTip('vulnerable') end, 400)
+  step('conditions_tip_shield', function() conditionTip('shield') end, 400)
+  step('conditions_tip_pt', function()
+    modules.client_locales.setLocale('pt')
+    modules.game_conditions.preview('S|' .. CONDITIONS)
+    conditionTip('manaburn')
+    conditionTip('stun')
+    modules.client_locales.setLocale('en')
+  end, 400)
+  step('conditions_blind', function()
+    g_tooltip.hide()
+    modules.game_conditions.preview('S|' .. CONDITIONS .. ';blind:5000:40:0')
+  end, 900)
+  step('conditions_blind_tip', function()
+    conditionCount('blind')
+    conditionTip('blind')
+  end, 300)
+  step('conditions_later', function()
+    g_tooltip.hide()
+    conditionCount('2.5 s later')
+  end, 2500)
+  step('conditions_all', function()
+    local all = {}
+    for _, key in ipairs({'stun', 'frozen', 'root', 'silence', 'disarm', 'sleep', 'fear', 'taunt', 'vulnerable', 'weakened', 'mortalwound',
+      'manaburn', 'armorbreak', 'blind', 'marked', 'shield', 'reflect', 'lifesteal', 'fortified', 'unstoppable'}) do
+      table.insert(all, key .. ':' .. (#all + 2) * 1500 .. ':' .. (key == 'shield' and '900:5000' or '25:0'))
+    end
+    modules.game_conditions.preview('S|' .. table.concat(all, ';'))
+    conditionCount('all 20')
+  end, 900)
+  step('conditions_bad', function()
+    modules.game_conditions.preview('nonsense')
+    conditionCount('after nonsense (kept)')
+    modules.game_conditions.preview('S|stun:abc;;;:::;dragon:100:1:1;shield:99999999999999:-5:0;root:0:0:0;taunt:-7:0:0;stun:1000:0:0;stun:9000:0:0')
+    conditionCount('after bad entries (shield, taunt, stun)')
+  end, 500)
+  step('conditions_none', function()
+    modules.game_conditions.preview('S|')
+    conditionCount('none')
+  end, 800)
   -- what adds up to each stat, with an answer shaped like the server's
   step('skills_tips', function()
     closeWindows()
@@ -626,6 +689,21 @@ local function define()
         if card.title and card.title:getText() == 'Training room' then
           scheduleEvent(function() cards:ensureChildVisible(card) end, 300)
           scheduleEvent(function() local scroll = bar:getCurrentTabPanel():recursiveGetChildById('scroll'); if scroll then scroll:setValue(scroll:getValue() + 40) end end, 450)
+          return
+        end
+      end
+    end
+  end, 900)
+  -- the Conditions card of the Spells tab
+  step('guides_conditions', function()
+    modules.game_guides.show()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      for _, card in ipairs(cards and cards:getChildren() or {}) do
+        if card.title and card.title:getText() == 'Conditions' then
+          scheduleEvent(function() cards:ensureChildVisible(card) end, 300)
           return
         end
       end

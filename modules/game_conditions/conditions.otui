@@ -1,0 +1,84 @@
+// The player's conditions (modules/game_conditions): a row of icons at the top of the map. Each icon sits in a dark well with a
+// bronze edge, the Reborn slot; a dark part grows from its top as the time runs out and the seconds left are written under it.
+// The Barrier also has a bar of the damage it still absorbs. Pictures: tools/make_condition_icons.py.
+ConditionCell < UIWidget
+  size: 34 55
+  anchors.top: parent.top
+  anchors.left: parent.left
+  phantom: true
+  focusable: false
+
+  // not phantom: the mouse over it shows what the condition does
+  UIWidget
+    id: frame
+    size: 34 34
+    anchors.top: parent.top
+    anchors.left: parent.left
+    padding: 1
+    background-color: #0e0b09
+    border-width: 1
+    border-color: #8a6a2e
+    focusable: false
+
+    UIWidget
+      id: icon
+      anchors.fill: parent
+      phantom: true
+
+    UIWidget
+      id: drain
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: parent.top
+      height: 0
+      background-color: #000000a8
+      phantom: true
+
+  UILabel
+    id: time
+    height: 13
+    anchors.top: frame.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 1
+    font: verdana-11px-rounded
+    color: #f0e6cc
+    text-align: center
+    text-offset: 0 1
+    background-color: #0e0b09c0
+    phantom: true
+
+  UIWidget
+    id: absorb
+    size: 34 6
+    anchors.top: time.bottom
+    anchors.left: parent.left
+    margin-top: 1
+    padding: 1
+    background-color: #0e0b09e0
+    border-width: 1
+    border-color: #5c4422
+    phantom: true
+    visible: false
+
+    UIWidget
+      id: fill
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      width: 0
+      background-color: #74dcff
+      phantom: true
+
+ConditionRow < UIWidget
+  phantom: true
+  focusable: false
+  visible: false
+
+// black, clear around the player and dark at the map's edges; stretched over the map, its opacity follows the blind's value
+ConditionVignette < UIWidget
+  phantom: true
+  focusable: false
+  image-source: /modules/game_conditions/images/blind_vignette
+  opacity: 0
+  visible: false

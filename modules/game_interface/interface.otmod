@@ -47,6 +47,7 @@ Module
     - game_generalstore
     - game_inspect
     - game_bossbar
+    - game_conditions
     - game_blessings
     - game_chess
     - game_checkall

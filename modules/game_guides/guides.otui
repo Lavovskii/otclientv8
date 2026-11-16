@@ -3552,3 +3552,215 @@ ArtTraining < Panel
     margin-top: 2
     text: 1 soul = 1 minute
     color: #c9b98f
+
+// a condition as the row at the top of the map shows it (modules/game_conditions): the icon in its well, the dark part of the time
+// gone, the Barrier's absorb bar, the seconds left
+GuideCondition < UIWidget
+  size: 34 55
+  phantom: true
+
+  UIWidget
+    id: frame
+    size: 34 34
+    anchors.top: parent.top
+    anchors.left: parent.left
+    padding: 1
+    background-color: #0e0b09
+    border-width: 1
+    border-color: #8a6a2e
+    phantom: true
+
+    UIWidget
+      id: icon
+      anchors.fill: parent
+      phantom: true
+
+    UIWidget
+      id: drain
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: parent.top
+      height: 0
+      background-color: #000000a8
+      phantom: true
+
+  Label
+    id: time
+    height: 13
+    anchors.top: frame.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 1
+    font: verdana-11px-rounded
+    color: #f0e6cc
+    text-align: center
+    text-offset: 0 1
+    background-color: #0e0b09c0
+    phantom: true
+
+  UIWidget
+    id: absorb
+    size: 34 6
+    anchors.top: time.bottom
+    anchors.left: parent.left
+    margin-top: 1
+    padding: 1
+    background-color: #0e0b09e0
+    border-width: 1
+    border-color: #5c4422
+    phantom: true
+    visible: false
+
+    UIWidget
+      id: fill
+      anchors.left: parent.left
+      anchors.top: parent.top
+      anchors.bottom: parent.bottom
+      width: 0
+      background-color: #74dcff
+      phantom: true
+
+// the conditions: two of each group under its colour (violet control, red debuff, green buff), then the two rules
+ArtConditions < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: controlLabel
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-left: 4
+    margin-top: 2
+    text: control
+    color: #c8a8ff
+
+  GuideCondition
+    id: stun
+    anchors.left: controlLabel.left
+    anchors.top: controlLabel.bottom
+    margin-top: 3
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/stun') self.frame.drain:setHeight(18) self.time:setText('2s') self.time:setColor('#ff9a5a')
+
+  GuideCondition
+    id: root
+    anchors.left: stun.right
+    anchors.top: stun.top
+    margin-left: 4
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/root') self.frame.drain:setHeight(6) self.time:setText('3s') self.time:setColor('#ff9a5a')
+
+  GuideNote
+    id: debuffLabel
+    anchors.left: root.right
+    anchors.top: controlLabel.top
+    margin-left: 18
+    text: debuff
+    color: #ff9a8a
+
+  GuideCondition
+    id: vulnerable
+    anchors.left: debuffLabel.left
+    anchors.top: stun.top
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/vulnerable') self.frame.drain:setHeight(10) self.time:setText('4s')
+
+  GuideCondition
+    id: blind
+    anchors.left: vulnerable.right
+    anchors.top: stun.top
+    margin-left: 4
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/blind') self.frame.drain:setHeight(4) self.time:setText('5s')
+
+  GuideNote
+    id: buffLabel
+    anchors.left: blind.right
+    anchors.top: controlLabel.top
+    margin-left: 18
+    text: buff
+    color: #e8c56a
+
+  GuideCondition
+    id: shield
+    anchors.left: buffLabel.left
+    anchors.top: stun.top
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/shield') self.frame.drain:setHeight(3) self.absorb:show() self.absorb.fill:setWidth(19) self.time:setText('9s')
+
+  GuideCondition
+    id: fortified
+    anchors.left: shield.right
+    anchors.top: stun.top
+    margin-left: 4
+    @onSetup: self.frame.icon:setImageSource('/modules/game_conditions/icons/fortified') self.frame.drain:setHeight(8) self.time:setText('6s')
+
+  GuideNote
+    id: immune
+    anchors.left: controlLabel.left
+    anchors.top: stun.bottom
+    margin-top: 2
+    text: a control ends: 3 s immune to it
+    color: #e8cf94
+
+  GuideNote
+    id: bosses
+    anchors.left: controlLabel.left
+    anchors.top: immune.bottom
+    margin-top: 1
+    text: bosses: only root, taunt and debuffs
+
+  // the map while blind: the row at its top, the edges dark, the player still seen in the middle
+  UIWidget
+    id: blindMap
+    size: 196 90
+    anchors.left: controlLabel.left
+    anchors.top: bosses.bottom
+    margin-top: 8
+    image-source: /images/game/floor
+    image-repeated: true
+    image-color: #8a9a7a
+    border-width: 1
+    border-color: #8a6a2e
+    phantom: true
+
+    UICreature
+      size: 52 52
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.verticalCenter: parent.verticalCenter
+      margin-left: -12
+      margin-top: -12
+      phantom: true
+      &outfitType: 128
+
+    UIWidget
+      anchors.fill: parent
+      margin: 1
+      image-source: /modules/game_conditions/images/blind_vignette
+      opacity: 0.8
+      phantom: true
+
+    UIWidget
+      id: miniBlind
+      size: 16 16
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter
+      margin-top: 4
+      image-source: /modules/game_conditions/icons/blind_16
+      phantom: true
+
+    UIWidget
+      size: 16 16
+      anchors.top: miniBlind.top
+      anchors.right: miniBlind.left
+      margin-right: 2
+      image-source: /modules/game_conditions/icons/root_16
+      phantom: true
+
+    UIWidget
+      size: 16 16
+      anchors.top: miniBlind.top
+      anchors.left: miniBlind.right
+      margin-left: 2
+      image-source: /modules/game_conditions/icons/shield_16
+      phantom: true
+
+  GuideNote
+    anchors.left: blindMap.left
+    anchors.top: blindMap.bottom
+    margin-top: 2
+    text: blind: the map darkens from its edges

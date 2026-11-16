@@ -156,6 +156,9 @@ local GUIDES = {
        text = 'Every vocation has 18 area spells of its own, from level 1 to level 100,000: at levels 1, 500 and 1,000, then every few thousand levels up to 100,000. Each one is learned by itself when you reach its level and goes on a free slot of your bars. They all have a 1 second cooldown, and attack, healing and support spells cool down apart: you can heal and attack at the same time. Light Healing (exura) heals every vocation from level 1.'},
       {art = 'ArtSpellEffects', title = 'Spell effects your way',
        text = "Your client draws the spells. In Options, Graphics, Spell effects you choose whether to see the effects of your own spells and of other players' spells, and how see-through each are, from 0 to 90 percent: a crowded hunt stays clear and your own spells stay bright."},
+      -- the row of modules/game_conditions (extended opcode 42) and the rules of the server's data/lib/143-conditions.lua
+      {art = 'ArtConditions', title = 'Conditions',
+       text = 'Some spells put a condition on you. Its icon shows at the top of the map with the seconds left: the dark part grows as the time runs out, and the bar under the Barrier is the damage it still absorbs. Point at an icon to see what it does. The frame tells the kind: steel with violet is control (stunned, frozen, rooted, silenced, disarmed, asleep, feared, taunted), dark iron with red is a debuff (vulnerable, weakened, mortal wound, mana burn, armor break, marked and blind, which also darkens your screen from its edges), bronze with gold is a buff (barrier, thorns, lifesteal, fortified and unstoppable). When a control ends you are immune to the same kind for 3 seconds, so nobody can keep you locked. Bosses are immune to stun, frozen, sleep, fear, silence and disarm; root, taunt and every debuff still work on them.'},
     }
   },
   {
