@@ -1,0 +1,8 @@
+Module
+  name: game_spellfx
+  description: Draws the vocations' area spells from their designs (extended opcode 40) with the players' effect options
+  author: ForgottenL
+  sandboxed: true
+  scripts: [ designs, spellfx ]
+  @onLoad: init()
+  @onUnload: terminate()

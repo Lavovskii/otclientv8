@@ -1609,6 +1609,125 @@ ArtSpellDemo < Panel
     margin-left: 8
     text: Replay
 
+// the vocations' area spells: four of them on the bars with the level that brings each, and Light Healing (exura). The icons
+// are cells of the spell sheet named by &spellIcon (guides.lua clips them from SpellIcons)
+GuideLevelNote < GuideNote
+  anchors.top: prev.bottom
+  margin-top: 3
+  font: verdana-11px-antialised
+
+ArtVocationSpells < Panel
+  anchors.fill: parent
+
+  GuideNote
+    id: title
+    anchors.left: parent.left
+    anchors.top: parent.top
+    text: Your area spells, by level
+
+  GuideSlotOn
+    id: s1
+    anchors.left: parent.left
+    anchors.top: title.bottom
+    margin-top: 5
+    margin-left: 4
+    GuideSpell
+      &spellIcon: 'vs_sorcerer_1'
+    GuideHotkey
+      text: F3
+  GuideLevelNote
+    anchors.horizontalCenter: s1.horizontalCenter
+    text: 1
+
+  GuideSlotOn
+    id: s2
+    anchors.left: s1.right
+    anchors.top: s1.top
+    margin-left: 20
+    GuideSpell
+      &spellIcon: 'vs_druid_1000'
+  GuideLevelNote
+    anchors.horizontalCenter: s2.horizontalCenter
+    text: 1,000
+
+  GuideSlotOn
+    id: s3
+    anchors.left: s2.right
+    anchors.top: s1.top
+    margin-left: 20
+    GuideSpell
+      &spellIcon: 'vs_paladin_30000'
+  GuideLevelNote
+    anchors.horizontalCenter: s3.horizontalCenter
+    text: 30,000
+
+  GuideSlotOn
+    id: s4
+    anchors.left: s3.right
+    anchors.top: s1.top
+    margin-left: 20
+    GuideSpell
+      &spellIcon: 'vs_knight_100000'
+  GuideLevelNote
+    anchors.horizontalCenter: s4.horizontalCenter
+    text: 100,000
+
+  GuideSlotOn
+    id: s5
+    anchors.left: s4.right
+    anchors.top: s1.top
+    margin-left: 30
+    GuideSpell
+      &spellIcon: 'heal_exura'
+  GuideLevelNote
+    anchors.horizontalCenter: s5.horizontalCenter
+    text: exura
+
+// Options > Graphics > Spell effects: the two check boxes and a slider as the window draws them
+ArtSpellEffects < Panel
+  anchors.fill: parent
+
+  CheckBox
+    id: own
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin-top: 4
+    width: 260
+    checked: true
+    phantom: true
+    text: Show my spell effects
+
+  CheckBox
+    id: other
+    anchors.left: parent.left
+    anchors.top: own.bottom
+    margin-top: 4
+    width: 260
+    checked: true
+    phantom: true
+    text: Show other players' spell effects
+
+  Label
+    id: transparency
+    anchors.left: parent.left
+    anchors.top: other.bottom
+    margin-top: 8
+    font: verdana-11px-antialised
+    color: #dfdfdf
+    text-auto-resize: true
+    phantom: true
+    text: Other players' spell effects transparency: 60%
+
+  HorizontalScrollBar
+    anchors.left: parent.left
+    anchors.top: transparency.bottom
+    margin-top: 3
+    width: 230
+    minimum: 0
+    maximum: 90
+    value: 60
+    phantom: true
+
 // the Skills window: sections with an icon on every line, and the explanation under the mouse
 GuideSkillText < Label
   anchors.top: parent.top

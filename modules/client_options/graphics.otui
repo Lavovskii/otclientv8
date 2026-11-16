@@ -35,11 +35,13 @@ OptionPanel
     id: antialiasing
     !text: tr('Antialiasing')
 
+  // the FPS tips are this label's tooltip since 2026-11-16: the spell effect options took their room
   Label
     margin-top: 12
     id: optimizationLevelLabel
     !text: tr("Optimization level")
-    
+    !tooltip: tr("If you have FPS issues:\n- Use OpenGL version (_gl)\n- Disable vertical synchronization\n- Set higher optimization level\n- Lower screen resolution\nOr report it on forum: http://otclient.net")
+
   ComboBox
     id: optimizationLevel
     margin-top: 3
@@ -88,13 +90,52 @@ OptionPanel
     margin-top: 3
     minimum: 0
     maximum: 100
-  
+
+  // the vocations' spells are drawn by the client (modules/game_spellfx): yours and other players' apart
+  HorizontalSeparator
+    margin-top: 10
+
   Label
-    id: tips
-    margin-top: 20
-    text-auto-resize: true
-    text-align: left
-    text-wrap: true
-    !text: tr("If you have FPS issues:\n- Use OpenGL version (_gl)\n- Disable vertical synchronization\n- Set higher optimization level\n- Lower screen resolution\nOr report it on forum: http://otclient.net")
-    $mobile:
-      visible: false
+    id: spellEffectsLabel
+    margin-top: 6
+    color: #ffd57a
+    !text: tr('Spell effects')
+
+  OptionCheckBox
+    id: showOwnSpellEffects
+    margin-top: 4
+    !text: tr('Show my spell effects')
+    !tooltip: tr('Draw the effects of the spells you cast')
+
+  OptionCheckBox
+    id: showOtherSpellEffects
+    !text: tr("Show other players' spell effects")
+    !tooltip: tr('Draw the effects of the spells other players cast')
+
+  Label
+    id: ownSpellEffectsTransparencyLabel
+    margin-top: 6
+    @onSetup: |
+      local value = modules.client_options.getOption('ownSpellEffectsTransparency')
+      self:setText(tr('My spell effects transparency: %d%%', value))
+
+  OptionScrollbar
+    id: ownSpellEffectsTransparency
+    margin-top: 3
+    minimum: 0
+    maximum: 90
+    !tooltip: tr('Arrow keys change it once the bar is clicked')
+
+  Label
+    id: otherSpellEffectsTransparencyLabel
+    margin-top: 6
+    @onSetup: |
+      local value = modules.client_options.getOption('otherSpellEffectsTransparency')
+      self:setText(tr("Other players' spell effects transparency: %d%%", value))
+
+  OptionScrollbar
+    id: otherSpellEffectsTransparency
+    margin-top: 3
+    minimum: 0
+    maximum: 90
+    !tooltip: tr('Arrow keys change it once the bar is clicked')

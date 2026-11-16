@@ -150,6 +150,10 @@ local GUIDES = {
        text = 'Assign Spell, on the right click of an action bar slot, lists only the spells of your vocation, by level. The tabs show Attack, Healing or Support. Faded spells need a higher level.'},
       {art = 'ArtSpellDemo', title = 'See a spell',
        text = 'Click a spell: a small demo shows its missile, effect and area as they look in the game. Replay plays it again.'},
+      {art = 'ArtVocationSpells', title = 'Your vocation spells',
+       text = 'Every vocation has 18 area spells of its own, from level 1 to level 100,000: at levels 1, 500 and 1,000, then every few thousand levels up to 100,000. Each one is learned by itself when you reach its level and goes on a free slot of your bars. They all have a 1 second cooldown, and attack, healing and support spells cool down apart: you can heal and attack at the same time. Light Healing (exura) heals every vocation from level 1.'},
+      {art = 'ArtSpellEffects', title = 'Spell effects your way',
+       text = "Your client draws the spells. In Options, Graphics, Spell effects you choose whether to see the effects of your own spells and of other players' spells, and how see-through each are, from 0 to 90 percent: a crowded hunt stays clear and your own spells stay bright."},
     }
   },
   {
@@ -179,6 +183,10 @@ local function fillArt(art)
       if child.itemCount then
         child:setItemCount(tonumber(child.itemCount))
       end
+    end
+    -- a spell icon by its SpellIcons name (gamelib/spells.lua, gamelib/spellicons_vocations.lua)
+    if child.spellIcon and SpellIcons and SpellIcons[child.spellIcon] then
+      child:setImageClip(Spells.getImageClip(SpellIcons[child.spellIcon][1], 'Default'))
     end
     if child.outfitType then
       child:setOutfit({type = tonumber(child.outfitType), head = 78, body = 69, legs = 58, feet = 76})

@@ -416,6 +416,80 @@ local function applyServerHotkeys(buffer)
   scheduleSave()
 end
 
+-- The old ForgottenL spells (Mage10 ... Knight100k and Exevo Trap of the server's spells.xml) were replaced by the
+-- vocations' area spells on 2026-11-16. A slot that casts or says one of their words is cleared once (its key stays), and
+-- what the server gave for it is forgotten, so the server's hotkeys (above) put the new spells on the bars: the level 1
+-- spell back on F3, the others on the first free slots. Three new spells kept old words (death core, wizard beam,
+-- jumbo berserk): they come back the same way, with their new icons.
+local SPELLS_MIGRATION = 1
+local OLD_SPELL_WORDS = {
+  'exevo mas love', 'exevo mas amor', 'exevo mas shot', 'exevo gran mas shot', 'exori rings', 'exori gran rings',
+  'exevo gran mas love', 'exevo gran mas labay', 'exevo gran mas magical', 'wizard beam', 'xx fireworks', 'pimpeen',
+  'dead neo', 'exevo vis mort', 'exevo gran mas mortal', 'exevo mas vanish', 'death core', 'exevo mas power',
+  'exevo mas vis ris', 'verms', 'holyyy', 'exevo gran mas brutal', 'mas mort gran', 'super avalanche', 'wild avalanche',
+  'exevo gran mas rip', 'exevo gran mas dead', 'exevo gran mas destroyer', 'exeva mas destroyer', 'exevo gran mas totum',
+  'exeva mas totum', 'exevo gran mas staff member', 'fury shot', 'deadx', 'deadx fireworks', 'mystique pala', 'xxdeadxx',
+  'mystique bla', 'massivex death', 'rx roxxor', 'death of the seven', 'paladin destruction', 'paladin revenge',
+  'mas gran deadx', 'mas gran destroyer', 'mas gran totum', 'deadly rings', 'super fighter', 'super knight',
+  'berserk guard', 'mystique quara', 'berserkerx', 'mystique avalanche', 'death berserker', 'jumbo berserk',
+  'death guard', 'super berserker', 'ultimate berserker', 'exevo mas rip berserker', 'exevo mas destroyer',
+  'exevo mas totum', 'exevo mas ragnarok', 'exevo trap'
+}
+
+local function slotWords(config)
+  local words
+  if config.type == TYPE.SPELL and type(config.spellData) == 'table' then
+    words = config.spellData.words
+  elseif config.type == TYPE.TEXT then
+    words = config.sayText
+  end
+  if type(words) ~= 'string' then
+    return nil
+  end
+  return words:lower():trim()
+end
+
+local function migrateOldSpells()
+  if (tonumber(settings.spellsMigration) or 0) >= SPELLS_MIGRATION then
+    return
+  end
+  settings.spellsMigration = SPELLS_MIGRATION
+
+  local old = {}
+  for _, words in ipairs(OLD_SPELL_WORDS) do
+    old[words] = true
+  end
+  local given = type(settings.serverHotkeys) == 'table' and settings.serverHotkeys or nil
+  local cleared = {}
+  for id, config in pairs(settings) do
+    if type(id) == 'string' and id:match('^%d+%.%d+$') and type(config) == 'table' then
+      local words = slotWords(config)
+      if words and old[words] then
+        table.insert(cleared, id)
+      end
+    end
+  end
+  for _, id in ipairs(cleared) do
+    local hotkey = settings[id].hotkey
+    if type(hotkey) == 'string' and hotkey ~= '' then
+      settings[id] = {hotkey = hotkey}
+      if given then
+        given['D:' .. hotkey] = nil -- the server's default for that key goes back on it
+      end
+    else
+      settings[id] = nil
+    end
+  end
+  if given then
+    for words in pairs(old) do
+      given['S:' .. words] = nil
+    end
+  end
+  if #cleared > 0 then
+    g_logger.info(string.format('[actionbar] %d slots of the old spells cleared for the new vocation spells', #cleared))
+  end
+end
+
 function onHotkeysOpcode(protocol, opcode, buffer)
   if settingsReady then
     applyServerHotkeys(buffer)
@@ -428,6 +502,7 @@ function online()
   settingsFile = modules.client_profiles.getSettingsFilePath("actionbar_v2.json")
   -- load settings
   load()
+  migrateOldSpells()
   applyDefaults()
 
   -- the bars this character had open (options are global, so push them into the options first); a character that has
@@ -480,6 +555,7 @@ function refresh()
 
   -- load settings
   load()
+  migrateOldSpells()
 
   -- setup actionbars
   show()

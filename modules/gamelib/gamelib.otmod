@@ -19,5 +19,6 @@ Module
     dofile 'textmessages'
     dofile 'thing'
     dofile 'spells'
+    dofile 'spellicons_vocations'
 
     dofiles 'ui'

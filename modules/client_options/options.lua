@@ -63,9 +63,18 @@ local defaultOptions = {
   actionbar9 = false,
 
   profile = 1,
-  
-  antialiasing = true
+
+  antialiasing = true,
+
+  -- the vocations' spells (modules/game_spellfx): shown, not see-through (0 to 90 percent)
+  showOwnSpellEffects = true,
+  showOtherSpellEffects = true,
+  ownSpellEffectsTransparency = 0,
+  otherSpellEffectsTransparency = 0
 }
+
+local SPELL_EFFECT_OPTIONS = {showOwnSpellEffects = true, showOtherSpellEffects = true, ownSpellEffectsTransparency = true,
+                              otherSpellEffectsTransparency = true}
 
 local optionsWindow
 local optionsButton
@@ -128,6 +137,7 @@ function init()
 
   customPanel = g_ui.loadUI('custom')
   optionsTabBar:addTab(tr('Custom'), customPanel, '/images/optionstab/features')
+  setupKeyboard()
 
   optionsButton = modules.client_topmenu.addLeftButton('optionsButton', tr('Options'), '/images/topbuttons/options', toggle)
   audioButton = modules.client_topmenu.addLeftButton('audioButton', tr('Audio'), '/images/topbuttons/audio', function() toggleOption('enableAudio') end)
@@ -369,6 +379,10 @@ function setOption(key, value, force)
     generalPanel:getChildById('walkCtrlTurnDelayLabel'):setText(tr('Walk delay after ctrl turn: %s ms', value))  
   elseif key == "antialiasing" then
     g_app.setSmooth(value)
+  elseif key == 'ownSpellEffectsTransparency' then
+    graphicsPanel:getChildById('ownSpellEffectsTransparencyLabel'):setText(tr('My spell effects transparency: %d%%', value))
+  elseif key == 'otherSpellEffectsTransparency' then
+    graphicsPanel:getChildById('otherSpellEffectsTransparencyLabel'):setText(tr("Other players' spell effects transparency: %d%%", value))
   end
 
   -- change value for keybind updates
@@ -415,6 +429,108 @@ function setOption(key, value, force)
   if key == 'topBar' then
     modules.game_topbar.show()
   end
+
+  if SPELL_EFFECT_OPTIONS[key] and modules.game_spellfx and modules.game_spellfx.refreshOptions then
+    modules.game_spellfx.refreshOptions()
+  end
+end
+
+-- keyboard in the window: Tab / Shift+Tab go through the check boxes and sliders of the open tab, Space ticks the check
+-- box in focus, the arrows (Page Up / Down, Home, End) move the slider in focus
+local function controlKind(widget)
+  local style = widget:getStyle()
+  local class = type(style) == 'table' and style.__class or nil
+  if class == 'UICheckBox' then return 'check' end
+  if class == 'UIScrollBar' then return 'slider' end
+  return nil
+end
+
+local function shownControls(panel)
+  local list = {}
+  for _, child in ipairs(panel:recursiveGetChildren()) do
+    if controlKind(child) and child:isVisible() and child:isEnabled() and child:getId():len() > 0
+      and child:getId() ~= 'widget' and options[child:getId()] ~= nil then
+      table.insert(list, child)
+    end
+  end
+  return list
+end
+
+-- check boxes and scroll bars are not focusable by themselves: the window makes them so, and the one Tab reaches gets a
+-- thin golden frame (a click focuses it too, without the frame)
+local tabbing = false
+local function onControlFocus(widget, focused)
+  local ring = focused and tabbing
+  widget:setBorderWidth(ring and 1 or 0)
+  if ring then
+    widget:setBorderColor('#e8c66a')
+  end
+end
+
+local function focusControl(widget)
+  tabbing = true
+  local w = widget
+  while w and w ~= optionsWindow do
+    w:focus()
+    w = w:getParent()
+  end
+  tabbing = false
+end
+
+local function onControlKey(widget, keyCode, keyboardModifiers)
+  if keyboardModifiers ~= KeyboardNoModifier then return false end
+  local kind = controlKind(widget)
+  if kind == 'check' and keyCode == KeySpace then
+    widget:setChecked(not widget:isChecked())
+    return true
+  elseif kind == 'slider' then
+    local value, step = widget:getValue(), widget:getStep()
+    local moves = {[KeyLeft] = -step, [KeyDown] = -step, [KeyRight] = step, [KeyUp] = step,
+                   [KeyPageDown] = -10 * step, [KeyPageUp] = 10 * step}
+    if moves[keyCode] then
+      widget:setValue(value + moves[keyCode])
+      return true
+    elseif keyCode == KeyHome then
+      widget:setValue(widget:getMinimum())
+      return true
+    elseif keyCode == KeyEnd then
+      widget:setValue(widget:getMaximum())
+      return true
+    end
+  end
+  return false
+end
+
+local function onWindowKey(window, keyCode, keyboardModifiers)
+  if keyCode ~= KeyTab or (keyboardModifiers ~= KeyboardNoModifier and keyboardModifiers ~= KeyboardShiftModifier) then
+    return false
+  end
+  local panel = optionsTabBar:getCurrentTabPanel()
+  if not panel then return false end
+  local list = shownControls(panel)
+  if #list == 0 then return false end
+  local current = 0
+  for i, control in ipairs(list) do
+    if control:isFocused() and control:getParent():isFocused() then current = i end
+  end
+  local delta = keyboardModifiers == KeyboardShiftModifier and -1 or 1
+  local nextIndex = current == 0 and (delta > 0 and 1 or #list) or ((current - 1 + delta) % #list + 1)
+  focusControl(list[nextIndex])
+  return true
+end
+
+-- every check box and slider of the window answers the keys; the window takes Tab (called by init, above)
+function setupKeyboard()
+  for _, panel in pairs(optionsTabBar:getTabsPanel()) do
+    for _, child in ipairs(panel:recursiveGetChildren()) do
+      if controlKind(child) and options[child:getId()] ~= nil then
+        child:setFocusable(true)
+        child.onKeyPress = onControlKey
+        child.onFocusChange = onControlFocus
+      end
+    end
+  end
+  optionsWindow.onKeyPress = onWindowKey
 end
 
 function getOption(key)
