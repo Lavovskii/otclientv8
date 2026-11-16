@@ -821,6 +821,7 @@ function setupButton(widget)
 
   widget.item.onDragEnter = function(self)
     if g_ui.isMouseGrabbed() or actionbar.locked then return end
+    if modules.game_spelllist and modules.game_spelllist.hideSlotTip then modules.game_spelllist.hideSlotTip() end
     mouseGrabberWidget:grabMouse()
     g_mouse.pushCursor('target')
 
@@ -830,7 +831,8 @@ function setupButton(widget)
 
   -- popupmenu & execute action
   widget.onMouseRelease = function(widget, mousePos, mouseButton)
-    if mouseButton == MouseRightButton then 
+    if modules.game_spelllist and modules.game_spelllist.hideSlotTip then modules.game_spelllist.hideSlotTip() end
+    if mouseButton == MouseRightButton then
 
       local menu = g_ui.createWidget('PopupMenu')
       menu:setGameMenu(true)
@@ -911,7 +913,22 @@ function setupButton(widget)
     end
   end
 
-  widget.item:setTooltip(tooltip)
+  -- a spell gets the Spells window's hover card (its level, words, mana, cooldown, damage now, the key) instead of the
+  -- plain tooltip; the plain one stays as the fallback when that module is not there
+  local spellList = modules.game_spelllist
+  if widget.type == TYPE.SPELL and spellData and spellList and spellList.showSlotTip then
+    widget.item:setTooltip(nil)
+    widget.item.onHoverChange = function(item, hovered)
+      if hovered then
+        spellList.showSlotTip(widget, spellData, hotkeyDesc)
+      else
+        spellList.hideSlotTip()
+      end
+    end
+  else
+    widget.item.onHoverChange = nil
+    widget.item:setTooltip(tooltip)
+  end
 end
 
 function resetSlot(widget)

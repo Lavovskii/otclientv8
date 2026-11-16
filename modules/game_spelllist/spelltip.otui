@@ -1,0 +1,109 @@
+// The hover card of a spell on an action bar slot (spelllist.lua showSlotTip), in the stash card's look: the spell's
+// icon, name and the level it belongs to, its words in Look's green, then level / mana / cooldown / damage now, whether
+// the character can cast it yet, and the slot's key.
+
+SpellTip < UIWidget
+  width: 260
+  background-color: #14110dee
+  border-width: 1
+  border-color: #8a6a34
+  padding: 8 10 8 10
+  phantom: true
+  focusable: false
+  layout:
+    type: verticalBox
+    fit-children: true
+    spacing: 2
+
+SpellTipHeader < UIWidget
+  height: 44
+  phantom: true
+
+  UIWidget
+    id: cell
+    size: 42 42
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    image-source: /images/taskboard/cell
+    image-border: 2
+    phantom: true
+
+  UIWidget
+    id: icon
+    size: 32 32
+    anchors.centerIn: cell
+    image-source: /images/game/spells/defaultspells
+    image-clip: 0 0 32 32
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: cell.right
+    anchors.right: parent.right
+    anchors.top: cell.top
+    margin-left: 8
+    margin-top: 1
+    font: verdana-11px-rounded
+    color: #f4d68c
+    phantom: true
+
+  Label
+    id: level
+    anchors.left: name.left
+    anchors.top: name.bottom
+    margin-top: 2
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #8fd48f
+    phantom: true
+
+  Label
+    id: kind
+    anchors.left: level.right
+    anchors.right: parent.right
+    anchors.verticalCenter: level.verticalCenter
+    margin-left: 6
+    font: verdana-9px
+    color: #9a9080
+    phantom: true
+
+SpellTipLine < Label
+  text-wrap: true
+  text-auto-resize: true
+  font: verdana-11px-rounded
+  color: #c8c8c8
+  phantom: true
+
+SpellTipSeparator < UIWidget
+  height: 9
+  phantom: true
+
+  UIWidget
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    height: 1
+    background-color: #5a4628
+    phantom: true
+
+SpellTipRow < UIWidget
+  height: 15
+  phantom: true
+
+  Label
+    id: key
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #9a9080
+    phantom: true
+
+  Label
+    id: value
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #ffffff
+    phantom: true

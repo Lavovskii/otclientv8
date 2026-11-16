@@ -802,8 +802,10 @@ local function onSpellsOpcode(protocol, opcode, buffer)
       end
     elseif kind == 'E' and state.incoming then
       state.server, state.incoming = state.incoming, nil
+      state.serverAt = g_clock.millis()
       state.asked = true
       if spelllistWindow and spelllistWindow:isVisible() then refresh() end
+      refreshSlotTip()
     end
   end
   if open then
@@ -839,6 +841,7 @@ function online()
 end
 
 function offline()
+  hideSlotTip()
   if spelllistWindow:isVisible() then toggle() end
   if state.editor then state.editor:destroy() state.editor = nil end
   state.admin = false
@@ -847,6 +850,7 @@ function offline()
 end
 
 function init()
+  g_ui.importStyle('spelltip')
   connect(g_game, {onGameStart = online, onGameEnd = offline})
   ProtocolGame.registerExtendedOpcode(SPELLS_OPCODE, function(protocol, opcode, buffer)
     local ok, err = pcall(onSpellsOpcode, protocol, opcode, buffer)
@@ -879,6 +883,7 @@ function init()
 end
 
 function terminate()
+  hideSlotTip()
   disconnect(g_game, {onGameStart = online, onGameEnd = offline})
   ProtocolGame.unregisterExtendedOpcode(SPELLS_OPCODE)
   if state.editor then state.editor:destroy() state.editor = nil end
@@ -968,5 +973,181 @@ function toggle()
     askVocation()
     refresh()
     fetchServerList(refresh)
+  end
+end
+
+-- the hover card of a spell on an action bar slot ----------------------------------------------------------------------
+-- (the owner, 2026-11-16: show the level the spell belongs to, in a better design than the plain tooltip). The action
+-- bars call showSlotTip(slot item, spell data, key) on hover and hideSlotTip() when the mouse leaves; the damage comes
+-- from the server's last answer (asked again on hover when it is older than 15 s) and the card redraws when it arrives.
+
+local SERVER_FRESH = 15000
+local slotTip = {widget = nil, anchor = nil, data = nil, hotkey = nil, askedAt = 0}
+
+function hideSlotTip()
+  if slotTip.widget then
+    slotTip.widget:destroy()
+  end
+  slotTip.widget, slotTip.anchor, slotTip.data, slotTip.hotkey = nil, nil, nil, nil
+end
+
+local function tipLine(text, color, font)
+  local l = g_ui.createWidget('SpellTipLine', slotTip.widget)
+  l:setText(text)
+  if color then l:setColor(color) end
+  if font then l:setFont(font) end
+end
+
+local function tipRow(key, value, color)
+  local r = g_ui.createWidget('SpellTipRow', slotTip.widget)
+  r.key:setText(key)
+  r.value:setText(value)
+  if color then r.value:setColor(color) end
+end
+
+local function tipSeparator()
+  g_ui.createWidget('SpellTipSeparator', slotTip.widget)
+end
+
+-- the spell of the slot: by name first, then by id (a renamed spell keeps its id)
+local function slotSpell(data)
+  local list = SpellInfo and SpellInfo['Default'] or {}
+  local found = data.name and list[data.name]
+  local name = data.name
+  if not found and data.id then
+    for n, spell in pairs(list) do
+      if spell.id == data.id then found, name = spell, n break end
+    end
+  end
+  if not found then return nil end
+  local spell = {}
+  for k, v in pairs(found) do spell[k] = v end
+  spell.name = name
+  spell.blocked, spell.blockedKind = blockedReason(spell)
+  return spell
+end
+
+-- above the slot (below it when there is no room), kept inside the screen
+local function placeSlotTip()
+  local tip, anchor = slotTip.widget, slotTip.anchor
+  if not tip then return end
+  local root = rootWidget:getSize()
+  local x, y
+  if anchor and not anchor:isDestroyed() then
+    local r = anchor:getRect()
+    x = r.x + math.floor(r.width / 2) - math.floor(tip:getWidth() / 2)
+    y = r.y - tip:getHeight() - 6
+    if y < 0 then y = r.y + r.height + 6 end
+  else
+    local pos = g_window.getMousePosition()
+    x, y = pos.x + 18, pos.y + 18
+  end
+  x = math.max(2, math.min(x, root.width - tip:getWidth() - 2))
+  y = math.max(2, math.min(y, root.height - tip:getHeight() - 2))
+  tip:setPosition({x = x, y = y})
+end
+
+local function drawSlotTip()
+  local data = slotTip.data
+  if slotTip.widget then slotTip.widget:destroy() end
+  slotTip.widget = g_ui.createWidget('SpellTip', rootWidget)
+  local spell = slotSpell(data)
+  local info = spell and windowInfo(spell)
+
+  local header = g_ui.createWidget('SpellTipHeader', slotTip.widget)
+  header.name:setText(spell and titleOf(spell) or data.name or tr('Spell'))
+  if spell then
+    header.icon:setImageClip(iconClip(spell))
+    local level = tr('Level %s', thousands(spell.level))
+    if (spell.maglevel or 0) > 0 then level = level .. ' / ML ' .. spell.maglevel end
+    header.level:setText(level)
+    header.level:setColor(not spell.blocked and READY_COLOR or (spell.blockedKind == 'level' and LEVEL_COLOR or BLOCKED_COLOR))
+    local kinds = {}
+    for id, name in ipairs(SpellGroups) do
+      if spell.group[id] then table.insert(kinds, tr(name)) end
+    end
+    local element = info and ELEMENTS[info.element]
+    if element then table.insert(kinds, tr(element[1])) end
+    header.kind:setText(table.concat(kinds, ', '))
+  elseif data.source then
+    header.icon:setImageSource(data.source)
+    header.icon:setImageClip(data.clip)
+  end
+
+  local words = data.words or (spell and spell.words) or ''
+  local param = data.param and data.param ~= '' and (' "' .. data.param .. '"') or ''
+  tipLine('"' .. words .. '"' .. param, '#00eb00')
+
+  tipSeparator()
+  local mana = spell and spell.mana or tonumber(data.mana) or 0
+  tipRow(tr('Mana'), mana > 0 and thousands(mana) or tr('Part of max'), '#8fc4ff')
+  local cooldown = spell and spell.exhaustion or ((tonumber(data.cd) or 0) * 1000)
+  tipRow(tr('Cooldown'), seconds(cooldown))
+  if spell then
+    local key, value, _, color = powerFact(spell, info)
+    if value ~= '-' then tipRow(key, value, color) end
+    if info then
+      tipRow(tr('Area'), tr('%s, %d sqm', info.shape == 'square' and tr('Square') or tr('Circle'), info.radius))
+      if info.nextLevel then tipRow(tr('Grows until'), tr('Level %s', thousands(info.nextLevel))) end
+    end
+
+    tipSeparator()
+    if spell.blocked then
+      local text = spell.blocked
+      local now = playerLevel()
+      if spell.blockedKind == 'level' and now and spell.level > now then
+        text = tr('Needs level %s: %s levels to go.', thousands(spell.level), thousands(spell.level - now))
+      end
+      tipLine(text, spell.blockedKind == 'level' and LEVEL_COLOR or BLOCKED_COLOR)
+    else
+      tipLine(tr('Ready to cast.'), READY_COLOR)
+    end
+  end
+
+  tipSeparator()
+  local hotkey = slotTip.hotkey
+  if hotkey and hotkey ~= '' and hotkey ~= 'None' then
+    tipRow(tr('Key'), hotkey, '#f4d68c')
+  else
+    tipRow(tr('Key'), tr('none'), '#7a7468')
+  end
+  tipLine(tr('Right click: change the spell or its key.'), '#8a8270', 'verdana-9px-italic')
+
+  slotTip.widget:raise()
+  -- the card's height is only known after its layout runs: place it again whenever its size changes
+  local placing = false
+  slotTip.widget.onGeometryChange = function()
+    if placing then return end
+    placing = true
+    pcall(placeSlotTip)
+    placing = false
+  end
+  placeSlotTip()
+  scheduleEvent(placeSlotTip, 1)
+  scheduleEvent(placeSlotTip, 60)
+end
+
+-- anchor: the slot under the mouse; data: the slot's spellData {id, name, words, mana, cd, param, source, clip}
+function showSlotTip(anchor, data, hotkey)
+  if type(data) ~= 'table' or g_mouse.isPressed() then return end
+  slotTip.anchor, slotTip.data, slotTip.hotkey = anchor, data, hotkey
+  local ok, err = pcall(drawSlotTip)
+  if not ok then
+    g_logger.error('[game_spelllist] slot tip: ' .. tostring(err))
+    hideSlotTip()
+    return
+  end
+  -- the damage grows with the level: ask again when the last answer is old (the server answers once a second)
+  local now = g_clock.millis()
+  if now - (state.serverAt or 0) > SERVER_FRESH and now - slotTip.askedAt > 2000 then
+    slotTip.askedAt = now
+    askServer()
+  end
+end
+
+function refreshSlotTip()
+  if slotTip.widget and slotTip.data then
+    local ok = pcall(drawSlotTip)
+    if not ok then hideSlotTip() end
   end
 end
