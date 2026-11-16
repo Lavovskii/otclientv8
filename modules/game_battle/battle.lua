@@ -290,6 +290,11 @@ function checkCreatures()
   battlePanel:getLayout():update()
 end
 
+-- is the battle list window open (closed, it lists nothing)
+function isOpen()
+  return battleWindow ~= nil and not battleWindow:isDestroyed() and battleWindow:isVisible()
+end
+
 -- the creatures currently listed (after the filters), in the order they are shown
 function getDisplayedCreatures()
   local creatures = {}

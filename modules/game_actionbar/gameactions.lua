@@ -217,6 +217,13 @@ function attackNextTarget(filter, step)
   if not battle or not battle.getDisplayedCreatures then
     return
   end
+  -- the targets come from the battle list, so with it closed the hotkey would do nothing in silence
+  if battle.isOpen and not battle.isOpen() then
+    if modules.game_textmessage then
+      modules.game_textmessage.displayFailureMessage(tr('Open your battle list to use this hotkey.'))
+    end
+    return
+  end
 
   local candidates = {}
   for _, creature in ipairs(battle.getDisplayedCreatures()) do
