@@ -3511,3 +3511,44 @@ MainWindow
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     @onClick: modules.game_guides.hide()
+
+// the training room: a Trainer telling its damage per second, the player's soul and a Soul Recharger
+ArtTraining < Panel
+  anchors.fill: parent
+
+  UICreature
+    id: trainer
+    size: 56 56
+    anchors.left: parent.left
+    anchors.top: parent.top
+    margin: 10 0 0 4
+    phantom: true
+    &outfitType: 225
+
+  GuideNote
+    anchors.horizontalCenter: trainer.horizontalCenter
+    anchors.bottom: trainer.top
+    margin-bottom: -6
+    text: 1,155 DPS
+    color: #e8964a
+
+  GuideItem
+    id: recharger
+    anchors.left: trainer.right
+    anchors.verticalCenter: trainer.verticalCenter
+    margin-left: 18
+    &itemId: 56886
+
+  GuideNote
+    anchors.horizontalCenter: recharger.horizontalCenter
+    anchors.top: recharger.bottom
+    margin-top: 2
+    text: 100 soul
+    color: #e0b44c
+
+  GuideNote
+    anchors.left: trainer.left
+    anchors.top: trainer.bottom
+    margin-top: 2
+    text: 1 soul = 1 minute
+    color: #c9b98f

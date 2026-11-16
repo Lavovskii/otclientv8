@@ -115,6 +115,8 @@ local GUIDES = {
        text = 'Use a reward shrine to open Daily Rewards and claim one reward a day, between two server saves (08:00 UTC). Days in a row build your streak, and its bonuses (more health and mana, +10%% experience) last while it does. Miss a day and you start again at day 1. Bound rewards stay with you.'},
       {art = 'ArtPromotion', title = 'Promotion',
        text = 'From level 30,000, bring 100 Buffary Coins and use the sacred fountain to choose your promotion: the offensive path (+12%% damage) or the defensive path (+6%% damage and 6%% less damage taken). Both raise skills and magic level twice as fast and keep every spell, rune and item of your vocation. You choose once, and forever.'},
+      {art = 'ArtTraining', title = 'Training room',
+       text = 'Step on the training entrance to get a booth of your own, with a Trainer on each side. Each minute there spends 1 soul point and you keep training while you have soul: no idle kick. Melee, distance and shielding rise as anywhere. Mages raise magic level only by hitting a Trainer with a wand; spells cast there give none. Every minute the Trainer tells you your damage per second. A Soul Recharger (General Store) fills your soul and is used by itself when the soul runs out. Leave by the teleport behind you. If you close the game while training you are logged out.'},
       {art = 'ArtTiers', title = 'Item tiers',
        text = 'Every item with a tier shows it everywhere (backpacks, inventory, Inspect, stash, loot): its slot takes the tier\'s colour, with a bright edge and corners. Tier 1 white, tier 2 green, tier 3 blue, tier 4 purple, tier 5 gold, tier 6 red.'},
       {art = 'ArtStash', title = 'Depot, stash and inbox',

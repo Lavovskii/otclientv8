@@ -616,6 +616,21 @@ local function define()
       end
     end
   end, 900)
+  -- the Training room card, wherever it is
+  step('guides_training', function()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      bar:selectTab(tab)
+      local cards = bar:getCurrentTabPanel():recursiveGetChildById('cards')
+      for _, card in ipairs(cards and cards:getChildren() or {}) do
+        if card.title and card.title:getText() == 'Training room' then
+          scheduleEvent(function() cards:ensureChildVisible(card) end, 300)
+          scheduleEvent(function() local scroll = bar:getCurrentTabPanel():recursiveGetChildById('scroll'); if scroll then scroll:setValue(scroll:getValue() + 40) end end, 450)
+          return
+        end
+      end
+    end
+  end, 900)
   -- the Boss bar card of the Interface tab
   step('guides_bossbar', function()
     local bar = byId('guidesTabBar')
