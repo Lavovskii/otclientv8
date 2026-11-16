@@ -147,9 +147,9 @@ local GUIDES = {
     name = 'Spells',
     cards = {
       {art = 'ArtSpells', title = 'Your spells',
-       text = 'Assign Spell, on the right click of an action bar slot, lists only the spells of your vocation, by level. The tabs show Attack, Healing or Support. Faded spells need a higher level.'},
+       text = 'Say !spells, or right click an action bar slot and choose Assign Spell: the spells of your vocation open, by level. Ready ones you can cast now; Locked ones need a higher level, and the top of the window shows the next one and how many levels it is away. The tabs show Attack, Healing or Support, and you can search by name or words.'},
       {art = 'ArtSpellDemo', title = 'See a spell',
-       text = 'Click a spell: a small demo shows its missile, effect and area as they look in the game. Replay plays it again.'},
+       text = 'Click a spell: the demo plays it exactly as the game draws it, on the tiles it hits. Beside it: mana, cooldown, element, area, waves, the damage it does now with your level and magic level, and the level where it stops growing (when the next spell comes). Drag it onto any slot of your bars.'},
       {art = 'ArtVocationSpells', title = 'Your vocation spells',
        text = 'Every vocation has 18 area spells of its own, from level 1 to level 100,000: at levels 1, 500 and 1,000, then every few thousand levels up to 100,000. Each one is learned by itself when you reach its level and goes on a free slot of your bars. They all have a 1 second cooldown, and attack, healing and support spells cool down apart: you can heal and attack at the same time. Light Healing (exura) heals every vocation from level 1.'},
       {art = 'ArtSpellEffects', title = 'Spell effects your way',
@@ -187,6 +187,21 @@ local function fillArt(art)
     -- a spell icon by its SpellIcons name (gamelib/spells.lua, gamelib/spellicons_vocations.lua)
     if child.spellIcon and SpellIcons and SpellIcons[child.spellIcon] then
       child:setImageClip(Spells.getImageClip(SpellIcons[child.spellIcon][1], 'Default'))
+    end
+    -- a row of the Spells window (GuideSpellRow) and a fact of a spell (GuideFact)
+    if child.rowName and child.name then
+      child.name:setText(tr(child.rowName))
+      local ready = child.rowState == 'ready'
+      child.state:setText(ready and tr('Ready') or tr('Locked'))
+      child.state:setColor(ready and '#8fd48f' or '#e8b04a')
+      if not ready then child.icon:setOpacity(0.45) child.name:setColor('#a8a8a8') end
+      if SpellIcons and SpellIcons[child.rowIcon] then
+        child.icon:setImageClip(Spells.getImageClip(SpellIcons[child.rowIcon][1], 'Default'))
+      end
+    end
+    if child.factKey and child:getChildById('key') then
+      child:getChildById('key'):setText(tr(child.factKey))
+      child:getChildById('value'):setText(tostring(child.factValue or ''))
     end
     if child.outfitType then
       child:setOutfit({type = tonumber(child.outfitType), head = 78, body = 69, legs = 58, feet = 76})

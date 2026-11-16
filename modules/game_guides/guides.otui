@@ -1361,114 +1361,143 @@ ArtCircles < Panel
     text: 90%
 
 // an action bar's slot and the window it opens: the spells of your vocation by level, with tabs
+// the Spells window opens from an action bar slot and with !spells: two of its rows, one ready and one locked
+GuideSpellRow < UIWidget
+  height: 26
+  anchors.left: parent.left
+  anchors.right: parent.right
+  margin: 0 3 0 3
+  image-source: /images/store/offer
+  image-border: 2
+  phantom: true
+
+  UIWidget
+    id: icon
+    size: 22 22
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 2
+    image-source: /images/game/spells/defaultspells
+    image-clip: 0 0 32 32
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: icon.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 5
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #ececec
+    phantom: true
+
+  Label
+    id: state
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 5
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    phantom: true
+
 ArtSpells < Panel
   anchors.fill: parent
 
-  UIWidget
-    id: button
-    size: 34 34
+  GuideKey
+    id: command
     anchors.left: parent.left
     anchors.top: parent.top
-    margin-top: 23
+    margin-top: 6
+    text: !spells
+
+  UIWidget
+    id: button
+    size: 30 30
+    anchors.horizontalCenter: command.horizontalCenter
+    anchors.top: command.bottom
+    margin-top: 12
     image-source: /images/game/actionbar/actionbarslot
     image-clip: 0 0 34 34
     phantom: true
 
   GuideArrow
     id: arrow
-    anchors.left: button.right
-    anchors.verticalCenter: button.verticalCenter
-    margin-left: 6
+    anchors.left: command.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 8
 
-  Panel
+  UIWidget
     id: win
     anchors.left: arrow.right
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    width: 224
-    margin-left: 6
-    background-color: #1c1c1c
-    border-width: 1
-    border-color: #5b4b25
+    anchors.right: parent.right
+    margin-left: 8
+    image-source: /images/taskboard/frame
+    image-border: 3
     phantom: true
 
-    GuideTab
-      id: all
+    Label
+      id: caption
       anchors.left: parent.left
+      anchors.right: parent.right
       anchors.top: parent.top
-      margin-left: 4
-      margin-top: 4
-      text: All
-    GuideTab
-      id: attack
-      anchors.left: prev.right
-      anchors.top: prev.top
-      margin-left: 3
-      text: Attack
-      on: true
-    GuideTab
-      anchors.left: prev.right
-      anchors.top: prev.top
-      margin-left: 3
-      text: Healing
-    GuideTab
-      anchors.left: prev.right
-      anchors.top: prev.top
-      margin-left: 3
-      text: Support
-
-    Label
-      id: header
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.top: all.bottom
-      margin: 5 1 0 1
-      height: 15
-      text-offset: 4 1
+      margin: 2 2 0 2
+      height: 16
+      image-source: /images/taskboard/caption
+      image-border: 2
+      text-align: center
       font: verdana-11px-rounded
-      color: #e8c66a
-      background-color: #00000088
-      text: Level 1 to 19
+      color: #d8c08a
+      text: Sorcerer Spells
       phantom: true
 
-    UIWidget
-      id: icon
-      size: 26 26
-      anchors.left: parent.left
-      anchors.top: header.bottom
-      margin-left: 4
+    GuideSpellRow
+      id: ready
+      anchors.top: caption.bottom
       margin-top: 4
-      image-source: /images/game/spells/defaultspells
-      image-clip: 224 96 32 32
-      phantom: true
-    Label
-      id: name
-      anchors.left: icon.right
-      anchors.top: icon.top
-      margin-left: 6
-      font: verdana-11px-rounded
-      color: #e6e6e6
-      text: Fire Wave
-      text-auto-resize: true
-      phantom: true
-    Label
-      anchors.left: name.left
-      anchors.top: name.bottom
-      margin-top: 1
-      font: verdana-11px-rounded
-      color: #c9a95a
-      text: exevo flam hur
-      text-auto-resize: true
-      phantom: true
-    Label
-      anchors.right: parent.right
-      anchors.top: icon.top
-      margin-right: 5
-      font: verdana-11px-rounded
-      color: #9f9f9f
-      text: Lv 18
-      text-auto-resize: true
-      phantom: true
+      &rowIcon: 'vs_sorcerer_1'
+      &rowName: 'Ember Burst'
+      &rowState: 'ready'
+
+    GuideSpellRow
+      id: locked
+      anchors.top: ready.bottom
+      margin-top: 4
+      &rowIcon: 'vs_sorcerer_3000'
+      &rowName: 'Flame Crown'
+      &rowState: 'locked'
+
+// a fact of a spell in the Spells window: a small caption over the value (&factKey, &factValue; guides.lua fills them)
+GuideFact < UIWidget
+  size: 140 36
+  image-source: /images/taskboard/plate
+  image-border: 2
+  phantom: true
+
+  Label
+    id: key
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 4
+    height: 12
+    text-align: center
+    font: verdana-9px
+    color: #a08c60
+    phantom: true
+
+  Label
+    id: value
+    anchors.top: key.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin-top: 2
+    height: 14
+    text-align: center
+    font: verdana-11px-rounded
+    color: #ffb070
+    phantom: true
 
 // a spell clicked in the Spells window plays on a little floor: the fire of Fire Wave in front of the caster
 ArtSpellDemo < Panel
@@ -1596,18 +1625,20 @@ ArtSpellDemo < Panel
       phantom: true
       &outfitType: 128
 
-  GuideArrow
-    id: arrow
+  GuideFact
+    id: damage
     anchors.left: grid.right
-    anchors.verticalCenter: grid.verticalCenter
+    anchors.top: grid.top
     margin-left: 10
+    &factKey: 'DAMAGE NOW'
+    &factValue: '~142,000'
 
-  GuideButtonText
-    width: 54
-    anchors.left: arrow.right
-    anchors.verticalCenter: grid.verticalCenter
-    margin-left: 8
-    text: Replay
+  GuideFact
+    anchors.left: damage.left
+    anchors.top: damage.bottom
+    margin-top: 4
+    &factKey: 'GROWS UNTIL'
+    &factValue: 'Level 3,000'
 
 // the vocations' area spells: four of them on the bars with the level that brings each, and Light Healing (exura). The icons
 // are cells of the spell sheet named by &spellIcon (guides.lua clips them from SpellIcons)

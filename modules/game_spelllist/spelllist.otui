@@ -1,60 +1,186 @@
-// the Spells window: the spells of the character's vocation grouped by level on the left, the chosen spell and a demo
-// of what it looks like on the right
+// The Spells window, on the Task Board's and Store's pieces (data/images/taskboard, data/images/store), opened from an
+// action bar slot (Assign Spell) and by the !spells command.
+// Inside the window: 880 x 562. A header of 60 (the character, how many spells are ready, the next spell and how far it
+// is), the tabs (kinds of spell, search, only what I can cast), then two columns 8 apart: the list (338) grouped by level,
+// and the chosen spell (its card, eight facts and the demo on stone). The bottom row: drag hint, parameter, Assign, Close.
 
-SpellCategoryButton < TabButton
-  size: 62 20
-  font: verdana-11px-rounded
-  margin-right: 3
+SpellFrame < UIWidget
+  image-source: /images/taskboard/frame
+  image-border: 3
+  phantom: true
 
-SpellGroupHeader < Label
+SpellBox < UIWidget
+  image-source: /images/taskboard/inset
+  image-border: 2
+  phantom: true
+
+SpellCaption < Label
   height: 18
+  image-source: /images/taskboard/caption
+  image-border: 2
+  text-align: center
+  color: #d8c08a
   font: verdana-11px-rounded
-  color: #e8c66a
-  text-offset: 6 3
-  background-color: #00000088
-  border-width-bottom: 1
-  border-color: #6b5a2c
+  phantom: true
+
+SpellGoldButton < UIButton
+  font: verdana-11px-rounded
+  color: #ffeab0
+  image-source: /images/store/gold_button
+  image-clip: 0 0 40 30
+  image-border: 4
+  text-offset: 0 0
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover !disabled:
+    image-clip: 0 30 40 30
+    color: #ffffff
+
+  $pressed:
+    image-clip: 0 60 40 30
+    text-offset: 1 1
+
+  $disabled:
+    image-color: #ffffff70
+    color: #ffeab060
+    change-cursor-image: false
+
+SpellCategoryButton < UIButton
+  size: 104 30
+  image-source: /images/taskboard/tab
+  image-clip: 0 0 48 34
+  image-border: 4
+  font: verdana-11px-rounded
+  color: #a0a0a0
+  margin-right: 4
+  change-cursor-image: true
+  cursor: pointer
+
+  $hover !on:
+    image-clip: 0 34 48 34
+    color: #d4d4d4
+
+  $on:
+    image-clip: 0 68 48 34
+    color: #f4d68c
+
+SpellBar < UIWidget
+  height: 14
+  image-source: /images/taskboard/track
+  image-border: 2
+  phantom: true
+
+  UIProgressBar
+    id: bar
+    anchors.fill: parent
+    margin: 1
+    background-color: #c8963c
+    phantom: true
+
+  UIWidget
+    id: gloss
+    anchors.fill: parent
+    margin: 1
+    image-source: /images/taskboard/gloss
+    phantom: true
+
+  Label
+    id: count
+    anchors.centerIn: parent
+    text-auto-resize: true
+    font: verdana-11px-antialised
+    color: #ffffff
+    phantom: true
+
+// a level group of the list: the caption bar with the range and how many of its spells are ready
+SpellGroupHeader < UIWidget
+  height: 22
   focusable: false
   phantom: true
 
+  SpellCaption
+    id: caption
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    text-align: left
+    text-offset: 8 0
+
+  Label
+    id: ready
+    anchors.right: parent.right
+    anchors.verticalCenter: parent.verticalCenter
+    margin-right: 8
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #8fd48f
+    phantom: true
+
+// one spell: its icon in a cell, name and words, level and whether it can be cast
 SpellRow < UIWidget
-  height: 38
+  height: 46
+  margin-top: 2
   focusable: true
-  background-color: alpha
+  image-source: /images/store/offer
+  image-border: 2
+  change-cursor-image: true
+  cursor: pointer
 
   $hover !focus:
-    background-color: #ffffff10
+    image-source: /images/store/offer_hover
 
   $focus:
-    background-color: #8a6a2e55
+    image-source: /images/store/offer_focus
+
+  UIWidget
+    id: cell
+    size: 38 38
+    anchors.left: parent.left
+    anchors.verticalCenter: parent.verticalCenter
+    margin-left: 4
+    image-source: /images/taskboard/cell
+    image-border: 2
+    phantom: true
 
   UIWidget
     id: icon
     size: 32 32
-    anchors.left: parent.left
-    anchors.verticalCenter: parent.verticalCenter
-    margin-left: 3
+    anchors.centerIn: cell
     image-source: /images/game/spells/defaultspells
     image-clip: 0 0 32 32
     phantom: true
 
+  UIWidget
+    id: lock
+    size: 16 16
+    anchors.right: cell.right
+    anchors.bottom: cell.bottom
+    margin: 0 -2 -2 0
+    image-source: /images/taskboard/lock26
+    image-smooth: true
+    phantom: true
+    visible: false
+
   Label
     id: name
-    anchors.left: icon.right
+    anchors.left: cell.right
     anchors.right: level.left
     anchors.top: parent.top
-    margin-left: 7
-    margin-top: 4
+    margin: 7 6 0 8
+    height: 14
     font: verdana-11px-rounded
-    color: #e6e6e6
+    color: #ececec
     phantom: true
 
   Label
     id: words
     anchors.left: name.left
-    anchors.right: parent.right
+    anchors.right: status.left
     anchors.top: name.bottom
-    margin-top: 2
+    margin-top: 4
+    margin-right: 6
+    height: 14
     font: verdana-11px-rounded
     color: #c9a95a
     phantom: true
@@ -63,12 +189,65 @@ SpellRow < UIWidget
     id: level
     anchors.right: parent.right
     anchors.top: parent.top
-    margin-right: 5
-    margin-top: 4
+    margin: 7 8 0 0
     text-auto-resize: true
     font: verdana-11px-rounded
-    color: #9f9f9f
+    color: #b0b0b0
     phantom: true
+
+  Label
+    id: status
+    anchors.right: parent.right
+    anchors.top: level.bottom
+    margin: 4 8 0 0
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #8fd48f
+    phantom: true
+
+// one fact of the chosen spell: a small caption over the value
+SpellFact < UIWidget
+  height: 38
+  image-source: /images/taskboard/plate
+  image-border: 2
+  phantom: false
+
+  Label
+    id: key
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 4 6 0 6
+    height: 12
+    text-align: center
+    font: verdana-9px
+    color: #a08c60
+    phantom: true
+
+  Label
+    id: value
+    anchors.top: key.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    margin: 3 4 0 4
+    height: 14
+    text-align: center
+    font: verdana-11px-rounded
+    color: #f0f0f0
+    phantom: true
+
+// a word in colour beside the spell's name (its kind, its element)
+SpellChip < Label
+  height: 18
+  text-auto-resize: true
+  padding: 0 7 0 7
+  image-source: /images/taskboard/plate
+  image-border: 2
+  font: verdana-11px-rounded
+  text-align: center
+  color: #d8d8d8
+  margin-left: 4
+  phantom: true
 
 // the spell under the mouse while it's dragged to an action bar
 SpellDragIcon < UIWidget
@@ -77,26 +256,6 @@ SpellDragIcon < UIWidget
   image-clip: 0 0 32 32
   focusable: false
   phantom: true
-
-SpellInfoRow < Panel
-  height: 15
-  margin-top: 1
-
-  Label
-    id: key
-    anchors.left: parent.left
-    anchors.top: parent.top
-    width: 82
-    font: verdana-11px-rounded
-    color: #9f9f9f
-
-  Label
-    id: value
-    anchors.left: key.right
-    anchors.right: parent.right
-    anchors.top: parent.top
-    font: verdana-11px-rounded
-    color: #e6e6e6
 
 SpellDemoLayer < UIWidget
   anchors.fill: parent
@@ -298,27 +457,27 @@ SpellEditWindow < MainWindow
     anchors.top: prev.top
   SpellEditCheck
     id: voc5
-    !text: tr('Master S.')
-    !tooltip: tr('Master Sorcerer')
+    !text: tr('Archmage')
+    !tooltip: tr('Archmage (and SpellWarden)')
     anchors.left: parent.left
     anchors.top: voc1.bottom
     margin-top: 3
   SpellEditCheck
     id: voc6
-    !text: tr('Elder D.')
-    !tooltip: tr('Elder Druid')
+    !text: tr('Stormbr.')
+    !tooltip: tr('Stormbringer (and Lifewarden)')
     anchors.left: prev.right
     anchors.top: prev.top
   SpellEditCheck
     id: voc7
-    !text: tr('Royal P.')
-    !tooltip: tr('Royal Paladin')
+    !text: tr('Sharpsh.')
+    !tooltip: tr('Sharpshooter (and Templar)')
     anchors.left: prev.right
     anchors.top: prev.top
   SpellEditCheck
     id: voc8
-    !text: tr('Elite K.')
-    !tooltip: tr('Elite Knight')
+    !text: tr('Warlord')
+    !tooltip: tr('Warlord (and Guardian)')
     anchors.left: prev.right
     anchors.top: prev.top
   SpellEditCheck
@@ -397,205 +556,162 @@ SpellEditWindow < MainWindow
 MainWindow
   id: spelllistWindow
   !text: tr('Spells')
-  size: 640 548
+  size: 900 660
   @onEscape: modules.game_spelllist.toggle()
 
-  Panel
-    id: categories
+  // ------------------------------------------------------------------------------------ the character and the next spell
+  SpellFrame
+    id: header
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
-    height: 20
+    height: 60
+
+  SpellBox
+    id: portrait
+    size: 52 52
+    anchors.left: header.left
+    anchors.verticalCenter: header.verticalCenter
+    margin-left: 4
+
+    UIWidget
+      id: floor
+      anchors.fill: parent
+      margin: 2
+      image-source: /images/taskboard/stage
+      image-clip: 274 91 48 48
+      phantom: true
+
+    UICreature
+      id: creature
+      size: 66 66
+      anchors.centerIn: parent
+      phantom: true
+
+  Label
+    id: vocationLabel
+    anchors.left: portrait.right
+    anchors.top: header.top
+    margin: 9 0 0 10
+    text-auto-resize: true
+    font: sans-bold-16px
+    color: #f4d68c
+
+  Label
+    id: summaryLabel
+    anchors.left: vocationLabel.left
+    anchors.top: vocationLabel.bottom
+    margin-top: 5
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #c4c4c4
+
+  Label
+    id: nextLabel
+    anchors.right: header.right
+    anchors.top: header.top
+    margin: 10 12 0 0
+    width: 300
+    text-align: right
+    font: verdana-11px-rounded
+    color: #d8c08a
+
+  SpellBar
+    id: nextBar
+    anchors.right: header.right
+    anchors.top: nextLabel.bottom
+    margin: 6 12 0 0
+    width: 300
+
+  // ------------------------------------------------------------------------------------------------------ the tabs row
+  Panel
+    id: categories
+    anchors.top: header.bottom
+    anchors.left: parent.left
+    margin-top: 6
+    width: 440
+    height: 30
     layout:
       type: horizontalBox
 
   CheckBox
     id: castableOnly
-    anchors.top: parent.top
     anchors.right: parent.right
-    margin-top: 3
+    anchors.verticalCenter: categories.verticalCenter
     width: 150
     !text: tr('Only what I can cast')
     @onCheckChange: modules.game_spelllist.setCastableOnly(self:isChecked())
 
   TextEdit
     id: search
-    anchors.top: categories.bottom
-    anchors.left: parent.left
-    width: 268
-    margin-top: 7
+    anchors.right: castableOnly.left
+    anchors.verticalCenter: categories.verticalCenter
+    margin-right: 12
+    width: 210
     placeholder: Search a spell or its words
     @onTextChange: modules.game_spelllist.setSearch(self:getText())
 
-  Label
-    id: vocationLabel
-    anchors.top: search.top
-    anchors.left: search.right
-    anchors.right: parent.right
-    margin-left: 10
-    margin-top: 4
-    font: verdana-11px-rounded
-    color: #c9b98f
-
-  TextList
-    id: spellList
-    vertical-scrollbar: spellsScrollBar
-    anchors.top: search.bottom
-    anchors.left: parent.left
-    anchors.bottom: closeButton.top
-    margin-top: 6
-    margin-bottom: 8
-    width: 268
-    padding: 1
-    padding-right: 14
-    focusable: false
-
-  VerticalScrollBar
-    id: spellsScrollBar
-    anchors.top: spellList.top
-    anchors.bottom: spellList.bottom
-    anchors.right: spellList.right
-    step: 38
-    pixels-scroll: true
-
-  Label
-    id: emptyLabel
-    anchors.top: spellList.top
-    anchors.left: spellList.left
-    anchors.right: spellList.right
-    margin-top: 40
-    text-align: center
-    text-wrap: true
-    text-auto-resize: true
-    font: verdana-11px-rounded
-    color: #9f9f9f
-    !text: tr('No spell matches.')
-    visible: false
-
-  Panel
-    id: details
-    anchors.top: spellList.top
-    anchors.left: spellList.right
-    anchors.right: parent.right
-    anchors.bottom: spellList.bottom
-    margin-left: 12
-
-    UIWidget
-      id: icon
-      size: 32 32
-      anchors.left: parent.left
-      anchors.top: parent.top
-      image-source: /images/game/spells/defaultspells
-      image-clip: 0 0 32 32
-
-    Label
-      id: name
-      anchors.left: icon.right
-      anchors.right: parent.right
-      anchors.top: parent.top
-      margin-left: 8
-      margin-top: 1
-      font: verdana-11px-rounded
-      color: #ffffff
-
-    Label
-      id: words
-      anchors.left: name.left
-      anchors.right: parent.right
-      anchors.top: name.bottom
-      margin-top: 3
-      font: verdana-11px-rounded
-      color: #e8c66a
-
-    Panel
-      id: info
-      anchors.top: icon.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      margin-top: 6
-      height: 66
-      layout:
-        type: verticalBox
-
-    Panel
-      id: demo
-      anchors.top: info.bottom
-      anchors.left: parent.left
-      anchors.right: parent.right
-      anchors.bottom: parent.bottom
-      margin-top: 6
-      clipping: true
-      background-color: #101010
-      border-width: 1
-      border-color: #5b4b25
-
-    Label
-      id: demoHint
-      anchors.centerIn: demo
-      text-auto-resize: true
-      font: verdana-11px-rounded
-      color: #9f9f9f
-      !text: tr('Click a spell to see it cast.')
-
-  Button
-    id: replayButton
-    !text: tr('Replay')
-    width: 64
-    anchors.left: details.left
-    anchors.bottom: parent.bottom
-    @onClick: modules.game_spelllist.replay()
-
+  // ------------------------------------------------------------------------------------------------ the bottom row
   Button
     id: closeButton
     !text: tr('Close')
-    width: 64
+    width: 80
+    height: 30
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     @onClick: modules.game_spelllist.toggle()
 
-  Button
+  SpellGoldButton
     id: assignButton
-    !text: tr('Assign')
-    width: 64
+    !text: tr('Assign to the slot')
+    width: 150
+    height: 30
     anchors.right: closeButton.left
     anchors.bottom: parent.bottom
-    margin-right: 4
+    margin-right: 6
     @onClick: modules.game_spelllist.assignSelected()
 
   TextEdit
     id: paramText
-    anchors.left: replayButton.right
     anchors.right: assignButton.left
-    anchors.verticalCenter: replayButton.verticalCenter
-    margin-left: 4
-    margin-right: 4
-    placeholder: Parameter
+    anchors.verticalCenter: assignButton.verticalCenter
+    margin-right: 6
+    width: 160
+    placeholder: Parameter (a name)
     visible: false
+
+  UIWidget
+    id: dragIcon
+    size: 16 16
+    anchors.left: parent.left
+    anchors.verticalCenter: closeButton.verticalCenter
+    image-source: /images/taskboard/star16
+    phantom: true
 
   Label
     id: dragHint
     !text: tr('Drag a spell onto an action bar.')
-    anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    margin-bottom: 4
-    text-auto-resize: true
+    anchors.left: dragIcon.right
+    anchors.right: paramText.left
+    anchors.verticalCenter: closeButton.verticalCenter
+    margin-left: 6
+    margin-right: 8
     font: verdana-11px-rounded
-    color: #c9b98f
+    color: #a08c60
 
   // admins only: the list is kept on the server (web API), like the Store
   Panel
     id: adminBar
     anchors.left: parent.left
-    anchors.bottom: parent.bottom
-    width: 268
+    anchors.verticalCenter: closeButton.verticalCenter
+    width: 338
     height: 22
-    background-color: #474747
     visible: false
 
     Button
       id: addButton
       !text: tr('Add')
-      width: 46
+      width: 50
       anchors.left: parent.left
       anchors.verticalCenter: parent.verticalCenter
       @onClick: modules.game_spelllist.adminEdit(false)
@@ -603,7 +719,7 @@ MainWindow
     Button
       id: editButton
       !text: tr('Edit')
-      width: 46
+      width: 50
       anchors.left: prev.right
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 3
@@ -612,7 +728,7 @@ MainWindow
     Button
       id: deleteButton
       !text: tr('Delete')
-      width: 56
+      width: 60
       anchors.left: prev.right
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 3
@@ -626,3 +742,166 @@ MainWindow
       anchors.verticalCenter: parent.verticalCenter
       margin-left: 8
       @onCheckChange: modules.game_spelllist.setShowDeleted(self:isChecked())
+
+  // ------------------------------------------------------------------------------------------- the list, by level
+  SpellFrame
+    id: listFrame
+    anchors.top: categories.bottom
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-top: 6
+    margin-bottom: 8
+    width: 338
+
+  TextList
+    id: spellList
+    vertical-scrollbar: spellsScrollBar
+    anchors.fill: listFrame
+    margin: 4 16 4 4
+    padding: 0
+    focusable: false
+    background-color: alpha
+    border-width: 0
+
+  VerticalScrollBar
+    id: spellsScrollBar
+    anchors.top: listFrame.top
+    anchors.bottom: listFrame.bottom
+    anchors.right: listFrame.right
+    margin: 4 3 4 0
+    step: 48
+    pixels-scroll: true
+
+  Label
+    id: emptyLabel
+    anchors.top: listFrame.top
+    anchors.left: listFrame.left
+    anchors.right: listFrame.right
+    margin: 60 20 0 20
+    text-align: center
+    text-wrap: true
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #9f9f9f
+    !text: tr('No spell matches.')
+    visible: false
+
+  // ----------------------------------------------------------------------------------------------- the chosen spell
+  SpellFrame
+    id: details
+    anchors.top: listFrame.top
+    anchors.left: listFrame.right
+    anchors.right: parent.right
+    anchors.bottom: listFrame.bottom
+    margin-left: 8
+
+  UIWidget
+    id: iconCell
+    size: 44 44
+    anchors.left: details.left
+    anchors.top: details.top
+    margin: 8 0 0 8
+    image-source: /images/taskboard/cell
+    image-border: 2
+    phantom: true
+
+  UIWidget
+    id: icon
+    size: 32 32
+    anchors.centerIn: iconCell
+    image-source: /images/game/spells/defaultspells
+    image-clip: 0 0 32 32
+    phantom: true
+
+  Label
+    id: name
+    anchors.left: iconCell.right
+    anchors.top: iconCell.top
+    margin: 3 0 0 10
+    text-auto-resize: true
+    font: sans-bold-16px
+    color: #ffffff
+
+  Label
+    id: words
+    anchors.left: name.left
+    anchors.top: name.bottom
+    margin-top: 5
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #e8c66a
+
+  Panel
+    id: chips
+    anchors.right: details.right
+    anchors.top: details.top
+    margin: 12 10 0 0
+    height: 18
+    width: 220
+    layout:
+      type: horizontalBox
+      align-right: true
+
+  // the facts in a column on the right, the demo square on the left of them
+  Panel
+    id: facts
+    anchors.top: iconCell.bottom
+    anchors.right: details.right
+    anchors.bottom: statusLabel.top
+    margin: 8 8 6 0
+    width: 150
+    layout:
+      type: verticalBox
+      spacing: 4
+
+  SpellBox
+    id: stage
+    anchors.top: iconCell.bottom
+    anchors.left: details.left
+    anchors.right: facts.left
+    anchors.bottom: statusLabel.top
+    margin: 8 8 6 8
+
+  Panel
+    id: demo
+    anchors.fill: stage
+    margin: 2
+    clipping: true
+    background-color: #101010
+
+  Label
+    id: demoHint
+    anchors.centerIn: demo
+    text-auto-resize: true
+    font: verdana-11px-rounded
+    color: #9f9f9f
+    !text: tr('Click a spell to see it cast.')
+    phantom: true
+
+  UIButton
+    id: replayButton
+    size: 26 26
+    anchors.right: demo.right
+    anchors.bottom: demo.bottom
+    margin: 0 6 6 0
+    image-source: /images/taskboard/reroll22
+    image-smooth: true
+    !tooltip: tr('Play the demo again')
+    change-cursor-image: true
+    cursor: pointer
+    opacity: 0.8
+    @onClick: modules.game_spelllist.replay()
+
+    $hover:
+      opacity: 1.0
+
+  Label
+    id: statusLabel
+    anchors.left: details.left
+    anchors.right: details.right
+    anchors.bottom: details.bottom
+    margin: 0 10 8 10
+    height: 14
+    text-align: center
+    font: verdana-11px-rounded
+    color: #8fd48f

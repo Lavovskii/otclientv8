@@ -62,6 +62,7 @@ function SpellDemoPlayer:stop()
   removeEvent(self.event)
   self.event = nil
   self.demo = nil
+  self.design = nil
   self:clear({'floor', 'items', 'creatures', 'effects'})
 end
 
@@ -182,6 +183,9 @@ function SpellDemoPlayer:startLoop()
 end
 
 function SpellDemoPlayer:update()
+  if self.design then
+    return self:updateDesign()
+  end
   if not self.demo or self.panel:isDestroyed() then
     removeEvent(self.event)
     self.event = nil

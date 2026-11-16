@@ -593,6 +593,14 @@ local function define()
     local children = cards:getChildren()
     cards:ensureChildVisible(children[#children])
   end, 700)
+  -- the Spells tab (its first cards: Your spells, See a spell)
+  step('guides_spells', function()
+    modules.game_guides.show()
+    local bar = byId('guidesTabBar')
+    for _, tab in ipairs(bar:getTabs()) do
+      if tab:getText() == 'Spells' then bar:selectTab(tab) return end
+    end
+  end, 700)
   -- the Promotion card, wherever it is
   step('guides_promotion', function()
     local bar = byId('guidesTabBar')
@@ -994,6 +1002,31 @@ L|3155|sudden death rune]])
     closeWindows()
     if modules.game_spelllist.toggle then modules.game_spelllist.toggle() end
   end, 700)
+  -- the game server's answer (opcode 41) for a level 6,445 Archmage, then !spells opening the window
+  local SPELLS_ANSWER = 'V|1|1\nD|Ember Burst|2450\nD|Static Ring|61000\nD|Grave Bloom|142000\nD|Flame Crown|409000' ..
+    '\nD|Thunder Cage|760000\nH|Light Healing|19300\nE'
+  step('spelllist_server', function()
+    closeWindows()
+    ProtocolGame.onExtendedOpcode(nil, 41, 'O\n' .. SPELLS_ANSWER)
+    modules.game_spelllist.selectSpell('Grave Bloom')
+  end, 900)
+  step('spelllist_demo2', function() end, 350)
+  step('spelllist_demo3', function() end, 350)
+  step('spelllist_big', function() modules.game_spelllist.selectSpell('Apocalypse') end, 1200)
+  step('spelllist_big2', function() end, 500)
+  step('spelllist_utori', function() modules.game_spelllist.selectSpell('Ignite') end, 600)
+  step('spelllist_heal', function() modules.game_spelllist.selectSpell('Light Healing') end, 500)
+  step('spelllist_attack', function()
+    modules.game_spelllist.setCategory('attack')
+    modules.game_spelllist.selectSpell('Thunder Cage')
+  end, 900)
+  step('spelllist_slot', function()
+    modules.game_spelllist.toggle()
+    modules.game_spelllist.setCategory('all')
+    modules.game_spelllist.assignTo({spellData = nil, isDestroyed = function() return false end})
+    modules.game_spelllist.selectSpell('Ember Burst')
+  end, 900)
+  step('spelllist_close', function() modules.game_spelllist.toggle() end, 100)
   step('bugreport', function()
     closeWindows()
     if modules.game_spelllist.toggle then pcall(modules.game_spelllist.toggle) end

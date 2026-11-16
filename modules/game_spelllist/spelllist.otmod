@@ -1,9 +1,9 @@
 Module
   name: game_spelllist
-  description: The spells of your vocation, with a demo of each
+  description: The spells of your vocation, with a demo of each (action bar Assign Spell and !spells)
   author: Summ, Edubart
   website: https://github.com/edubart/otclient
   sandboxed: true
-  scripts: [ spelldemosprites, spelldemos, spelldemo, spelllist ]
+  scripts: [ spelldemosprites, spelldemos, spelldemofx, spellwindowinfo, spelldemo, spelldemodesign, spelllist ]
   @onLoad: init()
   @onUnload: terminate()
