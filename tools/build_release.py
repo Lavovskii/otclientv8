@@ -4,7 +4,7 @@ manifest and files the launcher (modules/updater) compares itself with, the inst
 
   python tools/build_release.py              data.zip, dist/updater and dist/things-version.txt
   python tools/build_release.py --installer  ... and dist/ForgottenL-Client-Setup.exe (Inno Setup)
-  python tools/build_release.py --publish    ... and puts dist/updater on the website (ssh alias "vps")
+  python tools/build_release.py --publish    ... and puts dist/updater on the website (ssh alias "forgl")
 
 The installed client reads data.zip from its folder, or the newer one an update wrote into the user's folder
 (AppData/OTClientV8/ForgottenL). The game graphics (data/things/860, 420 MB) stay out of data.zip: the installer puts
@@ -161,11 +161,11 @@ def main():
         # the graphics parts first (only when this version is not on the website yet), so the manifest never names a
         # part not there; "complete" marks a finished upload
         target = '%s/%s' % (REMOTE_GRAPHICS, things_version)
-        if subprocess.run(['ssh', 'vps', 'test -f %s/complete' % target]).returncode != 0:
+        if subprocess.run(['ssh', 'forgl', 'test -f %s/complete' % target]).returncode != 0:
             remote = ('set -e; G=%s; sudo rm -rf $G.new; sudo mkdir -p $G.new; sudo tar -xf - -C $G.new --no-same-owner; '
                       'sudo touch $G.new/complete; sudo chown -R root:root %s; sudo chmod -R u=rwX,go=rX %s; sudo rm -rf $G; sudo mv $G.new $G; '
                       'echo published graphics $(ls $G | grep -c zip) parts' % (target, REMOTE_GRAPHICS, REMOTE_GRAPHICS))
-            ssh = subprocess.Popen(['ssh', 'vps', remote], stdin=subprocess.PIPE)
+            ssh = subprocess.Popen(['ssh', 'forgl', remote], stdin=subprocess.PIPE)
             with tarfile.open(fileobj=ssh.stdin, mode='w|') as tar:
                 for f in graphics:
                     for part in f['parts']:
@@ -179,7 +179,7 @@ def main():
         remote = ('set -e; D=%s; sudo rm -rf $D.new $D.old; sudo mkdir -p $D.new; sudo tar -xf - -C $D.new --no-same-owner; '
                   'sudo chown -R root:root $D.new; sudo chmod -R u=rwX,go=rX $D.new; if [ -d $D ]; then sudo mv $D $D.old; fi; sudo mv $D.new $D; sudo rm -rf $D.old; '
                   'echo published $(find $D/files -type f | wc -l) files' % REMOTE)
-        ssh = subprocess.Popen(['ssh', 'vps', remote], stdin=subprocess.PIPE)
+        ssh = subprocess.Popen(['ssh', 'forgl', remote], stdin=subprocess.PIPE)
         with tarfile.open(fileobj=ssh.stdin, mode='w|') as tar:
             tar.add(os.path.join(updater, 'files'), 'files')
             tar.add(os.path.join(updater, 'manifest.json'), 'manifest.json')
